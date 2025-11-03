@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "lib0": "^0.2.114",
     "rate-limiter-flexible": "^8.1.0",
+    "redis": "^5.9.0",
     "ws": "^8.18.0",
     "y-protocols": "^1.0.6",
     "y-websocket": "^3.0.0",
