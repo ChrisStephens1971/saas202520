@@ -1,0 +1,18 @@
+{
+  "name": "@tournament/crdt",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CRDT wrapper for offline-first synchronization",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.19.24",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.5"
+  }
+}

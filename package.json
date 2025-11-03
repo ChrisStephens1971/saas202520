@@ -1,0 +1,33 @@
+{
+  "name": "tournament-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline-first tournament platform for Pool/Billiards",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:migrate": "pnpm --filter=@tournament/db migrate",
+    "db:studio": "pnpm --filter=@tournament/db studio",
+    "db:generate": "pnpm --filter=@tournament/db generate"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prisma": "^6.18.0",
+    "turbo": "^2.4.5",
+    "typescript": "^5.6.3"
+  },
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "pnpm": {
+    "overrides": {}
+  },
+  "dependencies": {
+    "@prisma/client": "^6.18.0"
+  }
+}

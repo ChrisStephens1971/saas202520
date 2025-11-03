@@ -94,18 +94,25 @@ Items that need attention but aren't new features:
 
 ## Daily Progress
 
-### Week 1, Day 1 (Monday)
+### Week 1, Day 1 (Monday - Nov 4, 2025)
 **What I worked on:**
-- Monorepo initialization
-- Next.js app setup
-- Initial Prisma schema
+- ✅ Monorepo initialization with Turborepo + pnpm workspaces
+- ✅ Next.js 16 app created (TypeScript, Tailwind, App Router, ESLint)
+- ✅ Fastify sync service with WebSocket support
+- ✅ Shared packages created (@tournament/shared, @tournament/crdt, @tournament/events, @tournament/validation)
+- ✅ Prisma schema with complete domain model (orgs, tournaments, players, matches, tables, events)
+- ✅ Docker Compose updated (Postgres, Redis)
+- ✅ Initial database migration applied
+- ✅ RLS policies implemented for multi-tenant isolation
+- ✅ Environment variables configured
 
 **Blockers:**
 - None
 
 **Plan for tomorrow:**
-- Fastify sync service
-- CRDT library evaluation (Y.js prototype)
+- Test monorepo dev workflow (`pnpm dev` runs all services)
+- Start Y.js CRDT evaluation (prototype)
+- Set up authentication scaffolding
 
 ---
 

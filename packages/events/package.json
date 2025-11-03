@@ -1,0 +1,20 @@
+{
+  "name": "@tournament/events",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Event-sourced schemas and projections",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@tournament/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.24",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.5"
+  }
+}

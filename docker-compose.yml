@@ -10,9 +10,9 @@ services:
     container_name: saas202520-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: saas202520
+      POSTGRES_USER: tournament
+      POSTGRES_PASSWORD: tournament_pass
+      POSTGRES_DB: tournament_platform
     ports:
       - "5420:5432"
     volumes:
