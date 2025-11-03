@@ -32,7 +32,14 @@ This project has been created with a complete planning and documentation structu
 
 **Have a project brief ready?**
 
-Open `project-brief.md` and paste your vision, or skip this - Claude will ask you questions.
+Open `project-brief/brief.md` and paste your vision. You can also add:
+- `project-brief/vision.md` - Long-term vision
+- `project-brief/target-users.md` - User personas
+- Or create your own `.md` files in `project-brief/`
+
+Claude automatically reads ALL files in `project-brief/` during planning!
+
+**Or skip this** - Claude will ask you questions.
 
 ### 3. Start Planning
 

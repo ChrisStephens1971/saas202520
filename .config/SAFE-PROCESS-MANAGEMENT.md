@@ -31,7 +31,7 @@ pkill -f analytics
 
 ```powershell
 # Step 1: Find process using specific port
-netstat -ano | findstr :{{PROJECT_PORT_FRONTEND}}
+netstat -ano | findstr :3020
 
 # Step 2: Kill only that specific PID
 taskkill /F /PID <PID>
@@ -45,10 +45,10 @@ taskkill /F /PID 12345
 
 ```bash
 # Step 1: Find process using specific port
-lsof -ti:{{PROJECT_PORT_FRONTEND}}
+lsof -ti:3020
 
 # Step 2: Kill only that process
-kill $(lsof -ti:{{PROJECT_PORT_FRONTEND}})
+kill $(lsof -ti:3020)
 
 # Or as one-liner:
 lsof -ti:3009 | xargs kill -9
@@ -64,8 +64,8 @@ docker stop $(docker ps -aq)
 docker-compose down
 
 # Or stop specific container by name
-docker stop {{PROJECT_NAME}}-postgres
-docker stop {{PROJECT_NAME}}-redis
+docker stop saas202520-postgres
+docker stop saas202520-redis
 ```
 
 ---
@@ -89,8 +89,8 @@ lsof -ti:3009 | xargs kill
 
 ```powershell
 # Windows - Stop project-specific ports
-netstat -ano | findstr :{{PROJECT_PORT_FRONTEND}}
-netstat -ano | findstr :{{PROJECT_PORT_BACKEND}}
+netstat -ano | findstr :3020
+netstat -ano | findstr :8020
 # Then kill each PID individually
 
 # Mac/Linux - Kill multiple ports safely
@@ -105,7 +105,7 @@ for port in 3009 8009; do kill $(lsof -ti:$port) 2>/dev/null; done
 docker-compose restart postgres
 
 # Or by container name
-docker restart {{PROJECT_NAME}}-postgres
+docker restart saas202520-postgres
 ```
 
 ### 4. Clean Restart of This Project Only
@@ -116,14 +116,14 @@ docker-compose down
 
 # Kill dev servers on THIS project's ports
 # Windows:
-netstat -ano | findstr :{{PROJECT_PORT_FRONTEND}}
+netstat -ano | findstr :3020
 taskkill /F /PID <PID>
-netstat -ano | findstr :{{PROJECT_PORT_BACKEND}}
+netstat -ano | findstr :8020
 taskkill /F /PID <PID>
 
 # Mac/Linux:
-kill $(lsof -ti:{{PROJECT_PORT_FRONTEND}}) 2>/dev/null
-kill $(lsof -ti:{{PROJECT_PORT_BACKEND}}) 2>/dev/null
+kill $(lsof -ti:3020) 2>/dev/null
+kill $(lsof -ti:8020) 2>/dev/null
 
 # Restart services
 docker-compose up -d
@@ -136,11 +136,11 @@ npm run dev
 
 This project uses these ports (see `.env.local`):
 
-- Frontend: `{{PROJECT_PORT_FRONTEND}}`
-- Backend: `{{PROJECT_PORT_BACKEND}}`
-- PostgreSQL: `{{PROJECT_PORT_POSTGRES}}`
-- Redis: `{{PROJECT_PORT_REDIS}}`
-- MongoDB: `{{PROJECT_PORT_MONGO}}` (if enabled)
+- Frontend: `3020`
+- Backend: `8020`
+- PostgreSQL: `5420`
+- Redis: `6420`
+- MongoDB: `27020` (if enabled)
 
 **Only kill processes on YOUR project's ports.**
 
@@ -195,7 +195,7 @@ npm run dev &
 cd /c/devop/saas202506
 npm run dev &
 
-cd /c/devop/{{PROJECT_NAME}}
+cd /c/devop/saas202520
 npm run dev
 ```
 

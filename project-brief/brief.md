@@ -1,7 +1,7 @@
 # Project Brief
 
-**Project:** {{PROJECT_NAME}}
-**Created:** {{CREATION_DATE}}
+**Project:** saas202520
+**Created:** 2025-11-03
 
 ---
 

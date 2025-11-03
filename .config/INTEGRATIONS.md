@@ -1,6 +1,6 @@
 # Integration Guide
 
-**Project:** {{PROJECT_NAME}}
+**Project:** saas202520
 **Template Version:** 2.0
 
 This document covers optional external tool integrations for your SaaS project.
@@ -179,5 +179,5 @@ Just ask Claude:
 
 ---
 
-**Last Updated:** {{CREATION_DATE}}
+**Last Updated:** 2025-11-03
 **Template Version:** 2.0
