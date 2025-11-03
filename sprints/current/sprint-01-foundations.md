@@ -116,15 +116,39 @@ Items that need attention but aren't new features:
 
 ---
 
-### Week 1, Day 2 (Tuesday)
+### Week 1, Day 2-3 (Tuesday-Wednesday - Nov 5-6, 2025)
 **What I worked on:**
--
+- ✅ Y.js CRDT implementation complete
+  - TournamentDoc class with full CRUD operations (tournaments, players, matches, tables)
+  - WebSocket provider for sync
+  - Event log tracking (append-only audit trail)
+  - Snapshot & update handling for persistence
+- ✅ Sync service upgraded for Y.js protocol
+  - Room manager for multi-tournament sync
+  - Y.js sync protocol handler (MESSAGE_SYNC, MESSAGE_AWARENESS)
+  - Automatic room cleanup
+  - Health endpoint with room stats
+- ✅ Authentication models added to Prisma
+  - User model (email, password, emailVerified)
+  - Account model (OAuth providers)
+  - Session model (session tokens)
+  - VerificationToken model
+  - OrganizationMember linked to User
+- ✅ Prisma client singleton created
+  - Single instance pattern (connection pool management)
+  - Tenant context helpers (setTenantContext, withTenantContext)
+  - Development logging enabled
+- ✅ Database baseline established
+  - All models migrated cleanly
+  - Migration: 20251103163100_init (complete schema + auth)
 
 **Blockers:**
--
+- Migration state issues resolved (baseline approach)
 
 **Plan for tomorrow:**
--
+- Test Y.js sync between 2 clients (manual validation)
+- Implement basic authentication flow with NextAuth.js
+- Create simple TD console UI
 
 ---
 
