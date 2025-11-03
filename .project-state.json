@@ -4,14 +4,17 @@
   "templateType": "enterprise",
   "version": "2.0",
   "state": {
-    "hasGreeted": false,
-    "setupComplete": false,
-    "currentSprint": null,
-    "phase": "planning"
+    "hasGreeted": true,
+    "setupComplete": true,
+    "currentSprint": "sprint-01-foundations",
+    "phase": "development"
   },
   "metadata": {
-    "tradeName": null,
-    "teamType": null
+    "tradeName": "Tournament Platform (Pool/Billiards MVP)",
+    "teamType": "team",
+    "teamSize": 2,
+    "buildApproach": "complete",
+    "timeline": "12-week"
   },
   "ports": {
     "frontend": "3020",
