@@ -2,10 +2,10 @@
 // Handles Y.js CRDT synchronization protocol
 
 import * as Y from 'yjs';
-import * as syncProtocol from 'y-protocols/sync';
-import * as awarenessProtocol from 'y-protocols/awareness';
-import * as encoding from 'lib0/encoding';
-import * as decoding from 'lib0/decoding';
+import * as syncProtocol from 'y-protocols/dist/sync.cjs';
+import * as awarenessProtocol from 'y-protocols/dist/awareness.cjs';
+import * as encoding from 'lib0/dist/encoding.cjs';
+import * as decoding from 'lib0/dist/decoding.cjs';
 import type { WebSocket } from 'ws';
 
 const MESSAGE_SYNC = 0;

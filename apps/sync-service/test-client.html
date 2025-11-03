@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Y.js Sync Test Client</title>
+  <script src="https://cdn.jsdelivr.net/npm/yjs@13.6.8/dist/yjs.mjs" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/y-websocket@1.5.0/dist/y-websocket.mjs" type="module"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 20px 0;
+      font-weight: 500;
+    }
+    .connected {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    input, button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      margin-right: 10px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .state {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+      margin: 20px 0;
+    }
+    .state h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .player-list {
+      list-style: none;
+      padding: 0;
+    }
+    .player-list li {
+      padding: 8px;
+      background: white;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎱 Y.js Sync Test Client</h1>
+    <p>Open this file in multiple browser windows to test synchronization</p>
+
+    <div id="status" class="status disconnected">
+      ⏳ Connecting to sync service...
+    </div>
+
+    <div class="controls">
+      <input type="text" id="playerName" placeholder="Player name" />
+      <button onclick="addPlayer()">Add Player</button>
+      <button onclick="updateScore()">Random Score Update</button>
+      <button onclick="clearAll()">Clear All</button>
+    </div>
+
+    <div class="state">
+      <h3>📋 Tournament State</h3>
+      <p><strong>Tournament:</strong> <span id="tournamentName">Loading...</span></p>
+      <p><strong>Status:</strong> <span id="tournamentStatus">...</span></p>
+
+      <h4>Players</h4>
+      <ul id="playerList" class="player-list"></ul>
+
+      <h4>Events (Last 5)</h4>
+      <pre id="eventLog"></pre>
+    </div>
+
+    <div class="state">
+      <h3>🔍 Raw Document State</h3>
+      <pre id="rawState"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as Y from 'https://cdn.jsdelivr.net/npm/yjs@13.6.8/dist/yjs.mjs';
+    import { WebsocketProvider } from 'https://cdn.jsdelivr.net/npm/y-websocket@1.5.0/dist/y-websocket.mjs';
+
+    // Create Y.js document
+    const doc = new Y.Doc();
+    const roomName = 'test-tournament-' + (new URLSearchParams(window.location.search).get('room') || '1');
+
+    // Connect to sync service
+    const provider = new WebsocketProvider('ws://localhost:8020', roomName, doc, {
+      connect: true
+    });
+
+    // Get shared data structures
+    const tournamentMap = doc.getMap('tournament');
+    const playersMap = doc.getMap('players');
+    const matchesMap = doc.getMap('matches');
+    const eventsArray = doc.getArray('events');
+
+    // Initialize tournament if empty
+    if (!tournamentMap.get('id')) {
+      tournamentMap.set('id', 'test-tournament-1');
+      tournamentMap.set('name', 'Test Pool Tournament');
+      tournamentMap.set('status', 'registration');
+      tournamentMap.set('format', '8-ball-single-elimination');
+    }
+
+    // Status indicator
+    const statusEl = document.getElementById('status');
+
+    provider.on('status', event => {
+      console.log('Connection status:', event.status);
+      if (event.status === 'connected') {
+        statusEl.className = 'status connected';
+        statusEl.textContent = '✅ Connected to sync service - Room: ' + roomName;
+      } else {
+        statusEl.className = 'status disconnected';
+        statusEl.textContent = '❌ Disconnected from sync service';
+      }
+    });
+
+    provider.on('sync', isSynced => {
+      console.log('Sync status:', isSynced);
+      if (isSynced) {
+        updateUI();
+      }
+    });
+
+    // Listen for changes
+    doc.on('update', () => {
+      console.log('Document updated');
+      updateUI();
+    });
+
+    // Update UI from document state
+    function updateUI() {
+      // Tournament info
+      document.getElementById('tournamentName').textContent = tournamentMap.get('name') || 'N/A';
+      document.getElementById('tournamentStatus').textContent = tournamentMap.get('status') || 'N/A';
+
+      // Players list
+      const playerListEl = document.getElementById('playerList');
+      playerListEl.innerHTML = '';
+      const players = playersMap.toJSON();
+      Object.values(players).forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = `${player.name} - ${player.status} ${player.seed ? `(Seed: ${player.seed})` : ''}`;
+        playerListEl.appendChild(li);
+      });
+
+      // Event log
+      const events = eventsArray.toJSON();
+      const lastEvents = events.slice(-5).reverse();
+      document.getElementById('eventLog').textContent = lastEvents.length > 0
+        ? JSON.stringify(lastEvents, null, 2)
+        : 'No events yet';
+
+      // Raw state
+      const state = {
+        tournament: tournamentMap.toJSON(),
+        players: playersMap.toJSON(),
+        matches: matchesMap.toJSON(),
+        eventCount: eventsArray.length
+      };
+      document.getElementById('rawState').textContent = JSON.stringify(state, null, 2);
+    }
+
+    // Add player
+    window.addPlayer = function() {
+      const nameInput = document.getElementById('playerName');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert('Please enter a player name');
+        return;
+      }
+
+      const playerId = 'player-' + Date.now();
+      const player = {
+        id: playerId,
+        name: name,
+        status: 'registered',
+        seed: playersMap.size + 1
+      };
+
+      playersMap.set(playerId, player);
+
+      eventsArray.push([{
+        kind: 'player.registered',
+        actor: 'test-client',
+        device: navigator.userAgent.substring(0, 50),
+        payload: { playerId, name },
+        timestamp: new Date().toISOString()
+      }]);
+
+      nameInput.value = '';
+      console.log('Added player:', player);
+    };
+
+    // Random score update
+    window.updateScore = function() {
+      const players = Object.keys(playersMap.toJSON());
+      if (players.length < 2) {
+        alert('Need at least 2 players for a match');
+        return;
+      }
+
+      const matchId = 'match-' + Date.now();
+      const match = {
+        id: matchId,
+        playerAId: players[0],
+        playerBId: players[1],
+        score: {
+          playerA: Math.floor(Math.random() * 10),
+          playerB: Math.floor(Math.random() * 10)
+        },
+        state: 'in-progress'
+      };
+
+      matchesMap.set(matchId, match);
+
+      eventsArray.push([{
+        kind: 'score.updated',
+        actor: 'test-client',
+        device: navigator.userAgent.substring(0, 50),
+        payload: { matchId, score: match.score },
+        timestamp: new Date().toISOString()
+      }]);
+
+      console.log('Created match with score:', match);
+    };
+
+    // Clear all data
+    window.clearAll = function() {
+      if (!confirm('Clear all tournament data?')) return;
+
+      playersMap.clear();
+      matchesMap.clear();
+      eventsArray.delete(0, eventsArray.length);
+
+      eventsArray.push([{
+        kind: 'tournament.reset',
+        actor: 'test-client',
+        device: navigator.userAgent.substring(0, 50),
+        payload: {},
+        timestamp: new Date().toISOString()
+      }]);
+
+      console.log('Cleared all data');
+    };
+
+    // Initial UI update
+    updateUI();
+
+    console.log('Y.js client initialized');
+    console.log('Room:', roomName);
+    console.log('Add ?room=2 to URL to test different rooms');
+  </script>
+</body>
+</html>

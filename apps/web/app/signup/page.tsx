@@ -1,0 +1,29 @@
+// Signup Page - Tournament Platform
+
+import { SignupForm } from './signup-form';
+
+export default function SignupPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md space-y-8 px-4">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Create your account
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Start managing tournaments in minutes
+          </p>
+        </div>
+
+        <SignupForm />
+
+        <div className="text-center text-sm">
+          <span className="text-gray-600">Already have an account? </span>
+          <a href="/login" className="font-semibold text-blue-600 hover:text-blue-500">
+            Sign in
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}

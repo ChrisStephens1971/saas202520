@@ -152,39 +152,51 @@ Items that need attention but aren't new features:
 
 ---
 
-### Week 1, Day 3 (Wednesday)
+### Week 1, Day 3-4 (Wednesday-Thursday - Nov 6-7, 2025)
 **What I worked on:**
--
+- ✅ Y.js sync testing infrastructure
+  - Created test-client.html for manual sync validation
+  - Test scenarios documented (basic sync, score updates, real-time, offline recovery, conflicts, room isolation)
+  - Fixed y-protocols import issues (added missing package)
+  - Sync service running successfully on port 8020
+  - Health endpoint verified
+- ✅ NextAuth.js v5 authentication implementation
+  - Installed next-auth@beta, @auth/prisma-adapter, bcryptjs, zod
+  - Created auth.ts configuration with Credentials provider
+  - Multi-tenant session with orgId, orgSlug, role
+  - JWT strategy with org switching support
+  - Extended TypeScript types for session
+- ✅ Authentication API routes and middleware
+  - API route: /api/auth/[...nextauth]/route.ts
+  - Signup endpoint: /api/auth/signup (creates user + org atomically)
+  - Middleware: Protected routes, tenant context headers
+  - Redirect logic: logged-in users → /console, logged-out → /login
+- ✅ Auth UI pages
+  - Login page with form (email/password)
+  - Signup page with form (name, email, password, orgName)
+  - Client-side form handling with error states
+  - Auto-login after signup
+- ✅ TD Console UI
+  - Protected route at /console
+  - Quick stats (active, registration, draft, completed tournaments)
+  - Tournament list with status badges
+  - Empty state for new organizations
+  - Org context displayed in header
+- ✅ Dashboard page (for testing auth flow)
+  - Session info display
+  - Quick stats placeholders
+  - Sign out functionality
+- ✅ Homepage redirect
+  - Authenticated users → /console
+  - Unauthenticated users → /login
 
 **Blockers:**
--
+- None
 
 **Plan for tomorrow:**
--
-
----
-
-### Week 1, Day 4 (Thursday)
-**What I worked on:**
--
-
-**Blockers:**
--
-
-**Plan for tomorrow:**
--
-
----
-
-### Week 1, Day 5 (Friday)
-**What I worked on:**
--
-
-**Blockers:**
--
-
-**Plan for next week:**
--
+- Test complete auth flow (signup → login → console)
+- Add seed data script for development
+- Begin IndexedDB storage layer (if time permits)
 
 ---
 
