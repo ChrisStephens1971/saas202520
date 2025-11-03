@@ -1,26 +1,76 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalDependencies": [
+    ".env",
+    "tsconfig.json",
+    "package.json",
+    "pnpm-lock.yaml"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "AUTH_SECRET",
+    "NEXTAUTH_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "inputs": [
+        "src/**",
+        "app/**",
+        "pages/**",
+        "components/**",
+        "lib/**",
+        "public/**",
+        "tsconfig.json",
+        "package.json",
+        "next.config.js",
+        "tailwind.config.js"
+      ],
+      "env": ["NODE_ENV"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "inputs": [
+        "src/**",
+        "app/**",
+        "pages/**",
+        "components/**",
+        "lib/**",
+        "eslint.config.mjs",
+        ".eslintrc.*",
+        "tsconfig.json"
+      ],
+      "outputs": []
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**",
+        "test/**",
+        "tests/**",
+        "__tests__/**",
+        "*.test.*",
+        "*.spec.*",
+        "vitest.config.*",
+        "jest.config.*"
+      ]
     },
     "db:migrate": {
       "cache": false
     },
     "db:generate": {
+      "cache": false,
+      "inputs": ["prisma/**"]
+    },
+    "db:seed": {
       "cache": false
     }
   }

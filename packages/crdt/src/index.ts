@@ -5,3 +5,4 @@
 export * from './types.js';
 export * from './tournament-doc.js';
 export * from './websocket-provider.js';
+export * from './indexeddb-persistence.js';

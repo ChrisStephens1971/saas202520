@@ -7,3 +7,4 @@ export * from './types/match.js';
 export * from './types/organization.js';
 export * from './constants.js';
 export * from './lib/prisma.js';
+export * from './lib/logger.js';

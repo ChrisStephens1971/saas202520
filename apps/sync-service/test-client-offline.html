@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Y.js Offline Sync Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/yjs@13.6.8/dist/yjs.mjs" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/y-websocket@1.5.0/dist/y-websocket.mjs" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/y-indexeddb@9.0.12/dist/y-indexeddb.cjs" type="module"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 20px 0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .connected {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .offline {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input, button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button.danger {
+      background: #dc3545;
+    }
+    button.danger:hover {
+      background: #c82333;
+    }
+    button.warning {
+      background: #ffc107;
+      color: #000;
+    }
+    button.warning:hover {
+      background: #e0a800;
+    }
+    .state {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+      margin: 20px 0;
+    }
+    .state h3 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    .player-list {
+      list-style: none;
+      padding: 0;
+    }
+    .player-list li {
+      padding: 8px;
+      background: white;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    .info-box {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .info-box h3 {
+      margin-top: 0;
+      color: #0056b3;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .stat-card {
+      background: white;
+      padding: 15px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      text-transform: uppercase;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎱 Y.js Offline Sync Test</h1>
+    <p>Test offline-first synchronization with IndexedDB persistence</p>
+
+    <div class="info-box">
+      <h3>📖 How to Test</h3>
+      <ol>
+        <li><strong>Make changes while ONLINE</strong> - Add players, they sync to other windows</li>
+        <li><strong>Go OFFLINE</strong> - Click "Simulate Offline" button</li>
+        <li><strong>Make changes while OFFLINE</strong> - Add more players (stored in IndexedDB)</li>
+        <li><strong>Go back ONLINE</strong> - Click "Go Online", changes sync automatically!</li>
+        <li><strong>Open in multiple tabs</strong> - See real-time sync across all tabs</li>
+      </ol>
+    </div>
+
+    <div id="status" class="status disconnected">
+      ⏳ Connecting to sync service...
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Connection</div>
+        <div class="stat-value" id="connectionStatus">Connecting...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">IndexedDB</div>
+        <div class="stat-value" id="indexeddbStatus">Loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Persisted Size</div>
+        <div class="stat-value" id="persistedSize">0 KB</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Players</div>
+        <div class="stat-value" id="playerCount">0</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input type="text" id="playerName" placeholder="Player name" />
+      <button onclick="addPlayer()">Add Player</button>
+      <button onclick="updateScore()">Random Score</button>
+      <button class="warning" onclick="toggleOffline()" id="offlineBtn">Simulate Offline</button>
+      <button class="danger" onclick="clearAll()">Clear All</button>
+      <button onclick="showStats()">Show Stats</button>
+    </div>
+
+    <div class="state">
+      <h3>📋 Tournament State</h3>
+      <p><strong>Tournament:</strong> <span id="tournamentName">Loading...</span></p>
+      <p><strong>Status:</strong> <span id="tournamentStatus">...</span></p>
+
+      <h4>Players</h4>
+      <ul id="playerList" class="player-list"></ul>
+
+      <h4>Events (Last 5)</h4>
+      <pre id="eventLog"></pre>
+    </div>
+
+    <div class="state">
+      <h3>🔍 IndexedDB Persistence</h3>
+      <pre id="persistenceStats"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as Y from 'https://cdn.jsdelivr.net/npm/yjs@13.6.8/dist/yjs.mjs';
+    import { WebsocketProvider } from 'https://cdn.jsdelivr.net/npm/y-websocket@1.5.0/dist/y-websocket.mjs';
+    import { IndexeddbPersistence } from 'https://cdn.jsdelivr.net/npm/y-indexeddb@9.0.12/dist/y-indexeddb.mjs';
+
+    // Create Y.js document
+    const doc = new Y.Doc();
+    const roomName = 'offline-test-' + (new URLSearchParams(window.location.search).get('room') || '1');
+
+    // IndexedDB persistence (loads first, before WebSocket)
+    const indexeddbProvider = new IndexeddbPersistence(roomName, doc);
+
+    indexeddbProvider.on('synced', () => {
+      console.log('[IndexedDB] Content loaded from local storage');
+      document.getElementById('indexeddbStatus').textContent = 'Synced';
+      updateUI();
+      updatePersistenceStats();
+    });
+
+    // WebSocket provider (syncs with server)
+    let wsProvider = new WebsocketProvider('ws://localhost:8020', roomName, doc, {
+      connect: true
+    });
+
+    let isOffline = false;
+
+    // Get shared data structures
+    const tournamentMap = doc.getMap('tournament');
+    const playersMap = doc.getMap('players');
+    const matchesMap = doc.getMap('matches');
+    const eventsArray = doc.getArray('events');
+
+    // Initialize tournament if empty
+    if (!tournamentMap.get('id')) {
+      tournamentMap.set('id', 'offline-test-1');
+      tournamentMap.set('name', 'Offline Test Tournament');
+      tournamentMap.set('status', 'registration');
+      tournamentMap.set('format', '8-ball-single-elimination');
+    }
+
+    // Status indicators
+    const statusEl = document.getElementById('status');
+    const connectionStatusEl = document.getElementById('connectionStatus');
+
+    wsProvider.on('status', event => {
+      console.log('Connection status:', event.status);
+      if (event.status === 'connected' && !isOffline) {
+        statusEl.className = 'status connected';
+        statusEl.textContent = '✅ ONLINE - Connected to sync service';
+        connectionStatusEl.textContent = 'Online';
+      } else {
+        statusEl.className = 'status disconnected';
+        statusEl.textContent = '❌ DISCONNECTED - Changes saved locally in IndexedDB';
+        connectionStatusEl.textContent = 'Offline';
+      }
+    });
+
+    wsProvider.on('sync', isSynced => {
+      console.log('Sync status:', isSynced);
+      if (isSynced) {
+        updateUI();
+        updatePersistenceStats();
+      }
+    });
+
+    // Listen for changes
+    doc.on('update', () => {
+      console.log('Document updated');
+      updateUI();
+      // Persistence stats will update after debounce
+      setTimeout(updatePersistenceStats, 1500);
+    });
+
+    // Update UI from document state
+    function updateUI() {
+      // Tournament info
+      document.getElementById('tournamentName').textContent = tournamentMap.get('name') || 'N/A';
+      document.getElementById('tournamentStatus').textContent = tournamentMap.get('status') || 'N/A';
+
+      // Players list
+      const playerListEl = document.getElementById('playerList');
+      playerListEl.innerHTML = '';
+      const players = playersMap.toJSON();
+      const playerCount = Object.keys(players).length;
+      document.getElementById('playerCount').textContent = playerCount;
+
+      Object.values(players).forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = `${player.name} - ${player.status} ${player.seed ? `(Seed: ${player.seed})` : ''}`;
+        playerListEl.appendChild(li);
+      });
+
+      // Event log
+      const events = eventsArray.toJSON();
+      const lastEvents = events.slice(-5).reverse();
+      document.getElementById('eventLog').textContent = lastEvents.length > 0
+        ? JSON.stringify(lastEvents, null, 2)
+        : 'No events yet';
+    }
+
+    // Update persistence stats
+    async function updatePersistenceStats() {
+      try {
+        // Get IndexedDB stats
+        const dbName = 'y-indexeddb';
+        const db = await new Promise((resolve, reject) => {
+          const request = indexedDB.open(dbName);
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+
+        const transaction = db.transaction(['updates'], 'readonly');
+        const store = transaction.objectStore('updates');
+        const allRecords = await new Promise((resolve, reject) => {
+          const request = store.getAll();
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+
+        const totalSize = allRecords.reduce((sum, record) => {
+          return sum + (record.value?.length || 0);
+        }, 0);
+
+        document.getElementById('persistedSize').textContent = (totalSize / 1024).toFixed(2) + ' KB';
+
+        const stats = {
+          room: roomName,
+          updatesStored: allRecords.length,
+          totalSize: totalSize + ' bytes',
+          sizeKB: (totalSize / 1024).toFixed(2) + ' KB',
+          lastUpdate: allRecords.length > 0 ? new Date().toISOString() : 'N/A'
+        };
+
+        document.getElementById('persistenceStats').textContent = JSON.stringify(stats, null, 2);
+      } catch (err) {
+        console.error('Failed to get persistence stats:', err);
+      }
+    }
+
+    // Toggle offline mode
+    window.toggleOffline = function() {
+      isOffline = !isOffline;
+      const btn = document.getElementById('offlineBtn');
+
+      if (isOffline) {
+        // Disconnect from server
+        wsProvider.disconnect();
+        statusEl.className = 'status offline';
+        statusEl.textContent = '📴 OFFLINE MODE - Changes saved locally (will sync when back online)';
+        connectionStatusEl.textContent = 'Offline';
+        btn.textContent = 'Go Online';
+        btn.className = 'warning';
+      } else {
+        // Reconnect to server
+        wsProvider.connect();
+        statusEl.className = 'status connected';
+        statusEl.textContent = '✅ ONLINE - Syncing with server...';
+        connectionStatusEl.textContent = 'Online';
+        btn.textContent = 'Simulate Offline';
+        btn.className = 'warning';
+      }
+    };
+
+    // Add player
+    window.addPlayer = function() {
+      const nameInput = document.getElementById('playerName');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert('Please enter a player name');
+        return;
+      }
+
+      const playerId = 'player-' + Date.now();
+      const player = {
+        id: playerId,
+        name: name,
+        status: 'registered',
+        seed: playersMap.size + 1
+      };
+
+      playersMap.set(playerId, player);
+
+      eventsArray.push([{
+        kind: 'player.registered',
+        actor: 'test-client',
+        device: isOffline ? 'offline' : 'online',
+        payload: { playerId, name },
+        timestamp: new Date().toISOString()
+      }]);
+
+      nameInput.value = '';
+      console.log('Added player:', player, isOffline ? '(OFFLINE)' : '(ONLINE)');
+    };
+
+    // Random score update
+    window.updateScore = function() {
+      const players = Object.keys(playersMap.toJSON());
+      if (players.length < 2) {
+        alert('Need at least 2 players for a match');
+        return;
+      }
+
+      const matchId = 'match-' + Date.now();
+      const match = {
+        id: matchId,
+        playerAId: players[0],
+        playerBId: players[1],
+        score: {
+          playerA: Math.floor(Math.random() * 10),
+          playerB: Math.floor(Math.random() * 10)
+        },
+        state: 'in-progress'
+      };
+
+      matchesMap.set(matchId, match);
+
+      eventsArray.push([{
+        kind: 'score.updated',
+        actor: 'test-client',
+        device: isOffline ? 'offline' : 'online',
+        payload: { matchId, score: match.score },
+        timestamp: new Date().toISOString()
+      }]);
+
+      console.log('Created match:', match, isOffline ? '(OFFLINE)' : '(ONLINE)');
+    };
+
+    // Clear all data
+    window.clearAll = function() {
+      if (!confirm('Clear all tournament data (including IndexedDB)?')) return;
+
+      playersMap.clear();
+      matchesMap.clear();
+      eventsArray.delete(0, eventsArray.length);
+
+      eventsArray.push([{
+        kind: 'tournament.reset',
+        actor: 'test-client',
+        device: isOffline ? 'offline' : 'online',
+        payload: {},
+        timestamp: new Date().toISOString()
+      }]);
+
+      console.log('Cleared all data');
+    };
+
+    // Show stats
+    window.showStats = function() {
+      updatePersistenceStats();
+      alert('Stats updated in bottom panel');
+    };
+
+    // Initial UI update
+    updateUI();
+    updatePersistenceStats();
+
+    console.log('Y.js offline sync client initialized');
+    console.log('Room:', roomName);
+    console.log('IndexedDB persistence enabled');
+  </script>
+</body>
+</html>

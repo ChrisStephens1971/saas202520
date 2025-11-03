@@ -11,11 +11,19 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "db:migrate": "pnpm --filter=@tournament/db migrate",
     "db:studio": "pnpm --filter=@tournament/db studio",
-    "db:generate": "pnpm --filter=@tournament/db generate"
+    "db:generate": "pnpm --filter=@tournament/db generate",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "bcryptjs": "^3.0.3",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.3.3",
     "prisma": "^6.18.0",
+    "tsx": "^4.20.6",
     "turbo": "^2.4.5",
     "typescript": "^5.6.3"
   },
