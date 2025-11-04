@@ -7,12 +7,13 @@ export default auth((req) => {
   const { nextUrl, auth } = req;
   const isLoggedIn = !!auth?.user;
 
-  // Public routes (login, signup, landing page)
+  // Public routes (login, signup, landing page, health check)
   const isPublicRoute =
     nextUrl.pathname === '/login' ||
     nextUrl.pathname === '/signup' ||
     nextUrl.pathname === '/' ||
-    nextUrl.pathname.startsWith('/api/auth');
+    nextUrl.pathname.startsWith('/api/auth') ||
+    nextUrl.pathname.startsWith('/api/health');
 
   // Redirect logged-in users away from login/signup
   if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/signup')) {
