@@ -116,6 +116,7 @@ model Tournament {
   id                  String   @id @default(cuid())
   orgId               String   @map("org_id") // Tenant ID
   name                String
+  description         String? // Optional tournament description
   status              String // draft, registration, active, paused, completed, cancelled
   format              String // single_elimination, double_elimination, round_robin, modified_single, chip_format
   sportConfigId       String   @map("sport_config_id")
