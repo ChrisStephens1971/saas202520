@@ -42,7 +42,9 @@ class GitHubBoardAdapter {
       }
 
       // Get project items
-      const command = `gh project item-list ${projectNumber} --owner ${owner} --format json`;
+      // v2.1.2: Use @me for user projects (detected by /users/ in URL)
+      const projectOwner = projectUrl.includes('/users/') ? '@me' : owner;
+      const command = `gh project item-list ${projectNumber} --owner ${projectOwner} --format json`;
       const result = execSync(command, { encoding: 'utf8' });
       const items = JSON.parse(result);
 
