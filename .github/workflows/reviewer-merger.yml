@@ -1,0 +1,130 @@
+name: Reviewer and Merger
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    name: review
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Load config
+        id: config
+        run: |
+          echo "Checking PR against config.json rules..."
+          cat config.json
+
+      - name: Check PR size
+        id: size
+        run: |
+          FILES_CHANGED=$(gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files | length')
+          ADDITIONS=$(gh pr view ${{ github.event.pull_request.number }} --json additions --jq '.additions')
+
+          echo "files=$FILES_CHANGED" >> $GITHUB_OUTPUT
+          echo "additions=$ADDITIONS" >> $GITHUB_OUTPUT
+
+          # Check thresholds from config
+          if [ "$FILES_CHANGED" -gt 10 ] || [ "$ADDITIONS" -gt 800 ]; then
+            echo "large=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Large PR detected"
+          else
+            echo "large=false" >> $GITHUB_OUTPUT
+            echo "✅ PR size acceptable"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check security paths
+        id: security
+        run: |
+          gh pr diff ${{ github.event.pull_request.number }} --name-only > /tmp/changed-files.txt
+
+          # Check for security-sensitive paths
+          SECURITY_FILES=$(grep -E "(auth/|migrations/|\.env|secrets/|permissions/|tenant/)" /tmp/changed-files.txt | wc -l)
+
+          if [ "$SECURITY_FILES" -gt 0 ]; then
+            echo "security_touching=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Security-sensitive files changed"
+          else
+            echo "security_touching=false" >> $GITHUB_OUTPUT
+            echo "✅ No security-sensitive files"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check required checks
+        id: checks
+        run: |
+          # Simple check: all jobs must pass
+          echo "Checking required CI checks..."
+
+          # Get check runs
+          CHECKS=$(gh pr checks ${{ github.event.pull_request.number }} --json state --jq '.[] | select(.state != "SUCCESS") | .name')
+
+          if [ -z "$CHECKS" ]; then
+            echo "all_passed=true" >> $GITHUB_OUTPUT
+            echo "✅ All checks passed"
+          else
+            echo "all_passed=false" >> $GITHUB_OUTPUT
+            echo "❌ Some checks failed or pending"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine merge eligibility
+        id: eligible
+        run: |
+          LARGE_PR="${{ steps.size.outputs.large }}"
+          SECURITY="${{ steps.security.outputs.security_touching }}"
+          CHECKS_PASSED="${{ steps.checks.outputs.all_passed }}"
+
+          # Check for labels
+          BREAKING=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[] | select(.name == "breaking-change") | .name')
+          SECURITY_ALERT=$(gh pr view ${{ github.event.pull_request.number }} --json labels --jq '.labels[] | select(.name == "security-alert") | .name')
+
+          # Auto-merge only if:
+          # - Not a large PR
+          # - No security-touching files
+          # - All checks passed
+          # - No breaking changes
+          # - No security alerts
+
+          if [ "$LARGE_PR" = "false" ] && [ "$SECURITY" = "false" ] && [ "$CHECKS_PASSED" = "true" ] && [ -z "$BREAKING" ] && [ -z "$SECURITY_ALERT" ]; then
+            echo "eligible=true" >> $GITHUB_OUTPUT
+            echo "✅ PR eligible for auto-merge"
+          else
+            echo "eligible=false" >> $GITHUB_OUTPUT
+            echo "❌ PR requires human review"
+
+            # Add comment explaining why
+            gh pr comment ${{ github.event.pull_request.number }} --body "## 👤 Human Review Required
+
+            This PR requires manual review for one of these reasons:
+            - Large PR (files: ${{ steps.size.outputs.files }}, lines: ${{ steps.size.outputs.additions }})
+            - Security-sensitive files changed
+            - Checks not all passing
+            - Breaking changes
+            - Security alerts
+
+            Please review carefully before merging."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge if eligible
+        if: steps.eligible.outputs.eligible == 'true'
+        run: |
+          echo "🎉 Auto-merging PR..."
+          gh pr merge ${{ github.event.pull_request.number }} --squash --auto
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

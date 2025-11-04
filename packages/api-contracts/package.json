@@ -1,0 +1,17 @@
+{
+  "name": "@tournament/api-contracts",
+  "version": "0.1.0",
+  "description": "API contracts for tournament platform",
+  "main": "index.js",
+  "scripts": {
+    "validate": "swagger-cli validate openapi.yaml",
+    "generate": "openapi-typescript openapi.yaml -o types.ts",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "swagger-cli": "^4.0.4",
+    "openapi-typescript": "^6.0.0"
+  }
+}

@@ -1,0 +1,124 @@
+name: Coordinator
+on:
+  # Manual trigger for initial setup
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Coordinator mode'
+        required: false
+        default: 'manual'
+        type: choice
+        options:
+          - manual
+          - automated
+
+  # Scheduled polling (disabled by default, enable in automated mode)
+  # schedule:
+  #   - cron: '*/15 * * * *'  # Every 15 minutes
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: coordinator
+  cancel-in-progress: false
+
+jobs:
+  coordinate:
+    name: coordinate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install -g @octokit/rest
+
+      - name: Load configuration
+        id: config
+        run: |
+          CONFIG=$(cat config.json)
+          echo "config<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONFIG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Check if coordinator is enabled
+          ENABLED=$(echo "$CONFIG" | jq -r '.agents.coordinator.enabled')
+          echo "enabled=$ENABLED" >> $GITHUB_OUTPUT
+
+          MODE=$(echo "$CONFIG" | jq -r '.agents.coordinator.mode')
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+
+      - name: Poll board for work
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔄 Coordinator starting..."
+          echo "Mode: ${{ steps.config.outputs.mode }}"
+          echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          # Run board adapter
+          node scripts/board-adapters/board-adapter-github.js poll
+
+      - name: Aggregate agent status
+        if: always()
+        run: |
+          # v2.1.2: Safe handling of empty directory
+          shopt -s nullglob
+          python scripts/aggregate-status.py || {
+            echo "Aggregation failed, creating empty status"
+            mkdir -p agent-status
+            echo '{"agentId":"system","type":"system","status":"idle","lastUpdate":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' > agent-status/system.json
+            python scripts/aggregate-status.py
+          }
+
+      - name: Check costs
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/track-costs.js check
+
+      - name: Detect deadlocks
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/detect-deadlocks.js check || {
+            echo "⚠️ Deadlocks detected! Check issues for details."
+            exit 0  # Don't fail the workflow, just warn
+          }
+
+      - name: Commit status updates
+        if: always()
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add agent-status/
+          git add AGENT-STATUS.md || true
+
+          if git diff --staged --quiet; then
+            echo "No status changes to commit"
+          else
+            git commit -m "chore: Update agent status [skip ci]"
+            git push
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 🤖 Coordinator Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f AGENT-STATUS.md ]; then
+            cat AGENT-STATUS.md >> $GITHUB_STEP_SUMMARY
+          fi

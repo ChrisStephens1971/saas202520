@@ -1,0 +1,77 @@
+name: Agent Request
+description: Request work from another lane (used by agents)
+title: "[REQUEST] "
+labels: ["request-queue"]
+body:
+  - type: input
+    id: requestor
+    attributes:
+      label: Requestor Lane
+      description: Which lane is making this request?
+      placeholder: "backend"
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Target Lane
+      description: Which lane should handle this?
+      placeholder: "contracts"
+    validations:
+      required: true
+
+  - type: input
+    id: pr
+    attributes:
+      label: Related PR
+      description: PR that needs this work
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What's Needed
+      description: Describe what work is required
+      placeholder: |
+        Need new API endpoint for user preferences:
+        POST /api/users/{userId}/preferences
+        Body: { theme: string, notifications: boolean }
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: What defines "done"?
+      placeholder: |
+        - [ ] OpenAPI spec updated
+        - [ ] TypeScript types generated
+        - [ ] Contract tests added
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How urgent is this?
+      options:
+        - P0 - Blocking
+        - P1 - High
+        - P2 - Medium
+        - P3 - Low
+    validations:
+      required: true
+
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline
+      description: When is this needed by?
+      placeholder: "2025-01-10"
+    validations:
+      required: false

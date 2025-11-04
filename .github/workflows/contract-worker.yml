@@ -1,0 +1,144 @@
+name: Contract Worker
+on:
+  pull_request:
+    paths:
+      - "packages/api-contracts/**"
+      - "packages/api-contracts/openapi.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: contracts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: validate
+    if: contains(github.event.pull_request.labels.*.name, 'lane:contracts')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Validate OpenAPI spec
+        working-directory: packages/api-contracts
+        run: |
+          # Install OpenAPI tools
+          npm install -g @openapitools/openapi-generator-cli swagger-cli
+
+          # Validate spec
+          swagger-cli validate openapi.yaml
+
+          echo "✅ OpenAPI spec is valid"
+
+      - name: Detect breaking changes
+        id: breaking
+        run: |
+          # Get base spec from main branch
+          git fetch origin main:main
+          git show main:packages/api-contracts/openapi.yaml > /tmp/base-spec.yaml || {
+            echo "No base spec found, skipping breaking change detection"
+            echo "breaking=false" >> $GITHUB_OUTPUT
+            exit 0
+          }
+
+          # Compare specs using oasdiff
+          npm install -g oasdiff
+
+          # v2.1.2: Safe handling of breaking changes
+          if oasdiff breaking /tmp/base-spec.yaml packages/api-contracts/openapi.yaml > /tmp/breaking.txt; then
+            echo "breaking=false" >> $GITHUB_OUTPUT
+            echo "No breaking changes detected"
+          else
+            echo "breaking=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Breaking changes detected:"
+            cat /tmp/breaking.txt
+          fi
+
+      - name: Generate TypeScript types
+        working-directory: packages/api-contracts
+        run: |
+          # Generate TS types from OpenAPI
+          npx openapi-typescript openapi.yaml -o types.ts
+
+          echo "✅ TypeScript types generated"
+
+      - name: Run contract tests
+        run: |
+          pnpm --filter api-contracts test
+
+      - name: Check for tenant_id in schemas
+        working-directory: packages/api-contracts
+        run: |
+          echo "🔍 Checking for tenant_id in schemas..."
+
+          # Check if tenant_id is present in all relevant schemas
+          MISSING=$(grep -r "type: object" openapi.yaml | grep -v "tenant_id" | wc -l)
+
+          if [ $MISSING -gt 0 ]; then
+            echo "⚠️ Warning: Some schemas may be missing tenant_id"
+            echo "Please review tenant isolation for new endpoints"
+          else
+            echo "✅ Tenant isolation patterns look good"
+          fi
+
+      - name: Label PR if breaking
+        if: steps.breaking.outputs.breaking == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "breaking-change"
+
+          # Comment on PR
+          gh pr comment ${{ github.event.pull_request.number }} --body "## ⚠️ Breaking Changes Detected
+
+          This PR contains breaking changes to the API contract.
+
+          **Required Actions:**
+          - [ ] Update API documentation
+          - [ ] Notify dependent teams
+          - [ ] Plan migration strategy
+          - [ ] Bump major version
+
+          **Human review required before merge.**"
+
+      - name: Update agent status
+        if: always()
+        run: |
+          AGENT_ID="contracts-${{ github.event.pull_request.number }}"
+          STATUS_FILE="agent-status/${AGENT_ID}.json"
+
+          mkdir -p agent-status
+
+          cat > "$STATUS_FILE" <<EOF
+          {
+            "agentId": "${AGENT_ID}",
+            "type": "worker",
+            "lane": "contracts",
+            "status": "${{ job.status }}",
+            "task": "Contract validation",
+            "pr": "#${{ github.event.pull_request.number }}",
+            "branch": "${{ github.head_ref }}",
+            "lastUpdate": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "breaking": ${{ steps.breaking.outputs.breaking || false }}
+          }
+          EOF
+
+          # Track cost
+          node scripts/track-costs.js track "${AGENT_ID}" "contracts" "sonnet" "complex"

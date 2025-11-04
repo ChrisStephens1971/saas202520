@@ -1,0 +1,67 @@
+# CODEOWNERS for Multi-Agent Swarm System
+# v2.1.2 - Production Ready with Multi-Tenant Patterns
+
+# Multi-tenant specific paths (subdomain-based) - REQUIRE HUMAN REVIEW
+**/tenant/**                    @backend-team @security-team
+**/middleware/tenant/**         @backend-team @security-team
+**/tenant-isolation/**          @backend-team @security-team
+**/tenant-context/**            @backend-team @security-team
+**/cross-tenant/**              @backend-team @security-team
+
+# API Contracts - Critical path
+/packages/api-contracts/**      @contracts-team @tech-lead
+
+# Backend Services
+/apps/sync-service/**           @backend-team
+/packages/crdt/**               @backend-team
+/packages/events/**             @backend-team
+/packages/pubsub/**             @backend-team
+
+# Frontend Applications
+/apps/web/**                    @frontend-team
+/apps/scorekeeper/**            @frontend-team
+
+# Database - ALWAYS REQUIRE HUMAN REVIEW
+/prisma/migrations/**           @db-team @tech-lead
+/prisma/schema.prisma           @db-team @backend-team
+/database/**                    @db-team
+
+# Security-critical paths - ALWAYS REQUIRE HUMAN REVIEW
+**/auth/**                      @security-team @tech-lead
+**/middleware/auth/**           @security-team @tech-lead
+**/.env*                        @security-team @tech-lead
+**/secrets/**                   @security-team
+**/permissions/**               @security-team
+**/rbac/**                      @security-team
+**/api-keys/**                  @security-team
+
+# Test Infrastructure
+/tests/**                       @test-team
+/tests/e2e/**                   @test-team @frontend-team
+/tests/contracts/**             @test-team @backend-team
+
+# CI/CD Configuration - Require careful review
+/.github/workflows/**           @devops-team @tech-lead
+/turbo.json                     @devops-team
+/docker-compose.yml             @devops-team
+
+# Agent Coordination - Managed by swarm
+/agent-status/**                @coordinator-bot
+/AGENT-STATUS.md                @coordinator-bot
+/scripts/aggregate-status.py    @coordinator-bot
+/scripts/track-costs.js         @coordinator-bot
+/scripts/detect-deadlocks.js    @coordinator-bot
+
+# Configuration - Require approval
+/config.json                    @tech-lead
+/CODEOWNERS                     @tech-lead
+/package.json                   @tech-lead
+/pnpm-workspace.yaml            @tech-lead
+
+# Documentation
+/docs/**                        @docs-team
+/README.md                      @docs-team
+/CLAUDE.md                      @tech-lead
+
+# Default owner for everything else
+*                               @dev-team

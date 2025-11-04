@@ -1,0 +1,7 @@
+{
+  "agentId": "system",
+  "type": "system",
+  "status": "idle",
+  "lastUpdate": "2025-11-04T00:00:00Z",
+  "message": "System initialized. Waiting for first coordinator run."
+}
