@@ -1,0 +1,137 @@
+{
+  "version": "2.1.2",
+  "organization": {
+    "name": "Tournament Platform",
+    "scope": "tournament"
+  },
+  "project": {
+    "name": "saas202520",
+    "repository": "https://github.com/ChrisStephens1971/saas202520",
+    "board": {
+      "type": "github",
+      "url": "https://github.com/users/ChrisStephens1971/projects/1",
+      "apiKey": "GITHUB_TOKEN",
+      "readyColumnId": "TODO"
+    },
+    "preview": {
+      "baseUrl": "https://saas202520-preview",
+      "provider": "vercel"
+    }
+  },
+  "contracts": {
+    "package": "@tournament/api-contracts",
+    "baseSpecPath": "packages/api-contracts/openapi.yaml"
+  },
+  "ci": {
+    "requiredChecks": [
+      "build",
+      "test",
+      "lint",
+      "typecheck",
+      "security-scan"
+    ],
+    "checkNameNote": "IMPORTANT: Job names must match these exactly"
+  },
+  "lanes": {
+    "contracts": {
+      "enabled": true,
+      "maxConcurrent": 1,
+      "label": "lane:contracts",
+      "branch": "feat/contracts",
+      "model": "sonnet"
+    },
+    "backend": {
+      "enabled": true,
+      "maxConcurrent": 3,
+      "label": "lane:backend",
+      "branch": "feat/backend",
+      "model": "haiku"
+    },
+    "frontend": {
+      "enabled": true,
+      "maxConcurrent": 3,
+      "label": "lane:frontend",
+      "branch": "feat/frontend",
+      "model": "haiku"
+    },
+    "tests": {
+      "enabled": true,
+      "maxConcurrent": 2,
+      "label": "lane:tests",
+      "branch": "feat/tests",
+      "model": "haiku"
+    },
+    "migrations": {
+      "enabled": true,
+      "maxConcurrent": 1,
+      "label": "lane:migrations",
+      "branch": "feat/migrations",
+      "model": "sonnet",
+      "requiresHumanApproval": true
+    }
+  },
+  "agents": {
+    "coordinator": {
+      "enabled": true,
+      "pollIntervalMinutes": 15,
+      "maxConcurrentBranches": 5,
+      "mode": "manual",
+      "boardAdapter": "github"
+    },
+    "reviewer": {
+      "enabled": true,
+      "autoMergeEnabled": true,
+      "requireHumanReviewPaths": [
+        "prisma/migrations/**",
+        "packages/api-contracts/**",
+        "**/auth/**",
+        "**/middleware/auth/**",
+        "**/tenant/**",
+        "**/middleware/tenant/**",
+        "**/.env*",
+        "**/secrets/**",
+        "**/permissions/**",
+        "**/rbac/**",
+        "**/tenant-isolation/**",
+        "**/tenant-context/**",
+        "**/cross-tenant/**"
+      ],
+      "maxFilesAutoMerge": 10,
+      "maxLinesAutoMerge": 800,
+      "prSizeLabels": {
+        "xs": { "maxFiles": 2, "maxLines": 50 },
+        "s": { "maxFiles": 5, "maxLines": 200 },
+        "m": { "maxFiles": 10, "maxLines": 500 },
+        "l": { "maxFiles": 20, "maxLines": 1000 },
+        "xl": { "maxFiles": 50, "maxLines": 2000 }
+      }
+    }
+  },
+  "cost": {
+    "budgetPerMonth": 500,
+    "trackingEnabled": true,
+    "defaultModel": "haiku",
+    "criticalTaskModel": "sonnet",
+    "complexTaskModel": "opus",
+    "pauseNotificationEnabled": true,
+    "alerts": [
+      { "threshold": 50, "action": "log" },
+      { "threshold": 80, "action": "notify-slack", "webhook": "SLACK_WEBHOOK_URL" },
+      { "threshold": 90, "action": "pause-non-critical", "notifyPR": true },
+      { "threshold": 100, "action": "pause-all", "notifyPR": true }
+    ]
+  },
+  "observability": {
+    "dashboardEnabled": true,
+    "metricsEndpoint": "http://localhost:3333/metrics",
+    "updateIntervalMinutes": 5,
+    "retentionDays": 30
+  },
+  "multiTenant": {
+    "enabled": true,
+    "model": "subdomain",
+    "tenantIdField": "tenant_id",
+    "isolationValidation": true,
+    "crossTenantChecks": true
+  }
+}
