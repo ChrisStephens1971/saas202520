@@ -2,7 +2,7 @@
  * Tests for Organization API Contracts
  */
 
-import { describe, it, expect } from '@jest/globals';
+// Jest globals (describe, it, expect) are available automatically
 import {
   OrganizationSchema,
   OrganizationMemberSchema,

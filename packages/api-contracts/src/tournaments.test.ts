@@ -4,7 +4,7 @@
  * Comprehensive test coverage for tournament schemas, validation, and helper functions.
  */
 
-import { describe, it, expect } from '@jest/globals';
+// Jest globals (describe, it, expect) are available automatically
 import {
   // Enums
   TournamentStatus,

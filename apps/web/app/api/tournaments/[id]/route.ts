@@ -32,7 +32,7 @@ import {
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Authenticate user
@@ -45,7 +45,7 @@ export async function GET(
     }
 
     // Get organization context from headers
-    const headersList = headers();
+    const headersList = await headers();
     const orgId = headersList.get('x-org-id');
 
     if (!orgId) {
@@ -60,7 +60,7 @@ export async function GET(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Fetch tournament and verify it belongs to user's org
     const tournament = await prisma.tournament.findFirst({
@@ -101,14 +101,14 @@ export async function GET(
         name: tournament.name,
         slug: tournament.name.toLowerCase().replace(/\s+/g, '-'),
         description: tournament.description,
-        status: tournament.status,
-        format: tournament.format,
+        status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
+        format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
         sport: 'pool' as const,
         gameType: 'eight-ball' as const,
         raceToWins: 7,
         maxPlayers: null,
         createdAt: tournament.createdAt.toISOString(),
-        updatedAt: tournament.updatedAt.toISOString(),
+        updatedAt: new Date().toISOString(), // TODO: Add updatedAt to schema
         startedAt: tournament.startedAt?.toISOString() ?? null,
         completedAt: tournament.completedAt?.toISOString() ?? null,
         createdBy: tournament.createdBy,
@@ -156,7 +156,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Authenticate user
@@ -169,7 +169,7 @@ export async function PUT(
     }
 
     // Get organization context and role from headers
-    const headersList = headers();
+    const headersList = await headers();
     const orgId = headersList.get('x-org-id');
     const userRole = headersList.get('x-user-role');
 
@@ -185,7 +185,7 @@ export async function PUT(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Fetch tournament and verify access
     const tournament = await prisma.tournament.findFirst({
@@ -329,14 +329,14 @@ export async function PUT(
         name: updated.name,
         slug: updateData.slug || updated.name.toLowerCase().replace(/\s+/g, '-'),
         description: updated.description,
-        status: updated.status,
-        format: updated.format,
+        status: updated.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
+        format: updated.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
         sport: 'pool' as const,
         gameType: 'eight-ball' as const,
         raceToWins: 7,
         maxPlayers: null,
         createdAt: updated.createdAt.toISOString(),
-        updatedAt: updated.updatedAt.toISOString(),
+        updatedAt: new Date().toISOString(), // TODO: Add updatedAt to schema
         startedAt: updated.startedAt?.toISOString() ?? null,
         completedAt: updated.completedAt?.toISOString() ?? null,
         createdBy: updated.createdBy,
@@ -370,7 +370,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Authenticate user
@@ -383,7 +383,7 @@ export async function DELETE(
     }
 
     // Get organization context and role from headers
-    const headersList = headers();
+    const headersList = await headers();
     const orgId = headersList.get('x-org-id');
     const userRole = headersList.get('x-user-role');
 
@@ -399,7 +399,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Verify tournament exists and belongs to user's org
     const tournament = await prisma.tournament.findFirst({

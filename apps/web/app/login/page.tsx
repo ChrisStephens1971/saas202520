@@ -18,7 +18,7 @@ export default function LoginPage() {
         <LoginForm />
 
         <div className="text-center text-sm">
-          <span className="text-gray-600">Don't have an account? </span>
+          <span className="text-gray-600">Don&apos;t have an account? </span>
           <a href="/signup" className="font-semibold text-blue-600 hover:text-blue-500">
             Sign up
           </a>

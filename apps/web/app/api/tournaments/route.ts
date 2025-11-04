@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get organization context from headers (set by middleware)
-    const headersList = headers();
+    const headersList = await headers();
     const orgId = headersList.get('x-org-id');
 
     if (!orgId) {
@@ -123,14 +123,14 @@ export async function GET(request: NextRequest) {
       name: tournament.name,
       slug: tournament.name.toLowerCase().replace(/\s+/g, '-'),
       description: tournament.description,
-      status: tournament.status,
-      format: tournament.format,
+      status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
+      format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
       sport: 'pool' as const,
       gameType: 'eight-ball' as const,
       raceToWins: 7,
       maxPlayers: null,
       createdAt: tournament.createdAt.toISOString(),
-      updatedAt: tournament.updatedAt.toISOString(),
+      updatedAt: new Date().toISOString(), // TODO: Add updatedAt to schema
       startedAt: tournament.startedAt?.toISOString() ?? null,
       completedAt: tournament.completedAt?.toISOString() ?? null,
       createdBy: tournament.createdBy,
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get organization context and role from headers
-    const headersList = headers();
+    const headersList = await headers();
     const orgId = headersList.get('x-org-id');
     const userRole = headersList.get('x-user-role');
 
@@ -285,14 +285,14 @@ export async function POST(request: NextRequest) {
         name: tournament.name,
         slug,
         description: tournament.description,
-        status: tournament.status,
-        format: tournament.format,
+        status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
+        format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
         sport,
         gameType,
         raceToWins,
         maxPlayers: maxPlayers ?? null,
         createdAt: tournament.createdAt.toISOString(),
-        updatedAt: tournament.updatedAt.toISOString(),
+        updatedAt: new Date().toISOString(), // TODO: Add updatedAt to schema
         startedAt: tournament.startedAt?.toISOString() ?? null,
         completedAt: tournament.completedAt?.toISOString() ?? null,
         createdBy: tournament.createdBy,
