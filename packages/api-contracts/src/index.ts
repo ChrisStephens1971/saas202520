@@ -7,3 +7,6 @@
 
 // Tournament contracts
 export * from './tournaments';
+
+// Organization contracts
+export * from './organizations';
