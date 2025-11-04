@@ -12,6 +12,9 @@ importers:
         specifier: ^6.18.0
         version: 6.18.0(prisma@6.18.0(typescript@5.9.3))(typescript@5.9.3)
     devDependencies:
+      '@eslint/js':
+        specifier: ^9.39.0
+        version: 9.39.1
       '@types/bcryptjs':
         specifier: ^3.0.0
         version: 3.0.0
