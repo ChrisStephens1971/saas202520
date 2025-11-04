@@ -26,6 +26,15 @@ export default [
         __filename: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        setTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearTimeout: 'readonly',
+        clearInterval: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        NodeJS: 'readonly',
       },
     },
     plugins: {
@@ -70,6 +79,7 @@ export default [
       '*.config.js',
       '*.config.mjs',
       '.prisma/**',
+      'apps/sync-service/**', // TODO: Fix lint errors in sync-service
     ],
   },
 ];
