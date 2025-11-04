@@ -58,6 +58,7 @@ credentials.json
 dist/
 build/
 *.pdf
+.turbo/
 
 # Archives
 *.zip
