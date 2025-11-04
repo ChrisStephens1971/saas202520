@@ -89,8 +89,10 @@ export const CreateOrganizationRequestSchema = z.object({
   slug: z.string()
     .min(1, 'Slug is required')
     .max(100, 'Slug too long')
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens')
-    .transform(val => val.toLowerCase()),
+    .transform(val => val.toLowerCase())
+    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val), {
+      message: 'Slug must be lowercase alphanumeric with hyphens'
+    }),
 });
 
 export type CreateOrganizationRequest = z.infer<typeof CreateOrganizationRequestSchema>;
@@ -107,8 +109,8 @@ export const UpdateOrganizationRequestSchema = z.object({
   slug: z.string()
     .min(1)
     .max(100)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .transform(val => val.toLowerCase())
+    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
     .optional(),
 });
 

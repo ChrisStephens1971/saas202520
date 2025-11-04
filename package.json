@@ -9,9 +9,9 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "db:migrate": "pnpm --filter=@tournament/db migrate",
-    "db:studio": "pnpm --filter=@tournament/db studio",
-    "db:generate": "pnpm --filter=@tournament/db generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
