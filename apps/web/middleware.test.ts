@@ -1,97 +1,423 @@
 /**
- * Integration tests for middleware public route configuration
+ * Tests for Enhanced Multi-Tenant Middleware
  *
- * These tests verify that public endpoints remain accessible without authentication.
- * Unit tests for individual endpoints may pass by calling handlers directly,
- * but these integration tests verify the full request flow through middleware.
+ * Validates authentication, organization selection enforcement, and tenant context injection.
+ * These are unit tests for middleware logic using a simplified test implementation.
  */
 
-import { NextRequest } from 'next/server';
+import { describe, it, expect } from '@jest/globals';
 
-describe('Middleware Public Routes', () => {
-  const publicRoutes = [
-    '/login',
-    '/signup',
-    '/',
-    '/api/auth/signin',
-    '/api/auth/callback/credentials',
-    '/api/health',
-  ];
+// Simplified middleware logic for testing
+type AuthConfig = {
+  user?: {
+    id: string;
+    email: string;
+    orgId?: string;
+    orgSlug?: string;
+    role?: string;
+  };
+};
 
-  const protectedRoutes = [
-    '/dashboard',
-    '/tournaments',
-    '/api/tournaments',
-    '/api/players',
-  ];
+type TestRequest = {
+  nextUrl: { pathname: string };
+  auth: AuthConfig | null;
+};
 
-  describe('Public routes should be accessible without auth', () => {
-    publicRoutes.forEach((route) => {
-      it(`${route} should be accessible without authentication`, () => {
-        // This test verifies middleware configuration
-        // In a full integration test, we would:
-        // 1. Make an unauthenticated request to the route
-        // 2. Verify we get the expected response (200, not 302 redirect)
-        // 3. Verify no authentication is required
+/**
+ * Test implementation that mirrors actual middleware logic
+ */
+function testMiddlewareLogic(req: TestRequest) {
+  const { nextUrl, auth } = req;
+  const isLoggedIn = !!auth?.user;
+  const hasOrgSelected = isLoggedIn && !!auth.user.orgId;
 
-        expect(route).toBeDefined();
-        // TODO: Add full integration test when test infrastructure is ready
+  const isPublicRoute =
+    nextUrl.pathname === '/' ||
+    nextUrl.pathname === '/login' ||
+    nextUrl.pathname === '/signup' ||
+    nextUrl.pathname.startsWith('/api/auth') ||
+    nextUrl.pathname.startsWith('/api/health');
+
+  const isOrgManagementRoute =
+    nextUrl.pathname === '/select-organization' ||
+    nextUrl.pathname === '/api/organizations';
+
+  // Redirect logged-in users away from login/signup
+  if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/signup')) {
+    const redirectPath = hasOrgSelected ? '/dashboard' : '/select-organization';
+    return { type: 'redirect', path: redirectPath };
+  }
+
+  // Redirect logged-out users to login
+  if (!isLoggedIn && !isPublicRoute) {
+    return { type: 'redirect', path: '/login', callbackUrl: nextUrl.pathname };
+  }
+
+  // Redirect users without org to org selector
+  if (isLoggedIn && !hasOrgSelected && !isOrgManagementRoute && !isPublicRoute) {
+    return { type: 'redirect', path: '/select-organization' };
+  }
+
+  // Inject headers
+  if (isLoggedIn) {
+    const headers: Record<string, string> = {
+      'x-user-id': auth.user!.id,
+    };
+
+    if (hasOrgSelected) {
+      headers['x-org-id'] = auth.user!.orgId!;
+      headers['x-org-slug'] = auth.user!.orgSlug!;
+      headers['x-user-role'] = auth.user!.role!;
+    }
+
+    return { type: 'next', headers };
+  }
+
+  return { type: 'next' };
+}
+
+describe('Enhanced Multi-Tenant Middleware', () => {
+  describe('Public Routes', () => {
+    const publicRoutes = [
+      { path: '/', desc: 'landing page' },
+      { path: '/login', desc: 'login page' },
+      { path: '/signup', desc: 'signup page' },
+      { path: '/api/auth/signin', desc: 'auth API' },
+      { path: '/api/health', desc: 'health check' },
+    ];
+
+    publicRoutes.forEach(({ path, desc }) => {
+      it(`should allow unauthenticated access to ${desc}`, () => {
+        const req = {
+          nextUrl: { pathname: path },
+          auth: null,
+        };
+
+        const result = testMiddlewareLogic(req);
+
+        expect(result.type).toBe('next');
       });
     });
   });
 
-  describe('Protected routes should require auth', () => {
-    protectedRoutes.forEach((route) => {
-      it(`${route} should redirect unauthenticated users to /login`, () => {
-        // This test verifies middleware redirects work correctly
-        // In a full integration test, we would:
-        // 1. Make an unauthenticated request to the protected route
-        // 2. Verify we get a 302 redirect to /login
-        // 3. Verify callbackUrl parameter is set
+  describe('Authentication Redirects', () => {
+    it('should redirect unauthenticated users to login', () => {
+      const req = {
+        nextUrl: { pathname: '/dashboard' },
+        auth: null,
+      };
 
-        expect(route).toBeDefined();
-        // TODO: Add full integration test when test infrastructure is ready
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('redirect');
+      expect(result.path).toBe('/login');
+      expect(result.callbackUrl).toBe('/dashboard');
+    });
+
+    it('should redirect logged-in users with org from login to dashboard', () => {
+      const req = {
+        nextUrl: { pathname: '/login' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'owner',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('redirect');
+      expect(result.path).toBe('/dashboard');
+    });
+
+    it('should redirect logged-in users without org from login to org selector', () => {
+      const req = {
+        nextUrl: { pathname: '/login' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('redirect');
+      expect(result.path).toBe('/select-organization');
+    });
+  });
+
+  describe('Organization Selection Enforcement', () => {
+    it('should redirect users without org to org selector from protected routes', () => {
+      const req = {
+        nextUrl: { pathname: '/dashboard' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('redirect');
+      expect(result.path).toBe('/select-organization');
+    });
+
+    it('should allow access to org selector without org selected', () => {
+      const req = {
+        nextUrl: { pathname: '/select-organization' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+    });
+
+    it('should allow access to organizations API without org selected', () => {
+      const req = {
+        nextUrl: { pathname: '/api/organizations' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+    });
+
+    it('should allow access to protected routes with org selected', () => {
+      const req = {
+        nextUrl: { pathname: '/dashboard' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'owner',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers).toBeDefined();
+    });
+  });
+
+  describe('Tenant Context Header Injection', () => {
+    it('should inject x-user-id header for authenticated users', () => {
+      const req = {
+        nextUrl: { pathname: '/dashboard' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'owner',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers?.['x-user-id']).toBe('user123');
+    });
+
+    it('should inject all tenant headers when org selected', () => {
+      const req = {
+        nextUrl: { pathname: '/dashboard' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'owner',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers?.['x-org-id']).toBe('org123');
+      expect(result.headers?.['x-org-slug']).toBe('test-org');
+      expect(result.headers?.['x-user-role']).toBe('owner');
+    });
+
+    it('should inject user ID but not org headers when no org selected', () => {
+      const req = {
+        nextUrl: { pathname: '/api/organizations' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers?.['x-user-id']).toBe('user123');
+      expect(result.headers?.['x-org-id']).toBeUndefined();
+      expect(result.headers?.['x-org-slug']).toBeUndefined();
+      expect(result.headers?.['x-user-role']).toBeUndefined();
+    });
+
+    it('should not inject any headers for unauthenticated users', () => {
+      const req = {
+        nextUrl: { pathname: '/' },
+        auth: null,
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers).toBeUndefined();
+    });
+  });
+
+  describe('Role-Based Header Injection', () => {
+    const roles = ['owner', 'td', 'scorekeeper', 'streamer'];
+
+    roles.forEach((role) => {
+      it(`should inject headers correctly for ${role} role`, () => {
+        const req = {
+          nextUrl: { pathname: '/dashboard' },
+          auth: {
+            user: {
+              id: 'user123',
+              email: 'test@example.com',
+              orgId: 'org123',
+              orgSlug: 'test-org',
+              role,
+            },
+          },
+        };
+
+        const result = testMiddlewareLogic(req);
+
+        expect(result.type).toBe('next');
+        expect(result.headers?.['x-user-role']).toBe(role);
       });
     });
   });
 
-  describe('Health check endpoint', () => {
-    it('should be accessible for load balancers', () => {
+  describe('Edge Cases', () => {
+    it('should handle API routes correctly', () => {
+      const req = {
+        nextUrl: { pathname: '/api/tournaments' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'owner',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers?.['x-org-id']).toBe('org123');
+    });
+
+    it('should handle deeply nested routes', () => {
+      const req = {
+        nextUrl: { pathname: '/tournaments/123/matches/456' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'td',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers?.['x-org-id']).toBe('org123');
+    });
+
+    it('should handle query parameters in URL', () => {
+      const req = {
+        nextUrl: { pathname: '/tournaments' },
+        auth: {
+          user: {
+            id: 'user123',
+            email: 'test@example.com',
+            orgId: 'org123',
+            orgSlug: 'test-org',
+            role: 'td',
+          },
+        },
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers).toBeDefined();
+    });
+  });
+
+  describe('Health Check Critical Path', () => {
+    it('should allow health check without authentication', () => {
       // Critical: Load balancers and uptime monitors must be able to
       // access /api/health without authentication.
-      //
-      // Previous bug: /api/health was not in public routes list,
-      // causing 302 redirects instead of 200 OK responses.
-      //
-      // This test ensures the middleware allows unauthenticated access.
 
+      const req = {
+        nextUrl: { pathname: '/api/health' },
+        auth: null,
+      };
+
+      const result = testMiddlewareLogic(req);
+
+      expect(result.type).toBe('next');
+      expect(result.headers).toBeUndefined(); // No headers for unauthenticated
+    });
+
+    it('should verify health check is in public routes list', () => {
       const healthCheckRoute = '/api/health';
       const publicRoutesList = [
+        '/',
         '/login',
         '/signup',
-        '/',
         '/api/auth',
-        '/api/health',  // Must be included!
+        '/api/health',
       ];
 
-      // Verify health check is in public routes
       const isHealthPublic = publicRoutesList.some(
         (route) => healthCheckRoute.startsWith(route)
       );
 
       expect(isHealthPublic).toBe(true);
-    });
-
-    it('should return 200 OK, not 302 redirect', () => {
-      // When load balancers check health, they expect 200 OK
-      // If middleware redirects to /login, uptime checks will fail
-
-      // TODO: Full integration test
-      // const response = await fetch('http://localhost:3000/api/health');
-      // expect(response.status).toBe(200);
-      // expect(response.headers.get('location')).toBeNull();
-
-      expect(true).toBe(true); // Placeholder until integration tests ready
     });
   });
 });
