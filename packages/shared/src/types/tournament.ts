@@ -35,9 +35,9 @@ export interface SportConfig {
   id: string;
   name: string; // e.g., "Pool 8-Ball", "Pool 9-Ball"
   sport: Sport;
-  rules: Record<string, any>; // JSON schema for sport-specific rules
-  scoringSchema: Record<string, any>;
-  bracketTemplates: Record<string, any>;
+  rules: Record<string, unknown>; // JSON schema for sport-specific rules
+  scoringSchema: Record<string, unknown>;
+  bracketTemplates: Record<string, unknown>;
   version: string;
   createdAt: Date;
 }

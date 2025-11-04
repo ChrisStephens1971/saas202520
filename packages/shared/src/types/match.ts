@@ -49,7 +49,7 @@ export interface GameScore {
 export interface MatchUpdate {
   matchId: string;
   action: MatchAction;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   actor: string; // User ID who made the update
   device: string; // Device ID for conflict resolution
   timestamp: Date;
