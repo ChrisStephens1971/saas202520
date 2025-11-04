@@ -9,7 +9,7 @@ export enum LogLevel {
 }
 
 interface LogMetadata {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface LogEntry {
@@ -109,6 +109,7 @@ class Logger {
       this.prettyPrint(entry);
     } else {
       // In production, JSON for log aggregation
+      // eslint-disable-next-line no-console
       console.log(JSON.stringify(entry));
     }
 
@@ -149,9 +150,11 @@ class Logger {
       output += `)${reset}`;
     }
 
+    // eslint-disable-next-line no-console
     console.log(output);
 
     if (entry.metadata && Object.keys(entry.metadata).length > 0) {
+      // eslint-disable-next-line no-console
       console.log(`  ${dim}${JSON.stringify(entry.metadata, null, 2)}${reset}`);
     }
   }

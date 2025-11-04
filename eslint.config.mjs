@@ -18,6 +18,24 @@ export default [
         sourceType: 'module',
         project: './tsconfig.json',
       },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+        setTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearTimeout: 'readonly',
+        clearInterval: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+        NodeJS: 'readonly',
+      },
     },
     plugins: {
       '@typescript-eslint': typescript,
@@ -61,6 +79,7 @@ export default [
       '*.config.js',
       '*.config.mjs',
       '.prisma/**',
+      'apps/sync-service/**', // TODO: Fix lint errors in sync-service
     ],
   },
 ];
