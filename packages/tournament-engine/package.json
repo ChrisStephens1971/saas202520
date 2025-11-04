@@ -1,0 +1,21 @@
+{
+  "name": "@tournament/tournament-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tournament engine for bracket generation, match management, and table assignment",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "test": "vitest --run --passWithNoTests",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@tournament/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.24",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.5"
+  }
+}
