@@ -20,8 +20,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # Version auto-detected from package.json packageManager field
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -47,8 +46,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # Version auto-detected from package.json packageManager field
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -101,8 +99,7 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
+        # Version auto-detected from package.json packageManager field
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -130,39 +127,43 @@ jobs:
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
-        if: always()
+        if: hashFiles('coverage/lcov.info') != ''
+        continue-on-error: true
         with:
           files: ./coverage/lcov.info
           flags: unittests
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   # Docker build test (ensure Dockerfiles are valid)
-  docker-build:
-    name: Docker Build Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build sync-service Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/sync-service/Dockerfile
-          push: false
-          tags: tournament-sync-service:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build web app Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/web/Dockerfile
-          push: false
-          tags: tournament-web:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+  # Disabled until Dockerfiles are created
+  # TODO: Enable when containerization is ready (Sprint 2+)
+  # docker-build:
+  #   name: Docker Build Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #
+  #     - name: Build sync-service Docker image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         file: ./apps/sync-service/Dockerfile
+  #         push: false
+  #         tags: tournament-sync-service:test
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+  #
+  #     - name: Build web app Docker image
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: .
+  #         file: ./apps/web/Dockerfile
+  #         push: false
+  #         tags: tournament-web:test
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
