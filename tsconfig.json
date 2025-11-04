@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/web" },
+    { "path": "./apps/sync-service" },
+    { "path": "./packages/api-contracts" },
+    { "path": "./packages/shared" },
+    { "path": "./packages/crdt" },
+    { "path": "./packages/events" },
+    { "path": "./packages/validation" }
+  ]
+}
