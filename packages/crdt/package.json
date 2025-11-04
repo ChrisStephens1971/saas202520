@@ -7,7 +7,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "lint": "eslint src --ext .ts",
-    "test": "vitest"
+    "test": "vitest --run --passWithNoTests"
   },
   "dependencies": {
     "@tournament/shared": "workspace:*",
