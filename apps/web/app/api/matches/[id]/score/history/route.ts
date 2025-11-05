@@ -57,6 +57,7 @@ export async function GET(
     const response: ScoreHistoryResponse = {
       updates: updates.map(u => ({
         ...u,
+        action: u.action as 'increment_a' | 'increment_b' | 'undo',
         timestamp: u.timestamp,
         previousScore: u.previousScore as never,
         newScore: u.newScore as never,
