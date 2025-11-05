@@ -144,8 +144,8 @@ export async function POST(
           actor: session.user.id,
           device,
           action: player === 'A' ? 'increment_a' : 'increment_b',
-          previousScore: currentScore,
-          newScore,
+          previousScore: JSON.parse(JSON.stringify(currentScore)), // Ensure proper JSON serialization
+          newScore: JSON.parse(JSON.stringify(newScore)), // Ensure proper JSON serialization
         },
       });
 
@@ -153,7 +153,7 @@ export async function POST(
       const updatedMatch = await tx.match.update({
         where: { id: matchId },
         data: {
-          score: newScore,
+          score: JSON.parse(JSON.stringify(newScore)),
           state: matchComplete ? 'completed' : 'active',
           winnerId,
           completedAt: matchComplete ? new Date() : null,
@@ -171,8 +171,8 @@ export async function POST(
           payload: {
             matchId,
             player,
-            previousScore: currentScore,
-            newScore,
+            previousScore: JSON.parse(JSON.stringify(currentScore)),
+            newScore: JSON.parse(JSON.stringify(newScore)),
             matchComplete,
             winnerId,
           },
@@ -189,7 +189,7 @@ export async function POST(
             payload: {
               matchId,
               winnerId,
-              finalScore: newScore,
+              finalScore: JSON.parse(JSON.stringify(newScore)),
             },
           },
         });
@@ -216,8 +216,9 @@ export async function POST(
       scoreUpdate: {
         ...result.scoreUpdate,
         timestamp: result.scoreUpdate.timestamp,
-        previousScore: result.scoreUpdate.previousScore as never,
-        newScore: result.scoreUpdate.newScore as never,
+        action: result.scoreUpdate.action as 'increment_a' | 'increment_b' | 'undo',
+        previousScore: result.scoreUpdate.previousScore as unknown as MatchScore,
+        newScore: result.scoreUpdate.newScore as unknown as MatchScore,
       },
       validation,
     };
