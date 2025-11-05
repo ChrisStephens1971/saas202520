@@ -29,3 +29,40 @@ export {
   isTerminalState,
   getValidNextStates,
 } from './match/state-machine';
+
+// Match Progression
+export {
+  type MatchCompletionData,
+  type MatchProgressionResult,
+  completeMatch,
+  getReadyMatches,
+  getActiveMatches,
+  getCompletedMatches,
+  getPendingMatches,
+  getTournamentProgress,
+  getCurrentRound,
+  isTournamentComplete,
+  validateMatchCompletion,
+} from './match/progression';
+
+// Table Assignment
+export {
+  type TableStatus,
+  type Table,
+  type Match as TableMatch,
+  type AssignTableRequest,
+  type AssignTableResult,
+  TableAssignmentError,
+  TableAlreadyAssignedError,
+  TableNotAvailableError,
+  OptimisticLockError,
+  isTableAvailable,
+  validateTableAssignment,
+  createAssignmentMutation,
+  createUnassignmentMutation,
+  releaseTable,
+  blockTable,
+  getAvailableTables,
+  getTablesInUse,
+  findTableByMatch,
+} from './table/assignment';
