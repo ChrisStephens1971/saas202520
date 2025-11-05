@@ -24,7 +24,9 @@ function getStripe(): Stripe {
 // Export getter function for lazy initialization
 export const stripe = new Proxy({} as Stripe, {
   get: (_target, prop) => {
-    return (getStripe() as any)[prop];
+    const stripeInstance = getStripe();
+    const value = stripeInstance[prop as keyof Stripe];
+    return typeof value === 'function' ? value.bind(stripeInstance) : value;
   },
 });
 

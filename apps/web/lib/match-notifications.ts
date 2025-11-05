@@ -34,7 +34,6 @@ export async function notifyMatchReady(matchId: string): Promise<void> {
   }
 
   const orgId = match.tournament.orgId;
-  const tournamentName = match.tournament.name;
   const tableName = match.table.label;
 
   // Simple in-app notifications for both players (not using template system for match ready)

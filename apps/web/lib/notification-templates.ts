@@ -343,8 +343,10 @@ export async function saveCustomTemplate(
  * Get organization's custom templates
  */
 export async function getCustomTemplates(
-  orgId: string,
-  type?: NotificationTemplateType
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _orgId: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _type?: NotificationTemplateType
 ): Promise<NotificationTemplate[]> {
   // This would typically fetch from database
   // For now, return empty array
