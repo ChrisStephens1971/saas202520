@@ -17,6 +17,7 @@ import type {
   IncrementScoreResponse,
   MatchScore,
 } from '@tournament/shared/types/scoring';
+import { notifyMatchCompleted } from '@/lib/match-notifications';
 
 export async function POST(
   request: NextRequest,
@@ -196,6 +197,13 @@ export async function POST(
 
       return { updatedMatch, scoreUpdate };
     });
+
+    // NOTIFY-004: Send match completed notifications (non-blocking)
+    if (matchComplete) {
+      notifyMatchCompleted(matchId).catch((err) =>
+        console.error('Failed to send match completed notifications:', err)
+      );
+    }
 
     const response: IncrementScoreResponse = {
       match: {
