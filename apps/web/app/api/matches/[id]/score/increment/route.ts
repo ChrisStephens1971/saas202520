@@ -124,11 +124,7 @@ export async function POST(
     const gameNumber = (currentScore.games?.length || 0) + 1;
     newScore.games!.push({
       gameNumber,
-      winner: player === 'A' ? 'playerA' : 'playerB',
-      score: {
-        playerA: newScore.playerA,
-        playerB: newScore.playerB,
-      },
+      winner: player, // 'A' | 'B'
       timestamp: new Date(),
     });
 
