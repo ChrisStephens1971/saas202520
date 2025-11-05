@@ -153,7 +153,7 @@ export async function removeScorekeeperRole(
 /**
  * Get all scorekeepers for an organization
  */
-export async function getScorek eepers(orgId: string) {
+export async function getScorekeepers(orgId: string) {
   return await prisma.organizationMember.findMany({
     where: {
       orgId,
