@@ -1,6 +1,6 @@
 /**
  * Unit tests for notification service
- * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003, NOTIFY-008
+ * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003, NOTIFY-006, NOTIFY-008
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -16,6 +16,12 @@ import {
   type NotificationInput,
 } from '@/lib/notification-service';
 import { prisma } from '@/lib/prisma';
+
+// Mock Redis functions (using vi.hoisted for proper mock initialization)
+const { mockRedisGet, mockRedisSet } = vi.hoisted(() => ({
+  mockRedisGet: vi.fn(),
+  mockRedisSet: vi.fn(),
+}));
 
 // Mock Prisma
 vi.mock('@/lib/prisma', () => ({
@@ -73,7 +79,10 @@ vi.mock('nodemailer', () => ({
 
 // Mock Upstash Redis
 vi.mock('@upstash/redis', () => ({
-  Redis: vi.fn(() => ({})),
+  Redis: vi.fn(() => ({
+    get: mockRedisGet,
+    set: mockRedisSet,
+  })),
 }));
 
 vi.mock('@upstash/ratelimit', () => {
@@ -452,6 +461,337 @@ describe('notification-service', () => {
           timezone: 'America/Los_Angeles',
         },
       });
+    });
+  });
+
+  // ============================================================================
+  // SMS DEDUPLICATION TESTS (NOTIFY-006)
+  // ============================================================================
+
+  describe('SMS Deduplication', () => {
+    it('should send first SMS successfully', async () => {
+      const mockNotification = {
+        id: 'notif-sms-1',
+        orgId: 'org-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        status: 'pending',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const mockOrg = {
+        id: 'org-123',
+        twilioAccountSid: 'ACtest',
+        twilioAuthToken: 'test-token',
+        twilioPhoneNumber: '+15559876543',
+      };
+
+      const mockPlayer = {
+        id: 'player-123',
+        phone: '+15551234567',
+      };
+
+      const mockPreference = {
+        id: 'pref-123',
+        playerId: 'player-123',
+        smsEnabled: true,
+        smsOptedOut: false,
+        emailEnabled: true,
+        quietHoursStart: null,
+        quietHoursEnd: null,
+      };
+
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
+        mockNotification as never
+      );
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
+        mockOrg as never
+      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
+        mockPreference as never
+      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
+        mockPlayer as never
+      );
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
+        mockNotification as never
+      );
+
+      // Mock Redis: key doesn't exist (first send)
+      mockRedisGet.mockResolvedValueOnce(null);
+      mockRedisSet.mockResolvedValueOnce('OK');
+
+      const input: NotificationInput = {
+        orgId: 'org-123',
+        playerId: 'player-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const result = await sendNotification(input);
+
+      expect(result.success).toBe(true);
+      expect(mockRedisGet).toHaveBeenCalled();
+      expect(mockRedisSet).toHaveBeenCalledWith(
+        expect.stringContaining('sms:dedupe:+15551234567:'),
+        '1',
+        { ex: 120 }
+      );
+    });
+
+    it('should block duplicate SMS within 2-minute window', async () => {
+      const mockNotification = {
+        id: 'notif-sms-2',
+        orgId: 'org-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        status: 'pending',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const mockOrg = {
+        id: 'org-123',
+        twilioAccountSid: 'ACtest',
+        twilioAuthToken: 'test-token',
+        twilioPhoneNumber: '+15559876543',
+      };
+
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
+        mockNotification as never
+      );
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
+        mockOrg as never
+      );
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
+        mockNotification as never
+      );
+
+      // Mock Redis: key exists (duplicate detected)
+      mockRedisGet.mockResolvedValueOnce('1');
+
+      const input: NotificationInput = {
+        orgId: 'org-123',
+        playerId: 'player-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const result = await sendNotification(input);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Duplicate SMS detected within 2-minute window');
+      expect(mockRedisGet).toHaveBeenCalled();
+      expect(mockRedisSet).not.toHaveBeenCalled();
+    });
+
+    it('should allow different message to same recipient', async () => {
+      const mockNotification = {
+        id: 'notif-sms-3',
+        orgId: 'org-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        status: 'pending',
+        recipient: '+15551234567',
+        message: 'Different message',
+      };
+
+      const mockOrg = {
+        id: 'org-123',
+        twilioAccountSid: 'ACtest',
+        twilioAuthToken: 'test-token',
+        twilioPhoneNumber: '+15559876543',
+      };
+
+      const mockPlayer = {
+        id: 'player-123',
+        phone: '+15551234567',
+      };
+
+      const mockPreference = {
+        id: 'pref-123',
+        playerId: 'player-123',
+        smsEnabled: true,
+        smsOptedOut: false,
+        emailEnabled: true,
+        quietHoursStart: null,
+        quietHoursEnd: null,
+      };
+
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
+        mockNotification as never
+      );
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
+        mockOrg as never
+      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
+        mockPreference as never
+      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
+        mockPlayer as never
+      );
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
+        mockNotification as never
+      );
+
+      // Mock Redis: different message hash, key doesn't exist
+      mockRedisGet.mockResolvedValueOnce(null);
+      mockRedisSet.mockResolvedValueOnce('OK');
+
+      const input: NotificationInput = {
+        orgId: 'org-123',
+        playerId: 'player-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        recipient: '+15551234567',
+        message: 'Different message',
+      };
+
+      const result = await sendNotification(input);
+
+      expect(result.success).toBe(true);
+      expect(mockRedisSet).toHaveBeenCalled();
+    });
+
+    it('should allow same message to different recipient', async () => {
+      const mockNotification = {
+        id: 'notif-sms-4',
+        orgId: 'org-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        status: 'pending',
+        recipient: '+15559999999',
+        message: 'Your match is ready',
+      };
+
+      const mockOrg = {
+        id: 'org-123',
+        twilioAccountSid: 'ACtest',
+        twilioAuthToken: 'test-token',
+        twilioPhoneNumber: '+15559876543',
+      };
+
+      const mockPlayer = {
+        id: 'player-456',
+        phone: '+15559999999',
+      };
+
+      const mockPreference = {
+        id: 'pref-456',
+        playerId: 'player-456',
+        smsEnabled: true,
+        smsOptedOut: false,
+        emailEnabled: true,
+        quietHoursStart: null,
+        quietHoursEnd: null,
+      };
+
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
+        mockNotification as never
+      );
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
+        mockOrg as never
+      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
+        mockPreference as never
+      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
+        mockPlayer as never
+      );
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
+        mockNotification as never
+      );
+
+      // Mock Redis: different recipient, key doesn't exist
+      mockRedisGet.mockResolvedValueOnce(null);
+      mockRedisSet.mockResolvedValueOnce('OK');
+
+      const input: NotificationInput = {
+        orgId: 'org-123',
+        playerId: 'player-456',
+        type: 'sms',
+        channel: 'sms_twilio',
+        recipient: '+15559999999',
+        message: 'Your match is ready',
+      };
+
+      const result = await sendNotification(input);
+
+      expect(result.success).toBe(true);
+      expect(mockRedisSet).toHaveBeenCalled();
+    });
+
+    it('should fail gracefully if Redis is unavailable', async () => {
+      const mockNotification = {
+        id: 'notif-sms-5',
+        orgId: 'org-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        status: 'pending',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const mockOrg = {
+        id: 'org-123',
+        twilioAccountSid: 'ACtest',
+        twilioAuthToken: 'test-token',
+        twilioPhoneNumber: '+15559876543',
+      };
+
+      const mockPlayer = {
+        id: 'player-123',
+        phone: '+15551234567',
+      };
+
+      const mockPreference = {
+        id: 'pref-123',
+        playerId: 'player-123',
+        smsEnabled: true,
+        smsOptedOut: false,
+        emailEnabled: true,
+        quietHoursStart: null,
+        quietHoursEnd: null,
+      };
+
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
+        mockNotification as never
+      );
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
+        mockOrg as never
+      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
+        mockPreference as never
+      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
+        mockPlayer as never
+      );
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
+        mockNotification as never
+      );
+
+      // Mock Redis failure - should fail open and allow SMS
+      mockRedisGet.mockRejectedValueOnce(new Error('Redis connection failed'));
+      mockRedisSet.mockResolvedValueOnce('OK');
+
+      const input: NotificationInput = {
+        orgId: 'org-123',
+        playerId: 'player-123',
+        type: 'sms',
+        channel: 'sms_twilio',
+        recipient: '+15551234567',
+        message: 'Your match is ready',
+      };
+
+      const result = await sendNotification(input);
+
+      // Should succeed despite Redis failure (fail open)
+      expect(result.success).toBe(true);
     });
   });
 });

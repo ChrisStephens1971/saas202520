@@ -1,7 +1,7 @@
 /**
  * Notification Service
  * Handles in-app, email, and SMS notifications with rate limiting
- * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003, NOTIFY-008
+ * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003, NOTIFY-006, NOTIFY-008
  */
 
 import { prisma } from '@/lib/prisma';
@@ -71,6 +71,43 @@ const rateLimiters = {
     prefix: '@upstash/ratelimit/sms',
   }),
 };
+
+// ============================================================================
+// SMS DEDUPLICATION (NOTIFY-006)
+// ============================================================================
+
+/**
+ * Check if SMS was recently sent to prevent duplicates within 2-minute window
+ * Returns true if duplicate, false if okay to send
+ */
+async function checkSMSDuplicate(
+  recipient: string,
+  message: string
+): Promise<boolean> {
+  try {
+    // Create deduplication key from recipient + message hash
+    const messageHash = Buffer.from(message).toString('base64').substring(0, 32);
+    const dedupeKey = `sms:dedupe:${recipient}:${messageHash}`;
+
+    // Check if key exists in Redis
+    const existing = await redis.get(dedupeKey);
+
+    if (existing) {
+      // Duplicate detected within 2-minute window
+      return true;
+    }
+
+    // Set key with 2-minute TTL (120 seconds)
+    await redis.set(dedupeKey, '1', { ex: 120 });
+
+    // Not a duplicate
+    return false;
+  } catch (error) {
+    // If Redis fails, allow the SMS to proceed (fail open)
+    console.error('SMS deduplication check failed:', error);
+    return false;
+  }
+}
 
 // ============================================================================
 // TWILIO SETUP
@@ -239,6 +276,16 @@ async function sendSMSNotification(
         success: false,
         error: 'Rate limit exceeded for SMS notifications',
         rateLimited: true,
+      };
+    }
+
+    // Check for duplicate SMS within 2-minute window (NOTIFY-006)
+    const isDuplicate = await checkSMSDuplicate(input.recipient, input.message);
+    if (isDuplicate) {
+      return {
+        success: false,
+        error: 'Duplicate SMS detected within 2-minute window',
+        rateLimited: false,
       };
     }
 
