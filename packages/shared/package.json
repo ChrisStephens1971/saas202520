@@ -10,6 +10,30 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./types/scoring": {
+      "types": "./dist/types/scoring.d.ts",
+      "import": "./dist/types/scoring.js"
+    },
+    "./types/payment": {
+      "types": "./dist/types/payment.d.ts",
+      "import": "./dist/types/payment.js"
+    },
+    "./types/match": {
+      "types": "./dist/types/match.d.ts",
+      "import": "./dist/types/match.js"
+    },
+    "./types/tournament": {
+      "types": "./dist/types/tournament.d.ts",
+      "import": "./dist/types/tournament.js"
+    },
+    "./types/player": {
+      "types": "./dist/types/player.d.ts",
+      "import": "./dist/types/player.js"
+    },
+    "./types/organization": {
+      "types": "./dist/types/organization.d.ts",
+      "import": "./dist/types/organization.js"
     }
   },
   "scripts": {

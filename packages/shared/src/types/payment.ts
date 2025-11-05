@@ -186,7 +186,7 @@ export interface GetDisputeEvidenceResponse {
     timestamp: Date;
     actor: string;
     action: string;
-    details: any;
+    details: Record<string, unknown>;
   }[];
   summary: string; // Formatted text summary
 }

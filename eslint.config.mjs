@@ -80,6 +80,10 @@ export default [
       '*.config.mjs',
       '.prisma/**',
       'apps/sync-service/**', // TODO: Fix lint errors in sync-service
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/*.spec.ts',
+      '**/*.spec.tsx',
     ],
   },
 ];
