@@ -80,6 +80,13 @@ model Organization {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
+
+  // Notification settings (Sprint 4)
+  twilioAccountSid   String? @map("twilio_account_sid") // Encrypted
+  twilioAuthToken    String? @map("twilio_auth_token") // Encrypted
+  twilioPhoneNumber  String? @map("twilio_phone_number")
+  kioskPin           String? @map("kiosk_pin") // 4-digit PIN for kiosk mode
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -370,4 +377,53 @@ model Payout {
   @@index([playerId])
   @@index([status])
   @@map("payouts")
+}
+
+// ============================================================================
+// NOTIFICATIONS (Sprint 4)
+// ============================================================================
+
+model Notification {
+  id             String    @id @default(cuid())
+  orgId          String    @map("org_id") // Multi-tenant: organization scope
+  tournamentId   String?   @map("tournament_id") // Optional: notification context
+  playerId       String?   @map("player_id") // Optional: recipient if player-specific
+  type           String    // in_app, email, sms
+  channel        String    // in_app, email, sms_twilio
+  recipient      String    // Email address or phone number
+  subject        String?   // Optional: for email notifications
+  message        String    // Notification message body
+  status         String    // pending, sent, failed, delivered
+  sentAt         DateTime? @map("sent_at")
+  deliveredAt    DateTime? @map("delivered_at")
+  errorMessage   String?   @map("error_message")
+  metadata       Json?     // Additional data (e.g., Twilio message SID, retry count)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([orgId])
+  @@index([tournamentId])
+  @@index([playerId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id                String    @id @default(cuid())
+  playerId          String    @unique @map("player_id") // One preference per player
+  smsEnabled        Boolean   @default(true) @map("sms_enabled")
+  emailEnabled      Boolean   @default(true) @map("email_enabled")
+  smsOptedOut       Boolean   @default(false) @map("sms_opted_out") // User sent STOP
+  smsOptedOutAt     DateTime? @map("sms_opted_out_at")
+  quietHoursStart   String?   @map("quiet_hours_start") // Time format: "22:00"
+  quietHoursEnd     String?   @map("quiet_hours_end") // Time format: "08:00"
+  timezone          String?   // e.g., "America/New_York"
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@index([playerId])
+  @@index([smsOptedOut])
+  @@map("notification_preferences")
 }
