@@ -14,8 +14,7 @@ import type { ChipConfig } from '@/lib/chip-tracker';
 describe('Chip Format Integration Tests', () => {
   let testTournamentId: string;
   let testOrgId: string;
-  let testPlayerIds: string[] = [];
-  let testMatchId: string;
+  const testPlayerIds: string[] = [];
 
   const chipConfig: ChipConfig = {
     winnerChips: 3,
@@ -47,7 +46,7 @@ describe('Chip Format Integration Tests', () => {
         format: 'chip_format',
         startDate: new Date(),
         status: 'active',
-        chipConfig: chipConfig as any,
+        chipConfig: chipConfig as unknown as Record<string, unknown>,
       },
     });
     testTournamentId = tournament.id;
