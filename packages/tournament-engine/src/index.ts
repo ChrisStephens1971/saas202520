@@ -23,6 +23,19 @@ export {
   advanceWinner as advanceWinnerDE,
 } from './bracket-generator/double-elimination';
 
+export {
+  generateRoundRobinBracket,
+  type RoundRobinResult,
+  type StandingsEntry,
+  calculateStandings,
+  recordMatchResult,
+  getMatchesForPlayer,
+  getMatchesInRound as getMatchesInRoundRR,
+  isTournamentComplete as isTournamentCompleteRR,
+  getTournamentProgress as getTournamentProgressRR,
+  getCurrentRound as getCurrentRoundRR,
+} from './bracket-generator/round-robin';
+
 // Match State Machine
 export {
   type MatchStateTransition,
