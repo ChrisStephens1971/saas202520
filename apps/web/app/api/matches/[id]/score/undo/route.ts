@@ -97,7 +97,7 @@ export async function POST(
 
     // Get the most recent update to undo
     const updateToUndo = recentUpdates[0];
-    const previousScore = updateToUndo.previousScore as MatchScore;
+    const previousScore = updateToUndo.previousScore as unknown as MatchScore;
 
     // Perform undo in transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -115,8 +115,8 @@ export async function POST(
           actor: session.user.id,
           device,
           action: 'undo',
-          previousScore: updateToUndo.newScore,
-          newScore: previousScore,
+          previousScore: JSON.parse(JSON.stringify(updateToUndo.newScore)),
+          newScore: JSON.parse(JSON.stringify(previousScore)),
         },
       });
 
@@ -124,7 +124,7 @@ export async function POST(
       const updatedMatch = await tx.match.update({
         where: { id: matchId },
         data: {
-          score: previousScore,
+          score: JSON.parse(JSON.stringify(previousScore)),
           state: 'active', // Revert to active if was completed
           winnerId: null, // Clear winner
           completedAt: null, // Clear completion time
@@ -142,8 +142,8 @@ export async function POST(
           payload: {
             matchId,
             undoneUpdateId: updateToUndo.id,
-            previousScore: updateToUndo.newScore,
-            restoredScore: previousScore,
+            previousScore: JSON.parse(JSON.stringify(updateToUndo.newScore)),
+            restoredScore: JSON.parse(JSON.stringify(previousScore)),
           },
         },
       });
@@ -174,8 +174,9 @@ export async function POST(
       undoneUpdates: [{
         ...updateToUndo,
         timestamp: updateToUndo.timestamp,
-        previousScore: updateToUndo.previousScore as never,
-        newScore: updateToUndo.newScore as never,
+        action: updateToUndo.action as 'increment_a' | 'increment_b' | 'undo',
+        previousScore: updateToUndo.previousScore as unknown as MatchScore,
+        newScore: updateToUndo.newScore as unknown as MatchScore,
       }],
       canUndo,
     };
