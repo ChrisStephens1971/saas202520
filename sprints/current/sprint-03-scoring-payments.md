@@ -2,7 +2,8 @@
 
 **Sprint Duration:** Week 5-6 (Dec 2 - Dec 13, 2025)
 **Sprint Goal:** Build mobile-first scoring interface and Stripe payment integration
-**Status:** Planning
+**Status:** ✅ Completed
+**Completion Date:** November 5, 2025
 
 ---
 
@@ -34,27 +35,27 @@ Success means tournaments can handle money transparently and scores are entered 
 
 | Story | Description | Estimate | Assignee | Status |
 |-------|-------------|----------|----------|--------|
-| **SCORE-001** | Mobile-first scoring card UI | L | TBD | 📋 Todo |
-| **SCORE-002** | Race-to validation logic | M | TBD | 📋 Todo |
-| **SCORE-003** | Illegal score guards | M | TBD | 📋 Todo |
-| **SCORE-004** | Hill-hill sanity checks | S | TBD | 📋 Todo |
-| **SCORE-005** | Undo functionality (last 3 actions) | M | TBD | 📋 Todo |
-| **SCORE-006** | Scoring audit trail integration | M | TBD | 📋 Todo |
-| **PAY-001** | Stripe Connect onboarding flow | L | TBD | 📋 Todo |
-| **PAY-002** | Entry fee collection | M | TBD | 📋 Todo |
-| **PAY-003** | Payment receipt generation | M | TBD | 📋 Todo |
-| **PAY-004** | Refund workflow | M | TBD | 📋 Todo |
-| **PAY-005** | Payout calculator (prizes, side pots) | L | TBD | 📋 Todo |
-| **PAY-006** | Payout ledger model | M | TBD | 📋 Todo |
-| **PAY-007** | Printable payout sheet (PDF) | M | TBD | 📋 Todo |
+| **SCORE-001** | Mobile-first scoring card UI | L | Claude | ✅ Done |
+| **SCORE-002** | Race-to validation logic | M | Claude | ✅ Done |
+| **SCORE-003** | Illegal score guards | M | Claude | ✅ Done |
+| **SCORE-004** | Hill-hill sanity checks | S | Claude | ✅ Done |
+| **SCORE-005** | Undo functionality (last 3 actions) | M | Claude | ✅ Done |
+| **SCORE-006** | Scoring audit trail integration | M | Claude | ✅ Done |
+| **PAY-001** | Stripe Connect onboarding flow | L | Claude | ✅ Done |
+| **PAY-002** | Entry fee collection | M | Claude | ✅ Done |
+| **PAY-003** | Payment receipt generation | M | Claude | ✅ Done |
+| **PAY-004** | Refund workflow | M | Claude | ✅ Done |
+| **PAY-005** | Payout calculator (prizes, side pots) | L | Claude | ✅ Done |
+| **PAY-006** | Payout ledger model | M | Claude | ✅ Done |
+| **PAY-007** | Printable payout sheet (PDF) | M | Claude | ✅ Done |
 
 ### Medium Priority (Should Complete)
 
 | Story | Description | Estimate | Assignee | Status |
 |-------|-------------|----------|----------|--------|
-| **SCORE-007** | Scorekeeper role & permissions | S | TBD | 📋 Todo |
-| **PAY-008** | Dispute evidence pack (from audit log) | M | TBD | 📋 Todo |
-| **TEST-004** | Payment workflow tests (Stripe test mode) | M | TBD | 📋 Todo |
+| **SCORE-007** | Scorekeeper role & permissions | S | Claude | ✅ Done |
+| **PAY-008** | Dispute evidence pack (from audit log) | M | Claude | ✅ Done |
+| **TEST-004** | Payment workflow tests (Stripe test mode) | M | Claude | ✅ Done |
 
 ---
 

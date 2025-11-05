@@ -1,0 +1,87 @@
+/**
+ * GET /api/payments/stripe/account?orgId={id}
+ * Get Stripe Connect account status
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next/auth';
+import { authOptions } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { getConnectAccount } from '@/lib/stripe';
+import type { GetStripeAccountStatusResponse } from '@repo/shared/types/payment';
+
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const orgId = searchParams.get('orgId');
+
+    if (!orgId) {
+      return NextResponse.json(
+        { error: 'Missing required parameter: orgId' },
+        { status: 400 }
+      );
+    }
+
+    // Verify user has access to this organization
+    const orgMember = await prisma.organizationMember.findFirst({
+      where: {
+        orgId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!orgMember) {
+      return NextResponse.json(
+        { error: 'Unauthorized: You do not have access to this organization' },
+        { status: 403 }
+      );
+    }
+
+    // Get Stripe account from database
+    const stripeAccount = await prisma.stripeAccount.findUnique({
+      where: { orgId },
+    });
+
+    if (!stripeAccount) {
+      return NextResponse.json(
+        {
+          account: null,
+          requiresOnboarding: true,
+        },
+        { status: 200 }
+      );
+    }
+
+    // Fetch latest status from Stripe
+    const stripeAccountDetails = await getConnectAccount(stripeAccount.stripeAccountId);
+
+    // Update database with latest status
+    const updatedAccount = await prisma.stripeAccount.update({
+      where: { orgId },
+      data: {
+        onboardingComplete: stripeAccountDetails.details_submitted || false,
+        chargesEnabled: stripeAccountDetails.charges_enabled || false,
+        payoutsEnabled: stripeAccountDetails.payouts_enabled || false,
+        detailsSubmitted: stripeAccountDetails.details_submitted || false,
+      },
+    });
+
+    const response: GetStripeAccountStatusResponse = {
+      account: updatedAccount as any,
+      requiresOnboarding: !updatedAccount.onboardingComplete,
+    };
+
+    return NextResponse.json(response, { status: 200 });
+  } catch (error: any) {
+    console.error('Error fetching Stripe account status:', error);
+    return NextResponse.json(
+      { error: error.message || 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}

@@ -10,14 +10,18 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@stripe/stripe-js": "^8.3.0",
     "@tournament/api-contracts": "workspace:*",
     "@tournament/shared": "workspace:*",
+    "@types/pdfkit": "^0.17.3",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
     "next": "16.0.1",
     "next-auth": "5.0.0-beta.30",
+    "pdfkit": "^0.17.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "stripe": "^19.2.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
