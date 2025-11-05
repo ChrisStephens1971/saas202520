@@ -2,7 +2,7 @@
 
 **Sprint Duration:** Week 7-8 (Dec 16 - Dec 27, 2025)
 **Sprint Goal:** Implement SMS/email notifications, chip format, and kiosk mode
-**Status:** Planning
+**Status:** 🟡 In Progress (Notifications: 89% Complete)
 
 ---
 
@@ -34,15 +34,15 @@ Success means tournaments run smoother with automated player notifications and s
 
 | Story | Description | Estimate | Assignee | Status |
 |-------|-------------|----------|----------|--------|
-| **NOTIFY-001** | In-app notification system | M | TBD | 📋 Todo |
-| **NOTIFY-002** | Email notification templates | M | TBD | 📋 Todo |
-| **NOTIFY-003** | SMS integration (Twilio) | M | TBD | 📋 Todo |
-| **NOTIFY-004** | SMS "table now" trigger | M | TBD | 📋 Todo |
-| **NOTIFY-005** | SMS "up in 5" trigger | M | TBD | 📋 Todo |
+| **NOTIFY-001** | In-app notification system | M | Claude | ✅ Complete |
+| **NOTIFY-002** | Email notification templates | M | Claude | ✅ Complete |
+| **NOTIFY-003** | SMS integration (Twilio) | M | Claude | ✅ Complete |
+| **NOTIFY-004** | SMS "table now" trigger | M | Claude | ✅ Complete |
+| **NOTIFY-005** | SMS "up in 5" trigger | M | Claude | ✅ Complete |
 | **NOTIFY-006** | SMS dedupe logic (2-minute window) | M | TBD | 📋 Todo |
-| **NOTIFY-007** | SMS throttling & rate limits | S | TBD | 📋 Todo |
-| **NOTIFY-008** | SMS consent & opt-in tracking | M | TBD | 📋 Todo |
-| **NOTIFY-009** | STOP/HELP SMS handling | S | TBD | 📋 Todo |
+| **NOTIFY-007** | SMS throttling & rate limits | S | Claude | ✅ Complete |
+| **NOTIFY-008** | SMS consent & opt-in tracking | M | Claude | ✅ Complete |
+| **NOTIFY-009** | STOP/HELP SMS handling | S | Claude | ✅ Complete |
 | **CHIP-001** | Chip format queue engine | L | TBD | 📋 Todo |
 | **CHIP-002** | Chip counter tracking | M | TBD | 📋 Todo |
 | **CHIP-003** | Finals cutoff logic (top N by chips) | M | TBD | 📋 Todo |
