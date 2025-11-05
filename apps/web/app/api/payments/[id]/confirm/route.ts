@@ -53,16 +53,19 @@ export async function POST(
       );
     }
 
-    // Retrieve payment intent from Stripe
+    // Retrieve payment intent from Stripe (expand charges to get receipt URL)
     const paymentIntent = await stripe.paymentIntents.retrieve(
       stripePaymentIntentId,
+      {
+        expand: ['latest_charge'],
+      },
       {
         stripeAccount: payment.stripeAccount.stripeAccountId,
       }
     );
 
     // Update payment status based on Stripe status
-    let status: string;
+    let status: 'succeeded' | 'failed' | 'pending' | 'refunded' | 'partially_refunded';
     if (paymentIntent.status === 'succeeded') {
       status = 'succeeded';
     } else if (paymentIntent.status === 'canceled') {
@@ -75,9 +78,15 @@ export async function POST(
 
     // Get receipt URL if payment succeeded
     let receiptUrl: string | undefined;
-    if (paymentIntent.status === 'succeeded' && paymentIntent.charges.data[0]) {
-      const chargeId = paymentIntent.charges.data[0].id;
-      receiptUrl = paymentIntent.charges.data[0].receipt_url || getReceiptUrl(chargeId);
+    if (paymentIntent.status === 'succeeded' && paymentIntent.latest_charge) {
+      // latest_charge is expanded, so it's a full Charge object
+      const charge = typeof paymentIntent.latest_charge === 'string'
+        ? await stripe.charges.retrieve(paymentIntent.latest_charge, {
+            stripeAccount: payment.stripeAccount.stripeAccountId,
+          })
+        : paymentIntent.latest_charge;
+
+      receiptUrl = charge.receipt_url || getReceiptUrl(charge.id);
     }
 
     // Update payment in database
@@ -92,6 +101,11 @@ export async function POST(
     const response: ConfirmPaymentResponse = {
       payment: {
         ...updatedPayment,
+        status: updatedPayment.status as 'succeeded' | 'failed' | 'pending' | 'refunded' | 'partially_refunded',
+        purpose: updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
+        description: updatedPayment.description ?? undefined,
+        receiptUrl: updatedPayment.receiptUrl ?? undefined,
+        playerId: updatedPayment.playerId ?? undefined,
         createdAt: updatedPayment.createdAt,
         updatedAt: updatedPayment.updatedAt,
       },

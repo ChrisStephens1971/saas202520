@@ -14,7 +14,8 @@
       "Bash(powershell -Command \"& {$config = Get-Content ''C:\\devop\\.config\\godaddy-api.json'' | ConvertFrom-Json; Write-Host ''API Key:'' $config.apiKey; Write-Host ''Base URL:'' $config.baseUrl}\")",
       "WebFetch(domain:whoapi.com)",
       "WebFetch(domain:who.is)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []
