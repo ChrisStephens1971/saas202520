@@ -133,6 +133,10 @@ model Tournament {
   startedAt           DateTime? @map("started_at")
   completedAt         DateTime? @map("completed_at")
 
+  // Chip Format Configuration (Sprint 4 - CHIP-001, CHIP-002, CHIP-003)
+  chipConfig          Json? @map("chip_config") // { winnerChips, loserChips, qualificationRounds, finalsCount, pairingStrategy, tiebreaker }
+  qualificationLocked Boolean @default(false) @map("qualification_locked") // True after finals cutoff applied
+
   // Relations
   organization   Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
   players        Player[]
@@ -184,6 +188,11 @@ model Player {
   checkedInAt  DateTime? @map("checked_in_at")
   createdAt    DateTime @default(now()) @map("created_at")
 
+  // Chip Format Fields (Sprint 4 - CHIP-002)
+  chipCount    Int      @default(0) @map("chip_count") // Current chip total
+  matchesPlayed Int     @default(0) @map("matches_played") // Qualification matches completed
+  chipHistory  Json?    @map("chip_history") // Array of chip awards: [{ matchId, chipsEarned, timestamp }]
+
   // Relations
   tournament       Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   matchesAsPlayerA Match[]    @relation("PlayerA")
@@ -191,6 +200,7 @@ model Player {
 
   @@index([tournamentId])
   @@index([status])
+  @@index([chipCount]) // For chip standings queries
   @@map("players")
 }
 
