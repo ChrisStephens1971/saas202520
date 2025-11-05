@@ -18,6 +18,8 @@ import type {
   MatchScore,
 } from '@tournament/shared/types/scoring';
 import { notifyMatchCompleted } from '@/lib/match-notifications';
+import { awardChips } from '@/lib/chip-tracker';
+import type { ChipConfig } from '@/lib/chip-tracker';
 
 export async function POST(
   request: NextRequest,
@@ -203,6 +205,21 @@ export async function POST(
       notifyMatchCompleted(matchId).catch((err) =>
         console.error('Failed to send match completed notifications:', err)
       );
+
+      // CHIP-002: Award chips for chip format tournaments (non-blocking)
+      if (match.tournament.format === 'chip_format' && winnerId) {
+        const chipConfig = match.tournament.chipConfig as ChipConfig;
+        if (chipConfig) {
+          const loserId =
+            winnerId === match.playerAId ? match.playerBId : match.playerAId;
+
+          if (loserId) {
+            awardChips(matchId, winnerId, loserId, chipConfig).catch((err) =>
+              console.error('Failed to award chips:', err)
+            );
+          }
+        }
+      }
     }
 
     const response: IncrementScoreResponse = {
