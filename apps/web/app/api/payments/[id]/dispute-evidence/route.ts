@@ -26,16 +26,7 @@ export async function GET(
       where: { id: paymentId },
       include: {
         refunds: true,
-        stripeAccount: {
-          include: {
-            OrganizationMember: {
-              where: {
-                userId: session.user.id,
-                role: { in: ['owner', 'td'] },
-              },
-            },
-          },
-        },
+        stripeAccount: true,
       },
     });
 
@@ -46,8 +37,16 @@ export async function GET(
       );
     }
 
-    // Verify user has permission
-    if (!payment.stripeAccount.OrganizationMember || payment.stripeAccount.OrganizationMember.length === 0) {
+    // Verify user has permission (must be owner or TD of the organization)
+    const membership = await prisma.organizationMember.findFirst({
+      where: {
+        orgId: payment.stripeAccount.orgId,
+        userId: session.user.id,
+        role: { in: ['owner', 'td'] },
+      },
+    });
+
+    if (!membership) {
       return NextResponse.json(
         { error: 'Unauthorized: You must be an owner or TD to access dispute evidence' },
         { status: 403 }
@@ -154,6 +153,7 @@ function generateDisputeSummary(
 
   if (refunds.length > 0) {
     lines.push('=== REFUNDS ===');
+    const totalRefunded = refunds.reduce((sum, refund) => sum + refund.amount, 0);
     refunds.forEach((refund, i) => {
       lines.push(`Refund ${i + 1}:`);
       lines.push(`  ID: ${refund.id}`);
@@ -163,7 +163,7 @@ function generateDisputeSummary(
       lines.push(`  Processed: ${refund.createdAt.toLocaleString()}`);
       lines.push('');
     });
-    lines.push(`Total Refunded: $${(payment.refundedAmount / 100).toFixed(2)}`);
+    lines.push(`Total Refunded: $${(totalRefunded / 100).toFixed(2)}`);
     lines.push('');
   }
 
