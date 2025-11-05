@@ -4,6 +4,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ---
 
+## ⚠️ STOP! READ THIS BEFORE CODING ⚠️
+
+**🔴 IMPLEMENTATION REQUEST DETECTED?**
+
+**Before you write ANY code, you MUST read:**
+
+👉 **`WORKFLOW-ENFORCEMENT.md`** 👈
+
+This file contains the **mandatory workflow** for all implementation tasks.
+
+**Key Rules:**
+1. ❌ NEVER code entire features yourself
+2. ✅ ALWAYS use parallel agent execution
+3. ✅ ALWAYS delegate to specialized agents
+4. ✅ Read WORKFLOW-ENFORCEMENT.md for the complete process
+
+---
+
 ## 🎯 Role Division
 
 **You (the user) make decisions:**
