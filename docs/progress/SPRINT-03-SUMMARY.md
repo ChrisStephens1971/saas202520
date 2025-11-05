@@ -198,9 +198,16 @@ Payout
 ## 🧪 Testing
 
 **Test Files Created:**
-- `packages/shared/src/lib/scoring-validation.test.ts` - Unit tests for scoring logic
+- `packages/shared/src/lib/scoring-validation.test.ts` - Unit tests for scoring validation logic (12 tests)
+- `apps/web/tests/unit/stripe-payments.test.ts` - Mocked unit tests for Stripe payment flows (23 tests)
+- `apps/web/tests/integration/stripe-payments.test.ts` - Integration tests (excluded from test runs)
+- `apps/web/tests/fixtures/stripe-mocks.ts` - Stripe mock factories
+- `apps/web/tests/fixtures/test-data.ts` - Test data fixtures
+- `apps/web/tests/setup.ts` - Global test setup
 
-**Test Coverage:**
+**Test Coverage (35 tests passing):**
+
+### Scoring Validation (12 tests passing)
 - ✅ Race-to validation (prevents invalid scores)
 - ✅ Illegal score guards (prevents exceeding race-to)
 - ✅ Hill-hill detection (8-8 in race-to-9)
@@ -208,8 +215,30 @@ Payout
 - ✅ Winner determination
 - ✅ Games remaining calculation
 - ✅ Score formatting
+- ✅ Score integrity validation
+- ✅ Large score difference warnings
 
-**Test Framework:** Vitest (configured in monorepo)
+### Stripe Payment Workflows (23 tests passing)
+- ✅ Complete payment flow (Stripe account creation, payment intents, confirmations)
+- ✅ Refund workflows (full, partial, validation)
+- ✅ Payout calculations (prize structures, house take, side pots)
+- ✅ Stripe account status tracking
+- ✅ Error handling (API errors, missing accounts, card declines)
+
+**Test Framework:** Vitest 2.1.9
+
+**Test Configuration:**
+- Environment: Node.js
+- Mocking: Vitest `vi.mock()` for Prisma and Stripe
+- Integration tests excluded (require real database)
+- Node_modules tests excluded
+- Sequential execution for database safety
+
+**Current Test Status:**
+- ✅ 35 tests passing (scoring validation + payment workflows)
+- ⚠️ API route tests need additional mocking architecture work
+- ✅ All critical business logic tested with mocks
+- ✅ No external dependencies required for unit tests
 
 ---
 

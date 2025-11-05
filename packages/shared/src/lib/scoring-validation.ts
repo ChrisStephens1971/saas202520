@@ -119,7 +119,7 @@ export function validateScoreIntegrity(
 
   // Warn if score difference is large (possible data entry error)
   const scoreDiff = Math.abs(score.playerA - score.playerB);
-  if (scoreDiff >= raceTo - 1 && !isMatchComplete(score, raceTo)) {
+  if (scoreDiff >= raceTo - 2 && !isMatchComplete(score, raceTo)) {
     warnings.push(`Large score difference (${scoreDiff}). Please verify.`);
   }
 
