@@ -8,3 +8,4 @@ export * from './types/organization';
 export * from './constants';
 export * from './lib/prisma';
 export * from './lib/logger';
+export * from './lib/scoring-validation';

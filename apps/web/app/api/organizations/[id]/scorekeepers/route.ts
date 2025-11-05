@@ -6,10 +6,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/auth';
+import { auth } from '@/auth';
 import {
-  getScorekepers,
+  getScorekeepers,
   assignScorekeeperRole,
   removeScorekeeperRole,
   canManageTournament,
@@ -20,7 +19,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -36,7 +35,7 @@ export async function GET(
       );
     }
 
-    const scorekeepers = await getScorekepers(orgId);
+    const scorekeepers = await getScorekeepers(orgId);
 
     return NextResponse.json({ scorekeepers }, { status: 200 });
   } catch (error: unknown) {
@@ -54,7 +53,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -108,7 +107,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
