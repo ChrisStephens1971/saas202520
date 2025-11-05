@@ -11,7 +11,7 @@ import type { CreateRefundRequest, CreateRefundResponse } from '@repo/shared/typ
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -19,7 +19,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const paymentId = params.id;
+    const { id: paymentId } = await params;
     const body: CreateRefundRequest = await request.json();
     const { amount, reason } = body;
 

@@ -13,7 +13,7 @@ import type { GetPayoutsResponse, MarkPayoutPaidRequest, MarkPayoutPaidResponse 
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -21,7 +21,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
 
     // Verify tournament exists and user has access
     const tournament = await prisma.tournament.findUnique({
@@ -92,7 +92,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -100,7 +100,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
     const body: MarkPayoutPaidRequest & { payoutId: string } = await request.json();
     const { payoutId, notes } = body;
 

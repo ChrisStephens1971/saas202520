@@ -20,7 +20,7 @@ import type {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -28,7 +28,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const matchId = params.id;
+    const { id: matchId } = await params;
     const body: IncrementScoreRequest = await request.json();
     const { player, device, rev } = body;
 

@@ -11,7 +11,7 @@ import type { GetDisputeEvidenceResponse } from '@repo/shared/types/payment';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -19,7 +19,7 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const paymentId = params.id;
+    const { id: paymentId } = await params;
 
     // Get payment with related data
     const payment = await prisma.payment.findUnique({
