@@ -206,16 +206,21 @@ describe('rate-limiter', () => {
 
   describe('isWithinQuietHours', () => {
     it('should return true when current time is within quiet hours', async () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+
+      // Set quiet hours to cover current hour
+      // Use 22:00 to 08:00 (cross-midnight range)
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce({
         playerId: 'player-123',
-        quietHoursStart: '00:00', // Midnight
-        quietHoursEnd: '23:59', // Almost midnight
+        quietHoursStart: currentHour < 8 ? '22:00' : `${currentHour}:00`,
+        quietHoursEnd: currentHour < 8 ? '08:00' : `${currentHour + 1}:00`,
         timezone: 'America/New_York',
       } as never);
 
       const result = await isWithinQuietHours('player-123');
 
-      expect(result).toBe(true); // Should always be true with this range
+      expect(result).toBe(true);
     });
 
     it('should return false when no quiet hours set', async () => {
@@ -262,6 +267,9 @@ describe('rate-limiter', () => {
     });
 
     it('should block SMS when within quiet hours', async () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+
       // Mock opt-out check (not opted out)
       vi.mocked(prisma.notificationPreference.findUnique)
         .mockResolvedValueOnce({
@@ -271,8 +279,8 @@ describe('rate-limiter', () => {
         // Mock quiet hours check (within quiet hours)
         .mockResolvedValueOnce({
           playerId: 'player-123',
-          quietHoursStart: '00:00',
-          quietHoursEnd: '23:59',
+          quietHoursStart: currentHour < 8 ? '22:00' : `${currentHour}:00`,
+          quietHoursEnd: currentHour < 8 ? '08:00' : `${currentHour + 1}:00`,
           timezone: 'America/New_York',
         } as never);
 

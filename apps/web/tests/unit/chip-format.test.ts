@@ -346,11 +346,10 @@ describe('Chip Format System - Chip Tracker', () => {
 
       const stats = await getChipStats('tournament-1');
 
-      expect(stats.totalChips).toBe(45); // 20 + 15 + 10
-      expect(stats.averageChips).toBe(15); // 45 / 3
+      expect(stats.totalPlayers).toBe(3);
+      expect(stats.averageChips).toBe(15); // (20 + 15 + 10) / 3
       expect(stats.maxChips).toBe(20);
       expect(stats.minChips).toBe(10);
-      expect(stats.activePlayers).toBe(3);
     });
   });
 });
@@ -373,6 +372,17 @@ describe('Chip Format System - Queue Management', () => {
   describe('assignNextMatch', () => {
     it('should assign match from available players in queue', async () => {
       const { prisma } = await import('@/lib/prisma');
+
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+        tables: [],
+      } as never);
 
       // Mock available players
       vi.mocked(prisma.player.findMany).mockResolvedValue([
@@ -438,6 +448,17 @@ describe('Chip Format System - Queue Management', () => {
     it('should return null when not enough players available', async () => {
       const { prisma } = await import('@/lib/prisma');
 
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+        tables: [],
+      } as never);
+
       // Mock only one player available
       vi.mocked(prisma.player.findMany).mockResolvedValue([
         {
@@ -468,6 +489,17 @@ describe('Chip Format System - Queue Management', () => {
   describe('assignMatchBatch', () => {
     it('should assign multiple matches from queue', async () => {
       const { prisma } = await import('@/lib/prisma');
+
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+        tables: [],
+      } as never);
 
       // Mock available players (4 players = 2 matches)
       vi.mocked(prisma.player.findMany).mockResolvedValue([
@@ -579,6 +611,16 @@ describe('Chip Format System - Queue Management', () => {
     it('should calculate queue statistics', async () => {
       const { prisma } = await import('@/lib/prisma');
 
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+      } as never);
+
       // Mock players in queue
       vi.mocked(prisma.player.findMany).mockResolvedValue([
         {
@@ -674,6 +716,16 @@ describe('Chip Format System - Finals Cutoff', () => {
   describe('applyFinalsCutoff', () => {
     it('should select top N players for finals', async () => {
       const { prisma } = await import('@/lib/prisma');
+
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+      } as never);
 
       // Mock 6 players, top 4 should qualify
       vi.mocked(prisma.player.findMany).mockResolvedValue([
@@ -782,6 +834,16 @@ describe('Chip Format System - Finals Cutoff', () => {
 
     it('should handle ties at cutoff line', async () => {
       const { prisma } = await import('@/lib/prisma');
+
+      // Mock tournament
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValue({
+        id: 'tournament-1',
+        name: 'Test Tournament',
+        orgId: 'org-1',
+        format: 'chip_format',
+        startDate: new Date(),
+        status: 'active',
+      } as never);
 
       // Players with tie at 4th place (both have 12 chips)
       vi.mocked(prisma.player.findMany).mockResolvedValue([
