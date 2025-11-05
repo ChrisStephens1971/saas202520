@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { createPaymentIntent } from '@/lib/stripe';
-import type { CreatePaymentIntentRequest, CreatePaymentIntentResponse } from '@repo/shared/types/payment';
+import type { CreatePaymentIntentRequest, CreatePaymentIntentResponse } from '@tournament/shared/types/payment';
 
 export async function POST(request: NextRequest) {
   try {

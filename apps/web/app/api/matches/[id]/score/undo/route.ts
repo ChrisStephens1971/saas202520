@@ -12,7 +12,7 @@ import type {
   UndoScoreRequest,
   UndoScoreResponse,
   MatchScore,
-} from '@repo/shared/types/scoring';
+} from '@tournament/shared/types/scoring';
 
 const MAX_UNDO_DEPTH = 3;
 

@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import type { ScoreHistoryResponse } from '@repo/shared/types/scoring';
+import type { ScoreHistoryResponse } from '@tournament/shared/types/scoring';
 
 export async function GET(
   request: NextRequest,

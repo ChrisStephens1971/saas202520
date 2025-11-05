@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { createConnectAccount, createAccountLink } from '@/lib/stripe';
-import type { CreateStripeAccountRequest, CreateStripeAccountResponse } from '@repo/shared/types/payment';
+import type { CreateStripeAccountRequest, CreateStripeAccountResponse } from '@tournament/shared/types/payment';
 
 export async function POST(request: NextRequest) {
   try {

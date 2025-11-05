@@ -16,7 +16,7 @@ import type {
   IncrementScoreRequest,
   IncrementScoreResponse,
   MatchScore,
-} from '@repo/shared/types/scoring';
+} from '@tournament/shared/types/scoring';
 
 export async function POST(
   request: NextRequest,

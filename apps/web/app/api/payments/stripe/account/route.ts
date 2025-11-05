@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { getConnectAccount } from '@/lib/stripe';
-import type { GetStripeAccountStatusResponse } from '@repo/shared/types/payment';
+import type { GetStripeAccountStatusResponse } from '@tournament/shared/types/payment';
 
 export async function GET(request: NextRequest) {
   try {

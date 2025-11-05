@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import type { GetPayoutsResponse, MarkPayoutPaidRequest, MarkPayoutPaidResponse } from '@repo/shared/types/payment';
+import type { GetPayoutsResponse, MarkPayoutPaidRequest, MarkPayoutPaidResponse } from '@tournament/shared/types/payment';
 
 export async function GET(
   request: NextRequest,
