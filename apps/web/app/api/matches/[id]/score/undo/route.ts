@@ -166,7 +166,7 @@ export async function POST(
     const response: UndoScoreResponse = {
       match: {
         id: result.updatedMatch.id,
-        score: result.updatedMatch.score as MatchScore,
+        score: result.updatedMatch.score as unknown as MatchScore,
         state: result.updatedMatch.state,
         winnerId: result.updatedMatch.winnerId || undefined,
         rev: result.updatedMatch.rev,

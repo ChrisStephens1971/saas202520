@@ -88,7 +88,7 @@ export async function POST(
       );
     }
 
-    const currentScore = match.score as MatchScore;
+    const currentScore = match.score as unknown as MatchScore;
     const raceTo = currentScore.raceTo || 9; // Default race-to-9
 
     // SCORE-002, SCORE-003, SCORE-004: Validate score increment
@@ -204,7 +204,7 @@ export async function POST(
     const response: IncrementScoreResponse = {
       match: {
         id: result.updatedMatch.id,
-        score: result.updatedMatch.score as MatchScore,
+        score: result.updatedMatch.score as unknown as MatchScore,
         state: result.updatedMatch.state,
         winnerId: result.updatedMatch.winnerId || undefined,
         rev: result.updatedMatch.rev,
