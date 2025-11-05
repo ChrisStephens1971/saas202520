@@ -14,3 +14,18 @@ export {
   getMatchesInRound,
   advanceWinner,
 } from './bracket-generator/single-elimination';
+
+// Match State Machine
+export {
+  type MatchStateTransition,
+  type TransitionContext,
+  VALID_TRANSITIONS,
+  MatchStateTransitionError,
+  isValidTransition,
+  validateTransition,
+  validateTransitionPrerequisites,
+  transitionMatchState,
+  getStateDescription,
+  isTerminalState,
+  getValidNextStates,
+} from './match/state-machine';
