@@ -29,7 +29,7 @@ type Organization = {
 
 export default function SelectOrganizationPage() {
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { update } = useSession();
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +85,7 @@ export default function SelectOrganizationPage() {
 
       // Redirect to dashboard
       router.push('/dashboard');
-    } catch (err) {
+    } catch {
       setError('Failed to select organization');
     }
   };

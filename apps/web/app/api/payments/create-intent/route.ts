@@ -103,15 +103,20 @@ export async function POST(request: NextRequest) {
     });
 
     const response: CreatePaymentIntentResponse = {
-      payment: payment as any,
+      payment: {
+        ...payment,
+        createdAt: payment.createdAt,
+        updatedAt: payment.updatedAt,
+      },
       clientSecret: paymentIntent.client_secret!,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating payment intent:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

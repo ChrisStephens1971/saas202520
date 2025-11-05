@@ -153,7 +153,11 @@ export async function POST(
     const houseTake = totalCollected - totalPayouts;
 
     const response: CalculatePayoutsResponse = {
-      payouts: createdPayouts as any,
+      payouts: createdPayouts.map(p => ({
+        ...p,
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+      })),
       summary: {
         totalCollected,
         totalPayouts,
@@ -166,10 +170,11 @@ export async function POST(
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error calculating payouts:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

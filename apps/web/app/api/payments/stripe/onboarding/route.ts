@@ -62,10 +62,6 @@ export async function POST(request: NextRequest) {
       stripeAccountId = existingAccount.stripeAccountId;
     } else {
       // Create new Stripe Connect account
-      const org = await prisma.organization.findUnique({
-        where: { id: orgId },
-      });
-
       const stripeAccount = await createConnectAccount({
         country: country || 'US',
         businessType: 'individual', // Can be customized
@@ -104,15 +100,20 @@ export async function POST(request: NextRequest) {
     });
 
     const response: CreateStripeAccountResponse = {
-      account: account as any,
+      account: account ? {
+        ...account,
+        createdAt: account.createdAt,
+        updatedAt: account.updatedAt,
+      } : null!,
       onboardingUrl: accountLink.url,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating Stripe onboarding:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

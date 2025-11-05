@@ -91,15 +91,20 @@ export async function POST(
     });
 
     const response: ConfirmPaymentResponse = {
-      payment: updatedPayment as any,
+      payment: {
+        ...updatedPayment,
+        createdAt: updatedPayment.createdAt,
+        updatedAt: updatedPayment.updatedAt,
+      },
       receiptUrl,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error confirming payment:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

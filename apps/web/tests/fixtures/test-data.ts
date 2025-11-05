@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Test Data Fixtures
  * Reusable test data for integration tests

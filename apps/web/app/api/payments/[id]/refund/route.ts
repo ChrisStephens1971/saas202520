@@ -115,15 +115,24 @@ export async function POST(
     });
 
     const response: CreateRefundResponse = {
-      refund: result.refund as any,
-      payment: result.updatedPayment as any,
+      refund: {
+        ...result.refund,
+        createdAt: result.refund.createdAt,
+        updatedAt: result.refund.updatedAt,
+      },
+      payment: {
+        ...result.updatedPayment,
+        createdAt: result.updatedPayment.createdAt,
+        updatedAt: result.updatedPayment.updatedAt,
+      },
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating refund:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

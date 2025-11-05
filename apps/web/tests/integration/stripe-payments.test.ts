@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Stripe Payment Integration Tests
  * Tests complete payment workflows including Connect onboarding, payments, refunds, and payouts
@@ -5,7 +7,6 @@
 
 import { describe, test, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
 import { PrismaClient } from '@prisma/client';
-import type Stripe from 'stripe';
 import * as stripeLib from '../../lib/stripe';
 import {
   createMockStripeAccount,

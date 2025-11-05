@@ -72,15 +72,20 @@ export async function GET(
     };
 
     const response: GetPayoutsResponse = {
-      payouts: payouts as any,
+      payouts: payouts.map(p => ({
+        ...p,
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+      })),
       summary,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching payouts:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }
@@ -157,14 +162,19 @@ export async function PUT(
     });
 
     const response: MarkPayoutPaidResponse = {
-      payout: updatedPayout as any,
+      payout: {
+        ...updatedPayout,
+        createdAt: updatedPayout.createdAt,
+        updatedAt: updatedPayout.updatedAt,
+      },
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error marking payout as paid:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Tests for Organization Selection Page
  *
@@ -12,7 +13,7 @@ jest.mock('next-auth/react');
 jest.mock('next/navigation');
 
 const mockUseSession = require('next-auth/react').useSession as jest.Mock;
-const mockUseRouter = require('next/navigation').useRouter as jest.Mock;
+const _mockUseRouter = require('next/navigation').useRouter as jest.Mock;
 
 describe('Select Organization Page', () => {
   beforeEach(() => {

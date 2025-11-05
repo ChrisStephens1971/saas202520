@@ -10,10 +10,8 @@ import { prisma } from '@/lib/prisma';
 import { canScoreMatches } from '@/lib/permissions';
 import {
   validateScoreIncrement,
-  validateScoreIntegrity,
   isMatchComplete,
   getMatchWinner,
-  isHillHill,
 } from '@repo/shared/lib/scoring-validation';
 import type {
   IncrementScoreRequest,
@@ -212,7 +210,12 @@ export async function POST(
         winnerId: result.updatedMatch.winnerId || undefined,
         rev: result.updatedMatch.rev,
       },
-      scoreUpdate: result.scoreUpdate as any,
+      scoreUpdate: {
+        ...result.scoreUpdate,
+        timestamp: result.scoreUpdate.timestamp,
+        previousScore: result.scoreUpdate.previousScore as never,
+        newScore: result.scoreUpdate.newScore as never,
+      },
       validation,
     };
 

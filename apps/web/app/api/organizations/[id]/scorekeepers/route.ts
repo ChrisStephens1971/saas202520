@@ -39,10 +39,11 @@ export async function GET(
     const scorekeepers = await getScorekepers(orgId);
 
     return NextResponse.json({ scorekeepers }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching scorekeepers:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }
@@ -92,10 +93,11 @@ export async function POST(
       { message: 'Scorekeeper role assigned successfully' },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error assigning scorekeeper role:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }
@@ -129,10 +131,11 @@ export async function DELETE(
       { message: 'Scorekeeper role removed successfully' },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error removing scorekeeper role:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

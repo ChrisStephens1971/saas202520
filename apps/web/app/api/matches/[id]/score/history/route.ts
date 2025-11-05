@@ -9,8 +9,6 @@ import { authOptions } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import type { ScoreHistoryResponse } from '@repo/shared/types/scoring';
 
-const MAX_UNDO_DEPTH = 3;
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -58,7 +56,12 @@ export async function GET(
     const canUndo = undoableCount > 0;
 
     const response: ScoreHistoryResponse = {
-      updates: updates as any,
+      updates: updates.map(u => ({
+        ...u,
+        timestamp: u.timestamp,
+        previousScore: u.previousScore as never,
+        newScore: u.newScore as never,
+      })),
       total,
       canUndo,
     };

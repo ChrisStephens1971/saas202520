@@ -75,7 +75,7 @@ export async function GET(
       timestamp: Date;
       actor: string;
       action: string;
-      details: any;
+      details: Record<string, unknown>;
     }[] = [];
 
     // Add tournament events
@@ -107,29 +107,38 @@ export async function GET(
     auditTrail.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
     // Generate summary text
-    const summary = generateDisputeSummary(payment as any, payment.refunds as any[], auditTrail);
+    const summary = generateDisputeSummary(payment, payment.refunds, auditTrail);
 
     const response: GetDisputeEvidenceResponse = {
-      payment: payment as any,
-      refunds: payment.refunds as any,
+      payment: {
+        ...payment,
+        createdAt: payment.createdAt,
+        updatedAt: payment.updatedAt,
+      },
+      refunds: payment.refunds.map((r: typeof payment.refunds[0]) => ({
+        ...r,
+        createdAt: r.createdAt,
+        updatedAt: r.updatedAt,
+      })),
       auditTrail,
       summary,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching dispute evidence:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }
 }
 
 function generateDisputeSummary(
-  payment: any,
-  refunds: any[],
-  auditTrail: any[]
+  payment: { id: string; stripePaymentIntent: string; amount: number; currency: string; status: string; purpose: string; description?: string | null; createdAt: Date },
+  refunds: Array<{ id: string; amount: number; reason: string; status: string; stripeRefundId: string; createdAt: Date }>,
+  auditTrail: Array<{ timestamp: Date; actor: string; action: string }>
 ): string {
   const lines: string[] = [];
 

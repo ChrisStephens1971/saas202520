@@ -72,15 +72,20 @@ export async function GET(request: NextRequest) {
     });
 
     const response: GetStripeAccountStatusResponse = {
-      account: updatedAccount as any,
+      account: {
+        ...updatedAccount,
+        createdAt: updatedAccount.createdAt,
+        updatedAt: updatedAccount.updatedAt,
+      },
       requiresOnboarding: !updatedAccount.onboardingComplete,
     };
 
     return NextResponse.json(response, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching Stripe account status:', error);
+    const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: message },
       { status: 500 }
     );
   }

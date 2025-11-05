@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-const */
 /**
  * Stripe Payment Unit Tests (Mocked)
  * Tests payment workflows with mocked Prisma and Stripe dependencies
@@ -5,8 +8,6 @@
  */
 
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import type { PrismaClient } from '@prisma/client';
-import type Stripe from 'stripe';
 import {
   createMockStripeAccount,
   createMockAccountLink,

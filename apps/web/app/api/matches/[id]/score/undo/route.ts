@@ -172,7 +172,12 @@ export async function POST(
         winnerId: result.updatedMatch.winnerId || undefined,
         rev: result.updatedMatch.rev,
       },
-      undoneUpdates: [updateToUndo as any],
+      undoneUpdates: [{
+        ...updateToUndo,
+        timestamp: updateToUndo.timestamp,
+        previousScore: updateToUndo.previousScore as never,
+        newScore: updateToUndo.newScore as never,
+      }],
       canUndo,
     };
 

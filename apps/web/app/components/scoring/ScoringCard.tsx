@@ -49,20 +49,20 @@ export function ScoringCard({
 
   // Check undo availability on mount
   useEffect(() => {
+    async function checkUndoAvailability() {
+      try {
+        const response = await fetch(`/api/matches/${matchId}/score/history?limit=1`);
+        if (response.ok) {
+          const data = await response.json();
+          setCanUndo(data.canUndo);
+        }
+      } catch (err) {
+        console.error('Error checking undo availability:', err);
+      }
+    }
+
     checkUndoAvailability();
   }, [matchId]);
-
-  async function checkUndoAvailability() {
-    try {
-      const response = await fetch(`/api/matches/${matchId}/score/history?limit=1`);
-      if (response.ok) {
-        const data = await response.json();
-        setCanUndo(data.canUndo);
-      }
-    } catch (err) {
-      console.error('Error checking undo availability:', err);
-    }
-  }
 
   async function incrementScore(player: 'A' | 'B') {
     // Check for hill-hill situation
@@ -115,8 +115,9 @@ export function ScoringCard({
       // Close hill-hill modal if open
       setShowHillHillConfirm(false);
       setPendingPlayer(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(message);
       console.error('Error incrementing score:', err);
     } finally {
       setIsLoading(false);
@@ -154,8 +155,9 @@ export function ScoringCard({
 
       // Notify parent
       onScoreUpdate?.(data.match.score);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(message);
       console.error('Error undoing score:', err);
     } finally {
       setIsLoading(false);

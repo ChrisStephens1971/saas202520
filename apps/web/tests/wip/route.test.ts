@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Tests for Tournament Detail Endpoints
  *
@@ -11,9 +12,9 @@ jest.mock('@/auth');
 jest.mock('next/headers');
 jest.mock('@tournament/shared');
 
-const mockAuth = require('@/auth').auth as jest.Mock;
-const mockHeaders = require('next/headers').headers as jest.Mock;
-const mockPrisma = require('@tournament/shared').prisma;
+const _mockAuth = require('@/auth').auth as jest.Mock;
+const _mockHeaders = require('next/headers').headers as jest.Mock;
+const _mockPrisma = require('@tournament/shared').prisma;
 
 describe('GET /api/tournaments/:id', () => {
   beforeEach(() => {
