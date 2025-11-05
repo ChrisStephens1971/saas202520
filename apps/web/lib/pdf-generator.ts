@@ -112,9 +112,9 @@ export function generatePayoutSheet(data: PayoutSheetData): Promise<Buffer> {
 
       // Footer
       doc.moveDown(3);
-      doc.fontSize(8).text(
+      doc.fontSize(8).fillColor('#666666').text(
         'This document is for recordkeeping purposes only. All amounts are in USD.',
-        { align: 'center', color: '#666666' }
+        { align: 'center' }
       );
 
       // Finalize PDF

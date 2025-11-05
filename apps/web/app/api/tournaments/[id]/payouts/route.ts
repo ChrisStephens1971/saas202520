@@ -72,7 +72,16 @@ export async function GET(
 
     const response: GetPayoutsResponse = {
       payouts: payouts.map(p => ({
-        ...p,
+        id: p.id,
+        tournamentId: p.tournamentId,
+        playerId: p.playerId,
+        placement: p.placement,
+        amount: p.amount,
+        source: p.source as 'prize_pool' | 'side_pot',
+        status: p.status as 'pending' | 'paid' | 'voided',
+        paidAt: p.paidAt ?? undefined,
+        paidBy: p.paidBy ?? undefined,
+        notes: p.notes ?? undefined,
         createdAt: p.createdAt,
         updatedAt: p.updatedAt,
       })),
@@ -117,22 +126,6 @@ export async function PUT(
         id: payoutId,
         tournamentId,
       },
-      include: {
-        tournament: {
-          include: {
-            organization: {
-              include: {
-                members: {
-                  where: {
-                    userId: session.user.id,
-                    role: { in: ['owner', 'td'] },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
     });
 
     if (!payout) {
@@ -142,7 +135,29 @@ export async function PUT(
       );
     }
 
-    if (payout.tournament.organization.members.length === 0) {
+    // Get tournament to verify permissions
+    const tournament = await prisma.tournament.findUnique({
+      where: { id: tournamentId },
+      select: { orgId: true },
+    });
+
+    if (!tournament) {
+      return NextResponse.json(
+        { error: 'Tournament not found' },
+        { status: 404 }
+      );
+    }
+
+    // Verify user has permission (must be owner or TD of the organization)
+    const membership = await prisma.organizationMember.findFirst({
+      where: {
+        orgId: tournament.orgId,
+        userId: session.user.id,
+        role: { in: ['owner', 'td'] },
+      },
+    });
+
+    if (!membership) {
       return NextResponse.json(
         { error: 'Unauthorized: You must be an owner or TD to mark payouts as paid' },
         { status: 403 }
@@ -162,7 +177,16 @@ export async function PUT(
 
     const response: MarkPayoutPaidResponse = {
       payout: {
-        ...updatedPayout,
+        id: updatedPayout.id,
+        tournamentId: updatedPayout.tournamentId,
+        playerId: updatedPayout.playerId,
+        placement: updatedPayout.placement,
+        amount: updatedPayout.amount,
+        source: updatedPayout.source as 'prize_pool' | 'side_pot',
+        status: updatedPayout.status as 'pending' | 'paid' | 'voided',
+        paidAt: updatedPayout.paidAt ?? undefined,
+        paidBy: updatedPayout.paidBy ?? undefined,
+        notes: updatedPayout.notes ?? undefined,
         createdAt: updatedPayout.createdAt,
         updatedAt: updatedPayout.updatedAt,
       },

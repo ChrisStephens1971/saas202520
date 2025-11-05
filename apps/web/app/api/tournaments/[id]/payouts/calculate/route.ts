@@ -153,7 +153,16 @@ export async function POST(
 
     const response: CalculatePayoutsResponse = {
       payouts: createdPayouts.map(p => ({
-        ...p,
+        id: p.id,
+        tournamentId: p.tournamentId,
+        playerId: p.playerId,
+        placement: p.placement,
+        amount: p.amount,
+        source: p.source as 'prize_pool' | 'side_pot',
+        status: p.status as 'pending' | 'paid' | 'voided',
+        paidAt: p.paidAt ?? undefined,
+        paidBy: p.paidBy ?? undefined,
+        notes: p.notes ?? undefined,
         createdAt: p.createdAt,
         updatedAt: p.updatedAt,
       })),

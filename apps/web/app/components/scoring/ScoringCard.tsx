@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import type { MatchScore } from '@tournament/shared/types/scoring';
-import { isHillHill, formatScore } from '@tournament/shared/lib/scoring-validation';
+import { isHillHill, formatScore } from '@tournament/shared';
 
 interface ScoringCardProps {
   matchId: string;

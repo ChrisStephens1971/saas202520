@@ -119,7 +119,7 @@ export async function sendNotification(
         subject: input.subject,
         message: input.message,
         status: 'pending',
-        metadata: input.metadata || {},
+        metadata: (input.metadata || {}) as any,
       },
     });
 

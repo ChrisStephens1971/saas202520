@@ -103,7 +103,18 @@ export async function POST(request: NextRequest) {
 
     const response: CreatePaymentIntentResponse = {
       payment: {
-        ...payment,
+        id: payment.id,
+        tournamentId: payment.tournamentId,
+        playerId: payment.playerId ?? undefined,
+        stripeAccountId: payment.stripeAccountId,
+        stripePaymentIntent: payment.stripePaymentIntent,
+        amount: payment.amount,
+        currency: payment.currency,
+        status: payment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        purpose: payment.purpose as 'entry_fee' | 'side_pot' | 'addon',
+        description: payment.description ?? undefined,
+        refundedAmount: payment.refundedAmount,
+        receiptUrl: payment.receiptUrl ?? undefined,
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
       },

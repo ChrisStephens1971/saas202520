@@ -82,7 +82,7 @@ export async function GET(
         timestamp: event.timestamp,
         actor: event.actor,
         action: event.kind,
-        details: event.payload,
+        details: (event.payload as Record<string, unknown>) ?? {},
       });
     });
 
@@ -109,12 +109,29 @@ export async function GET(
 
     const response: GetDisputeEvidenceResponse = {
       payment: {
-        ...payment,
+        id: payment.id,
+        tournamentId: payment.tournamentId,
+        playerId: payment.playerId ?? undefined,
+        stripeAccountId: payment.stripeAccountId,
+        stripePaymentIntent: payment.stripePaymentIntent,
+        amount: payment.amount,
+        currency: payment.currency,
+        status: payment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        purpose: payment.purpose as 'entry_fee' | 'side_pot' | 'addon',
+        description: payment.description ?? undefined,
+        refundedAmount: payment.refundedAmount,
+        receiptUrl: payment.receiptUrl ?? undefined,
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
       },
-      refunds: payment.refunds.map((r: typeof payment.refunds[0]) => ({
-        ...r,
+      refunds: payment.refunds.map((r) => ({
+        id: r.id,
+        paymentId: r.paymentId,
+        stripeRefundId: r.stripeRefundId,
+        amount: r.amount,
+        reason: r.reason as 'duplicate' | 'fraudulent' | 'requested_by_customer',
+        status: r.status as 'pending' | 'succeeded' | 'failed' | 'cancelled',
+        processedBy: r.processedBy,
         createdAt: r.createdAt,
         updatedAt: r.updatedAt,
       })),
@@ -136,7 +153,7 @@ export async function GET(
 function generateDisputeSummary(
   payment: { id: string; stripePaymentIntent: string; amount: number; currency: string; status: string; purpose: string; description?: string | null; createdAt: Date },
   refunds: Array<{ id: string; amount: number; reason: string; status: string; stripeRefundId: string; createdAt: Date }>,
-  auditTrail: Array<{ timestamp: Date; actor: string; action: string }>
+  auditTrail: Array<{ timestamp: Date; actor: string; action: string; details: Record<string, unknown> }>
 ): string {
   const lines: string[] = [];
 
@@ -171,7 +188,7 @@ function generateDisputeSummary(
   auditTrail.forEach(event => {
     lines.push(`[${event.timestamp.toLocaleString()}] ${event.action}`);
     lines.push(`  Actor: ${event.actor}`);
-    if (event.details) {
+    if (Object.keys(event.details).length > 0) {
       lines.push(`  Details: ${JSON.stringify(event.details, null, 2)}`);
     }
     lines.push('');

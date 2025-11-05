@@ -92,8 +92,8 @@ export async function GET(
     // Generate PDF
     const pdfBuffer = await generatePayoutSheet(pdfData);
 
-    // Return PDF as response
-    return new NextResponse(pdfBuffer, {
+    // Return PDF as response (convert Buffer to Uint8Array for NextResponse)
+    return new NextResponse(new Uint8Array(pdfBuffer), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',

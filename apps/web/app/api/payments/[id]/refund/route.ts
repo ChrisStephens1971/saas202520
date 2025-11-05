@@ -34,16 +34,7 @@ export async function POST(
     const payment = await prisma.payment.findUnique({
       where: { id: paymentId },
       include: {
-        stripeAccount: {
-          include: {
-            OrganizationMember: {
-              where: {
-                userId: session.user.id,
-                role: { in: ['owner', 'td'] },
-              },
-            },
-          },
-        },
+        stripeAccount: true,
       },
     });
 
@@ -54,8 +45,16 @@ export async function POST(
       );
     }
 
-    // Verify user has permission (must be owner or TD)
-    if (!payment.stripeAccount.OrganizationMember || payment.stripeAccount.OrganizationMember.length === 0) {
+    // Verify user has permission (must be owner or TD of the organization)
+    const membership = await prisma.organizationMember.findFirst({
+      where: {
+        orgId: payment.stripeAccount.orgId,
+        userId: session.user.id,
+        role: { in: ['owner', 'td'] },
+      },
+    });
+
+    if (!membership) {
       return NextResponse.json(
         { error: 'Unauthorized: You must be an owner or TD to process refunds' },
         { status: 403 }
@@ -115,12 +114,29 @@ export async function POST(
 
     const response: CreateRefundResponse = {
       refund: {
-        ...result.refund,
+        id: result.refund.id,
+        paymentId: result.refund.paymentId,
+        stripeRefundId: result.refund.stripeRefundId,
+        amount: result.refund.amount,
+        reason: result.refund.reason as 'duplicate' | 'fraudulent' | 'requested_by_customer',
+        status: result.refund.status as 'pending' | 'succeeded' | 'failed' | 'cancelled',
+        processedBy: result.refund.processedBy,
         createdAt: result.refund.createdAt,
         updatedAt: result.refund.updatedAt,
       },
       payment: {
-        ...result.updatedPayment,
+        id: result.updatedPayment.id,
+        tournamentId: result.updatedPayment.tournamentId,
+        playerId: result.updatedPayment.playerId ?? undefined,
+        stripeAccountId: result.updatedPayment.stripeAccountId,
+        stripePaymentIntent: result.updatedPayment.stripePaymentIntent,
+        amount: result.updatedPayment.amount,
+        currency: result.updatedPayment.currency,
+        status: result.updatedPayment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        purpose: result.updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
+        description: result.updatedPayment.description ?? undefined,
+        refundedAmount: result.updatedPayment.refundedAmount,
+        receiptUrl: result.updatedPayment.receiptUrl ?? undefined,
         createdAt: result.updatedPayment.createdAt,
         updatedAt: result.updatedPayment.updatedAt,
       },

@@ -72,7 +72,15 @@ export async function GET(request: NextRequest) {
 
     const response: GetStripeAccountStatusResponse = {
       account: {
-        ...updatedAccount,
+        id: updatedAccount.id,
+        orgId: updatedAccount.orgId,
+        stripeAccountId: updatedAccount.stripeAccountId,
+        onboardingComplete: updatedAccount.onboardingComplete,
+        chargesEnabled: updatedAccount.chargesEnabled,
+        payoutsEnabled: updatedAccount.payoutsEnabled,
+        detailsSubmitted: updatedAccount.detailsSubmitted,
+        country: updatedAccount.country ?? undefined,
+        currency: updatedAccount.currency ?? 'usd',
         createdAt: updatedAccount.createdAt,
         updatedAt: updatedAccount.updatedAt,
       },

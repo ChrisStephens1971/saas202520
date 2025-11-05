@@ -100,7 +100,15 @@ export async function POST(request: NextRequest) {
 
     const response: CreateStripeAccountResponse = {
       account: account ? {
-        ...account,
+        id: account.id,
+        orgId: account.orgId,
+        stripeAccountId: account.stripeAccountId,
+        onboardingComplete: account.onboardingComplete,
+        chargesEnabled: account.chargesEnabled,
+        payoutsEnabled: account.payoutsEnabled,
+        detailsSubmitted: account.detailsSubmitted,
+        country: account.country ?? undefined,
+        currency: account.currency ?? 'usd',
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,
       } : null!,
