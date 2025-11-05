@@ -2,7 +2,7 @@
 
 **Sprint Duration:** Week 7-8 (Dec 16 - Dec 27, 2025)
 **Sprint Goal:** Implement SMS/email notifications, chip format, and kiosk mode
-**Status:** 🟡 In Progress (Notifications: 89% Complete)
+**Status:** 🟢 Notifications Complete (100%) | 🟡 Chip Format & Kiosk Pending
 
 ---
 
@@ -39,7 +39,7 @@ Success means tournaments run smoother with automated player notifications and s
 | **NOTIFY-003** | SMS integration (Twilio) | M | Claude | ✅ Complete |
 | **NOTIFY-004** | SMS "table now" trigger | M | Claude | ✅ Complete |
 | **NOTIFY-005** | SMS "up in 5" trigger | M | Claude | ✅ Complete |
-| **NOTIFY-006** | SMS dedupe logic (2-minute window) | M | TBD | 📋 Todo |
+| **NOTIFY-006** | SMS dedupe logic (2-minute window) | M | Claude | ✅ Complete |
 | **NOTIFY-007** | SMS throttling & rate limits | S | Claude | ✅ Complete |
 | **NOTIFY-008** | SMS consent & opt-in tracking | M | Claude | ✅ Complete |
 | **NOTIFY-009** | STOP/HELP SMS handling | S | Claude | ✅ Complete |
@@ -70,14 +70,14 @@ Success means tournaments run smoother with automated player notifications and s
 - ✅ Quiet hours respected (no SMS 10pm-8am)
 
 **Chip Format:**
-- ✅ Queue-based match assignment works
-- ✅ Chip counters update correctly
-- ✅ Finals cutoff automatically promotes top N players
+- ⏳ Queue-based match assignment works
+- ⏳ Chip counters update correctly
+- ⏳ Finals cutoff automatically promotes top N players
 
 **Kiosk Mode:**
-- ✅ Tablet kiosk allows self-check-in
-- ✅ TD console requires PIN to exit kiosk mode
-- ✅ Check-in status updates in real-time
+- ⏳ Tablet kiosk allows self-check-in
+- ⏳ TD console requires PIN to exit kiosk mode
+- ⏳ Check-in status updates in real-time
 
 ---
 
