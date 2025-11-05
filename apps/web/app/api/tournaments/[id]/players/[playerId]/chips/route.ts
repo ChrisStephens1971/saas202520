@@ -9,10 +9,10 @@ import { adjustChips } from '@/lib/chip-tracker';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string; playerId: string } }
+  { params }: { params: Promise<{ id: string; playerId: string }> }
 ) {
   try {
-    const { playerId } = params;
+    const { playerId } = await params;
     const body = await request.json();
 
     const { adjustment, reason } = body;

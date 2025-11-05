@@ -10,10 +10,10 @@ import type { ChipConfig } from '@/lib/chip-tracker';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
     const body = await request.json();
 
     // Get chip config from request or use defaults

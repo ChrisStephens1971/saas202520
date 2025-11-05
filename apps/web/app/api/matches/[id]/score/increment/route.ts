@@ -208,7 +208,7 @@ export async function POST(
 
       // CHIP-002: Award chips for chip format tournaments (non-blocking)
       if (match.tournament.format === 'chip_format' && winnerId) {
-        const chipConfig = match.tournament.chipConfig as ChipConfig;
+        const chipConfig = match.tournament.chipConfig as unknown as ChipConfig;
         if (chipConfig) {
           const loserId =
             winnerId === match.playerAId ? match.playerBId : match.playerAId;

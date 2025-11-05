@@ -9,10 +9,10 @@ import { getChipStandings, getChipStats } from '@/lib/chip-tracker';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
     const { searchParams } = new URL(request.url);
     const includeStats = searchParams.get('includeStats') === 'true';
 

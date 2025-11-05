@@ -87,7 +87,7 @@ export async function awardChips(
       data: {
         chipCount: winner.chipCount + chipConfig.winnerChips,
         matchesPlayed: winner.matchesPlayed + 1,
-        chipHistory: winnerHistory,
+        chipHistory: JSON.parse(JSON.stringify(winnerHistory)),
       },
     }),
     prisma.player.update({
@@ -95,7 +95,7 @@ export async function awardChips(
       data: {
         chipCount: loser.chipCount + chipConfig.loserChips,
         matchesPlayed: loser.matchesPlayed + 1,
-        chipHistory: loserHistory,
+        chipHistory: JSON.parse(JSON.stringify(loserHistory)),
       },
     }),
   ]);
@@ -130,7 +130,7 @@ export async function adjustChips(
     where: { id: playerId },
     data: {
       chipCount: player.chipCount + chipAdjustment,
-      chipHistory: history,
+      chipHistory: JSON.parse(JSON.stringify(history)),
     },
   });
 }

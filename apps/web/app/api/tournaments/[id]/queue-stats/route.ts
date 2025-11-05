@@ -9,10 +9,10 @@ import { getQueueStats } from '@/lib/chip-format-engine';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
     const stats = await getQueueStats(tournamentId);
 
     return NextResponse.json(stats);

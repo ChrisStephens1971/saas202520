@@ -11,10 +11,10 @@ import type { ChipConfig } from '@/lib/chip-tracker';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const tournamentId = params.id;
+    const { id: tournamentId } = await params;
 
     // Get tournament with chip config
     const tournament = await prisma.tournament.findUnique({
@@ -35,7 +35,7 @@ export async function POST(
       );
     }
 
-    const chipConfig = tournament.chipConfig as ChipConfig;
+    const chipConfig = tournament.chipConfig as unknown as ChipConfig;
 
     if (!chipConfig) {
       return NextResponse.json(
