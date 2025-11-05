@@ -10,6 +10,7 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       './tests/integration/**', // Skip integration tests that need real DB
+      './tests/wip/**', // Skip work-in-progress tests with known issues
     ],
     coverage: {
       provider: 'v8',

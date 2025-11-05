@@ -11,7 +11,8 @@
   "scripts": {
     "validate": "swagger-cli validate openapi.yaml",
     "generate": "openapi-typescript openapi.yaml -o types.ts",
-    "test": "jest"
+    "test": "jest",
+    "test:run": "jest"
   },
   "dependencies": {
     "zod": "^3.22.4"

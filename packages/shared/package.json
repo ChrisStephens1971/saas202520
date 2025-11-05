@@ -11,7 +11,8 @@
   },
   "scripts": {
     "lint": "eslint src --ext .ts",
-    "test": "vitest --run --passWithNoTests"
+    "test": "vitest --run --passWithNoTests",
+    "test:run": "vitest --run --passWithNoTests"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0"
