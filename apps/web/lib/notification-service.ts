@@ -1,7 +1,7 @@
 /**
  * Notification Service
  * Handles in-app, email, and SMS notifications with rate limiting
- * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003
+ * Sprint 4 - NOTIFY-001, NOTIFY-002, NOTIFY-003, NOTIFY-008
  */
 
 import { prisma } from '@/lib/prisma';
@@ -9,6 +9,13 @@ import twilio from 'twilio';
 import nodemailer from 'nodemailer';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import {
+  renderEmailTemplate,
+  renderSMSTemplate,
+  renderInAppTemplate,
+  type NotificationTemplateType,
+  type TemplateVariable,
+} from '@/lib/notification-templates';
 
 // ============================================================================
 // TYPES
@@ -535,4 +542,85 @@ export async function updateNotificationPreferences(
     },
     update: preferences,
   });
+}
+
+// ============================================================================
+// TEMPLATE-BASED NOTIFICATIONS (NOTIFY-008)
+// ============================================================================
+
+/**
+ * Send notification using template system
+ */
+export async function sendNotificationWithTemplate(
+  orgId: string,
+  playerId: string,
+  templateType: NotificationTemplateType,
+  variables: TemplateVariable,
+  channels: ('email' | 'sms' | 'in_app')[],
+  tournamentId?: string
+): Promise<{ email?: NotificationResult; sms?: NotificationResult; inApp?: NotificationResult }> {
+  const results: {
+    email?: NotificationResult;
+    sms?: NotificationResult;
+    inApp?: NotificationResult;
+  } = {};
+
+  // Get player details
+  const player = await prisma.player.findUnique({
+    where: { id: playerId },
+    select: { email: true, phone: true },
+  });
+
+  if (!player) {
+    throw new Error('Player not found');
+  }
+
+  // Send email notification
+  if (channels.includes('email') && player.email) {
+    const emailTemplate = renderEmailTemplate(templateType, variables);
+    results.email = await sendNotification({
+      orgId,
+      tournamentId,
+      playerId,
+      type: 'email',
+      channel: 'email',
+      recipient: player.email,
+      subject: emailTemplate.subject,
+      message: emailTemplate.body,
+      metadata: { templateType, variables },
+    });
+  }
+
+  // Send SMS notification
+  if (channels.includes('sms') && player.phone) {
+    const smsTemplate = renderSMSTemplate(templateType, variables);
+    results.sms = await sendNotification({
+      orgId,
+      tournamentId,
+      playerId,
+      type: 'sms',
+      channel: 'sms_twilio',
+      recipient: player.phone,
+      message: smsTemplate.body,
+      metadata: { templateType, variables },
+    });
+  }
+
+  // Send in-app notification
+  if (channels.includes('in_app')) {
+    const inAppTemplate = renderInAppTemplate(templateType, variables);
+    results.inApp = await sendNotification({
+      orgId,
+      tournamentId,
+      playerId,
+      type: 'in_app',
+      channel: 'in_app',
+      recipient: playerId,
+      subject: inAppTemplate.title,
+      message: inAppTemplate.body,
+      metadata: { templateType, variables },
+    });
+  }
+
+  return results;
 }

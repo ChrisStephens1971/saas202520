@@ -32,8 +32,11 @@ vi.mock('@/lib/prisma', () => ({
 
 // Mock notification service
 vi.mock('@/lib/notification-service', () => ({
-  sendEmailWithTemplate: vi.fn().mockResolvedValue({ success: true }),
-  sendSMSToPlayer: vi.fn().mockResolvedValue({ success: true }),
+  sendNotificationWithTemplate: vi.fn().mockResolvedValue({
+    email: { success: true },
+    sms: { success: true },
+    inApp: { success: true },
+  }),
   createInAppNotification: vi.fn().mockResolvedValue({ success: true }),
 }));
 
@@ -95,23 +98,6 @@ describe('match-notifications', () => {
         expect.stringContaining('Table 1'),
         'tournament-123'
       );
-
-      // Verify emails sent to both players
-      expect(notificationService.sendEmailWithTemplate).toHaveBeenCalledTimes(2);
-      expect(notificationService.sendEmailWithTemplate).toHaveBeenCalledWith(
-        'org-123',
-        'alice@example.com',
-        'match-ready',
-        expect.objectContaining({
-          playerName: 'Alice',
-          opponentName: 'Bob',
-        }),
-        'tournament-123',
-        'player-a'
-      );
-
-      // Verify SMS sent to both players
-      expect(notificationService.sendSMSToPlayer).toHaveBeenCalledTimes(2);
     });
 
     it('should skip notification if match is not ready', async () => {
@@ -130,8 +116,6 @@ describe('match-notifications', () => {
 
       // No notifications should be sent
       expect(notificationService.createInAppNotification).not.toHaveBeenCalled();
-      expect(notificationService.sendEmailWithTemplate).not.toHaveBeenCalled();
-      expect(notificationService.sendSMSToPlayer).not.toHaveBeenCalled();
     });
   });
 
@@ -169,32 +153,36 @@ describe('match-notifications', () => {
 
       await notifyMatchCompleted('match-123');
 
-      // Verify in-app notifications sent to both players
-      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(
-        2
-      );
+      // Verify template-based notifications sent to both players
+      expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledTimes(2);
 
       // Winner notification
-      expect(notificationService.createInAppNotification).toHaveBeenCalledWith(
+      expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledWith(
         'org-123',
         'player-a',
-        expect.stringContaining('won'),
+        'match_completed',
+        expect.objectContaining({
+          playerName: 'Alice',
+          matchOpponent: 'Bob',
+          score: '9-7',
+        }),
+        ['email', 'sms', 'in_app'],
         'tournament-123'
       );
 
       // Loser notification
-      expect(notificationService.createInAppNotification).toHaveBeenCalledWith(
+      expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledWith(
         'org-123',
         'player-b',
-        expect.stringContaining('completed'),
+        'match_completed',
+        expect.objectContaining({
+          playerName: 'Bob',
+          matchOpponent: 'Alice',
+          score: '9-7',
+        }),
+        ['email', 'sms', 'in_app'],
         'tournament-123'
       );
-
-      // Verify emails sent
-      expect(notificationService.sendEmailWithTemplate).toHaveBeenCalledTimes(2);
-
-      // Verify SMS sent
-      expect(notificationService.sendSMSToPlayer).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -227,24 +215,17 @@ describe('match-notifications', () => {
         'tournament-123'
       );
 
-      // Verify email sent
-      expect(notificationService.sendEmailWithTemplate).toHaveBeenCalledWith(
+      // Verify template notification sent
+      expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledWith(
         'org-123',
-        'alice@example.com',
-        'tournament-starting',
+        'player-123',
+        'tournament_reminder',
         expect.objectContaining({
           playerName: 'Alice',
           tournamentName: 'Test Tournament',
+          customMessage: expect.stringContaining('check in'),
         }),
-        'tournament-123',
-        'player-123'
-      );
-
-      // Verify SMS sent
-      expect(notificationService.sendSMSToPlayer).toHaveBeenCalledWith(
-        'org-123',
-        'player-123',
-        expect.stringContaining('check in'),
+        ['email', 'sms'],
         'tournament-123'
       );
     });
@@ -264,8 +245,7 @@ describe('match-notifications', () => {
 
       // No notifications should be sent
       expect(notificationService.createInAppNotification).not.toHaveBeenCalled();
-      expect(notificationService.sendEmailWithTemplate).not.toHaveBeenCalled();
-      expect(notificationService.sendSMSToPlayer).not.toHaveBeenCalled();
+      expect(notificationService.sendNotificationWithTemplate).not.toHaveBeenCalled();
     });
   });
 
@@ -370,11 +350,8 @@ describe('match-notifications', () => {
         2
       );
 
-      // Verify emails sent
-      expect(notificationService.sendEmailWithTemplate).toHaveBeenCalledTimes(2);
-
-      // Verify SMS sent
-      expect(notificationService.sendSMSToPlayer).toHaveBeenCalledTimes(2);
+      // Verify template notifications sent
+      expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledTimes(2);
     });
   });
 });

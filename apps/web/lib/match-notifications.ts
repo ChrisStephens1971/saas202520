@@ -1,13 +1,12 @@
 /**
  * Match Notification Triggers
  * Automatically send notifications on match state changes
- * Sprint 4 - NOTIFY-004, NOTIFY-005
+ * Sprint 4 - NOTIFY-004, NOTIFY-005, NOTIFY-008
  */
 
 import { prisma } from '@/lib/prisma';
 import {
-  sendEmailWithTemplate,
-  sendSMSToPlayer,
+  sendNotificationWithTemplate,
   createInAppNotification,
 } from '@/lib/notification-service';
 
@@ -38,91 +37,28 @@ export async function notifyMatchReady(matchId: string): Promise<void> {
   const tournamentName = match.tournament.name;
   const tableName = match.table.label;
 
-  // Notify Player A
-  if (match.playerA.email || match.playerA.phone) {
-    const templateData = {
-      playerName: match.playerA.name,
-      tournamentName,
-      tableName,
-      opponentName: match.playerB.name,
-    };
+  // Simple in-app notifications for both players (not using template system for match ready)
+  // In-app notification for Player A
+  await createInAppNotification(
+    orgId,
+    match.playerA.id,
+    `Your match is ready at ${tableName}. Opponent: ${match.playerB.name}`,
+    match.tournamentId
+  );
 
-    // In-app notification
-    await createInAppNotification(
-      orgId,
-      match.playerA.id,
-      `Your match is ready at ${tableName}. Opponent: ${match.playerB.name}`,
-      match.tournamentId
-    );
-
-    // Email notification (if email provided)
-    if (match.playerA.email) {
-      await sendEmailWithTemplate(
-        orgId,
-        match.playerA.email,
-        'match-ready',
-        templateData,
-        match.tournamentId,
-        match.playerA.id
-      ).catch((err) => console.error('Failed to send email to Player A:', err));
-    }
-
-    // SMS notification (if phone provided)
-    if (match.playerA.phone) {
-      await sendSMSToPlayer(
-        orgId,
-        match.playerA.id,
-        `Your match is ready at ${tableName}. Opponent: ${match.playerB.name}`,
-        match.tournamentId
-      ).catch((err) => console.error('Failed to send SMS to Player A:', err));
-    }
-  }
-
-  // Notify Player B
-  if (match.playerB.email || match.playerB.phone) {
-    const templateData = {
-      playerName: match.playerB.name,
-      tournamentName,
-      tableName,
-      opponentName: match.playerA.name,
-    };
-
-    // In-app notification
-    await createInAppNotification(
-      orgId,
-      match.playerB.id,
-      `Your match is ready at ${tableName}. Opponent: ${match.playerA.name}`,
-      match.tournamentId
-    );
-
-    // Email notification (if email provided)
-    if (match.playerB.email) {
-      await sendEmailWithTemplate(
-        orgId,
-        match.playerB.email,
-        'match-ready',
-        templateData,
-        match.tournamentId,
-        match.playerB.id
-      ).catch((err) => console.error('Failed to send email to Player B:', err));
-    }
-
-    // SMS notification (if phone provided)
-    if (match.playerB.phone) {
-      await sendSMSToPlayer(
-        orgId,
-        match.playerB.id,
-        `Your match is ready at ${tableName}. Opponent: ${match.playerA.name}`,
-        match.tournamentId
-      ).catch((err) => console.error('Failed to send SMS to Player B:', err));
-    }
-  }
+  // In-app notification for Player B
+  await createInAppNotification(
+    orgId,
+    match.playerB.id,
+    `Your match is ready at ${tableName}. Opponent: ${match.playerA.name}`,
+    match.tournamentId
+  );
 
   console.log(`Match ready notifications sent for match ${matchId}`);
 }
 
 /**
- * Notify players when match is completed
+ * Notify players when match is completed (using new template system)
  */
 export async function notifyMatchCompleted(matchId: string): Promise<void> {
   const match = await prisma.match.findUnique({
@@ -144,92 +80,45 @@ export async function notifyMatchCompleted(matchId: string): Promise<void> {
   const score = match.score as { playerA: number; playerB: number };
   const scoreText = `${score.playerA}-${score.playerB}`;
 
-  const winnerName =
-    match.winnerId === match.playerA.id ? match.playerA.name : match.playerB.name;
   const loserName =
     match.winnerId === match.playerA.id ? match.playerB.name : match.playerA.name;
 
   // Notify winner
   const winner = match.winnerId === match.playerA.id ? match.playerA : match.playerB;
-  if (winner.email || winner.phone) {
-    const templateData = {
+  await sendNotificationWithTemplate(
+    orgId,
+    winner.id,
+    'match_completed',
+    {
       playerName: winner.name,
       tournamentName,
-      result: 'You won!',
+      matchOpponent: loserName,
       score: scoreText,
-    };
-
-    // In-app notification
-    await createInAppNotification(
-      orgId,
-      winner.id,
-      `Match completed! You won ${scoreText} against ${loserName}`,
-      match.tournamentId
-    );
-
-    // Email notification
-    if (winner.email) {
-      await sendEmailWithTemplate(
-        orgId,
-        winner.email,
-        'match-completed',
-        templateData,
-        match.tournamentId,
-        winner.id
-      ).catch((err) => console.error('Failed to send email to winner:', err));
-    }
-
-    // SMS notification
-    if (winner.phone) {
-      await sendSMSToPlayer(
-        orgId,
-        winner.id,
-        `Match completed! You won ${scoreText} against ${loserName}`,
-        match.tournamentId
-      ).catch((err) => console.error('Failed to send SMS to winner:', err));
-    }
-  }
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tournaments/${match.tournamentId}/matches/${matchId}`,
+    },
+    ['email', 'sms', 'in_app'],
+    match.tournamentId
+  ).catch((err) => console.error('Failed to send match completed notification to winner:', err));
 
   // Notify loser
   const loser = match.winnerId === match.playerA.id ? match.playerB : match.playerA;
-  if (loser.email || loser.phone) {
-    const templateData = {
+  const winnerName =
+    match.winnerId === match.playerA.id ? match.playerA.name : match.playerB.name;
+
+  await sendNotificationWithTemplate(
+    orgId,
+    loser.id,
+    'match_completed',
+    {
       playerName: loser.name,
       tournamentName,
-      result: 'Match complete',
+      matchOpponent: winnerName,
       score: scoreText,
-    };
-
-    // In-app notification
-    await createInAppNotification(
-      orgId,
-      loser.id,
-      `Match completed. Final score: ${scoreText} vs ${winnerName}`,
-      match.tournamentId
-    );
-
-    // Email notification
-    if (loser.email) {
-      await sendEmailWithTemplate(
-        orgId,
-        loser.email,
-        'match-completed',
-        templateData,
-        match.tournamentId,
-        loser.id
-      ).catch((err) => console.error('Failed to send email to loser:', err));
-    }
-
-    // SMS notification
-    if (loser.phone) {
-      await sendSMSToPlayer(
-        orgId,
-        loser.id,
-        `Match completed. Final score: ${scoreText} vs ${winnerName}`,
-        match.tournamentId
-      ).catch((err) => console.error('Failed to send SMS to loser:', err));
-    }
-  }
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tournaments/${match.tournamentId}/matches/${matchId}`,
+    },
+    ['email', 'sms', 'in_app'],
+    match.tournamentId
+  ).catch((err) => console.error('Failed to send match completed notification to loser:', err));
 
   console.log(`Match completed notifications sent for match ${matchId}`);
 }
@@ -270,27 +159,20 @@ export async function sendCheckInReminder(
   // In-app notification
   await createInAppNotification(orgId, playerId, message, tournamentId);
 
-  // Email reminder
-  if (player.email) {
-    await sendEmailWithTemplate(
-      orgId,
-      player.email,
-      'tournament-starting',
-      {
-        playerName: player.name,
-        tournamentName,
-      },
-      tournamentId,
-      playerId
-    ).catch((err) => console.error('Failed to send check-in email:', err));
-  }
-
-  // SMS reminder
-  if (player.phone) {
-    await sendSMSToPlayer(orgId, playerId, message, tournamentId).catch((err) =>
-      console.error('Failed to send check-in SMS:', err)
-    );
-  }
+  // Use template system for email/SMS
+  await sendNotificationWithTemplate(
+    orgId,
+    playerId,
+    'tournament_reminder',
+    {
+      playerName: player.name,
+      tournamentName,
+      customMessage: 'Please check in. Tournament starts soon!',
+      actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tournaments/${tournamentId}`,
+    },
+    ['email', 'sms'],
+    tournamentId
+  ).catch((err) => console.error('Failed to send check-in reminder:', err));
 
   console.log(`Check-in reminder sent to player ${playerId}`);
 }
@@ -360,27 +242,20 @@ export async function notifyTournamentStarting(tournamentId: string): Promise<vo
         // In-app notification
         await createInAppNotification(orgId, player.id, message, tournamentId);
 
-        // Email notification
-        if (player.email) {
-          await sendEmailWithTemplate(
-            orgId,
-            player.email,
-            'tournament-starting',
-            {
-              playerName: player.name,
-              tournamentName: tournament.name,
-            },
-            tournamentId,
-            player.id
-          ).catch((err) => console.error('Failed to send email:', err));
-        }
-
-        // SMS notification
-        if (player.phone) {
-          await sendSMSToPlayer(orgId, player.id, message, tournamentId).catch(
-            (err) => console.error('Failed to send SMS:', err)
-          );
-        }
+        // Use template system for email/SMS
+        await sendNotificationWithTemplate(
+          orgId,
+          player.id,
+          'tournament_reminder',
+          {
+            playerName: player.name,
+            tournamentName: tournament.name,
+            customMessage: 'The tournament is starting! Please proceed to your assigned table.',
+            actionUrl: `${process.env.NEXT_PUBLIC_APP_URL}/tournaments/${tournamentId}`,
+          },
+          ['email', 'sms'],
+          tournamentId
+        ).catch((err) => console.error('Failed to send tournament starting notification:', err));
       })
     );
 
