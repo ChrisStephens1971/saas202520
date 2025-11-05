@@ -3,6 +3,8 @@
  * Mobile-first scoring with validation, undo, and audit trail
  */
 
+import type { MatchScore, GameScore } from './match';
+
 export interface ScoreUpdate {
   id: string;
   matchId: string;
@@ -16,22 +18,8 @@ export interface ScoreUpdate {
   undone: boolean;
 }
 
-export interface MatchScore {
-  playerA: number;
-  playerB: number;
-  raceTo?: number;
-  games?: GameScore[];
-}
-
-export interface GameScore {
-  gameNumber: number;
-  winner: 'playerA' | 'playerB';
-  score: {
-    playerA: number;
-    playerB: number;
-  };
-  timestamp: Date;
-}
+// Re-export for convenience
+export type { MatchScore, GameScore };
 
 export interface ScoreValidationResult {
   valid: boolean;

@@ -4,12 +4,16 @@
   "private": true,
   "description": "Shared types, models, and constants for tournament platform",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "scripts": {
+    "build": "tsc",
     "lint": "eslint src --ext .ts",
     "test": "vitest --run --passWithNoTests",
     "test:run": "vitest --run --passWithNoTests"
