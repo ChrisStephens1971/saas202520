@@ -15,6 +15,14 @@ export {
   advanceWinner,
 } from './bracket-generator/single-elimination';
 
+export {
+  generateDoubleEliminationBracket,
+  getMatch as getMatchDE,
+  getMatchesInRound as getMatchesInRoundDE,
+  getMatchesInBracket,
+  advanceWinner as advanceWinnerDE,
+} from './bracket-generator/double-elimination';
+
 // Match State Machine
 export {
   type MatchStateTransition,

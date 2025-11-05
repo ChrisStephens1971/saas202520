@@ -46,18 +46,25 @@ export interface Player {
  * Represents a match in the bracket before it's saved to database
  */
 export interface BracketMatch {
+  id?: string; // Optional match ID (used in double elimination)
   round: number;
   position: number; // Position within the round (0-indexed)
-  bracket?: 'winners' | 'losers'; // For double elimination
-  playerAId?: string;
-  playerBId?: string;
+  bracket?: 'winners' | 'losers' | 'grand_finals'; // For double elimination
+  playerAId?: string | null;
+  playerBId?: string | null;
   state: MatchState;
   // For linking matches in bracket progression
   feedsInto?: {
     round: number;
     position: number;
-    bracket?: 'winners' | 'losers';
+    bracket?: 'winners' | 'losers' | 'grand_finals';
     slot: 'A' | 'B'; // Which slot does the winner fill
+  };
+  // For double elimination: where loser goes
+  feedsLoserInto?: {
+    round: number;
+    position: number;
+    slot: 'A' | 'B';
   };
 }
 
