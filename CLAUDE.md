@@ -18,7 +18,67 @@ This file contains the **mandatory workflow** for all implementation tasks.
 1. ❌ NEVER code entire features yourself
 2. ✅ ALWAYS use parallel agent execution
 3. ✅ ALWAYS delegate to specialized agents
-4. ✅ Read WORKFLOW-ENFORCEMENT.md for the complete process
+4. ✅ ALWAYS validate using IDE diagnostics
+5. ✅ Read WORKFLOW-ENFORCEMENT.md for the complete process
+
+## 🔍 IDE Diagnostics Validation
+
+### Critical Requirements
+
+Always validate code using IDE diagnostics after implementation
+
+### Validation Workflow
+
+#### 1. Immediate File Validation
+
+- Check current file immediately after changes
+- Fix any errors before moving to related files
+- Pay attention to both errors and warnings
+
+#### 2. Feature-Level Validation
+
+- Check all related files in the same feature
+- Validate interface compatibility
+- Check for breaking changes in shared types
+
+#### 3. Workspace-Level Validation
+
+- Run full workspace diagnostics
+- Check for cross-module dependencies
+- Verify no regressions in other areas
+
+### Using Diagnostic Tools
+
+```typescript
+// 1. Check specific file
+get_errors({ filePaths: ["path/to/changed/file.ts"] })
+
+// 2. Check related files
+get_errors({ filePaths: [
+  "path/to/feature/**/*.ts",
+  "path/to/feature/**/*.tsx"
+] })
+
+// 3. Check entire workspace
+get_errors() // No filePaths = check everything
+```
+
+### Types of Issues to Watch For
+
+- TypeScript compilation errors
+- ESLint warnings and errors
+- Import/export compatibility
+- Type definitions and interfaces
+- Unused variables or imports
+- Cross-module dependencies
+
+### Best Practices
+
+- Validate after each significant change
+- Don't wait until the end to check
+- Fix errors immediately when found
+- Check both local and shared types
+- Verify cross-feature compatibility
 
 ---
 
@@ -38,7 +98,7 @@ This file contains the **mandatory workflow** for all implementation tasks.
 - File creation and organization
 
 **Simple rule:** When there's a decision to make, Claude asks. Everything else, Claude just does.
-
+- Always use IDE diagnostics to validate code after implementation
 ---
 
 ## 🏢 Multi-Tenant Architecture
