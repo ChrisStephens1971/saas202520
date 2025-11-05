@@ -7,7 +7,6 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import type { Player, Match, Tournament } from '@prisma/client';
 import type { ChipConfig } from '@/lib/chip-tracker';
 
 // ============================================================================

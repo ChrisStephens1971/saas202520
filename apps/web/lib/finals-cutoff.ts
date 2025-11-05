@@ -180,9 +180,8 @@ export async function applyFinalsCutoff(
     );
   }
 
-  // Separate into finalists and eliminated
+  // Separate into finalists (eliminated computed after tiebreakers)
   const initialFinalists = standings.slice(0, chipConfig.finalsCount);
-  const initialEliminated = standings.slice(chipConfig.finalsCount);
 
   // Check for ties at the cutoff line
   const cutoffChips = initialFinalists[initialFinalists.length - 1].chipCount;

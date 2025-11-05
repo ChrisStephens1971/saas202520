@@ -769,8 +769,8 @@ describe('Chip Format System - Finals Cutoff', () => {
         },
       ]);
 
-      vi.mocked(prisma.player.update).mockResolvedValue({} as any);
-      vi.mocked(prisma.tournamentEvent.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.player.update).mockResolvedValue({} as never);
+      vi.mocked(prisma.tournamentEvent.create).mockResolvedValue({} as never);
 
       const result = await applyFinalsCutoff('tournament-1', mockChipConfig);
 
@@ -862,8 +862,8 @@ describe('Chip Format System - Finals Cutoff', () => {
         },
       ]);
 
-      vi.mocked(prisma.player.update).mockResolvedValue({} as any);
-      vi.mocked(prisma.tournamentEvent.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.player.update).mockResolvedValue({} as never);
+      vi.mocked(prisma.tournamentEvent.create).mockResolvedValue({} as never);
 
       const result = await applyFinalsCutoff('tournament-1', mockChipConfig);
 
