@@ -5,6 +5,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 import twilio from 'twilio';
 import nodemailer from 'nodemailer';
 import { Ratelimit } from '@upstash/ratelimit';
@@ -119,7 +120,7 @@ export async function sendNotification(
         subject: input.subject,
         message: input.message,
         status: 'pending',
-        metadata: (input.metadata || {}) as unknown as Record<string, unknown>,
+        metadata: (input.metadata || {}) as Prisma.InputJsonValue,
       },
     });
 
