@@ -143,7 +143,7 @@ export function createOptimizedResponse(
 
   // Apply compression
   let compressionResult: CompressionResult | undefined;
-  let responseBody: string | Uint8Array;
+  let responseBody: string;
 
   if (compress) {
     const acceptEncoding = request.headers.get('accept-encoding');
@@ -151,7 +151,10 @@ export function createOptimizedResponse(
 
     // Only use compression if beneficial
     if (isCompressionBeneficial(compressionResult)) {
-      responseBody = new Uint8Array(compressionResult.data);
+      // Convert Buffer to base64 for JSON transmission
+      // Note: In production with a reverse proxy (nginx, cloudflare), compression
+      // is handled at the proxy level. This is for direct Node.js responses.
+      responseBody = compressionResult.data.toString('base64');
     } else {
       responseBody = JSON.stringify(processedData);
       compressionResult = undefined;
@@ -174,13 +177,36 @@ export function createOptimizedResponse(
     responseHeaders['X-Compressed-Size'] = compressionResult.compressedSize.toString();
     responseHeaders['X-Compression-Ratio'] = (compressionResult.ratio * 100).toFixed(1) + '%';
 
+    // For compressed responses, we send raw buffer via Response
+    // Convert back to buffer for proper binary transmission
+    const buffer = Buffer.from(responseBody, 'base64');
+
     // Log compression metrics in development
     if (process.env.NODE_ENV === 'development') {
       console.log('[Compression]', formatCompressionMetrics(compressionResult));
     }
+
+    // Add ETag header
+    if (etagValue) {
+      responseHeaders['ETag'] = etagValue;
+      responseHeaders['Cache-Control'] = 'public, max-age=60, must-revalidate';
+    }
+
+    // Add CORS headers (if needed)
+    if (process.env.ENABLE_CORS === 'true') {
+      responseHeaders['Access-Control-Allow-Origin'] = process.env.CORS_ORIGIN || '*';
+      responseHeaders['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS';
+      responseHeaders['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+    }
+
+    // Return compressed response as binary
+    return new NextResponse(buffer, {
+      status,
+      headers: responseHeaders,
+    });
   }
 
-  // Add ETag header
+  // Add ETag header for uncompressed response
   if (etagValue) {
     responseHeaders['ETag'] = etagValue;
     responseHeaders['Cache-Control'] = 'public, max-age=60, must-revalidate';
@@ -193,6 +219,7 @@ export function createOptimizedResponse(
     responseHeaders['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
   }
 
+  // Return uncompressed JSON response
   return new NextResponse(responseBody, {
     status,
     headers: responseHeaders,
