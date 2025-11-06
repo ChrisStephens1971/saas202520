@@ -23,17 +23,17 @@ model User {
   password      String? // For credentials provider (hashed)
 
   // User management fields (Sprint 9 Phase 2)
-  role              String    @default("player") // admin, organizer, player
-  status            String    @default("active") // active, suspended, banned, pending
-  lastLoginAt       DateTime? @map("last_login_at")
-  bannedAt          DateTime? @map("banned_at")
-  bannedBy          String?   @map("banned_by")
-  banReason         String?   @map("ban_reason")
-  suspendedUntil    DateTime? @map("suspended_until")
-  suspensionReason  String?   @map("suspension_reason")
+  role             String    @default("player") // admin, organizer, player
+  status           String    @default("active") // active, suspended, banned, pending
+  lastLoginAt      DateTime? @map("last_login_at")
+  bannedAt         DateTime? @map("banned_at")
+  bannedBy         String?   @map("banned_by")
+  banReason        String?   @map("ban_reason")
+  suspendedUntil   DateTime? @map("suspended_until")
+  suspensionReason String?   @map("suspension_reason")
 
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   accounts            Account[]
@@ -42,6 +42,7 @@ model User {
   activityLogs        UserActivity[]
   moderationActions   UserModerationAction[]
   performedActions    UserModerationAction[] @relation("PerformedBy")
+  analyticsEvents     AnalyticsEvent[]
 
   @@index([role])
   @@index([status])
@@ -94,22 +95,27 @@ model VerificationToken {
 // ============================================================================
 
 model Organization {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
 
   // Notification settings (Sprint 4)
-  twilioAccountSid   String? @map("twilio_account_sid") // Encrypted
-  twilioAuthToken    String? @map("twilio_auth_token") // Encrypted
-  twilioPhoneNumber  String? @map("twilio_phone_number")
-  kioskPin           String? @map("kiosk_pin") // 4-digit PIN for kiosk mode
+  twilioAccountSid  String? @map("twilio_account_sid") // Encrypted
+  twilioAuthToken   String? @map("twilio_auth_token") // Encrypted
+  twilioPhoneNumber String? @map("twilio_phone_number")
+  kioskPin          String? @map("kiosk_pin") // 4-digit PIN for kiosk mode
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  members     OrganizationMember[]
-  tournaments Tournament[]
+  members              OrganizationMember[]
+  tournaments          Tournament[]
+  analyticsEvents      AnalyticsEvent[]
+  revenueAggregates    RevenueAggregate[]
+  userCohorts          UserCohort[]
+  tournamentAggregates TournamentAggregate[]
+  scheduledReports     ScheduledReport[]
 
   @@map("organizations")
 }
@@ -137,29 +143,29 @@ model OrganizationMember {
 // ============================================================================
 
 model Tournament {
-  id                  String   @id @default(cuid())
-  orgId               String   @map("org_id") // Tenant ID
-  name                String
-  description         String? // Optional tournament description
-  status              String // draft, registration, active, paused, completed, cancelled
-  format              String // single_elimination, double_elimination, round_robin, modified_single, chip_format
-  sportConfigId       String   @map("sport_config_id")
-  sportConfigVersion  String   @map("sport_config_version") // Frozen at creation
-  createdBy           String   @map("created_by")
-  createdAt           DateTime @default(now()) @map("created_at")
-  startedAt           DateTime? @map("started_at")
-  completedAt         DateTime? @map("completed_at")
+  id                 String    @id @default(cuid())
+  orgId              String    @map("org_id") // Tenant ID
+  name               String
+  description        String? // Optional tournament description
+  status             String // draft, registration, active, paused, completed, cancelled
+  format             String // single_elimination, double_elimination, round_robin, modified_single, chip_format
+  sportConfigId      String    @map("sport_config_id")
+  sportConfigVersion String    @map("sport_config_version") // Frozen at creation
+  createdBy          String    @map("created_by")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  startedAt          DateTime? @map("started_at")
+  completedAt        DateTime? @map("completed_at")
 
   // Chip Format Configuration (Sprint 4 - CHIP-001, CHIP-002, CHIP-003)
-  chipConfig          Json? @map("chip_config") // { winnerChips, loserChips, qualificationRounds, finalsCount, pairingStrategy, tiebreaker }
+  chipConfig          Json?   @map("chip_config") // { winnerChips, loserChips, qualificationRounds, finalsCount, pairingStrategy, tiebreaker }
   qualificationLocked Boolean @default(false) @map("qualification_locked") // True after finals cutoff applied
 
   // Relations
-  organization   Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  players        Player[]
-  matches        Match[]
-  tables         Table[]
-  events         TournamentEvent[]
+  organization Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  players      Player[]
+  matches      Match[]
+  tables       Table[]
+  events       TournamentEvent[]
 
   @@index([orgId])
   @@index([status])
@@ -194,8 +200,8 @@ model TournamentEvent {
 // ============================================================================
 
 model Player {
-  id           String   @id @default(cuid())
-  tournamentId String   @map("tournament_id")
+  id           String    @id @default(cuid())
+  tournamentId String    @map("tournament_id")
   name         String
   email        String?
   phone        String?
@@ -203,12 +209,12 @@ model Player {
   status       String // registered, checked_in, active, eliminated, no_show, withdrawn
   seed         Int?
   checkedInAt  DateTime? @map("checked_in_at")
-  createdAt    DateTime @default(now()) @map("created_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
 
   // Chip Format Fields (Sprint 4 - CHIP-002)
-  chipCount    Int      @default(0) @map("chip_count") // Current chip total
-  matchesPlayed Int     @default(0) @map("matches_played") // Qualification matches completed
-  chipHistory  Json?    @map("chip_history") // Array of chip awards: [{ matchId, chipsEarned, timestamp }]
+  chipCount     Int   @default(0) @map("chip_count") // Current chip total
+  matchesPlayed Int   @default(0) @map("matches_played") // Qualification matches completed
+  chipHistory   Json? @map("chip_history") // Array of chip awards: [{ matchId, chipsEarned, timestamp }]
 
   // Relations
   tournament       Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
@@ -226,20 +232,20 @@ model Player {
 // ============================================================================
 
 model Match {
-  id           String   @id @default(cuid())
-  tournamentId String   @map("tournament_id")
+  id           String    @id @default(cuid())
+  tournamentId String    @map("tournament_id")
   round        Int
   bracket      String? // winners, losers (null for non-bracket formats)
   position     Int // Position in bracket/round
-  playerAId    String?  @map("player_a_id")
-  playerBId    String?  @map("player_b_id")
+  playerAId    String?   @map("player_a_id")
+  playerBId    String?   @map("player_b_id")
   state        String // pending, ready, assigned, active, completed, cancelled
-  winnerId     String?  @map("winner_id")
+  winnerId     String?   @map("winner_id")
   score        Json // { playerA: number, playerB: number, raceTo?: number, games?: GameScore[] }
-  tableId      String?  @map("table_id")
+  tableId      String?   @map("table_id")
   startedAt    DateTime? @map("started_at")
   completedAt  DateTime? @map("completed_at")
-  rev          Int      @default(0) // Optimistic locking
+  rev          Int       @default(0) // Optimistic locking
 
   // Relations
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
@@ -259,12 +265,12 @@ model Match {
 // ============================================================================
 
 model Table {
-  id             String   @id @default(cuid())
-  tournamentId   String   @map("tournament_id")
+  id             String    @id @default(cuid())
+  tournamentId   String    @map("tournament_id")
   label          String // e.g., "Table 1", "Back Corner"
   status         String // available, in_use, blocked
   blockedUntil   DateTime? @map("blocked_until")
-  currentMatchId String?  @map("current_match_id")
+  currentMatchId String?   @map("current_match_id")
 
   // Relations
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
@@ -299,16 +305,16 @@ model SportConfig {
 // ============================================================================
 
 model ScoreUpdate {
-  id           String   @id @default(cuid())
-  matchId      String   @map("match_id")
-  tournamentId String   @map("tournament_id")
-  actor        String // User ID who entered the score
-  device       String // Device ID
-  action       String // increment_a, increment_b, undo
-  previousScore Json   @map("previous_score") // Score snapshot before this action
-  newScore     Json     @map("new_score") // Score snapshot after this action
-  timestamp    DateTime @default(now())
-  undone       Boolean  @default(false) // True if this action was undone
+  id            String   @id @default(cuid())
+  matchId       String   @map("match_id")
+  tournamentId  String   @map("tournament_id")
+  actor         String // User ID who entered the score
+  device        String // Device ID
+  action        String // increment_a, increment_b, undo
+  previousScore Json     @map("previous_score") // Score snapshot before this action
+  newScore      Json     @map("new_score") // Score snapshot after this action
+  timestamp     DateTime @default(now())
+  undone        Boolean  @default(false) // True if this action was undone
 
   @@index([matchId])
   @@index([tournamentId])
@@ -321,17 +327,17 @@ model ScoreUpdate {
 // ============================================================================
 
 model StripeAccount {
-  id                    String   @id @default(cuid())
-  orgId                 String   @unique @map("org_id") // One Stripe account per organization
-  stripeAccountId       String   @unique @map("stripe_account_id") // Stripe Connect account ID
-  onboardingComplete    Boolean  @default(false) @map("onboarding_complete")
-  chargesEnabled        Boolean  @default(false) @map("charges_enabled")
-  payoutsEnabled        Boolean  @default(false) @map("payouts_enabled")
-  detailsSubmitted      Boolean  @default(false) @map("details_submitted")
-  country               String?
-  currency              String?  @default("usd")
-  createdAt             DateTime @default(now()) @map("created_at")
-  updatedAt             DateTime @updatedAt @map("updated_at")
+  id                 String   @id @default(cuid())
+  orgId              String   @unique @map("org_id") // One Stripe account per organization
+  stripeAccountId    String   @unique @map("stripe_account_id") // Stripe Connect account ID
+  onboardingComplete Boolean  @default(false) @map("onboarding_complete")
+  chargesEnabled     Boolean  @default(false) @map("charges_enabled")
+  payoutsEnabled     Boolean  @default(false) @map("payouts_enabled")
+  detailsSubmitted   Boolean  @default(false) @map("details_submitted")
+  country            String?
+  currency           String?  @default("usd")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
   // Relations
   payments Payment[]
@@ -368,15 +374,15 @@ model Payment {
 }
 
 model Refund {
-  id              String   @id @default(cuid())
-  paymentId       String   @map("payment_id")
-  stripeRefundId  String   @unique @map("stripe_refund_id") // Stripe Refund ID
-  amount          Int // Amount refunded in cents
-  reason          String // duplicate, fraudulent, requested_by_customer
-  status          String // pending, succeeded, failed, cancelled
-  processedBy     String   @map("processed_by") // User ID who processed the refund
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id             String   @id @default(cuid())
+  paymentId      String   @map("payment_id")
+  stripeRefundId String   @unique @map("stripe_refund_id") // Stripe Refund ID
+  amount         Int // Amount refunded in cents
+  reason         String // duplicate, fraudulent, requested_by_customer
+  status         String // pending, succeeded, failed, cancelled
+  processedBy    String   @map("processed_by") // User ID who processed the refund
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
 
   // Relations
   payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
@@ -387,18 +393,18 @@ model Refund {
 }
 
 model Payout {
-  id              String   @id @default(cuid())
-  tournamentId    String   @map("tournament_id")
-  playerId        String   @map("player_id")
-  placement       Int // 1st, 2nd, 3rd, etc.
-  amount          Int // Payout amount in cents
-  source          String // prize_pool, side_pot
-  status          String // pending, paid, voided
-  paidAt          DateTime? @map("paid_at")
-  paidBy          String?  @map("paid_by") // User ID who marked as paid
-  notes           String?
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id           String    @id @default(cuid())
+  tournamentId String    @map("tournament_id")
+  playerId     String    @map("player_id")
+  placement    Int // 1st, 2nd, 3rd, etc.
+  amount       Int // Payout amount in cents
+  source       String // prize_pool, side_pot
+  status       String // pending, paid, voided
+  paidAt       DateTime? @map("paid_at")
+  paidBy       String?   @map("paid_by") // User ID who marked as paid
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@index([tournamentId])
   @@index([playerId])
@@ -411,22 +417,22 @@ model Payout {
 // ============================================================================
 
 model Notification {
-  id             String    @id @default(cuid())
-  orgId          String    @map("org_id") // Multi-tenant: organization scope
-  tournamentId   String?   @map("tournament_id") // Optional: notification context
-  playerId       String?   @map("player_id") // Optional: recipient if player-specific
-  type           String    // in_app, email, sms
-  channel        String    // in_app, email, sms_twilio
-  recipient      String    // Email address or phone number
-  subject        String?   // Optional: for email notifications
-  message        String    // Notification message body
-  status         String    // pending, sent, failed, delivered
-  sentAt         DateTime? @map("sent_at")
-  deliveredAt    DateTime? @map("delivered_at")
-  errorMessage   String?   @map("error_message")
-  metadata       Json?     // Additional data (e.g., Twilio message SID, retry count)
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(cuid())
+  orgId        String    @map("org_id") // Multi-tenant: organization scope
+  tournamentId String?   @map("tournament_id") // Optional: notification context
+  playerId     String?   @map("player_id") // Optional: recipient if player-specific
+  type         String // in_app, email, sms
+  channel      String // in_app, email, sms_twilio
+  recipient    String // Email address or phone number
+  subject      String? // Optional: for email notifications
+  message      String // Notification message body
+  status       String // pending, sent, failed, delivered
+  sentAt       DateTime? @map("sent_at")
+  deliveredAt  DateTime? @map("delivered_at")
+  errorMessage String?   @map("error_message")
+  metadata     Json? // Additional data (e.g., Twilio message SID, retry count)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@index([orgId])
   @@index([tournamentId])
@@ -438,17 +444,17 @@ model Notification {
 }
 
 model NotificationPreference {
-  id                String    @id @default(cuid())
-  playerId          String    @unique @map("player_id") // One preference per player
-  smsEnabled        Boolean   @default(true) @map("sms_enabled")
-  emailEnabled      Boolean   @default(true) @map("email_enabled")
-  smsOptedOut       Boolean   @default(false) @map("sms_opted_out") // User sent STOP
-  smsOptedOutAt     DateTime? @map("sms_opted_out_at")
-  quietHoursStart   String?   @map("quiet_hours_start") // Time format: "22:00"
-  quietHoursEnd     String?   @map("quiet_hours_end") // Time format: "08:00"
-  timezone          String?   // e.g., "America/New_York"
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
+  id              String    @id @default(cuid())
+  playerId        String    @unique @map("player_id") // One preference per player
+  smsEnabled      Boolean   @default(true) @map("sms_enabled")
+  emailEnabled    Boolean   @default(true) @map("email_enabled")
+  smsOptedOut     Boolean   @default(false) @map("sms_opted_out") // User sent STOP
+  smsOptedOutAt   DateTime? @map("sms_opted_out_at")
+  quietHoursStart String?   @map("quiet_hours_start") // Time format: "22:00"
+  quietHoursEnd   String?   @map("quiet_hours_end") // Time format: "08:00"
+  timezone        String? // e.g., "America/New_York"
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   @@index([playerId])
   @@index([smsOptedOut])
@@ -460,18 +466,18 @@ model NotificationPreference {
 // ============================================================================
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  orgId       String   @map("org_id") // Multi-tenant: organization scope
-  userId      String   @map("user_id") // Actor who performed the action
-  userName    String   @map("user_name") // Denormalized for performance
-  action      String   // create, update, delete, login, logout, failed_login, ban, suspend, etc.
-  resource    String   // user, tournament, match, player, settings, etc.
-  resourceId  String?  @map("resource_id") // ID of affected resource (optional for some actions)
-  changes     Json?    // Before/after values for updates: { before: {...}, after: {...} }
-  ipAddress   String?  @map("ip_address")
-  userAgent   String?  @map("user_agent")
-  metadata    Json?    // Additional context (e.g., error details, request params)
-  timestamp   DateTime @default(now())
+  id         String   @id @default(cuid())
+  orgId      String   @map("org_id") // Multi-tenant: organization scope
+  userId     String   @map("user_id") // Actor who performed the action
+  userName   String   @map("user_name") // Denormalized for performance
+  action     String // create, update, delete, login, logout, failed_login, ban, suspend, etc.
+  resource   String // user, tournament, match, player, settings, etc.
+  resourceId String?  @map("resource_id") // ID of affected resource (optional for some actions)
+  changes    Json? // Before/after values for updates: { before: {...}, after: {...} }
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  metadata   Json? // Additional context (e.g., error details, request params)
+  timestamp  DateTime @default(now())
 
   @@index([orgId])
   @@index([userId])
@@ -487,37 +493,37 @@ model AuditLog {
 // ============================================================================
 
 model SystemSettings {
-  id          String   @id @default(cuid())
-  orgId       String   @unique @map("org_id") // One settings record per organization
+  id    String @id @default(cuid())
+  orgId String @unique @map("org_id") // One settings record per organization
 
   // General Settings
-  siteName    String?  @map("site_name")
+  siteName        String? @map("site_name")
   siteDescription String? @map("site_description")
-  timezone    String?  @default("America/New_York")
-  language    String?  @default("en")
+  timezone        String? @default("America/New_York")
+  language        String? @default("en")
 
   // Email Settings
-  smtpHost    String?  @map("smtp_host")
-  smtpPort    Int?     @map("smtp_port")
-  smtpUser    String?  @map("smtp_user")
-  smtpPassword String? @map("smtp_password") // Encrypted
+  smtpHost      String? @map("smtp_host")
+  smtpPort      Int?    @map("smtp_port")
+  smtpUser      String? @map("smtp_user")
+  smtpPassword  String? @map("smtp_password") // Encrypted
   smtpFromEmail String? @map("smtp_from_email")
   smtpFromName  String? @map("smtp_from_name")
 
   // Security Settings
-  sessionTimeout Int?   @map("session_timeout") // Minutes
-  require2FA     Boolean @default(false) @map("require_2fa")
-  passwordMinLength Int? @map("password_min_length") @default(8)
+  sessionTimeout             Int?    @map("session_timeout") // Minutes
+  require2FA                 Boolean @default(false) @map("require_2fa")
+  passwordMinLength          Int?    @default(8) @map("password_min_length")
   passwordRequireSpecialChar Boolean @default(true) @map("password_require_special_char")
-  maxLoginAttempts Int?  @map("max_login_attempts") @default(5)
-  lockoutDuration Int?   @map("lockout_duration") // Minutes
+  maxLoginAttempts           Int?    @default(5) @map("max_login_attempts")
+  lockoutDuration            Int?    @map("lockout_duration") // Minutes
 
   // Feature Flags
-  features    Json?    // { liveScoring: true, notifications: true, payments: false, ... }
+  features Json? // { liveScoring: true, notifications: true, payments: false, ... }
 
   // Performance Settings
-  cacheTTL    Int?     @map("cache_ttl") // Seconds
-  rateLimit   Int?     @map("rate_limit") // Requests per minute
+  cacheTTL  Int? @map("cache_ttl") // Seconds
+  rateLimit Int? @map("rate_limit") // Requests per minute
 
   // Notification Settings
   enableEmailNotifications Boolean @default(true) @map("enable_email_notifications")
@@ -525,10 +531,10 @@ model SystemSettings {
   enablePushNotifications  Boolean @default(false) @map("enable_push_notifications")
 
   // Integration Settings (stored as JSON for flexibility)
-  integrations Json?   // { stripe: {...}, twilio: {...}, analytics: {...} }
+  integrations Json? // { stripe: {...}, twilio: {...}, analytics: {...} }
 
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([orgId])
   @@map("system_settings")
@@ -539,15 +545,15 @@ model SystemSettings {
 // ============================================================================
 
 model UserActivity {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  action      String   // login, logout, view_tournament, create_tournament, etc.
-  resource    String   // tournament, player, match, settings
-  resourceId  String?  @map("resource_id")
-  metadata    Json?    // Additional context
-  ipAddress   String?  @map("ip_address")
-  userAgent   String?  @map("user_agent")
-  timestamp   DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  action     String // login, logout, view_tournament, create_tournament, etc.
+  resource   String // tournament, player, match, settings
+  resourceId String?  @map("resource_id")
+  metadata   Json? // Additional context
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  timestamp  DateTime @default(now())
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -560,14 +566,14 @@ model UserActivity {
 }
 
 model UserModerationAction {
-  id            String    @id @default(cuid())
-  userId        String    @map("user_id") // User being moderated
-  actionType    String    @map("action_type") // warn, suspend, ban, unban, unsuspend
-  reason        String
-  performedBy   String    @map("performed_by") // Admin user ID
-  performedAt   DateTime  @default(now()) @map("performed_at")
-  expiresAt     DateTime? @map("expires_at") // For temporary suspensions
-  metadata      Json?     // Additional details
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id") // User being moderated
+  actionType  String    @map("action_type") // warn, suspend, ban, unban, unsuspend
+  reason      String
+  performedBy String    @map("performed_by") // Admin user ID
+  performedAt DateTime  @default(now()) @map("performed_at")
+  expiresAt   DateTime? @map("expires_at") // For temporary suspensions
+  metadata    Json? // Additional details
 
   // Relations
   user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -578,4 +584,125 @@ model UserModerationAction {
   @@index([actionType])
   @@index([performedAt])
   @@map("user_moderation_actions")
+}
+
+// ============================================================================
+// ADVANCED ANALYTICS (Sprint 10 - Week 1)
+// ============================================================================
+
+// Raw event tracking for all analytics-relevant activities
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  eventType String   @map("event_type") @db.VarChar(100) // payment_completed, user_signup, tournament_completed, etc.
+  eventData Json     @map("event_data") // Flexible event-specific data
+  userId    String?  @map("user_id")
+  sessionId String?  @map("session_id") @db.VarChar(255)
+  timestamp DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, eventType])
+  @@index([tenantId, timestamp(sort: Desc)])
+  @@index([userId, timestamp(sort: Desc)])
+  @@map("analytics_events")
+}
+
+// Pre-computed revenue metrics for fast dashboard queries
+model RevenueAggregate {
+  id                  String   @id @default(cuid())
+  tenantId            String   @map("tenant_id")
+  periodStart         DateTime @map("period_start") @db.Date
+  periodEnd           DateTime @map("period_end") @db.Date
+  periodType          String   @map("period_type") @db.VarChar(20) // day, week, month, quarter, year
+  mrr                 Decimal? @db.Decimal(10, 2)
+  arr                 Decimal? @db.Decimal(10, 2)
+  newRevenue          Decimal? @map("new_revenue") @db.Decimal(10, 2)
+  churnedRevenue      Decimal? @map("churned_revenue") @db.Decimal(10, 2)
+  expansionRevenue    Decimal? @map("expansion_revenue") @db.Decimal(10, 2)
+  totalRevenue        Decimal? @map("total_revenue") @db.Decimal(10, 2)
+  paymentCount        Int?     @map("payment_count")
+  paymentSuccessCount Int?     @map("payment_success_count")
+  refundCount         Int?     @map("refund_count")
+  refundAmount        Decimal? @map("refund_amount") @db.Decimal(10, 2)
+  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, periodType, periodStart])
+  @@index([tenantId, periodStart(sort: Desc)])
+  @@map("revenue_aggregates")
+}
+
+// User retention analysis by signup cohort
+model UserCohort {
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  cohortMonth   DateTime @map("cohort_month") @db.Date // First day of signup month (YYYY-MM-01)
+  cohortSize    Int      @map("cohort_size")
+  monthNumber   Int      @map("month_number") // 0 = signup month, 1 = month 1, etc.
+  retainedUsers Int      @map("retained_users")
+  retentionRate Decimal  @map("retention_rate") @db.Decimal(5, 2)
+  revenue       Decimal? @db.Decimal(10, 2)
+  ltv           Decimal? @db.Decimal(10, 2)
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, cohortMonth, monthNumber])
+  @@index([tenantId, cohortMonth(sort: Desc)])
+  @@map("user_cohorts")
+}
+
+// Tournament performance metrics by time period
+model TournamentAggregate {
+  id                 String   @id @default(cuid())
+  tenantId           String   @map("tenant_id")
+  periodStart        DateTime @map("period_start") @db.Date
+  periodEnd          DateTime @map("period_end") @db.Date
+  periodType         String   @map("period_type") @db.VarChar(20)
+  tournamentCount    Int?     @map("tournament_count")
+  completedCount     Int?     @map("completed_count")
+  completionRate     Decimal? @map("completion_rate") @db.Decimal(5, 2)
+  totalPlayers       Int?     @map("total_players")
+  avgPlayers         Decimal? @map("avg_players") @db.Decimal(10, 2)
+  avgDurationMinutes Decimal? @map("avg_duration_minutes") @db.Decimal(10, 2)
+  mostPopularFormat  String?  @map("most_popular_format") @db.VarChar(100)
+  revenue            Decimal? @db.Decimal(10, 2)
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, periodType, periodStart])
+  @@index([tenantId, periodStart(sort: Desc)])
+  @@map("tournament_aggregates")
+}
+
+// Configuration for automated report delivery
+model ScheduledReport {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  name       String    @db.VarChar(255)
+  reportType String    @map("report_type") @db.VarChar(50)
+  frequency  String    @db.VarChar(20) // daily, weekly, monthly
+  recipients String[] // Array of email addresses
+  parameters Json?
+  lastRunAt  DateTime? @map("last_run_at")
+  nextRunAt  DateTime  @map("next_run_at")
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([nextRunAt], map: "idx_scheduled_reports_next_run")
+  @@map("scheduled_reports")
 }
