@@ -298,12 +298,13 @@ export async function withCacheLock<T>(
     lockTimeout: number;
   }
 ): Promise<T> {
+  const { cacheService: cache } = await import('./redis');
   const lockKey = `lock:${key}`;
   const lockValue = Date.now().toString();
 
   try {
     // Try to acquire lock
-    const acquired = await cacheService.set(
+    const acquired = await cache.set(
       tenantId,
       lockKey,
       lockValue,
@@ -313,7 +314,7 @@ export async function withCacheLock<T>(
     if (!acquired) {
       // Someone else has the lock, wait and try to get from cache
       await new Promise((resolve) => setTimeout(resolve, 100));
-      const cached = await cacheService.get<T>(tenantId, key);
+      const cached = await cache.get<T>(tenantId, key);
       if (cached) {
         return cached;
       }
@@ -324,17 +325,19 @@ export async function withCacheLock<T>(
     const data = await generator();
 
     // Store in cache
-    await cacheService.set(tenantId, key, data, options.ttl);
+    await cache.set(tenantId, key, data, options.ttl);
 
     return data;
   } finally {
     // Release lock
-    await cacheService.delete(tenantId, lockKey);
+    await cache.delete(tenantId, lockKey);
   }
 }
 
 /**
  * Export commonly used cache patterns
+ *
+ * These are re-exported from strategies.ts for convenience
  */
 export const CachePatterns = {
   /**
@@ -345,7 +348,7 @@ export const CachePatterns = {
   /**
    * Write-through (update cache and DB together)
    */
-  writeThrough,
+  writeThrough: writeThrough,
 
   /**
    * Refresh-ahead (proactive cache refresh)

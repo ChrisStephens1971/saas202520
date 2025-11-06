@@ -143,7 +143,7 @@ export function createOptimizedResponse(
 
   // Apply compression
   let compressionResult: CompressionResult | undefined;
-  let responseBody: Buffer | string;
+  let responseBody: string | Uint8Array;
 
   if (compress) {
     const acceptEncoding = request.headers.get('accept-encoding');
@@ -151,7 +151,7 @@ export function createOptimizedResponse(
 
     // Only use compression if beneficial
     if (isCompressionBeneficial(compressionResult)) {
-      responseBody = compressionResult.data;
+      responseBody = new Uint8Array(compressionResult.data);
     } else {
       responseBody = JSON.stringify(processedData);
       compressionResult = undefined;
@@ -321,8 +321,8 @@ export function withOptimization(
     try {
       const data = await handler(request);
 
-      // If handler returns a Response, return it as-is
-      if (data instanceof NextResponse || data instanceof Response) {
+      // If handler returns a NextResponse, return it as-is
+      if (data instanceof NextResponse) {
         return data;
       }
 
