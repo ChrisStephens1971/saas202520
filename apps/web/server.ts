@@ -1,6 +1,6 @@
 /**
  * Custom Next.js Server with Socket.io
- * Sprint 6: WebSocket Integration
+ * Sprint 9: Real-Time Features
  *
  * This custom server enables Socket.io for real-time updates
  * while maintaining Next.js functionality
@@ -9,12 +9,12 @@
 import { createServer } from 'http';
 import { parse } from 'url';
 import next from 'next';
-import { initializeSocket } from './lib/socket-server';
+import { initializeSocketServer } from './lib/socket/server';
+import { authMiddleware, loggingMiddleware } from './lib/socket/middleware';
 import type { Server as SocketIOServer } from 'socket.io';
 
 // Extend global type to include Socket.io instance
 declare global {
-   
   var io: SocketIOServer | undefined;
 }
 
@@ -37,8 +37,12 @@ app.prepare().then(() => {
     }
   });
 
-  // Initialize Socket.io
-  const io = initializeSocket(server);
+  // Initialize Socket.io with new Sprint 9 implementation
+  const io = initializeSocketServer(server);
+
+  // Apply middleware
+  io.use(loggingMiddleware);
+  io.use(authMiddleware);
 
   // Make Socket.io instance globally available
   global.io = io;
@@ -50,6 +54,6 @@ app.prepare().then(() => {
 
   server.listen(port, () => {
     console.log(`> Ready on http://${hostname}:${port}`);
-    console.log(`> Socket.io ready on path: /api/socket`);
+    console.log(`> Socket.io server running with Redis adapter support`);
   });
 });

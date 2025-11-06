@@ -1,143 +1,279 @@
 /**
  * useSocket Hook
- * Sprint 6 - WebSocket Integration
+ * Sprint 9 - Real-Time Features
  *
- * Client-side Socket.io connection management for real-time updates
+ * Custom React hooks for Socket.io operations with type safety
  */
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-
-interface UseSocketReturn {
-  socket: Socket | null;
-  isConnected: boolean;
-  error: Error | null;
-}
+import { useCallback, useEffect, useRef } from 'react';
+import { useSocketContext } from '@/contexts/SocketContext';
+import type {
+  ServerToClientEvents,
+  ClientToServerEvents,
+  SocketEvent,
+} from '@/lib/socket/events';
 
 /**
- * Custom React hook for Socket.io connection
+ * Main Socket.io hook with convenience methods
  *
- * @param tournamentId - Tournament ID to join for scoped updates
- * @param enabled - Whether to establish connection (default: true)
- * @returns Socket instance, connection status, and error state
+ * Provides typed access to socket operations:
+ * - Event listeners (on)
+ * - Event emitters (emit)
+ * - Room management (joinTournament, leaveTournament)
+ *
+ * @example
+ * const { socket, isConnected, joinTournament, emit } = useSocket();
+ *
+ * useEffect(() => {
+ *   if (isConnected) {
+ *     joinTournament('tournament-123', 'user-456');
+ *   }
+ * }, [isConnected, joinTournament]);
  */
-export function useSocket(
-  tournamentId?: string,
-  enabled: boolean = true
-): UseSocketReturn {
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+export function useSocket() {
+  const { socket, isConnected, isConnecting, error } = useSocketContext();
 
-  useEffect(() => {
-    // Skip if disabled or socket already exists
-    if (!enabled) {
-      return;
-    }
-
-    // Initialize socket connection
-    const socketInstance = io({
-      path: '/api/socket',
-      autoConnect: true,
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
-      transports: ['websocket', 'polling'],
-    });
-
-    // Connection event handlers
-    socketInstance.on('connect', () => {
-      console.log('[useSocket] Connected to Socket.io server');
-      setSocket(socketInstance);
-      setIsConnected(true);
-      setError(null);
-
-      // Join tournament room if tournamentId provided
-      if (tournamentId) {
-        socketInstance.emit('join:tournament', tournamentId);
-        console.log(`[useSocket] Joined tournament room: ${tournamentId}`);
-      }
-    });
-
-    socketInstance.on('disconnect', (reason) => {
-      console.log(`[useSocket] Disconnected: ${reason}`);
-      setIsConnected(false);
-    });
-
-    socketInstance.on('connect_error', (err) => {
-      console.error('[useSocket] Connection error:', err);
-      setError(err);
-      setIsConnected(false);
-    });
-
-    socketInstance.on('reconnect', (attemptNumber) => {
-      console.log(`[useSocket] Reconnected after ${attemptNumber} attempts`);
-      setIsConnected(true);
-      setError(null);
-    });
-
-    socketInstance.on('reconnect_error', (err) => {
-      console.error('[useSocket] Reconnection error:', err);
-      setError(err);
-    });
-
-    socketInstance.on('reconnect_failed', () => {
-      console.error('[useSocket] Reconnection failed after max attempts');
-      setError(new Error('Reconnection failed after maximum attempts'));
-    });
-
-    // Cleanup on unmount
-    return () => {
-      if (tournamentId) {
-        socketInstance.emit('leave:tournament', tournamentId);
-        console.log(`[useSocket] Left tournament room: ${tournamentId}`);
+  /**
+   * Listen to a Socket.io event
+   * Automatically removes listener on unmount
+   */
+  const on = useCallback(
+    <K extends keyof ServerToClientEvents>(
+      event: K,
+      handler: ServerToClientEvents[K]
+    ) => {
+      if (!socket) {
+        console.warn('[useSocket] Cannot listen to event - socket not connected');
+        return () => {};
       }
 
-      socketInstance.disconnect();
-      setSocket(null);
-      console.log('[useSocket] Socket disconnected and cleaned up');
-    };
-  }, [tournamentId, enabled]);
+      socket.on(event, handler);
+      console.log(`[useSocket] Listening to event: ${String(event)}`);
+
+      // Return cleanup function
+      return () => {
+        socket.off(event, handler);
+        console.log(`[useSocket] Stopped listening to event: ${String(event)}`);
+      };
+    },
+    [socket]
+  );
+
+  /**
+   * Emit a Socket.io event
+   * Type-safe event emission
+   */
+  const emit = useCallback(
+    <K extends keyof ClientToServerEvents>(
+      event: K,
+      ...args: Parameters<ClientToServerEvents[K]>
+    ) => {
+      if (!socket) {
+        console.warn('[useSocket] Cannot emit event - socket not connected');
+        return;
+      }
+
+      socket.emit(event, ...args);
+      console.log(`[useSocket] Emitted event: ${String(event)}`, args);
+    },
+    [socket]
+  );
+
+  /**
+   * Join a tournament room for scoped real-time updates
+   */
+  const joinTournament = useCallback(
+    (tournamentId: string, userId?: string) => {
+      if (!socket) {
+        console.warn('[useSocket] Cannot join tournament - socket not connected');
+        return;
+      }
+
+      socket.emit('tournament:join' as keyof ClientToServerEvents, {
+        tournamentId,
+        userId,
+      } as any);
+
+      console.log(`[useSocket] Joined tournament room: ${tournamentId}`);
+    },
+    [socket]
+  );
+
+  /**
+   * Leave a tournament room
+   */
+  const leaveTournament = useCallback(
+    (tournamentId: string, userId?: string) => {
+      if (!socket) {
+        console.warn('[useSocket] Cannot leave tournament - socket not connected');
+        return;
+      }
+
+      socket.emit('tournament:leave' as keyof ClientToServerEvents, {
+        tournamentId,
+        userId,
+      } as any);
+
+      console.log(`[useSocket] Left tournament room: ${tournamentId}`);
+    },
+    [socket]
+  );
 
   return {
     socket,
     isConnected,
+    isConnecting,
     error,
+    on,
+    emit,
+    joinTournament,
+    leaveTournament,
   };
 }
 
 /**
- * Hook for listening to socket events with SWR integration
+ * Hook for listening to a specific Socket.io event
  *
- * @param tournamentId - Tournament ID to join
- * @param eventName - Socket event to listen for
- * @param callback - Callback function when event is received
- * @param enabled - Whether to establish connection (default: true)
+ * Automatically manages event listener lifecycle and cleanup
+ *
+ * @param event - Socket.io event name
+ * @param handler - Event handler function
+ * @param dependencies - Additional dependencies for handler (default: [])
+ *
+ * @example
+ * useSocketEvent('tournament:updated', (payload) => {
+ *   console.log('Tournament updated:', payload);
+ *   // Update local state...
+ * });
  */
-export function useSocketEvent<T = unknown>(
-  tournamentId: string,
-  eventName: string,
-  callback: (data: T) => void,
-  enabled: boolean = true
+export function useSocketEvent<K extends keyof ServerToClientEvents>(
+  event: K,
+  handler: ServerToClientEvents[K],
+  dependencies: any[] = []
 ) {
-  const { socket, isConnected } = useSocket(tournamentId, enabled);
+  const { socket, isConnected } = useSocketContext();
+
+  // Use ref to avoid re-creating listener on every render
+  const handlerRef = useRef(handler);
+  handlerRef.current = handler;
 
   useEffect(() => {
     if (!socket || !isConnected) {
       return;
     }
 
-    socket.on(eventName, callback);
-    console.log(`[useSocketEvent] Listening for event: ${eventName}`);
+    // Wrap handler to use current ref value
+    const wrappedHandler = (...args: any[]) => {
+      handlerRef.current(...(args as Parameters<ServerToClientEvents[K]>));
+    };
+
+    socket.on(event, wrappedHandler as any);
+    console.log(`[useSocketEvent] Listening to: ${String(event)}`);
 
     return () => {
-      socket.off(eventName, callback);
-      console.log(`[useSocketEvent] Stopped listening for event: ${eventName}`);
+      socket.off(event, wrappedHandler as any);
+      console.log(`[useSocketEvent] Stopped listening to: ${String(event)}`);
     };
-  }, [socket, isConnected, eventName, callback]);
+  }, [socket, isConnected, event, ...dependencies]);
+}
 
-  return { socket, isConnected };
+/**
+ * Hook for managing tournament room subscription
+ *
+ * Automatically joins tournament room on mount and leaves on unmount
+ * Re-subscribes when tournament ID changes
+ *
+ * @param tournamentId - Tournament ID to join (null to skip)
+ * @param userId - Optional user ID for presence tracking
+ *
+ * @example
+ * const { isInRoom, users } = useTournamentRoom(tournamentId, currentUserId);
+ *
+ * if (isInRoom) {
+ *   // Render real-time tournament UI
+ * }
+ */
+export function useTournamentRoom(tournamentId: string | null, userId?: string) {
+  const { socket, isConnected } = useSocketContext();
+  const { joinTournament, leaveTournament } = useSocket();
+
+  useEffect(() => {
+    if (!socket || !isConnected || !tournamentId) {
+      return;
+    }
+
+    // Join tournament room
+    joinTournament(tournamentId, userId);
+
+    // Cleanup: leave room on unmount or tournament change
+    return () => {
+      leaveTournament(tournamentId, userId);
+    };
+  }, [socket, isConnected, tournamentId, userId, joinTournament, leaveTournament]);
+
+  return {
+    isInRoom: isConnected && !!tournamentId,
+    tournamentId,
+  };
+}
+
+/**
+ * Hook for managing user presence in a tournament
+ *
+ * Tracks online/offline users and provides presence updates
+ *
+ * @param tournamentId - Tournament ID to track presence for
+ *
+ * @example
+ * const { onlineUsers, totalUsers } = usePresence(tournamentId);
+ *
+ * return (
+ *   <div>
+ *     {onlineUsers.length} / {totalUsers} players online
+ *   </div>
+ * );
+ */
+export function usePresence(tournamentId: string) {
+  const { socket, isConnected } = useSocketContext();
+  const [onlineUsers, setOnlineUsers] = React.useState<string[]>([]);
+
+  useSocketEvent(
+    'user:online',
+    useCallback(
+      (payload) => {
+        if (payload.userId) {
+          setOnlineUsers((prev) => [...new Set([...prev, payload.userId!])]);
+        }
+      },
+      []
+    )
+  );
+
+  useSocketEvent(
+    'user:offline',
+    useCallback(
+      (payload) => {
+        if (payload.userId) {
+          setOnlineUsers((prev) => prev.filter((id) => id !== payload.userId));
+        }
+      },
+      []
+    )
+  );
+
+  // Request current users when joining
+  useEffect(() => {
+    if (socket && isConnected && tournamentId) {
+      // Server will emit users:in:tournament event with current users
+      socket.emit('tournament:join' as any, { tournamentId });
+    }
+  }, [socket, isConnected, tournamentId]);
+
+  return {
+    onlineUsers,
+    totalUsers: onlineUsers.length,
+    isTracking: isConnected,
+  };
 }
