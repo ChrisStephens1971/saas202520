@@ -30,7 +30,13 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
     );
   }
 
-  let runningTotal = 0;
+  // Pre-calculate running totals for each award
+  const historyWithTotals = history.map((award, index) => {
+    const runningTotal = history
+      .slice(0, index + 1)
+      .reduce((sum, a) => sum + a.chipsEarned, 0);
+    return { ...award, runningTotal };
+  });
 
   return (
     <div className="space-y-4">
@@ -47,10 +53,9 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
 
         {/* Timeline Items */}
         <div className="space-y-4">
-          {history.map((award, index) => {
-            runningTotal += award.chipsEarned;
-            const isManual = award.matchId.startsWith('manual-');
-            const isPositive = award.chipsEarned > 0;
+          {historyWithTotals.map((item, index) => {
+            const isManual = item.matchId.startsWith('manual-');
+            const isPositive = item.chipsEarned > 0;
 
             return (
               <div key={index} className="relative pl-16">
@@ -80,13 +85,13 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
                           {isManual ? 'Manual Adjustment' : 'Match'}
                         </span>
                         <span className="text-xs text-gray-500">
-                          {format(new Date(award.timestamp), 'MMM d, h:mm a')}
+                          {format(new Date(item.timestamp), 'MMM d, h:mm a')}
                         </span>
                       </div>
 
                       {!isManual && (
                         <div className="text-sm text-gray-600">
-                          Match ID: {award.matchId.slice(0, 8)}...
+                          Match ID: {item.matchId.slice(0, 8)}...
                         </div>
                       )}
                     </div>
@@ -98,10 +103,10 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
                         }`}
                       >
                         {isPositive ? '+' : ''}
-                        {award.chipsEarned}
+                        {item.chipsEarned}
                       </div>
                       <div className="text-xs text-gray-500">
-                        Total: {runningTotal}
+                        Total: {item.runningTotal}
                       </div>
                     </div>
                   </div>
