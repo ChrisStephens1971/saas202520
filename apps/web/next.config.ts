@@ -15,6 +15,55 @@ const nextConfig: NextConfig = {
     hideSourceMaps: true,
     widenClientFileUpload: true,
   },
+
+  // Compression configuration (Sprint 9 Phase 3)
+  compress: true, // Enable gzip compression for responses
+
+  // Performance optimizations
+  experimental: {
+    // Enable optimized package imports
+    optimizePackageImports: ['@tournament/api-contracts', '@tournament/shared'],
+  },
+
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
+  poweredByHeader: false, // Remove X-Powered-By header for security
+
+  // Headers configuration for compression and caching
+  async headers() {
+    return [
+      {
+        // API routes - enable compression hints
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Vary',
+            value: 'Accept-Encoding',
+          },
+        ],
+      },
+      {
+        // Static assets - aggressive caching
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Images - cache for 1 day
+        source: '/:path*.{jpg,jpeg,png,gif,webp,svg,ico}',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, must-revalidate',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 // Combine PWA and Sentry configurations

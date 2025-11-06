@@ -13,7 +13,11 @@
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:generate": "prisma generate",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "load-test": "k6 run load-tests/scenarios/tournament-load.js",
+    "load-test:api": "k6 run load-tests/scenarios/api-load.js",
+    "load-test:ws": "k6 run load-tests/scenarios/websocket-load.js",
+    "load-test:all": "k6 run load-tests/scenarios/tournament-load.js && k6 run load-tests/scenarios/api-load.js && k6 run load-tests/scenarios/websocket-load.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
@@ -23,6 +27,7 @@
     "bcryptjs": "^3.0.3",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
+    "k6": "^0.0.0",
     "prettier": "^3.3.3",
     "prisma": "^6.18.0",
     "tsx": "^4.20.6",
