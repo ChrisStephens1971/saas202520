@@ -1,13 +1,15 @@
 /**
  * Chip Standings Table Component
  * Epic: UI-002 - Live Chip Standings
+ * Sprint 6 - WebSocket real-time updates
  * Displays real-time chip standings with rankings
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useSWR from 'swr';
+import { useSocket } from '@/hooks/useSocket';
 
 interface ChipStanding {
   playerId: string;
@@ -40,15 +42,48 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
   const [sortBy, setSortBy] = useState<'rank' | 'wins' | 'matches'>('rank');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
-  // Fetch standings with auto-refresh every 5 seconds
+  // WebSocket connection for real-time updates
+  const { socket, isConnected } = useSocket(tournamentId);
+
+  // Fetch standings (no polling, WebSocket-triggered updates only)
   const { data, error, isLoading, mutate } = useSWR(
     `/api/tournaments/${tournamentId}/chip-standings?includeStats=true`,
     fetcher,
     {
-      refreshInterval: 5000, // Auto-refresh every 5 seconds
+      refreshInterval: 0, // Disabled: using WebSocket instead
       revalidateOnFocus: true,
     }
   );
+
+  // Listen for WebSocket events and trigger SWR revalidation
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const handleStandingsUpdate = () => {
+      console.log('[ChipStandingsTable] Received standings:updated event');
+      mutate();
+    };
+
+    const handleFinalsApplied = () => {
+      console.log('[ChipStandingsTable] Received finals:applied event');
+      mutate();
+    };
+
+    const handleChipsAdjusted = () => {
+      console.log('[ChipStandingsTable] Received chips:adjusted event');
+      mutate();
+    };
+
+    socket.on('standings:updated', handleStandingsUpdate);
+    socket.on('finals:applied', handleFinalsApplied);
+    socket.on('chips:adjusted', handleChipsAdjusted);
+
+    return () => {
+      socket.off('standings:updated', handleStandingsUpdate);
+      socket.off('finals:applied', handleFinalsApplied);
+      socket.off('chips:adjusted', handleChipsAdjusted);
+    };
+  }, [socket, isConnected, mutate]);
 
   const standings: ChipStanding[] = data?.standings || [];
   const stats: ChipStats = data?.stats;
@@ -234,9 +269,13 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
         </div>
       )}
 
-      {/* Auto-refresh indicator */}
-      <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 text-right">
-        Auto-refreshing every 5 seconds • Last updated: {new Date().toLocaleTimeString()}
+      {/* WebSocket connection status */}
+      <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`} />
+          <span>{isConnected ? 'Live updates active' : 'Connecting...'}</span>
+        </div>
+        <span>Last updated: {new Date().toLocaleTimeString()}</span>
       </div>
     </div>
   );

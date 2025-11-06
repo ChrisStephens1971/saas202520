@@ -2,17 +2,19 @@
  * API: Manual Chip Adjustment
  * PATCH /api/tournaments/[id]/players/[playerId]/chips
  * Sprint 4 - CHIP-002
+ * Sprint 6 - WebSocket integration
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { adjustChips } from '@/lib/chip-tracker';
+import { emitChipsAdjusted, emitStandingsUpdate } from '@/lib/socket-server';
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; playerId: string }> }
 ) {
   try {
-    const { playerId } = await params;
+    const { id: tournamentId, playerId } = await params;
     const body = await request.json();
 
     const { adjustment, reason } = body;
@@ -32,6 +34,13 @@ export async function PATCH(
     }
 
     const updatedPlayer = await adjustChips(playerId, adjustment, reason);
+
+    // Emit WebSocket events
+    const io = global.io;
+    if (io) {
+      emitChipsAdjusted(io, tournamentId, playerId);
+      emitStandingsUpdate(io, tournamentId);
+    }
 
     return NextResponse.json({
       success: true,

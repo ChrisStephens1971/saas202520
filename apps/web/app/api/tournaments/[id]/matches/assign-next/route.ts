@@ -2,11 +2,13 @@
  * API: Assign Next Match (Chip Format Queue)
  * POST /api/tournaments/[id]/matches/assign-next
  * Sprint 4 - CHIP-001
+ * Sprint 6 - WebSocket integration
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { assignNextMatch, assignMatchBatch } from '@/lib/chip-format-engine';
 import type { ChipConfig } from '@/lib/chip-tracker';
+import { emitMatchAssigned, emitQueueUpdate } from '@/lib/socket-server';
 
 export async function POST(
   request: NextRequest,
@@ -40,6 +42,13 @@ export async function POST(
         );
       }
 
+      // Emit WebSocket events
+      const io = global.io;
+      if (io) {
+        emitMatchAssigned(io, tournamentId, assignment.matchId);
+        emitQueueUpdate(io, tournamentId);
+      }
+
       return NextResponse.json({
         success: true,
         assignment,
@@ -47,6 +56,15 @@ export async function POST(
     } else {
       // Assign multiple matches in batch
       const assignments = await assignMatchBatch(tournamentId, chipConfig, count);
+
+      // Emit WebSocket events for batch assignment
+      const io = global.io;
+      if (io) {
+        assignments.forEach((assignment) => {
+          emitMatchAssigned(io, tournamentId, assignment.matchId);
+        });
+        emitQueueUpdate(io, tournamentId);
+      }
 
       return NextResponse.json({
         success: true,

@@ -1,12 +1,15 @@
 /**
  * Queue Dashboard Component
  * Epic: UI-003 - Queue Management
+ * Sprint 6 - WebSocket real-time updates
  * Displays queue status and available players
  */
 
 'use client';
 
+import { useEffect } from 'react';
 import useSWR from 'swr';
+import { useSocket } from '@/hooks/useSocket';
 
 interface QueueStats {
   availableCount: number;
@@ -28,14 +31,40 @@ interface Props {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function QueueDashboard({ tournamentId }: Props) {
+  // WebSocket connection for real-time updates
+  const { socket, isConnected } = useSocket(tournamentId);
+
   const { data, error, isLoading, mutate } = useSWR<QueueStats>(
     `/api/tournaments/${tournamentId}/queue-stats`,
     fetcher,
     {
-      refreshInterval: 3000, // Refresh every 3 seconds for queue
+      refreshInterval: 0, // Disabled: using WebSocket instead
       revalidateOnFocus: true,
     }
   );
+
+  // Listen for WebSocket events and trigger SWR revalidation
+  useEffect(() => {
+    if (!socket || !isConnected) return;
+
+    const handleQueueUpdate = () => {
+      console.log('[QueueDashboard] Received queue:updated event');
+      mutate();
+    };
+
+    const handleMatchAssigned = () => {
+      console.log('[QueueDashboard] Received match:assigned event');
+      mutate();
+    };
+
+    socket.on('queue:updated', handleQueueUpdate);
+    socket.on('match:assigned', handleMatchAssigned);
+
+    return () => {
+      socket.off('queue:updated', handleQueueUpdate);
+      socket.off('match:assigned', handleMatchAssigned);
+    };
+  }, [socket, isConnected, mutate]);
 
   if (error) {
     return (
@@ -164,9 +193,12 @@ export default function QueueDashboard({ tournamentId }: Props) {
         )}
       </div>
 
-      {/* Auto-refresh indicator */}
-      <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 text-right">
-        Auto-refreshing every 3 seconds
+      {/* WebSocket connection status */}
+      <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`} />
+          <span>{isConnected ? 'Live updates active' : 'Connecting...'}</span>
+        </div>
       </div>
     </div>
   );

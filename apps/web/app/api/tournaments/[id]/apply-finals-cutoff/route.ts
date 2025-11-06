@@ -2,12 +2,14 @@
  * API: Apply Finals Cutoff
  * POST /api/tournaments/[id]/apply-finals-cutoff
  * Sprint 4 - CHIP-003
+ * Sprint 6 - WebSocket integration
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { applyFinalsCutoff } from '@/lib/finals-cutoff';
 import { prisma } from '@/lib/prisma';
 import type { ChipConfig } from '@/lib/chip-tracker';
+import { emitFinalsApplied, emitStandingsUpdate } from '@/lib/socket-server';
 
 export async function POST(
   request: NextRequest,
@@ -46,6 +48,13 @@ export async function POST(
 
     // Apply finals cutoff
     const result = await applyFinalsCutoff(tournamentId, chipConfig);
+
+    // Emit WebSocket events
+    const io = global.io;
+    if (io) {
+      emitFinalsApplied(io, tournamentId, result.finalists.length);
+      emitStandingsUpdate(io, tournamentId);
+    }
 
     return NextResponse.json({
       success: true,
