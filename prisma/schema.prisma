@@ -21,14 +21,31 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
   password      String? // For credentials provider (hashed)
+
+  // User management fields (Sprint 9 Phase 2)
+  role              String    @default("player") // admin, organizer, player
+  status            String    @default("active") // active, suspended, banned, pending
+  lastLoginAt       DateTime? @map("last_login_at")
+  bannedAt          DateTime? @map("banned_at")
+  bannedBy          String?   @map("banned_by")
+  banReason         String?   @map("ban_reason")
+  suspendedUntil    DateTime? @map("suspended_until")
+  suspensionReason  String?   @map("suspension_reason")
+
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  accounts           Account[]
-  sessions           Session[]
+  accounts            Account[]
+  sessions            Session[]
   organizationMembers OrganizationMember[]
+  activityLogs        UserActivity[]
+  moderationActions   UserModerationAction[]
+  performedActions    UserModerationAction[] @relation("PerformedBy")
 
+  @@index([role])
+  @@index([status])
+  @@index([lastLoginAt])
   @@map("users")
 }
 
@@ -436,4 +453,129 @@ model NotificationPreference {
   @@index([playerId])
   @@index([smsOptedOut])
   @@map("notification_preferences")
+}
+
+// ============================================================================
+// AUDIT LOGS (Sprint 9 - Phase 2)
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  orgId       String   @map("org_id") // Multi-tenant: organization scope
+  userId      String   @map("user_id") // Actor who performed the action
+  userName    String   @map("user_name") // Denormalized for performance
+  action      String   // create, update, delete, login, logout, failed_login, ban, suspend, etc.
+  resource    String   // user, tournament, match, player, settings, etc.
+  resourceId  String?  @map("resource_id") // ID of affected resource (optional for some actions)
+  changes     Json?    // Before/after values for updates: { before: {...}, after: {...} }
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  metadata    Json?    // Additional context (e.g., error details, request params)
+  timestamp   DateTime @default(now())
+
+  @@index([orgId])
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([timestamp])
+  @@index([orgId, timestamp]) // Composite for fast org-scoped queries
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// SYSTEM SETTINGS (Sprint 9 - Phase 2)
+// ============================================================================
+
+model SystemSettings {
+  id          String   @id @default(cuid())
+  orgId       String   @unique @map("org_id") // One settings record per organization
+
+  // General Settings
+  siteName    String?  @map("site_name")
+  siteDescription String? @map("site_description")
+  timezone    String?  @default("America/New_York")
+  language    String?  @default("en")
+
+  // Email Settings
+  smtpHost    String?  @map("smtp_host")
+  smtpPort    Int?     @map("smtp_port")
+  smtpUser    String?  @map("smtp_user")
+  smtpPassword String? @map("smtp_password") // Encrypted
+  smtpFromEmail String? @map("smtp_from_email")
+  smtpFromName  String? @map("smtp_from_name")
+
+  // Security Settings
+  sessionTimeout Int?   @map("session_timeout") // Minutes
+  require2FA     Boolean @default(false) @map("require_2fa")
+  passwordMinLength Int? @map("password_min_length") @default(8)
+  passwordRequireSpecialChar Boolean @default(true) @map("password_require_special_char")
+  maxLoginAttempts Int?  @map("max_login_attempts") @default(5)
+  lockoutDuration Int?   @map("lockout_duration") // Minutes
+
+  // Feature Flags
+  features    Json?    // { liveScoring: true, notifications: true, payments: false, ... }
+
+  // Performance Settings
+  cacheTTL    Int?     @map("cache_ttl") // Seconds
+  rateLimit   Int?     @map("rate_limit") // Requests per minute
+
+  // Notification Settings
+  enableEmailNotifications Boolean @default(true) @map("enable_email_notifications")
+  enableSmsNotifications   Boolean @default(true) @map("enable_sms_notifications")
+  enablePushNotifications  Boolean @default(false) @map("enable_push_notifications")
+
+  // Integration Settings (stored as JSON for flexibility)
+  integrations Json?   // { stripe: {...}, twilio: {...}, analytics: {...} }
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([orgId])
+  @@map("system_settings")
+}
+
+// ============================================================================
+// USER MANAGEMENT (Sprint 9 - Phase 2)
+// ============================================================================
+
+model UserActivity {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  action      String   // login, logout, view_tournament, create_tournament, etc.
+  resource    String   // tournament, player, match, settings
+  resourceId  String?  @map("resource_id")
+  metadata    Json?    // Additional context
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  timestamp   DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@index([userId, timestamp]) // Composite for user activity timeline
+  @@map("user_activities")
+}
+
+model UserModerationAction {
+  id            String    @id @default(cuid())
+  userId        String    @map("user_id") // User being moderated
+  actionType    String    @map("action_type") // warn, suspend, ban, unban, unsuspend
+  reason        String
+  performedBy   String    @map("performed_by") // Admin user ID
+  performedAt   DateTime  @default(now()) @map("performed_at")
+  expiresAt     DateTime? @map("expires_at") // For temporary suspensions
+  metadata      Json?     // Additional details
+
+  // Relations
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  performer User @relation("PerformedBy", fields: [performedBy], references: [id])
+
+  @@index([userId])
+  @@index([performedBy])
+  @@index([actionType])
+  @@index([performedAt])
+  @@map("user_moderation_actions")
 }
