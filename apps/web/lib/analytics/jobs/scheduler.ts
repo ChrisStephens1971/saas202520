@@ -251,6 +251,52 @@ export function scheduleWeeklyTournamentAggregation(): void {
 }
 
 /**
+ * Schedule hourly scheduled reports check
+ *
+ * Runs every hour to check for reports that are due to run
+ */
+export function scheduleReportsCheck(): void {
+  const taskName = 'hourly-reports-check';
+
+  if (scheduledTasks.has(taskName)) {
+    console.log(`[Scheduler] Task '${taskName}' is already scheduled`);
+    return;
+  }
+
+  // Cron expression: Run every hour at minute 5
+  // '5 * * * *' = At minute 5 past every hour
+  const schedule = '5 * * * *';
+
+  const task = cron.schedule(
+    schedule,
+    async () => {
+      console.log('[Scheduler] Running scheduled reports check...');
+
+      try {
+        // Import dynamically to avoid circular dependencies
+        const { scheduleReports } = await import('./report-generation-job');
+        await scheduleReports();
+      } catch (error) {
+        console.error('[Scheduler] Failed to check scheduled reports:', error);
+      }
+    },
+    {
+      scheduled: false,
+      timezone: process.env.TZ || 'America/New_York',
+    }
+  );
+
+  scheduledTasks.set(taskName, {
+    name: taskName,
+    schedule,
+    task,
+    enabled: false,
+  });
+
+  console.log(`[Scheduler] Scheduled task '${taskName}' created with cron: ${schedule}`);
+}
+
+/**
  * Initialize all scheduled tasks
  *
  * Creates all scheduled jobs but doesn't start them.
@@ -263,6 +309,7 @@ export function initializeScheduler(): void {
   scheduleDailyRevenueAggregation();
   scheduleMonthlyCohortAnalysis();
   scheduleWeeklyTournamentAggregation();
+  scheduleReportsCheck();
 
   console.log(`[Scheduler] ${scheduledTasks.size} tasks initialized`);
 }
@@ -384,6 +431,11 @@ export async function triggerTask(taskName: string): Promise<boolean> {
       case 'weekly-tournaments':
         jobData = { type: 'tournaments', periodType: 'week' };
         break;
+      case 'hourly-reports-check':
+        // Trigger scheduled reports check manually
+        const { scheduleReports } = await import('./report-generation-job');
+        await scheduleReports();
+        return true;
       default:
         throw new Error(`Unknown task type: ${taskName}`);
     }
