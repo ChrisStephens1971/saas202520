@@ -1,0 +1,75 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "pnpm build && pnpm start",
+      "url": [
+        "http://localhost:3020/",
+        "http://localhost:3020/tournaments",
+        "http://localhost:3020/leaderboard",
+        "http://localhost:3020/profile"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638,
+          "requestLatencyMs": 150,
+          "downloadThroughputKbps": 1638,
+          "uploadThroughputKbps": 768,
+          "cpuSlowdownMultiplier": 4
+        },
+        "screenEmulation": {
+          "mobile": true,
+          "width": 375,
+          "height": 667,
+          "deviceScaleFactor": 2,
+          "disabled": false
+        },
+        "formFactor": "mobile",
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36"
+      }
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "categories:performance": ["error", {"minScore": 0.85}],
+        "categories:accessibility": ["warn", {"minScore": 0.9}],
+        "categories:best-practices": ["warn", {"minScore": 0.9}],
+        "categories:seo": ["warn", {"minScore": 0.9}],
+        "categories:pwa": ["warn", {"minScore": 0.8}],
+        "first-contentful-paint": ["error", {"maxNumericValue": 3000}],
+        "largest-contentful-paint": ["error", {"maxNumericValue": 4000}],
+        "cumulative-layout-shift": ["error", {"maxNumericValue": 0.1}],
+        "total-blocking-time": ["error", {"maxNumericValue": 600}],
+        "speed-index": ["error", {"maxNumericValue": 5000}],
+        "interactive": ["error", {"maxNumericValue": 5000}],
+        "uses-responsive-images": "error",
+        "offscreen-images": "error",
+        "unminified-css": "error",
+        "unminified-javascript": "error",
+        "unused-css-rules": "error",
+        "unused-javascript": "warn",
+        "modern-image-formats": "error",
+        "uses-optimized-images": "error",
+        "uses-text-compression": "error",
+        "uses-rel-preconnect": "warn",
+        "server-response-time": ["error", {"maxNumericValue": 600}],
+        "redirects": "error",
+        "critical-request-chains": "error",
+        "bootup-time": ["error", {"maxNumericValue": 4000}],
+        "mainthread-work-breakdown": ["error", {"maxNumericValue": 5000}],
+        "font-display": "error",
+        "resource-summary:script:size": ["error", {"maxNumericValue": 204800}],
+        "resource-summary:stylesheet:size": ["error", {"maxNumericValue": 51200}],
+        "resource-summary:image:size": ["error", {"maxNumericValue": 512000}],
+        "resource-summary:total:size": ["error", {"maxNumericValue": 1048576}],
+        "tap-targets": "error",
+        "viewport": "error"
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

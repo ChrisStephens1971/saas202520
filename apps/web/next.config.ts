@@ -19,6 +19,16 @@ const nextConfig: NextConfig = {
   // Compression configuration (Sprint 9 Phase 3)
   compress: true, // Enable gzip compression for responses
 
+  // Image optimization configuration (Sprint 10 Week 4)
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+
   // Performance optimizations
   experimental: {
     // Enable optimized package imports
@@ -28,6 +38,50 @@ const nextConfig: NextConfig = {
   // Production optimizations
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
   poweredByHeader: false, // Remove X-Powered-By header for security
+
+  // Webpack optimizations (Sprint 10 Week 4)
+  webpack: (config, { dev, isServer }) => {
+    // Production optimizations
+    if (!dev && !isServer) {
+      // Tree shaking
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+        // Module concatenation
+        concatenateModules: true,
+        // Minimize bundle size
+        minimize: true,
+      };
+
+      // Split chunks for better caching
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Vendor chunk
+          vendor: {
+            name: 'vendor',
+            chunks: 'all',
+            test: /node_modules/,
+            priority: 20,
+          },
+          // Common chunk
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true,
+          },
+        },
+      };
+    }
+
+    return config;
+  },
 
   // Headers configuration for compression and caching
   async headers() {

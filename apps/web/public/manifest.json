@@ -74,17 +74,31 @@
   ],
   "shortcuts": [
     {
-      "name": "Create Tournament",
+      "name": "New Tournament",
       "short_name": "New",
       "description": "Create a new tournament",
       "url": "/tournaments/new",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "View Tournaments",
-      "short_name": "View",
-      "description": "View all tournaments",
+      "name": "Record Score",
+      "short_name": "Score",
+      "description": "Record match scores",
+      "url": "/scoring",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Bracket",
+      "short_name": "Bracket",
+      "description": "View tournament brackets",
       "url": "/tournaments",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Leaderboards",
+      "short_name": "Leaders",
+      "description": "View player rankings and leaderboards",
+      "url": "/leaderboards",
       "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ]

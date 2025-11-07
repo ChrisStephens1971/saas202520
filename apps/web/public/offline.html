@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - Tournament Management System</title>
+    <meta name="description" content="You are currently offline" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+          Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #333;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        width: 100%;
+        padding: 40px;
+        text-align: center;
+      }
+
+      .icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 30px;
+        background: #f0f0f0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .icon svg {
+        width: 60px;
+        height: 60px;
+        color: #999;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 16px;
+        color: #1a1a1a;
+      }
+
+      p {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+
+      .status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        margin-bottom: 30px;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        background: #ffc107;
+        border-radius: 50%;
+        animation: blink 1.5s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .status-text {
+        font-weight: 600;
+        color: #856404;
+      }
+
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: 100%;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .info {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        font-size: 14px;
+      }
+
+      .info-label {
+        color: #999;
+      }
+
+      .info-value {
+        font-weight: 600;
+        color: #333;
+      }
+
+      .success {
+        background: #d4edda;
+        border-color: #28a745;
+      }
+
+      .success .status-dot {
+        background: #28a745;
+      }
+
+      .success .status-text {
+        color: #155724;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 30px 20px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+
+        .icon {
+          width: 100px;
+          height: 100px;
+        }
+
+        .icon svg {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"
+          />
+        </svg>
+      </div>
+
+      <h1>You're Offline</h1>
+
+      <p>
+        It looks like you're not connected to the internet. Don't worry, some features are still
+        available offline.
+      </p>
+
+      <div class="status" id="status">
+        <div class="status-dot"></div>
+        <span class="status-text">Checking connection...</span>
+      </div>
+
+      <button onclick="handleRetry()" id="retryButton">Try Again</button>
+
+      <div class="info">
+        <div class="info-item">
+          <span class="info-label">Offline Features</span>
+          <span class="info-value">Available</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Cached Data</span>
+          <span class="info-value" id="cacheStatus">Checking...</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Queued Actions</span>
+          <span class="info-value" id="queuedActions">0</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Check connection status
+      function updateStatus() {
+        const statusDiv = document.getElementById('status');
+        const statusDot = statusDiv.querySelector('.status-dot');
+        const statusText = statusDiv.querySelector('.status-text');
+
+        if (navigator.onLine) {
+          statusDiv.classList.add('success');
+          statusText.textContent = 'Back Online!';
+          document.getElementById('retryButton').textContent = 'Return to App';
+        } else {
+          statusDiv.classList.remove('success');
+          statusText.textContent = 'No Internet Connection';
+        }
+      }
+
+      // Handle retry button
+      function handleRetry() {
+        if (navigator.onLine) {
+          window.location.href = '/';
+        } else {
+          updateStatus();
+        }
+      }
+
+      // Check cache status
+      async function checkCache() {
+        if ('caches' in window) {
+          try {
+            const cacheNames = await caches.keys();
+            const cacheCount = cacheNames.length;
+            document.getElementById('cacheStatus').textContent =
+              cacheCount > 0 ? `${cacheCount} caches` : 'No cache';
+          } catch {
+            document.getElementById('cacheStatus').textContent = 'Unknown';
+          }
+        } else {
+          document.getElementById('cacheStatus').textContent = 'Not supported';
+        }
+      }
+
+      // Check queued actions (if offline queue is available)
+      async function checkQueuedActions() {
+        try {
+          // This would need to import and use the offline queue
+          // For now, just show 0
+          document.getElementById('queuedActions').textContent = '0';
+        } catch {
+          document.getElementById('queuedActions').textContent = '0';
+        }
+      }
+
+      // Listen for online/offline events
+      window.addEventListener('online', updateStatus);
+      window.addEventListener('offline', updateStatus);
+
+      // Initial status check
+      updateStatus();
+      checkCache();
+      checkQueuedActions();
+
+      // Periodically check connection
+      setInterval(updateStatus, 5000);
+    </script>
+  </body>
+</html>

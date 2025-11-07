@@ -1,14 +1,24 @@
 /**
  * Unsubscribe from Push Notifications API Route
- * Sprint 8 - Advanced Features
+ * Sprint 10 Week 4 - PWA Push Notifications
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
-    const { subscription, tournamentId } = body;
+    const { subscription } = body;
 
     if (!subscription || !subscription.endpoint) {
       return NextResponse.json(
@@ -17,16 +27,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Remove subscription from database
-    // For now, we'll just return success
-    // In production, you would:
-    // 1. Get user ID from session/auth
-    // 2. Find and delete subscription from database
-    // 3. Clean up any associated notification preferences
+    // Remove subscription from database
+    await prisma.pushSubscription.delete({
+      where: {
+        endpoint: subscription.endpoint,
+      },
+    });
 
-    console.log('Unsubscribed from push notifications:', {
-      endpoint: subscription.endpoint,
-      tournamentId,
+    console.log('Push subscription removed:', {
+      userId: session.user.id,
+      endpoint: subscription.endpoint.substring(0, 50) + '...',
     });
 
     return NextResponse.json({

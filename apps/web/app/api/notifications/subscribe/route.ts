@@ -1,14 +1,24 @@
 /**
  * Subscribe to Push Notifications API Route
- * Sprint 8 - Advanced Features
+ * Sprint 10 Week 4 - PWA Push Notifications
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
-    const { subscription, tournamentId } = body;
+    const { subscription, preferences } = body;
 
     if (!subscription || !subscription.endpoint) {
       return NextResponse.json(
@@ -17,16 +27,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Store subscription in database
-    // For now, we'll just return success
-    // In production, you would:
-    // 1. Get user ID from session/auth
-    // 2. Store subscription in database with user ID and tournament ID
-    // 3. Associate subscription with notification preferences
+    // Store or update subscription in database
+    await prisma.pushSubscription.upsert({
+      where: {
+        endpoint: subscription.endpoint,
+      },
+      update: {
+        p256dhKey: subscription.keys.p256dh,
+        authKey: subscription.keys.auth,
+        preferences: preferences || {},
+        updatedAt: new Date(),
+      },
+      create: {
+        userId: session.user.id,
+        endpoint: subscription.endpoint,
+        p256dhKey: subscription.keys.p256dh,
+        authKey: subscription.keys.auth,
+        preferences: preferences || {},
+      },
+    });
 
-    console.log('New push subscription:', {
-      endpoint: subscription.endpoint,
-      tournamentId,
+    console.log('Push subscription saved:', {
+      userId: session.user.id,
+      endpoint: subscription.endpoint.substring(0, 50) + '...',
     });
 
     return NextResponse.json({
