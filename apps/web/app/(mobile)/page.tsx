@@ -8,8 +8,6 @@ import {
   Calendar,
   Settings,
   Plus,
-  Trash,
-  Archive,
   Heart,
   Share
 } from 'lucide-react';
@@ -125,7 +123,6 @@ export default function MobileHomePage() {
                   label: 'Favorite',
                   color: '#ef4444',
                   onAction: () => {
-                    console.log('Favorited:', card.title);
                     triggerHaptic('success');
                   },
                   haptic: 'medium'
@@ -135,7 +132,6 @@ export default function MobileHomePage() {
                   label: 'Share',
                   color: '#3b82f6',
                   onAction: () => {
-                    console.log('Shared:', card.title);
                     triggerHaptic('success');
                   },
                   haptic: 'medium'
@@ -229,7 +225,7 @@ export default function MobileHomePage() {
 
             <div className="grid grid-cols-3 gap-3">
               <TouchFeedback
-                onPress={() => console.log('Light tap')}
+                onPress={() => {}}
                 hapticType="light"
               >
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
@@ -241,7 +237,7 @@ export default function MobileHomePage() {
               </TouchFeedback>
 
               <TouchFeedback
-                onPress={() => console.log('Medium tap')}
+                onPress={() => {}}
                 hapticType="medium"
               >
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
@@ -253,7 +249,7 @@ export default function MobileHomePage() {
               </TouchFeedback>
 
               <TouchFeedback
-                onPress={() => console.log('Heavy tap')}
+                onPress={() => {}}
                 hapticType="heavy"
               >
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">

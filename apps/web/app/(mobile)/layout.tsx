@@ -24,6 +24,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
   const pathname = usePathname();
 
   // Determine if we should show mobile UI
+  // eslint-disable-next-line no-undef, @typescript-eslint/no-unused-vars
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Paths where we don't show bottom nav (e.g., auth pages)

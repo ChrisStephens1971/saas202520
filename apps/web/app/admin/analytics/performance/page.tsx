@@ -70,6 +70,7 @@ export default function PerformanceAnalyticsPage() {
         startDate: dateRange.start.toISOString(),
         endDate: dateRange.end.toISOString(),
       });
+      // eslint-disable-next-line no-undef
       const response = await fetch(`/api/admin/analytics/performance?${params}`);
       if (!response.ok) throw new Error('Failed to fetch performance analytics');
       const data = await response.json();

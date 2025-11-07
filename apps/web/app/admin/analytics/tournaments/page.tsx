@@ -70,6 +70,7 @@ export default function TournamentAnalyticsPage() {
         startDate: dateRange.start.toISOString(),
         endDate: dateRange.end.toISOString(),
       });
+      // eslint-disable-next-line no-undef
       const response = await fetch(`/api/admin/analytics/tournaments?${params}`);
       if (!response.ok) throw new Error('Failed to fetch tournament analytics');
       const data = await response.json();

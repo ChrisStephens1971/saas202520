@@ -61,6 +61,7 @@ export default function UserAnalyticsPage() {
         startDate: dateRange.start.toISOString(),
         endDate: dateRange.end.toISOString(),
       });
+      // eslint-disable-next-line no-undef
       const response = await fetch(`/api/admin/analytics/users?${params}`);
       if (!response.ok) throw new Error('Failed to fetch user analytics');
       const data = await response.json();

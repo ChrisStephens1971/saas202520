@@ -8,6 +8,7 @@
 
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { isOwner } from '@/lib/permissions';
 
@@ -16,7 +17,7 @@ export const dynamic = 'force-dynamic';
 export default async function AdminLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const session = await auth();
 

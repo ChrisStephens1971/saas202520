@@ -22,6 +22,7 @@ export default function AuditLogsPage() {
     async function fetchLogs() {
       try {
         setIsLoading(true);
+        // eslint-disable-next-line no-undef
         const response = await fetch('/api/admin/audit-logs');
         if (!response.ok) throw new Error('Failed to fetch logs');
         const data = await response.json();

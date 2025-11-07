@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Plus,
   Minus,
   Undo,
   Check,
-  AlertCircle,
   Trophy
 } from 'lucide-react';
 import TouchOptimizedButton from '@/components/mobile/TouchOptimizedButton';
@@ -137,7 +136,11 @@ export function MobileScorer({
 
           addToHistory(`${player1.name} won game`);
         } else {
-          delta > 0 ? gameHaptics.scorePoint() : gameHaptics.undo();
+          if (delta > 0) {
+            gameHaptics.scorePoint();
+          } else {
+            gameHaptics.undo();
+          }
           addToHistory(`${player1.name} ${delta > 0 ? '+' : ''}${delta} point`);
         }
       } else {
@@ -160,7 +163,11 @@ export function MobileScorer({
 
           addToHistory(`${player2.name} won game`);
         } else {
-          delta > 0 ? gameHaptics.scorePoint() : gameHaptics.undo();
+          if (delta > 0) {
+            gameHaptics.scorePoint();
+          } else {
+            gameHaptics.undo();
+          }
           addToHistory(`${player2.name} ${delta > 0 ? '+' : ''}${delta} point`);
         }
       }
