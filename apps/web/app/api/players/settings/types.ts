@@ -72,9 +72,9 @@ export interface SettingsResponse {
       showHistory: boolean;
     };
     notifications: {
-      email: NotificationPreferences | any;
-      push: NotificationPreferences | any;
-      sms: NotificationPreferences | any;
+      email: NotificationPreferences | Record<string, unknown>;
+      push: NotificationPreferences | Record<string, unknown>;
+      sms: NotificationPreferences | Record<string, unknown>;
     };
     display: {
       theme: 'LIGHT' | 'DARK' | 'AUTO';
@@ -97,5 +97,5 @@ export interface SettingsErrorResponse {
   error: string;
   message?: string;
   code?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }

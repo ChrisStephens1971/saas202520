@@ -82,11 +82,20 @@ export async function PUT(request: NextRequest) {
     // Users can only update their own profile
     const playerId = session.user.id;
 
+    // Filter out null values and convert to UpdateProfileRequest type
+    const profileData = {
+      ...(updateData.bio !== undefined && { bio: updateData.bio }),
+      ...(updateData.photoUrl !== undefined && updateData.photoUrl !== null && { photoUrl: updateData.photoUrl }),
+      ...(updateData.location !== undefined && updateData.location !== null && { location: updateData.location }),
+      ...(updateData.skillLevel !== undefined && { skillLevel: updateData.skillLevel }),
+      ...(updateData.socialLinks !== undefined && { socialLinks: updateData.socialLinks }),
+    };
+
     // Update profile using service layer
     const updatedProfile = await updatePlayerProfile(
       playerId,
       tenantId,
-      updateData
+      profileData
     );
 
     // Return successful response

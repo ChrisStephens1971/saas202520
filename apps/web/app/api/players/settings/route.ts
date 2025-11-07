@@ -9,21 +9,15 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+// import { getServerSession } from 'next-auth'; // TODO: Uncomment when auth is connected
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
-import { PlayerProfileError } from '@/lib/player-profiles/types';
 
 // ============================================================================
 // VALIDATION SCHEMAS
 // ============================================================================
 
-const PrivacySettingsSchema = z.object({
-  isProfilePublic: z.boolean().optional(),
-  showStatistics: z.boolean().optional(),
-  showAchievements: z.boolean().optional(),
-  showHistory: z.boolean().optional(),
-});
+// Note: PrivacySettingsSchema defined but not used directly (fields validated via UpdateSettingsSchema)
 
 const NotificationCategoriesSchema = z.object({
   tournaments: z.boolean().optional(),
@@ -152,7 +146,7 @@ async function getOrCreateSettings(playerId: string, tenantId: string) {
 // GET HANDLER - Fetch Current User's Settings
 // ============================================================================
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get current user from session
     const { playerId, tenantId } = await getCurrentUser();
@@ -247,7 +241,7 @@ export async function PUT(request: NextRequest) {
     await getOrCreateSettings(playerId, tenantId);
 
     // Build update object
-    const updateFields: any = {};
+    const updateFields: Record<string, unknown> = {};
 
     // Privacy settings
     if (updateData.isProfilePublic !== undefined) {

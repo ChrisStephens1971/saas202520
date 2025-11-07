@@ -141,9 +141,7 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
 
   const exportToJSON = () => {
     const jsonData = {
-      tournament
-
-Id: tournamentId,
+      tournamentId: tournamentId,
       exportedAt: new Date().toISOString(),
       statistics,
       chipProgression: progression
