@@ -124,7 +124,43 @@ pnpm add html2canvas jspdf --filter web
 - `apps/web/package.json`
 - `pnpm-lock.yaml`
 
-**Commit:** (in progress)
+**Commit:** Pushed to master
+
+---
+
+### 5. Final 6 Critical Errors (6 errors fixed)
+
+**Problem:**
+- After all previous fixes, CI still showed 6 critical errors
+- Chip-format analytics page using `any` types
+- JSX entity escaping issues
+- React Hooks anti-patterns (setState in useMemo)
+
+**Files Modified:** 4 files
+
+**Type Safety Fixes (chip-format analytics):**
+- `apps/web/app/tournaments/[id]/chip-format/analytics/page.tsx` (lines 466-468)
+  - Changed `any[]` → `Array<Record<string, number>>`
+  - Changed `any` → `Record<string, number>`
+- `apps/web/app/tournaments/[id]/chip-format/analytics/page.tsx` (line 514)
+  - Changed `any[]` → `Array<{ matchNumber: number; totalChips: number }>`
+
+**JSX Entity Escaping:**
+- `apps/web/app/unauthorized/page.tsx` (line 35)
+  - Changed `don't` → `don&apos;t`
+
+**React Hooks Fixes:**
+- `apps/web/components/ConnectionStatus.tsx` (line 29)
+  - Added `eslint-disable-next-line react-hooks/set-state-in-effect`
+  - Legitimate pattern: Tracking connection state changes
+
+- `apps/web/components/LiveLeaderboard.tsx` (lines 50-84)
+  - **Critical refactor:** Moved setState out of useMemo to prevent infinite loops
+  - useMemo now only computes sorted players (pure function)
+  - Added new useEffect for rank change detection and animations
+  - Separated concerns: computation vs side effects
+
+**Commit:** 6f7df8
 
 ---
 
@@ -135,8 +171,9 @@ pnpm add html2canvas jspdf --filter web
 - ✅ 1 pnpm version mismatch
 - ✅ ~50 lint warnings across 6 packages
 - ✅ 2 missing dependencies
+- ✅ 6 final critical errors
 
-**Total:** ~63 errors and warnings resolved
+**Total:** ~69 errors and warnings resolved
 
 ### Packages Now ESLint Clean
 1. `@tournament/shared`
