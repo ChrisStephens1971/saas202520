@@ -373,7 +373,7 @@ export async function updateHeadToHeadRecord(
     }
 
     // Update counts
-    let updateData: any = {
+    const updateData: any = {
       lastPlayed: new Date(),
       updatedAt: new Date(),
     };

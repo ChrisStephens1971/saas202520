@@ -22,7 +22,7 @@ import { checkAPIRateLimit } from '@/lib/rate-limiter';
 
 export interface CreateEventRequest {
   eventType: string;
-  eventData: Record<string, any>;
+  eventData: Record<string, unknown>;
   userId?: string;
   sessionId?: string;
 }
@@ -47,7 +47,7 @@ export interface EventsResponse {
   events: {
     id: string;
     eventType: string;
-    eventData: Record<string, any>;
+    eventData: Record<string, unknown>;
     userId: string | null;
     sessionId: string | null;
     timestamp: string;
@@ -363,7 +363,7 @@ export async function GET(request: NextRequest) {
       events: events.map((event) => ({
         id: event.id,
         eventType: event.eventType,
-        eventData: event.eventData as Record<string, any>,
+        eventData: event.eventData as Record<string, unknown>,
         userId: event.userId,
         sessionId: event.sessionId,
         timestamp: event.timestamp.toISOString(),

@@ -47,7 +47,7 @@ export interface SyncStrategy {
 // STATE
 // =============================================================================
 
-let syncStatus: SyncStatus = {
+const syncStatus: SyncStatus = {
   isSyncing: false,
   pendingCount: 0,
   failedCount: 0,

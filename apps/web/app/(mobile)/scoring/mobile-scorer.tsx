@@ -31,6 +31,12 @@ interface ScoreHistory {
   action: string;
 }
 
+interface ScoreData {
+  player1: { score: number; gamesWon: number };
+  player2: { score: number; gamesWon: number };
+  history: ScoreHistory[];
+}
+
 interface MobileScorerProps {
   match: {
     id: string;
@@ -47,7 +53,7 @@ interface MobileScorerProps {
       pointsToWin: number;
     };
   };
-  onComplete?: (winner: string, scores: any) => void;
+  onComplete?: (winner: string, scores: ScoreData) => void;
   onCancel?: () => void;
 }
 

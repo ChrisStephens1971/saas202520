@@ -128,8 +128,18 @@ export default async function LeaderboardsPage() {
 }
 
 // Leaderboard Table Component
+interface LeaderboardEntry {
+  playerId: string;
+  playerName: string;
+  rank: number;
+  photoUrl: string | null;
+  skillLevel: string;
+  formattedValue: string;
+  change?: number;
+}
+
 interface LeaderboardTableProps {
-  entries: any[];
+  entries: LeaderboardEntry[];
   currentUserId: string;
 }
 

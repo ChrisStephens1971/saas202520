@@ -86,6 +86,7 @@ export async function GET(request: NextRequest) {
     } = validation.data;
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {};
 
     if (search) {

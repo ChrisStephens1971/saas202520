@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 /**
  * Admin Permission Tests
  * Sprint 9 Phase 2 - Admin Dashboard

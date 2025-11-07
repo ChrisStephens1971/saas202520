@@ -179,7 +179,7 @@ export function measureCLS(callback: (metric: PerformanceMetric) => void): void 
   }
 
   let clsValue = 0;
-  let clsEntries: any[] = [];
+  const clsEntries: any[] = [];
 
   try {
     const observer = new PerformanceObserver((list) => {

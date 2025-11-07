@@ -33,7 +33,7 @@ export default function ApiOverviewPage() {
               1. Get Your API Key
             </h3>
             <p className="text-gray-600 mb-4">
-              To access the API, you'll need an API key. Sign up for an account
+              To access the API, you&apos;ll need an API key. Sign up for an account
               and generate your key from the{' '}
               <a href="/developer" className="text-blue-600 hover:underline">
                 developer portal
@@ -381,7 +381,7 @@ curl -X GET "https://api.tournament-platform.com/v1/venues/venue-123/tournaments
           </h2>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
             <p className="text-gray-700 mb-4">
-              Have questions or need assistance with the API? We're here to help!
+              Have questions or need assistance with the API? We&apos;re here to help!
             </p>
             <ul className="space-y-2 text-gray-700">
               <li>

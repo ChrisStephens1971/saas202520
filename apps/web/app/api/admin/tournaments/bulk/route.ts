@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let result: { success: number; failed: number } = { success: 0, failed: 0 };
+    const result = { success: 0, failed: 0 };
 
     // Perform bulk operation
     switch (operation) {

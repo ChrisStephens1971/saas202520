@@ -49,7 +49,7 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
           <Card>
             <CardContent className="py-12 text-center">
               <h2 className="text-2xl font-bold mb-2">Private Profile</h2>
-              <p className="text-muted-foreground">This player's profile is set to private.</p>
+              <p className="text-muted-foreground">This player&apos;s profile is set to private.</p>
             </CardContent>
           </Card>
         </div>
