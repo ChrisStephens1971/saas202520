@@ -120,6 +120,50 @@ get_errors() // No filePaths = check everything
 
 ---
 
+## ⚙️ Available Tools: Built-in vs. Installable
+
+**IMPORTANT:** Understand what's available without installation!
+
+### ✅ Built-in Tools (Always Available - No Installation)
+
+These are **ALWAYS** available in every Claude Code session:
+
+**Core Operations:**
+- Read, Write, Edit - File operations
+- Glob, Grep - Search and find files
+- Bash - Execute commands
+- WebSearch, WebFetch - Research capabilities
+
+**Specialized Task Agents (Built-in!):**
+- **Task tool with subagent_type** - Launches specialized agents
+  - `Explore` - Fast codebase exploration
+  - `Plan` - Fast planning and analysis
+  - `general-purpose` - Multi-step complex tasks
+
+**⚠️ CRITICAL:** Task tool's Explore/Plan agents are **BUILT-IN**. They do NOT require installation!
+
+### 📦 Optional Extensions (Require Installation)
+
+Install these **ONLY when needed**:
+
+**Claude Skills** - Document processing
+- xlsx, docx, pdf, skill-creator
+- Install: `/plugin add xlsx`
+
+**WSHobson Agents** - Framework specialists
+- python-development, react-typescript, full-stack-orchestration
+- Install: `/plugin install full-stack-orchestration`
+
+**Claude Code Templates** - Role-based workflows
+- frontend-developer, backend-architect, test-engineer
+- Install: `npx claude-code-templates@latest --agent [name]`
+
+**See:** `BUILT-IN-VS-INSTALLABLE.md` for complete breakdown
+
+**When to install extensions?** Only during development phase, NOT for planning!
+
+---
+
 ## 🎯 IMPORTANT: First-Time Project Detection
 
 **Project ID:** saas202520

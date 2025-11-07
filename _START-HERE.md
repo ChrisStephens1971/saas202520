@@ -41,7 +41,33 @@ Claude automatically reads ALL files in `project-brief/` during planning!
 
 **Or skip this** - Claude will ask you questions.
 
-### 3. Start Planning
+### 2.5. Understanding Your Tools (Important!)
+
+**✅ Good news: Most tools are BUILT-IN!**
+
+Claude Code comes with powerful built-in tools that require ZERO setup:
+- **File operations** (Read, Write, Edit, Search)
+- **Specialized agents** (Explore codebase, Plan implementation)
+- **Web research** (WebSearch, WebFetch)
+- **Task management** (TodoWrite, AskUserQuestion)
+
+**You can start planning immediately with no installation required!**
+
+---
+
+**📦 Optional Extensions (Install Later)**
+
+When you're ready to code or need advanced features:
+- **Claude Skills** - Document processing (Excel, PDF, Word)
+- **WSHobson Agents** - Framework specialists (React, Python, databases)
+- **Claude Code Templates** - Role-based development workflows
+- **MCP Servers** - External integrations (analytics, design tools)
+
+**See:** `BUILT-IN-VS-INSTALLABLE.md` for the complete breakdown.
+
+**When to install?** Only when you need them (usually during development, not planning).
+
+### 3. Start Planning### 3. Start Planning
 
 Open Claude Code and say:
 
