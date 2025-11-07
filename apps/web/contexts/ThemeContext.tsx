@@ -29,6 +29,26 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
   const [mounted, setMounted] = useState(false);
 
+  // Define helper functions before they're used
+  const applyTheme = (resolved: 'light' | 'dark') => {
+    const root = document.documentElement;
+
+    if (resolved === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  };
+
+  const updateResolvedTheme = (newTheme: Theme, prefersDark: boolean) => {
+    const resolved = newTheme === 'system'
+      ? (prefersDark ? 'dark' : 'light')
+      : newTheme;
+
+    setResolvedTheme(resolved);
+    applyTheme(resolved);
+  };
+
   // Initialize theme from localStorage or system preference
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
@@ -58,25 +78,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme]);
-
-  const updateResolvedTheme = (newTheme: Theme, prefersDark: boolean) => {
-    const resolved = newTheme === 'system'
-      ? (prefersDark ? 'dark' : 'light')
-      : newTheme;
-
-    setResolvedTheme(resolved);
-    applyTheme(resolved);
-  };
-
-  const applyTheme = (resolved: 'light' | 'dark') => {
-    const root = document.documentElement;
-
-    if (resolved === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  };
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);

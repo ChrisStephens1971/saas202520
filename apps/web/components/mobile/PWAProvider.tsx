@@ -20,6 +20,7 @@ interface PWAProviderProps {
 export function PWAProvider({ children }: PWAProviderProps) {
   const [isReady, setIsReady] = React.useState(false);
 
+  // eslint-disable-next-line react-compiler/react-compiler
   React.useEffect(() => {
     // Register service worker
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {

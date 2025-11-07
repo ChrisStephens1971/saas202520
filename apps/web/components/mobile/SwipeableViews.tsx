@@ -30,12 +30,21 @@ export default function SwipeableViews({
   const childrenArray = Children.toArray(children);
   const childCount = childrenArray.length;
 
+  const [containerWidth, setContainerWidth] = useState(1);
+
   useEffect(() => {
     setCurrentIndex(index);
   }, [index]);
 
+  // Track container width for calculations
+  useEffect(() => {
+    if (containerRef.current) {
+      setContainerWidth(containerRef.current.offsetWidth);
+    }
+  }, [currentIndex, translateX]);
+
   const getTranslateValue = () => {
-    return -currentIndex * 100 + (translateX / (containerRef.current?.offsetWidth || 1)) * 100;
+    return -currentIndex * 100 + (translateX / containerWidth) * 100;
   };
 
   const handleStart = (clientX: number) => {

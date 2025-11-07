@@ -54,6 +54,7 @@ export default function BottomNav() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>('tournaments');
 
+  // eslint-disable-next-line react-compiler/react-compiler
   useEffect(() => {
     // Determine active tab based on pathname
     const currentTab = navTabs.find(tab => pathname.startsWith(tab.path));
