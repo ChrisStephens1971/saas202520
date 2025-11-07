@@ -706,3 +706,301 @@ model ScheduledReport {
   @@index([nextRunAt], map: "idx_scheduled_reports_next_run")
   @@map("scheduled_reports")
 }
+// ============================================================================
+// PLAYER PROFILES & ENHANCED EXPERIENCE (Sprint 10 - Week 2)
+// ============================================================================
+// This file contains schema additions for player profiles, statistics,
+// achievements, match history, and enhanced player experience features.
+//
+// Multi-Tenant: All tables include tenantId for row-level isolation
+// Usage: Add these models to the main schema.prisma file
+
+// ============================================================================
+// PLAYER PROFILE EXTENSIONS
+// ============================================================================
+
+/**
+ * Extended player profile information
+ * Provides rich player profiles with bio, photos, social links, and preferences
+ */
+model PlayerProfile {
+  id       String  @id @default(cuid())
+  playerId String  @unique @map("player_id")
+  tenantId String  @map("tenant_id")
+
+  // Profile Information
+  bio      String? @db.Text
+  photoUrl String? @map("photo_url") @db.VarChar(500)
+  location String? @db.VarChar(255)
+
+  // Skill & Rating
+  skillLevel String @default("BEGINNER") @map("skill_level") @db.VarChar(50) // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+
+  // Privacy & Settings
+  privacySettings         Json @default("{}") @map("privacy_settings") // { profilePublic, showStats, showHistory }
+  notificationPreferences Json @default("{}") @map("notification_preferences") // { email, sms, push, categories }
+
+  // Social Links
+  socialLinks Json? @map("social_links") // { twitter, facebook, instagram, website }
+
+  // Tenant-Specific Custom Fields
+  customFields Json? @map("custom_fields") // Flexible storage for tenant customization
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations (defined in main schema)
+  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, skillLevel])
+  @@index([playerId])
+  @@map("player_profiles")
+}
+
+// ============================================================================
+// PLAYER STATISTICS
+// ============================================================================
+
+/**
+ * Aggregated player statistics across all tournaments
+ * Pre-computed metrics for fast profile loading
+ */
+model PlayerStatistics {
+  id       String @id @default(cuid())
+  playerId String @unique @map("player_id")
+  tenantId String @map("tenant_id")
+
+  // Tournament Statistics
+  totalTournaments Int @default(0) @map("total_tournaments")
+  totalMatches     Int @default(0) @map("total_matches")
+  totalWins        Int @default(0) @map("total_wins")
+  totalLosses      Int @default(0) @map("total_losses")
+
+  // Calculated Metrics
+  winRate Decimal @default(0) @map("win_rate") @db.Decimal(5, 2) // 0.00 to 100.00
+
+  // Streaks
+  currentStreak Int @default(0) @map("current_streak") // Positive = win streak, negative = loss streak
+  longestStreak Int @default(0) @map("longest_streak") // Best win streak
+
+  // Performance
+  averageFinish    Decimal? @map("average_finish") @db.Decimal(6, 2) // Average placement
+  favoriteFormat   String?  @map("favorite_format") @db.VarChar(100) // Most played format
+  totalPrizeWon    Decimal  @default(0) @map("total_prize_won") @db.Decimal(10, 2)
+  lastPlayedAt     DateTime? @map("last_played_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations (defined in main schema)
+  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, playerId])
+  @@index([tenantId, winRate(sort: Desc)]) // For leaderboards
+  @@index([tenantId, totalTournaments(sort: Desc)]) // For participation tracking
+  @@index([tenantId, totalPrizeWon(sort: Desc)]) // For earnings leaderboard
+  @@map("player_statistics")
+}
+
+// ============================================================================
+// ACHIEVEMENT DEFINITIONS
+// ============================================================================
+
+/**
+ * System-wide achievement definitions
+ * Defines all possible achievements players can unlock
+ */
+model AchievementDefinition {
+  id   String @id @default(cuid())
+  code String @unique @db.VarChar(100) // Unique identifier (FIRST_STEPS, WINNER, etc.)
+
+  // Display Information
+  name        String @db.VarChar(255)
+  description String @db.Text
+  iconUrl     String? @map("icon_url") @db.VarChar(500)
+  badgeUrl    String? @map("badge_url") @db.VarChar(500)
+
+  // Categorization
+  category String @db.VarChar(50) // PARTICIPATION, PERFORMANCE, ENGAGEMENT, FORMAT_MASTERY
+  tier     String @db.VarChar(50) // BRONZE, SILVER, GOLD, PLATINUM
+
+  // Unlock Requirements
+  requirements Json @map("requirements") // { type: "tournament_count", value: 10, format: "8-ball" }
+
+  // Gamification
+  points   Int     @default(0)
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  playerAchievements PlayerAchievement[]
+
+  @@index([category])
+  @@index([tier])
+  @@index([isActive])
+  @@map("achievement_definitions")
+}
+
+// ============================================================================
+// PLAYER ACHIEVEMENTS
+// ============================================================================
+
+/**
+ * Tracks unlocked achievements for each player
+ * Records when and how achievements were earned
+ */
+model PlayerAchievement {
+  id            String @id @default(cuid())
+  playerId      String @map("player_id")
+  tenantId      String @map("tenant_id")
+  achievementId String @map("achievement_id")
+
+  // Unlock Information
+  unlockedAt DateTime @default(now()) @map("unlocked_at")
+  progress   Int      @default(100) @map("progress") // 0-100, for progressive achievements
+
+  // Context
+  metadata Json? // Additional unlock data (tournamentId, matchId, etc.)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  achievement AchievementDefinition @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, achievementId])
+  @@index([tenantId, playerId])
+  @@index([tenantId, achievementId])
+  @@index([unlockedAt(sort: Desc)])
+  @@map("player_achievements")
+}
+
+// ============================================================================
+// MATCH HISTORY
+// ============================================================================
+
+/**
+ * Complete match history for each player
+ * Tracks every match played with detailed statistics
+ */
+model MatchHistory {
+  id           String @id @default(cuid())
+  matchId      String @map("match_id")
+  playerId     String @map("player_id")
+  tenantId     String @map("tenant_id")
+  tournamentId String @map("tournament_id")
+
+  // Opponent Information
+  opponentId String @map("opponent_id")
+  result     String @db.VarChar(20) // WIN, LOSS, DRAW
+
+  // Match Details
+  score       Json @map("score") // Detailed score data { playerScore, opponentScore, games: [...] }
+  matchNumber Int  @map("match_number")
+  roundNumber Int  @map("round_number")
+
+  // Performance Metrics
+  durationMinutes    Int?    @map("duration_minutes")
+  skillRatingBefore  Decimal? @map("skill_rating_before") @db.Decimal(10, 2)
+  skillRatingAfter   Decimal? @map("skill_rating_after") @db.Decimal(10, 2)
+
+  // Timing
+  playedAt  DateTime @map("played_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations (defined in main schema)
+  // match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  // tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, playerId, playedAt(sort: Desc)])
+  @@index([tenantId, playerId, opponentId]) // For head-to-head queries
+  @@index([tenantId, tournamentId, playerId])
+  @@index([matchId])
+  @@map("match_history")
+}
+
+// ============================================================================
+// HEAD-TO-HEAD RECORDS
+// ============================================================================
+
+/**
+ * Aggregated head-to-head records between two players
+ * Pre-computed for fast rivalry tracking
+ */
+model HeadToHeadRecord {
+  id       String @id @default(cuid())
+  tenantId String @map("tenant_id")
+
+  // Player IDs (ordered: player1Id < player2Id for consistency)
+  player1Id String @map("player1_id")
+  player2Id String @map("player2_id")
+
+  // Record Tracking
+  player1Wins Int @default(0) @map("player1_wins")
+  player2Wins Int @default(0) @map("player2_wins")
+  draws       Int @default(0) @map("draws")
+
+  // Aggregate Stats
+  totalMatches Int      @default(0) @map("total_matches")
+  lastPlayedAt DateTime @map("last_played_at")
+
+  // Advantage Indicator
+  favorsPlayer1 Boolean @default(true) @map("favors_player1") // True if player1 has more wins
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations (defined in main schema)
+  // player1 Player @relation("Player1HeadToHead", fields: [player1Id], references: [id], onDelete: Cascade)
+  // player2 Player @relation("Player2HeadToHead", fields: [player2Id], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, player1Id, player2Id])
+  @@index([tenantId, player1Id])
+  @@index([tenantId, player2Id])
+  @@index([tenantId, lastPlayedAt(sort: Desc)])
+  @@map("head_to_head_records")
+}
+
+// ============================================================================
+// PLAYER SETTINGS
+// ============================================================================
+
+/**
+ * Player-specific settings and preferences
+ * Granular control over privacy, notifications, and display
+ */
+model PlayerSettings {
+  id       String @id @default(cuid())
+  playerId String @unique @map("player_id")
+  tenantId String @map("tenant_id")
+
+  // Privacy Settings
+  isProfilePublic    Boolean @default(true) @map("is_profile_public")
+  showStatistics     Boolean @default(true) @map("show_statistics")
+  showAchievements   Boolean @default(true) @map("show_achievements")
+  showHistory        Boolean @default(true) @map("show_history")
+
+  // Notification Preferences (detailed JSON structure)
+  emailNotifications Json @default("{}") @map("email_notifications") // { tournaments: true, matches: true, achievements: true }
+  pushNotifications  Json @default("{}") @map("push_notifications") // { tournaments: true, matches: true, achievements: true }
+  smsNotifications   Json @default("{}") @map("sms_notifications") // { urgent: true, reminders: false }
+
+  // Display Preferences
+  theme    String @default("LIGHT") @db.VarChar(20) // LIGHT, DARK, AUTO
+  language String @default("en") @db.VarChar(10)
+  timezone String? @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations (defined in main schema)
+  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, playerId])
+  @@index([tenantId])
+  @@map("player_settings")
+}
