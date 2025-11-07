@@ -34,23 +34,44 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
   const tenantId = session.user.organizationId;
   const viewerId = session.user.id;
 
+  // Fetch profile and handle errors before rendering
+  let profile;
   try {
-    const profile = await getPlayerProfile(params.id, tenantId, viewerId);
+    profile = await getPlayerProfile(params.id, tenantId, viewerId);
+  } catch (error: unknown) {
+    const err = error as { code?: string };
+    if (err.code === 'PROFILE_NOT_FOUND') {
+      notFound();
+    }
+    if (err.code === 'PROFILE_PRIVATE') {
+      return (
+        <div className="container mx-auto py-8 px-4">
+          <Card>
+            <CardContent className="py-12 text-center">
+              <h2 className="text-2xl font-bold mb-2">Private Profile</h2>
+              <p className="text-muted-foreground">This player's profile is set to private.</p>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+    throw error;
+  }
 
-    const isOwner = viewerId === params.id;
-    const privacySettings = profile.profile.privacySettings;
+  const isOwner = viewerId === params.id;
+  const privacySettings = profile.profile.privacySettings;
 
-    // Format dates
-    const memberSince = new Date(profile.profile.createdAt).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-    });
+  // Format dates
+  const memberSince = new Date(profile.profile.createdAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+  });
 
-    // Calculate display values
-    const winRate = parseFloat(profile.statistics.winRate.toString());
-    const totalPrize = parseFloat(profile.statistics.totalPrizeWon.toString());
+  // Calculate display values
+  const winRate = parseFloat(profile.statistics.winRate.toString());
+  const totalPrize = parseFloat(profile.statistics.totalPrizeWon.toString());
 
-    return (
+  return (
       <div className="container mx-auto py-8 px-4">
         {/* Profile Header */}
         <Card className="mb-6">
@@ -328,22 +349,4 @@ export default async function PlayerProfilePage({ params }: PlayerProfilePagePro
         </Tabs>
       </div>
     );
-  } catch (error: any) {
-    if (error.code === 'PROFILE_NOT_FOUND') {
-      notFound();
-    }
-    if (error.code === 'PROFILE_PRIVATE') {
-      return (
-        <div className="container mx-auto py-8 px-4">
-          <Card>
-            <CardContent className="py-12 text-center">
-              <h2 className="text-2xl font-bold mb-2">Private Profile</h2>
-              <p className="text-muted-foreground">This player's profile is set to private.</p>
-            </CardContent>
-          </Card>
-        </div>
-      );
-    }
-    throw error;
-  }
 }

@@ -35,6 +35,10 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@tournament/api-contracts', '@tournament/shared'],
   },
 
+  // Turbopack configuration (Next.js 16 default)
+  // Empty config to acknowledge webpack config coexistence
+  turbopack: {},
+
   // Production optimizations
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
   poweredByHeader: false, // Remove X-Powered-By header for security
