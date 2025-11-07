@@ -240,3 +240,57 @@ ls .claude/
 - `docs/recommended-claude-skills.md` - Claude Skills catalog
 - `docs/wshobson-agents-guide.md` - WSHobson agents guide
 - `docs/MCP-USAGE-GUIDE.md` - MCP servers guide
+
+---
+
+## 📋 Quick Syntax Reference
+
+**Need to invoke an agent? Here's the exact syntax:**
+
+### Built-in Task Agents (Always Available)
+
+```python
+# Codebase exploration
+Task(subagent_type="Explore", prompt="search for authentication code")
+
+# Planning and analysis
+Task(subagent_type="Plan", prompt="analyze testing strategy")
+
+# Multi-step tasks
+Task(subagent_type="general-purpose", prompt="implement feature X")
+```
+
+### Claude Skills (Install Once, Use Naturally)
+
+```bash
+# Installation
+/plugin marketplace add anthropics/skills
+/plugin add xlsx
+
+# Usage (natural language after installation)
+"Create a spreadsheet with this data..."
+"Extract text from this PDF..."
+```
+
+### WSHobson Agents (Install Once, Invoke via Slash)
+
+```bash
+# Installation
+/plugin marketplace add wshobson/agents
+/plugin install full-stack-orchestration
+
+# Usage
+/full-stack-orchestration:feature-name
+/python-development:implement-feature
+```
+
+### Claude Code Templates (Install As Needed)
+
+```bash
+# Installation
+npx claude-code-templates@latest --agent development-team/frontend-developer
+npx claude-code-templates@latest --command testing/generate-tests
+
+# Usage (natural language after installation)
+"Help me build the login component..."
+```
