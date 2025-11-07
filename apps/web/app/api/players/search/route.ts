@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     // Get tenant ID from session
     // TODO: Update this when proper tenant extraction is implemented
-    const tenantId = (session as any).organizationId || session.user.id;
+    const tenantId = (session as { organizationId?: string; user: { id: string } }).organizationId || session.user.id;
 
     // Parse and validate request body
     const body = await request.json();
@@ -102,19 +102,20 @@ export async function POST(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[POST /api/players/search] Error:', error);
 
     // Handle known errors
-    if (error.name === 'PlayerProfileError') {
+    const err = error as { name?: string; code?: string; message?: string; statusCode?: number };
+    if (err.name === 'PlayerProfileError') {
       return NextResponse.json(
         {
           error: {
-            code: error.code,
-            message: error.message,
+            code: err.code,
+            message: err.message,
           },
         },
-        { status: error.statusCode || 500 }
+        { status: err.statusCode || 500 }
       );
     }
 

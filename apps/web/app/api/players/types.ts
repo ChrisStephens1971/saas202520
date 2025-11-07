@@ -156,7 +156,7 @@ export interface MatchHistoryResponse {
 export interface APIError {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface ErrorResponse {
@@ -213,7 +213,7 @@ export interface GetPlayerProfileResponse {
       achievementId: string;
       unlockedAt: Date;
       progress: number;
-      metadata: any;
+      metadata: unknown;
       createdAt: Date;
       achievement: {
         id: string;
@@ -222,7 +222,7 @@ export interface GetPlayerProfileResponse {
         description: string;
         category: string;
         tier: string;
-        requirements: any;
+        requirements: unknown;
         points: number;
         iconUrl: string | null;
         badgeUrl: string | null;
@@ -271,7 +271,7 @@ export interface UpdateProfileResponse {
 export interface ProfileOperationError {
   error: string;
   code?: string;
-  details?: any;
+  details?: unknown;
 }
 
 /**
