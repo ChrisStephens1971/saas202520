@@ -41,6 +41,7 @@ export async function GET(
     // If not, this endpoint will need to be updated
 
     // Build query filters
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
       orgId: tenantId,
       // venueId: venueId, // Uncomment when venue_id is added to tournaments

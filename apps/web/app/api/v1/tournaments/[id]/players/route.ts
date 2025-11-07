@@ -76,6 +76,7 @@ export async function GET(
     const { status } = queryValidation.data;
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       tournamentId,
     };

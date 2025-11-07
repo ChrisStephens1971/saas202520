@@ -77,6 +77,7 @@ export async function GET(
     const { round, status } = queryValidation.data;
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       tournamentId,
     };
@@ -137,7 +138,7 @@ export async function GET(
 
     // Transform to API response format
     const data: TournamentMatchSummary[] = matches.map((m) => {
-      const score = m.score as any;
+      const score = m.score as unknown as { playerA?: number; playerB?: number };
       const winner = m.winnerId
         ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB)
         : null;

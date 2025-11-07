@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
     // For now, returning mock data structure
 
     // Build query filters
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const whereClause: any = {
       orgId: tenantId,
     };

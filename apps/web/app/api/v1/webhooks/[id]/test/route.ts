@@ -95,10 +95,10 @@ export async function POST(
           'x-webhook-delivery-id': headers['X-Webhook-Delivery-Id'],
         },
       });
-    } catch (fetchError: any) {
+    } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
 
-      if (fetchError.name === 'AbortError') {
+      if (((fetchError as Error)?.name || "") === 'AbortError') {
         return NextResponse.json({
           success: false,
           error: 'Request timeout (>5 seconds)',
@@ -108,15 +108,15 @@ export async function POST(
 
       return NextResponse.json({
         success: false,
-        error: `Network error: ${fetchError.message}`,
+        error: `Network error: ${((fetchError as Error)?.message || "Network error")}`,
       }, { status: 500 });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[Webhook Test] Error:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || 'Internal server error',
+        error: (error as Error)?.message || 'Internal server error',
       },
       { status: 500 }
     );

@@ -112,7 +112,7 @@ export async function GET(
       const roundsMap = new Map<number, BracketMatchNode[]>();
 
       matches.forEach(match => {
-        const score = match.score as any;
+        const score = match.score as unknown as { playerA?: number; playerB?: number };
         const winner = match.winnerId
           ? (match.playerA?.id === match.winnerId ? match.playerA : match.playerB)
           : null;
