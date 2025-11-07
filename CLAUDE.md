@@ -1001,7 +1001,7 @@ The pre-commit hook automatically fixes these issues:
 
 After auto-fixing, validates:
 
-1. **No unreplaced placeholders** → Blocks commit if `{{...}}` found
+1. **No unreplaced placeholders** → Blocks commit if `{ {...} }` found (template variables)
 2. **No secrets** → Prevents committing `.env.local`
 3. **Markdown syntax** → Warns about linting issues (doesn't block)
 
@@ -1062,9 +1062,9 @@ git commit -m "feat: add feature"
 🔍 Running validation...
   Checking for unreplaced placeholders...
 ❌ ERROR: Found unreplaced placeholders in staged files:
-config.json:5:  "apiKey": "{{API_KEY}}"
+config.json:5:  "apiKey": "{ {API_KEY} }"
 
-Please replace all {{PLACEHOLDER}} values before committing.
+Please replace all template placeholder values before committing.
 ```
 
 ---
