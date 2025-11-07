@@ -95,12 +95,13 @@ export async function GET(
       },
     });
 
-    const privacySettings = (profile?.privacySettings as any) || {};
+    const privacySettings = (profile?.privacySettings as unknown as { showHistory?: boolean }) || {};
     if (!privacySettings.showHistory) {
       return forbiddenError('Player history is private');
     }
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       tournamentId: {
         in: await prisma.player.findMany({

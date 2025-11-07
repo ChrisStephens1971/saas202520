@@ -78,7 +78,7 @@ export async function GET(
     });
 
     // Check privacy settings
-    const privacySettings = (profile?.privacySettings as any) || {};
+    const privacySettings = (profile?.privacySettings as unknown as { profilePublic?: boolean }) || {};
     if (!privacySettings.profilePublic) {
       return forbiddenError('This player profile is private');
     }
@@ -108,7 +108,7 @@ export async function GET(
       photoUrl: profile?.photoUrl || null,
       skillLevel: profile?.skillLevel || 'BEGINNER',
       location: profile?.location || null,
-      socialLinks: (profile?.socialLinks as any) || null,
+      socialLinks: (profile?.socialLinks as unknown) || null,
       careerStats: {
         totalTournaments: stats?.totalTournaments || 0,
         totalMatches: stats?.totalMatches || 0,

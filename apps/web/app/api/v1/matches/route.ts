@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
     const { page, limit, status, tournamentId } = validation.data;
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       tournament: {
         orgId: tenantId,
@@ -122,7 +123,7 @@ export async function GET(request: NextRequest) {
 
     // Transform to API response format
     const data: MatchSummary[] = matches.map(m => {
-      const score = m.score as any;
+      const score = m.score as unknown as { playerA?: number; playerB?: number };
       const winner = m.winnerId
         ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB)
         : null;

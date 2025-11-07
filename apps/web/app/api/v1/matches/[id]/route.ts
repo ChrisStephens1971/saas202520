@@ -103,8 +103,13 @@ export async function GET(
     }
 
     // Parse score data
-    const scoreData = match.score as any;
-    const games: GameScore[] | undefined = scoreData?.games?.map((g: any, idx: number) => ({
+    const scoreData = match.score as unknown as {
+      playerA?: number;
+      playerB?: number;
+      raceTo?: number;
+      games?: Array<{ winner: string; score: string }>;
+    };
+    const games: GameScore[] | undefined = scoreData?.games?.map((g, idx: number) => ({
       gameNumber: idx + 1,
       winner: g.winner,
       score: g.score,

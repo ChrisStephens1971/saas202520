@@ -74,7 +74,7 @@ export async function GET(
       },
     });
 
-    const privacySettings = (profile?.privacySettings as any) || {};
+    const privacySettings = (profile?.privacySettings as unknown as { showStatistics?: boolean }) || {};
     if (!privacySettings.showStatistics) {
       return forbiddenError('Player statistics are private');
     }
