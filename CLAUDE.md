@@ -974,6 +974,225 @@ If push fails:
 
 ---
 
+## 🔧 Git Auto-Fix - Automatic Error Resolution
+
+**NEW (2025-11-07):** This project now has **automatic error fixing** during git commits!
+
+**What's different:**
+- ❌ **Before:** Git hooks detected errors, you had to fix manually
+- ✅ **Now:** Git hooks automatically fix common issues, then validate
+
+**Status:** This is a **test implementation** in saas202520 only. If successful after 1-week monitoring, will roll out to all projects.
+
+---
+
+### 🎯 Auto-Fix Features
+
+**Phase 1: Automatic Fixes (runs first)**
+
+The pre-commit hook automatically fixes these issues:
+
+1. **Trailing whitespace** → Removed from all staged files
+2. **Line endings** → Normalized CRLF → LF
+3. **Missing final newlines** → Added to files that need them
+4. **Code formatting** → Applied via black (Python) or prettier (JS/JSON/MD)
+
+**Phase 2: Validation (runs after auto-fix)**
+
+After auto-fixing, validates:
+
+1. **No unreplaced placeholders** → Blocks commit if `{{...}}` found
+2. **No secrets** → Prevents committing `.env.local`
+3. **Markdown syntax** → Warns about linting issues (doesn't block)
+
+**Pre-Push Protection (NEW)**
+
+Before pushing to GitHub:
+
+1. **Branch divergence detection** → Warns if local/remote branches have diverged
+2. **Conflict warnings** → Suggests `git pull` before push
+3. **User confirmation** → Allows canceling push to fix conflicts first
+
+---
+
+### 📋 What You'll See
+
+**During commit (successful auto-fix):**
+```bash
+git commit -m "feat: add new feature"
+
+🔧 Running pre-commit auto-fix...
+  ✓ Removed trailing whitespace from api.py
+  ✓ Added final newline to README.md
+  ✓ Formatted config.json with prettier
+  Auto-fixed 3 issue(s)
+
+🔍 Running validation...
+  Checking for unreplaced placeholders...
+✅ Pre-commit validation passed
+
+[master abc123d] feat: add new feature
+ 3 files changed, 15 insertions(+), 8 deletions(-)
+```
+
+**During push (branch diverged):**
+```bash
+git push origin master
+
+🔍 Checking branch status before push...
+  ⚠️  WARNING: Your branch has diverged from origin/master
+
+  Local commits not in remote:  2
+  Remote commits not in local:  1
+
+  You may need to:
+    git pull --rebase    # Rebase your changes on top of remote
+    git pull             # Merge remote changes
+
+  Continue with push anyway? (y/N)
+```
+
+**If validation fails:**
+```bash
+git commit -m "feat: add feature"
+
+🔧 Running pre-commit auto-fix...
+  No auto-fixes needed
+
+🔍 Running validation...
+  Checking for unreplaced placeholders...
+❌ ERROR: Found unreplaced placeholders in staged files:
+config.json:5:  "apiKey": "{{API_KEY}}"
+
+Please replace all {{PLACEHOLDER}} values before committing.
+```
+
+---
+
+### ⚙️ Configuration
+
+**Location:** `.git/hooks-config`
+
+**Available options:**
+
+```bash
+# ===== AUTO-FIX OPTIONS =====
+
+# Automatically remove trailing whitespace (default: true)
+AUTO_FIX_WHITESPACE=true
+
+# Automatically normalize line endings CRLF → LF (default: true)
+AUTO_FIX_LINE_ENDINGS=true
+
+# Automatically ensure files end with newline (default: true)
+AUTO_FIX_FINAL_NEWLINE=true
+
+# Automatically format code with black/prettier (default: true)
+AUTO_FORMAT_CODE=true
+
+# Check for branch divergence before push (default: true)
+CHECK_BRANCH_DIVERGENCE=true
+```
+
+**To disable a specific auto-fix:**
+```bash
+# Edit .git/hooks-config
+AUTO_FIX_WHITESPACE=false  # Disable whitespace fixing
+```
+
+**To disable all auto-fixes:**
+```bash
+# Edit .git/hooks-config - set all to false
+AUTO_FIX_WHITESPACE=false
+AUTO_FIX_LINE_ENDINGS=false
+AUTO_FIX_FINAL_NEWLINE=false
+AUTO_FORMAT_CODE=false
+```
+
+---
+
+### 🔄 Integration with Git Workflow
+
+**Works seamlessly with existing workflow:**
+
+```bash
+# Your normal workflow - no changes needed!
+git add .
+git commit -m "feat: add authentication"
+# ← Auto-fix runs here automatically
+# ← Validation runs here automatically
+
+git push origin master
+# ← Branch divergence check runs here
+```
+
+**If auto-fixes are made:**
+1. Hook fixes files and re-stages them automatically
+2. Commit proceeds with fixed files
+3. You see clear output showing what was fixed
+4. No manual intervention needed
+
+**If validation fails:**
+1. Commit is blocked
+2. Error message shows exactly what's wrong
+3. Fix the issue manually
+4. Try commit again
+
+---
+
+### 📖 Documentation
+
+**Complete documentation:** `.githooks/README.md`
+
+**Hook scripts:**
+- `.githooks/pre-commit` - Auto-fix and validation
+- `.githooks/commit-msg` - Commit message format validation
+- `.githooks/post-commit` - Optional doc generation
+- `.githooks/pre-push` - Branch divergence detection
+
+**Enable hooks (if not already enabled):**
+```bash
+git config core.hooksPath .githooks
+```
+
+---
+
+### 🐛 Troubleshooting
+
+**Hook not running?**
+```bash
+# Check if hooks are enabled
+git config core.hooksPath
+# Should show: .githooks
+
+# Re-enable if needed
+git config core.hooksPath .githooks
+```
+
+**Formatters not installed?**
+- Auto-fix gracefully skips formatting if black/prettier not available
+- Other auto-fixes still work (whitespace, line endings, newlines)
+- Install formatters for full functionality:
+  ```bash
+  pip install black           # Python formatting
+  npm install -g prettier     # JS/JSON/MD formatting
+  ```
+
+**Commit taking multiple attempts?**
+- This is normal if hook fixes issues
+- First commit: fixes trailing whitespace, re-stages file
+- Second commit: adds final newline, re-stages file
+- Third commit: succeeds with all fixes applied
+- Each attempt fixes discovered issues
+
+**Want to bypass hooks temporarily?**
+```bash
+# Emergency only - not recommended
+git commit --no-verify -m "emergency fix"
+```
+
+---
+
 ## 🔗 Additional Resources
 
 All detailed guides are in `.config/`:
@@ -1002,4 +1221,4 @@ Advanced specialists:
 ---
 
 **Template Version:** 1.0
-**Last Updated:** 2025-11-03
+**Last Updated:** 2025-11-07
