@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+# Pre-push hook for branch divergence detection
+#
+# Checks:
+# - If local branch has diverged from remote
+# - Warns and prompts user before pushing
+# - Suggests git pull if branches have diverged
+#
+# Installation:
+#   git config core.hooksPath .githooks
+#
+# Configuration: .git/hooks-config
+#   CHECK_BRANCH_DIVERGENCE=true/false
+#
+# Author: Template System
+# Created: 2025-11-07
+
+set -e
+
+# Load configuration
+CONFIG_FILE=".git/hooks-config"
+if [ -f "$CONFIG_FILE" ]; then
+    source "$CONFIG_FILE"
+fi
+
+# Default values if not configured
+: ${CHECK_BRANCH_DIVERGENCE:=true}
+
+if [ "$CHECK_BRANCH_DIVERGENCE" != "true" ]; then
+    exit 0
+fi
+
+echo "🔍 Checking branch status before push..."
+
+# Get current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+if [ -z "$CURRENT_BRANCH" ]; then
+    echo "  Detached HEAD state, skipping check"
+    exit 0
+fi
+
+# Get remote branch name
+REMOTE_BRANCH="origin/$CURRENT_BRANCH"
+
+# Check if remote branch exists
+if ! git rev-parse "$REMOTE_BRANCH" >/dev/null 2>&1; then
+    echo "  New branch (no remote tracking), push will create it"
+    exit 0
+fi
+
+# Get commit hashes
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse "$REMOTE_BRANCH")
+BASE=$(git merge-base HEAD "$REMOTE_BRANCH" 2>/dev/null || echo "")
+
+# Check relationship between branches
+if [ "$LOCAL" = "$REMOTE" ]; then
+    echo "  ✓ Branch is up to date with $REMOTE_BRANCH"
+    exit 0
+fi
+
+if [ "$LOCAL" = "$BASE" ]; then
+    echo "  ✓ Local branch is behind $REMOTE_BRANCH (fast-forward possible)"
+    echo "  ⚠️  You may want to: git pull"
+    read -p "  Continue with push anyway? (y/N) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "  Push cancelled"
+        exit 1
+    fi
+    exit 0
+fi
+
+if [ "$REMOTE" = "$BASE" ]; then
+    echo "  ✓ Remote branch is behind local (fast-forward push)"
+    exit 0
+fi
+
+# Branches have diverged
+echo "  ⚠️  WARNING: Your branch has diverged from $REMOTE_BRANCH"
+echo ""
+echo "  Local commits not in remote:  $(git rev-list --count HEAD ^$REMOTE_BRANCH)"
+echo "  Remote commits not in local:  $(git rev-list --count $REMOTE_BRANCH ^HEAD)"
+echo ""
+echo "  You may need to:"
+echo "    git pull --rebase    # Rebase your changes on top of remote"
+echo "    git pull             # Merge remote changes"
+echo ""
+read -p "  Continue with push anyway? (y/N) " -n 1 -r
+echo
+
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "  Push cancelled"
+    exit 1
+fi
+
+echo "  Continuing with push..."
+exit 0

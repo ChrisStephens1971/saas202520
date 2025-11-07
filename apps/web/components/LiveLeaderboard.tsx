@@ -57,26 +57,31 @@ export function LiveLeaderboard({
       return b.totalChips - a.totalChips;
     });
 
-    // Update ranks and detect changes
-    const newRankChanges = new Map<string, number>();
+    // Update ranks (side effects moved to useEffect below)
     sorted.forEach((player, index) => {
-      const newRank = index + 1;
-      const oldRank = player.rank;
+      player.rank = index + 1;
+    });
 
-      if (oldRank !== newRank) {
-        newRankChanges.set(player.id, oldRank - newRank); // Positive = moved up
+    return maxPlayers ? sorted.slice(0, maxPlayers) : sorted;
+  }, [players, maxPlayers]);
+
+  // Detect rank changes and trigger animations (moved from useMemo to avoid setState in render)
+  useEffect(() => {
+    const newRankChanges = new Map<string, number>();
+    sortedPlayers.forEach((player) => {
+      // Compare with original player rank from state
+      const originalPlayer = players.find((p) => p.id === player.id);
+      if (originalPlayer && originalPlayer.rank !== player.rank) {
+        newRankChanges.set(player.id, originalPlayer.rank - player.rank); // Positive = moved up
       }
-
-      player.rank = newRank;
     });
 
     if (newRankChanges.size > 0) {
       setRankChanges(newRankChanges);
-      setTimeout(() => setRankChanges(new Map()), 2000); // Clear after animation
+      const timer = setTimeout(() => setRankChanges(new Map()), 2000); // Clear after animation
+      return () => clearTimeout(timer);
     }
-
-    return maxPlayers ? sorted.slice(0, maxPlayers) : sorted;
-  }, [players, maxPlayers]);
+  }, [sortedPlayers, players]);
 
   // Listen for chips awarded
   useSocketEvent('chips:awarded', (payload: ChipsAwardedPayload) => {

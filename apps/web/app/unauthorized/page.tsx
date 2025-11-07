@@ -32,7 +32,7 @@ export default async function UnauthorizedPage() {
 
         {/* Message */}
         <p className="text-gray-600 dark:text-gray-400 mb-8">
-          You don't have permission to access this page. Admin features are only available to
+          You don&apos;t have permission to access this page. Admin features are only available to
           organization owners.
         </p>
 

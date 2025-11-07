@@ -463,9 +463,9 @@ function prepareChipProgressionData(progression: ChipProgressionData[]) {
   const maxMatches = Math.max(...progression.flatMap(p => p.data.map(d => d.matchNumber)));
 
   // Create data points for each match
-  const chartData: any[] = [];
+  const chartData: Array<Record<string, number>> = [];
   for (let i = 0; i <= maxMatches; i++) {
-    const dataPoint: any = { matchNumber: i };
+    const dataPoint: Record<string, number> = { matchNumber: i };
 
     progression.slice(0, 8).forEach(player => {
       const matchData = player.data.find(d => d.matchNumber === i);
@@ -511,7 +511,7 @@ function prepareMatchActivityData(progression: ChipProgressionData[]) {
 
   const maxMatches = Math.max(...progression.flatMap(p => p.data.map(d => d.matchNumber)));
 
-  const activityData: any[] = [];
+  const activityData: Array<{ matchNumber: number; totalChips: number }> = [];
   for (let i = 0; i <= maxMatches; i++) {
     let totalChips = 0;
     progression.forEach(player => {

@@ -20,15 +20,34 @@ chmod +x .githooks/*  # Mac/Linux only
 
 ### pre-commit
 
-**Runs before each commit to validate:**
+**NEW: Now includes auto-fix capabilities!**
+
+**Phase 1: Auto-Fix (runs automatically):**
+- ✅ Removes trailing whitespace from staged files
+- ✅ Normalizes line endings (CRLF → LF)
+- ✅ Ensures files end with a newline
+- ✅ Auto-formats code (black for Python, prettier for JS/JSON/MD)
+
+**Phase 2: Validation (blocks commit if issues found):**
 - ✅ No unreplaced placeholders (`{{...}}`)
 - ✅ No `.env.local` files being committed
 - ✅ Markdown syntax (if markdownlint installed)
 
+**What you'll see:**
+```bash
+git commit -m "feat: add feature"
+🔧 Running pre-commit auto-fix...
+  ✓ Removed trailing whitespace from file.py
+  ✓ Added final newline to README.md
+  Auto-fixed 2 issue(s)
+🔍 Running validation...
+✅ Pre-commit validation passed
+```
+
 **When it fails:**
-- Fix the issues reported
-- Re-stage your files
-- Try commit again
+- Auto-fixes happen first (you don't need to do anything)
+- If validation fails, fix the issues reported
+- Re-stage your files and try commit again
 
 ### commit-msg
 
@@ -60,28 +79,100 @@ AUTO_SESSION_DOC=true
 AUTO_CHANGELOG=true
 ```
 
+### pre-push
+
+**NEW: Checks branch status before pushing:**
+- ✅ Detects if local branch has diverged from remote
+- ✅ Warns about potential conflicts
+- ✅ Suggests `git pull` if branches have diverged
+- ✅ Allows user to continue or cancel push
+
+**What you'll see:**
+```bash
+git push origin main
+🔍 Checking branch status before push...
+  ⚠️  WARNING: Your branch has diverged from origin/main
+
+  Local commits not in remote:  3
+  Remote commits not in local:  2
+
+  You may need to:
+    git pull --rebase    # Rebase your changes on top of remote
+    git pull             # Merge remote changes
+
+  Continue with push anyway? (y/N)
+```
+
 ---
 
 ## 🔧 Configuration
 
+### Auto-Fix Options
+
+Configure in `.git/hooks-config`:
+
+```bash
+# ===== AUTO-FIX OPTIONS =====
+
+# Automatically remove trailing whitespace (default: true)
+AUTO_FIX_WHITESPACE=true
+
+# Automatically normalize line endings CRLF → LF (default: true)
+AUTO_FIX_LINE_ENDINGS=true
+
+# Automatically ensure files end with newline (default: true)
+AUTO_FIX_FINAL_NEWLINE=true
+
+# Automatically format code with black/prettier (default: true)
+AUTO_FORMAT_CODE=true
+
+# Check for branch divergence before push (default: true)
+CHECK_BRANCH_DIVERGENCE=true
+```
+
+**To disable a specific auto-fix:**
+```bash
+# Edit .git/hooks-config
+AUTO_FIX_WHITESPACE=false  # Disable whitespace fixing
+```
+
 ### Enable Auto-Documentation
 
 ```bash
-# Create hooks config
-cat > .git/hooks-config << EOF
+# Add to .git/hooks-config
 AUTO_SESSION_DOC=true
 AUTO_CHANGELOG=true
-EOF
+AUTO_PROGRESS_SYNC=true
 ```
 
 ### Disable Specific Hooks
 
 ```bash
-# Temporarily bypass hooks (not recommended)
-git commit --no-verify -m "commit message"
+# Temporarily bypass hooks (emergency only, not recommended)
+git commit --no-verify -m "emergency commit"
 
 # Disable permanently
 git config core.hooksPath ""  # Revert to default hooks
+```
+
+### Complete Configuration Example
+
+Full `.git/hooks-config` with all options:
+
+```bash
+# Documentation automation
+AUTO_SESSION_DOC=false
+AUTO_CHANGELOG=false
+AUTO_PROGRESS_SYNC=true
+
+# Auto-fix options
+AUTO_FIX_WHITESPACE=true
+AUTO_FIX_LINE_ENDINGS=true
+AUTO_FIX_FINAL_NEWLINE=true
+AUTO_FORMAT_CODE=true
+
+# Pre-push checks
+CHECK_BRANCH_DIVERGENCE=true
 ```
 
 ---
@@ -230,5 +321,5 @@ python C:/devop/.template-system/scripts/generate_session_doc.py --help
 
 ---
 
-**Version:** 1.0
-**Last Updated:** 2025-11-02
+**Version:** 2.0 (with auto-fix)
+**Last Updated:** 2025-11-07
