@@ -9,7 +9,7 @@ export interface SyncProviderConfig {
   roomName: string;
   doc: Y.Doc;
   connect?: boolean;
-  awareness?: any;
+  awareness?: unknown;
   params?: Record<string, string>;
 }
 
@@ -49,20 +49,20 @@ export class TournamentSyncProvider {
    * Set up event handlers for connection lifecycle
    */
   private setupEventHandlers(): void {
-    this.provider.on('status', (event: { status: string }) => {
-      console.log(`[Sync] Status: ${event.status}`);
+    this.provider.on('status', (_event: { status: string }) => {
+      // Status event handler
     });
 
-    this.provider.on('sync', (isSynced: boolean) => {
-      console.log(`[Sync] Synced: ${isSynced}`);
+    this.provider.on('sync', (_isSynced: boolean) => {
+      // Sync event handler
     });
 
-    this.provider.on('connection-close', (event: any) => {
-      console.log('[Sync] Connection closed', event);
+    this.provider.on('connection-close', (_event: unknown) => {
+      // Connection closed handler
     });
 
-    this.provider.on('connection-error', (event: any) => {
-      console.error('[Sync] Connection error', event);
+    this.provider.on('connection-error', (_event: unknown) => {
+      // Connection error handler
     });
   }
 

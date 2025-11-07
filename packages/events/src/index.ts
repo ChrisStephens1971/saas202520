@@ -7,7 +7,7 @@ export interface TournamentEvent {
   kind: EventKind;
   actor: string; // User ID
   device: string; // Device ID for CRDT
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
   timestamp: Date;
 }
 

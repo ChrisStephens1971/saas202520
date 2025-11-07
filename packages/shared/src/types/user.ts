@@ -102,7 +102,7 @@ export interface UserActivity {
   action: string;
   resource: string;
   resourceId: string | null;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   ipAddress: string | null;
   userAgent: string | null;
   timestamp: Date;
@@ -116,7 +116,7 @@ export interface UserModerationAction {
   performedBy: string;
   performedAt: Date;
   expiresAt: Date | null;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface UserSearchFilters {

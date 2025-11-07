@@ -14,13 +14,13 @@ export class TournamentDoc {
   public doc: Y.Doc;
 
   // Y.js shared types for different parts of the tournament
-  private tournamentMap: Y.Map<any>;
-  private playersMap: Y.Map<any>;
-  private matchesMap: Y.Map<any>;
-  private tablesMap: Y.Map<any>;
-  private eventsArray: Y.Array<any>;
+  private tournamentMap: Y.Map<unknown>;
+  private playersMap: Y.Map<unknown>;
+  private matchesMap: Y.Map<unknown>;
+  private tablesMap: Y.Map<unknown>;
+  private eventsArray: Y.Array<unknown>;
 
-  constructor(docId: string) {
+  constructor(_docId: string) {
     this.doc = new Y.Doc();
     this.doc.clientID = Math.floor(Math.random() * 1000000); // Unique client ID
 
@@ -191,7 +191,7 @@ export class TournamentDoc {
   // EVENT LOG (Append-Only Audit Trail)
   // ============================================================================
 
-  private addEvent(event: { kind: string; payload: any; timestamp: string }): void {
+  private addEvent(event: { kind: string; payload: unknown; timestamp: string }): void {
     this.eventsArray.push([{
       id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ...event,
@@ -199,7 +199,7 @@ export class TournamentDoc {
     }]);
   }
 
-  getEvents(): any[] {
+  getEvents(): unknown[] {
     return this.eventsArray.toArray();
   }
 
@@ -238,7 +238,7 @@ export class TournamentDoc {
   /**
    * Subscribe to changes in the document
    */
-  onUpdate(callback: (update: Uint8Array, origin: any) => void): void {
+  onUpdate(callback: (update: Uint8Array, origin: unknown) => void): void {
     this.doc.on('update', callback);
   }
 

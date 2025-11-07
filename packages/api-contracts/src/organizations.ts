@@ -20,8 +20,8 @@ import { z } from 'zod';
  * - scorekeeper: Can update scores and match results
  * - streamer: Can view tournaments for streaming purposes
  */
-export const OrganizationRole = z.enum(['owner', 'td', 'scorekeeper', 'streamer']);
-export type OrganizationRole = z.infer<typeof OrganizationRole>;
+export const OrganizationRoleEnum = z.enum(['owner', 'td', 'scorekeeper', 'streamer']);
+export type OrganizationRole = z.infer<typeof OrganizationRoleEnum>;
 
 // ============================================================================
 // Entity Schemas

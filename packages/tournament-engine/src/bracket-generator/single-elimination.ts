@@ -110,7 +110,7 @@ export function generateSingleEliminationBracket(players: Player[]): BracketResu
   const playerCount = players.length;
   const bracketSize = nextPowerOf2(playerCount);
   const totalRounds = calculateRounds(bracketSize);
-  const byeCount = bracketSize - playerCount;
+  // byeCount calculated for future use: bracketSize - playerCount
 
   // Assign players to seed positions
   const seedMap = assignPlayersToSeeds(players);
@@ -128,7 +128,7 @@ export function generateSingleEliminationBracket(players: Player[]): BracketResu
 
     // Determine match state based on whether players are present
     let state: 'pending' | 'ready' | 'completed' = 'pending';
-    let winnerId: string | undefined;
+    // winnerId for future use
 
     if (playerA && playerB) {
       // Both players present - ready to play
@@ -136,11 +136,11 @@ export function generateSingleEliminationBracket(players: Player[]): BracketResu
     } else if (playerA && !playerB) {
       // Player A gets bye (auto-advances)
       state = 'completed';
-      winnerId = playerA.id;
+      // winnerId = playerA.id;
     } else if (!playerA && playerB) {
       // Player B gets bye (auto-advances)
       state = 'completed';
-      winnerId = playerB.id;
+      // winnerId = playerB.id;
     }
     // If neither player present, stays pending (shouldn't happen with proper seeding)
 

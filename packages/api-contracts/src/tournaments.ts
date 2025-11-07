@@ -22,7 +22,7 @@ import { z } from 'zod';
  * - completed: Tournament finished
  * - cancelled: Tournament cancelled before completion
  */
-export const TournamentStatus = z.enum([
+export const TournamentStatusEnum = z.enum([
   'draft',
   'registration',
   'active',
@@ -30,7 +30,7 @@ export const TournamentStatus = z.enum([
   'completed',
   'cancelled',
 ]);
-export type TournamentStatus = z.infer<typeof TournamentStatus>;
+export type TournamentStatus = z.infer<typeof TournamentStatusEnum>;
 
 /**
  * Tournament Format
@@ -42,14 +42,14 @@ export type TournamentStatus = z.infer<typeof TournamentStatus>;
  * - modified_single: Single-elim with modifications (e.g., third-place match)
  * - chip_format: Players collect chips, top X advance
  */
-export const TournamentFormat = z.enum([
+export const TournamentFormatEnum = z.enum([
   'single_elimination',
   'double_elimination',
   'round_robin',
   'modified_single',
   'chip_format',
 ]);
-export type TournamentFormat = z.infer<typeof TournamentFormat>;
+export type TournamentFormat = z.infer<typeof TournamentFormatEnum>;
 
 /**
  * Sport Type
@@ -57,10 +57,10 @@ export type TournamentFormat = z.infer<typeof TournamentFormat>;
  * Currently supports pool/billiards variants.
  * Future: darts, cornhole, etc.
  */
-export const SportType = z.enum([
+export const SportTypeEnum = z.enum([
   'pool',
 ]);
-export type SportType = z.infer<typeof SportType>;
+export type SportType = z.infer<typeof SportTypeEnum>;
 
 /**
  * Game Type (Pool-specific)
@@ -71,13 +71,13 @@ export type SportType = z.infer<typeof SportType>;
  * - ten-ball: 10-ball
  * - straight-pool: 14.1 continuous
  */
-export const GameType = z.enum([
+export const GameTypeEnum = z.enum([
   'eight-ball',
   'nine-ball',
   'ten-ball',
   'straight-pool',
 ]);
-export type GameType = z.infer<typeof GameType>;
+export type GameType = z.infer<typeof GameTypeEnum>;
 
 // ============================================================================
 // Entity Schemas

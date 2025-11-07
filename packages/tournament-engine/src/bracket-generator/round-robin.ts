@@ -41,7 +41,7 @@ export interface StandingsEntry {
  */
 export function generateRoundRobinBracket(
   players: Player[],
-  options?: {
+  _options?: {
     pointsForWin?: number; // Default: 1
     pointsForLoss?: number; // Default: 0
     pointsForDraw?: number; // Default: 0.5 (if draws are allowed)
@@ -70,7 +70,7 @@ export function generateRoundRobinBracket(
     : (totalPlayers * totalRounds) / 2;
 
   const matches: BracketMatch[] = [];
-  let matchId = 0;
+  // matchId for future use
 
   // Use circle method for scheduling
   // Fix position 0, rotate all others clockwise each round
@@ -94,14 +94,14 @@ export function generateRoundRobinBracket(
         id: `RR-${round}-${i}`,
         round,
         position: i,
-        bracket: 'round_robin' as any, // Type will be extended
+        bracket: 'round_robin' as 'winners' | 'losers' | 'finals', // Type extension placeholder
         playerAId: player1?.id ?? null,
         playerBId: player2?.id ?? null,
         state: player1 && player2 ? 'ready' : 'pending',
       };
 
       matches.push(match);
-      matchId++;
+      // matchId incremented for future use
     }
 
     // Rotate positions (keep position 0 fixed, rotate others clockwise)
@@ -139,8 +139,8 @@ export function generateRoundRobinBracket(
  */
 export function calculateStandings(
   bracket: RoundRobinResult,
-  pointsForWin: number = 1,
-  pointsForLoss: number = 0
+  _pointsForWin: number = 1,
+  _pointsForLoss: number = 0
 ): StandingsEntry[] {
   // Build player map
   const playerMap = new Map<string, StandingsEntry>();

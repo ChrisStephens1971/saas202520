@@ -39,7 +39,7 @@ export class IndexedDBPersistence {
    */
   private openDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
-      const request = (globalThis as any).indexedDB.open(DB_NAME, DB_VERSION);
+      const request = (globalThis as { indexedDB: IDBFactory }).indexedDB.open(DB_NAME, DB_VERSION);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
@@ -67,9 +67,9 @@ export class IndexedDBPersistence {
     if (record && record.update) {
       // Apply persisted state to Y.Doc
       Y.applyUpdate(this.doc, record.update);
-      console.log(`[IndexedDB] Loaded tournament ${this.tournamentId} from local storage (v${record.version})`);
+      // Tournament loaded from local storage
     } else {
-      console.log(`[IndexedDB] No persisted state found for tournament ${this.tournamentId}`);
+      // No persisted state found for tournament
     }
 
     this.synced = true;
@@ -82,7 +82,11 @@ export class IndexedDBPersistence {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readonly');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.get(tournamentId);
 
@@ -108,13 +112,17 @@ export class IndexedDBPersistence {
     };
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readwrite');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.put(record);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
-        console.log(`[IndexedDB] Saved tournament ${this.tournamentId} (v${record.version}, ${update.length} bytes)`);
+        // Tournament saved successfully
         resolve();
       };
     });
@@ -145,13 +153,17 @@ export class IndexedDBPersistence {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readwrite');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.delete(this.tournamentId);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
-        console.log(`[IndexedDB] Deleted tournament ${this.tournamentId}`);
+        // Tournament deleted successfully
         resolve();
       };
     });
@@ -164,13 +176,17 @@ export class IndexedDBPersistence {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readwrite');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readwrite');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.clear();
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
-        console.log('[IndexedDB] Cleared all tournaments');
+        // All tournaments cleared successfully
         resolve();
       };
     });
@@ -183,7 +199,11 @@ export class IndexedDBPersistence {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readonly');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.getAllKeys();
 
@@ -203,7 +223,11 @@ export class IndexedDBPersistence {
     if (!this.db) throw new Error('Database not initialized');
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([STORE_NAME], 'readonly');
+      if (!this.db) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+      const transaction = this.db.transaction([STORE_NAME], 'readonly');
       const store = transaction.objectStore(STORE_NAME);
       const request = store.getAll();
 

@@ -105,10 +105,16 @@ export function manualSeeding(players: Player[], seedOrder: string[]): Player[] 
   }
 
   // Assign seeds based on order
-  return seedOrder.map((playerId, index) => ({
-    ...playerMap.get(playerId)!,
-    seed: index + 1,
-  }));
+  return seedOrder.map((playerId, index) => {
+    const player = playerMap.get(playerId);
+    if (!player) {
+      throw new Error(`Player ${playerId} not found in map`);
+    }
+    return {
+      ...player,
+      seed: index + 1,
+    };
+  });
 }
 
 /**

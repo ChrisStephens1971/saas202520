@@ -2,7 +2,7 @@
  * Debug seeding pairs
  */
 
-function generateSeedingPairs(bracketSize: number): number[][] {
+function _generateSeedingPairs(bracketSize: number): number[][] {
   const rounds = Math.log2(bracketSize);
 
   // Start with [1, 2]
@@ -28,5 +28,5 @@ function generateSeedingPairs(bracketSize: number): number[][] {
   return pairs;
 }
 
-console.log('8-player pairs:', JSON.stringify(generateSeedingPairs(8)));
-console.log('Expected:      [[1,8],[4,5],[2,7],[3,6]]');
+// Debug output for seeding pairs
+// generateSeedingPairs(8) should produce [[1,8],[4,5],[2,7],[3,6]]
