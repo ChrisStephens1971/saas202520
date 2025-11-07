@@ -1,0 +1,841 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tournament Platform Public API",
+    "version": "1.0.0",
+    "description": "RESTful API for accessing tournament data, player statistics, and receiving real-time event notifications via webhooks",
+    "contact": {
+      "name": "API Support",
+      "email": "api@tournament-platform.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.tournament-platform.com/v1",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Development"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/leaderboards": {
+      "get": {
+        "operationId": "getLeaderboards",
+        "summary": "Get global player leaderboards",
+        "description": "Retrieve ranked lists of players across all tournaments based on various metrics",
+        "tags": ["Leaderboards"],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of leaderboard to retrieve",
+            "schema": {
+              "type": "string",
+              "enum": ["win-rate", "tournaments", "prize-money"],
+              "default": "win-rate"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of players to return (max 500)",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeaderboardEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/LeaderboardMeta"
+                    }
+                  }
+                },
+                "example": {
+                  "data": [
+                    {
+                      "rank": 1,
+                      "player": {
+                        "id": "player-123",
+                        "name": "John Doe"
+                      },
+                      "metric_value": 68.5,
+                      "change": "+2.3"
+                    }
+                  ],
+                  "meta": {
+                    "total": 100,
+                    "type": "win-rate",
+                    "updated_at": "2025-11-07T12:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          }
+        }
+      }
+    },
+    "/leaderboards/venue/{id}": {
+      "get": {
+        "operationId": "getVenueLeaderboard",
+        "summary": "Get leaderboard for specific venue",
+        "description": "Retrieve ranked players who have competed at a specific venue",
+        "tags": ["Leaderboards"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Venue ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of leaderboard metric",
+            "schema": {
+              "type": "string",
+              "enum": ["win-rate", "tournaments"],
+              "default": "win-rate"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of players to return (max 500)",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/VenueLeaderboardEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/VenueLeaderboardMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/leaderboards/format/{format}": {
+      "get": {
+        "operationId": "getFormatLeaderboard",
+        "summary": "Get leaderboard by tournament format",
+        "description": "Retrieve ranked players based on performance in a specific tournament format",
+        "tags": ["Leaderboards"],
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "required": true,
+            "description": "Tournament format",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "single_elimination",
+                "double_elimination",
+                "round_robin",
+                "modified_single",
+                "chip_format"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of players to return (max 500)",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FormatLeaderboardEntry"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/FormatLeaderboardMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/venues": {
+      "get": {
+        "operationId": "getVenues",
+        "summary": "List all venues",
+        "description": "Retrieve a paginated list of tournament venues with basic information",
+        "tags": ["Venues"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (max 100)",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search venues by name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "description": "Filter by city",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/VenueListItem"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/PaginationMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/venues/{id}": {
+      "get": {
+        "operationId": "getVenue",
+        "summary": "Get venue details",
+        "description": "Retrieve detailed information about a specific venue",
+        "tags": ["Venues"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Venue ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/VenueDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/venues/{id}/tournaments": {
+      "get": {
+        "operationId": "getVenueTournaments",
+        "summary": "List tournaments at venue",
+        "description": "Retrieve all tournaments that have been or will be held at a specific venue",
+        "tags": ["Venues"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Venue ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by tournament status",
+            "schema": {
+              "type": "string",
+              "enum": ["upcoming", "active", "completed", "all"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (max 100)",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TournamentListItem"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/VenueTournamentsMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key",
+        "description": "Use your API key in the Authorization header: `Authorization: Bearer sk_live_XXXXX`"
+      }
+    },
+    "schemas": {
+      "LeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "description": "Player's rank on the leaderboard"
+          },
+          "player": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "metric_value": {
+            "type": "number",
+            "description": "The value of the metric (win rate %, tournament count, or prize money)"
+          },
+          "change": {
+            "type": "string",
+            "description": "Change from last period (e.g., '+2.3', '-1.5')"
+          }
+        }
+      },
+      "VenueLeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer"
+          },
+          "player": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "metric_value": {
+            "type": "number"
+          },
+          "matches_played": {
+            "type": "integer"
+          }
+        }
+      },
+      "FormatLeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer"
+          },
+          "player": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "win_rate": {
+            "type": "number"
+          },
+          "matches_played": {
+            "type": "integer"
+          },
+          "tournaments_played": {
+            "type": "integer"
+          }
+        }
+      },
+      "LeaderboardMeta": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "VenueLeaderboardMeta": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "venue_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FormatLeaderboardMeta": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "format": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "VenueListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "tournament_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "VenueDetails": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "string"
+          },
+          "capacity": {
+            "type": "integer"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "phone": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "website": {
+                "type": "string"
+              }
+            }
+          },
+          "statistics": {
+            "type": "object",
+            "properties": {
+              "total_tournaments": {
+                "type": "integer"
+              },
+              "active_tournaments": {
+                "type": "integer"
+              },
+              "total_players_hosted": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "TournamentListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "format": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "player_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        }
+      },
+      "VenueTournamentsMeta": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          },
+          "venue_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request - Invalid parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "invalid_parameter",
+                "message": "Invalid query parameter value"
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized - Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "unauthorized",
+                "message": "Invalid or missing API key"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Not found - Resource does not exist",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "not_found",
+                "message": "Resource not found"
+              }
+            }
+          }
+        }
+      },
+      "RateLimitExceeded": {
+        "description": "Rate limit exceeded",
+        "headers": {
+          "X-RateLimit-Limit": {
+            "description": "Request limit per hour",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          "X-RateLimit-Remaining": {
+            "description": "Remaining requests",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          "X-RateLimit-Reset": {
+            "description": "Time when limit resets (Unix timestamp)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          "Retry-After": {
+            "description": "Seconds until you can retry",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": {
+                "code": "rate_limit_exceeded",
+                "message": "You have exceeded your rate limit of 100 requests per hour",
+                "details": {
+                  "limit": 100,
+                  "remaining": 0,
+                  "reset": "2025-11-07T14:00:00Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Leaderboards",
+      "description": "Player rankings and leaderboards"
+    },
+    {
+      "name": "Venues",
+      "description": "Tournament venue information"
+    }
+  ]
+}

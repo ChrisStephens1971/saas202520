@@ -43,6 +43,7 @@ model User {
   moderationActions   UserModerationAction[]
   performedActions    UserModerationAction[] @relation("PerformedBy")
   analyticsEvents     AnalyticsEvent[]
+  apiKeys             ApiKey[]
 
   @@index([role])
   @@index([status])
@@ -116,6 +117,8 @@ model Organization {
   userCohorts          UserCohort[]
   tournamentAggregates TournamentAggregate[]
   scheduledReports     ScheduledReport[]
+  apiKeys              ApiKey[]
+  webhooks             Webhook[]
 
   @@map("organizations")
 }
@@ -706,6 +709,7 @@ model ScheduledReport {
   @@index([nextRunAt], map: "idx_scheduled_reports_next_run")
   @@map("scheduled_reports")
 }
+
 // ============================================================================
 // PLAYER PROFILES & ENHANCED EXPERIENCE (Sprint 10 - Week 2)
 // ============================================================================
@@ -724,9 +728,9 @@ model ScheduledReport {
  * Provides rich player profiles with bio, photos, social links, and preferences
  */
 model PlayerProfile {
-  id       String  @id @default(cuid())
-  playerId String  @unique @map("player_id")
-  tenantId String  @map("tenant_id")
+  id       String @id @default(cuid())
+  playerId String @unique @map("player_id")
+  tenantId String @map("tenant_id")
 
   // Profile Information
   bio      String? @db.Text
@@ -785,10 +789,10 @@ model PlayerStatistics {
   longestStreak Int @default(0) @map("longest_streak") // Best win streak
 
   // Performance
-  averageFinish    Decimal? @map("average_finish") @db.Decimal(6, 2) // Average placement
-  favoriteFormat   String?  @map("favorite_format") @db.VarChar(100) // Most played format
-  totalPrizeWon    Decimal  @default(0) @map("total_prize_won") @db.Decimal(10, 2)
-  lastPlayedAt     DateTime? @map("last_played_at")
+  averageFinish  Decimal?  @map("average_finish") @db.Decimal(6, 2) // Average placement
+  favoriteFormat String?   @map("favorite_format") @db.VarChar(100) // Most played format
+  totalPrizeWon  Decimal   @default(0) @map("total_prize_won") @db.Decimal(10, 2)
+  lastPlayedAt   DateTime? @map("last_played_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -816,8 +820,8 @@ model AchievementDefinition {
   code String @unique @db.VarChar(100) // Unique identifier (FIRST_STEPS, WINNER, etc.)
 
   // Display Information
-  name        String @db.VarChar(255)
-  description String @db.Text
+  name        String  @db.VarChar(255)
+  description String  @db.Text
   iconUrl     String? @map("icon_url") @db.VarChar(500)
   badgeUrl    String? @map("badge_url") @db.VarChar(500)
 
@@ -903,9 +907,9 @@ model MatchHistory {
   roundNumber Int  @map("round_number")
 
   // Performance Metrics
-  durationMinutes    Int?    @map("duration_minutes")
-  skillRatingBefore  Decimal? @map("skill_rating_before") @db.Decimal(10, 2)
-  skillRatingAfter   Decimal? @map("skill_rating_after") @db.Decimal(10, 2)
+  durationMinutes   Int?     @map("duration_minutes")
+  skillRatingBefore Decimal? @map("skill_rating_before") @db.Decimal(10, 2)
+  skillRatingAfter  Decimal? @map("skill_rating_after") @db.Decimal(10, 2)
 
   // Timing
   playedAt  DateTime @map("played_at")
@@ -979,10 +983,10 @@ model PlayerSettings {
   tenantId String @map("tenant_id")
 
   // Privacy Settings
-  isProfilePublic    Boolean @default(true) @map("is_profile_public")
-  showStatistics     Boolean @default(true) @map("show_statistics")
-  showAchievements   Boolean @default(true) @map("show_achievements")
-  showHistory        Boolean @default(true) @map("show_history")
+  isProfilePublic  Boolean @default(true) @map("is_profile_public")
+  showStatistics   Boolean @default(true) @map("show_statistics")
+  showAchievements Boolean @default(true) @map("show_achievements")
+  showHistory      Boolean @default(true) @map("show_history")
 
   // Notification Preferences (detailed JSON structure)
   emailNotifications Json @default("{}") @map("email_notifications") // { tournaments: true, matches: true, achievements: true }
@@ -990,8 +994,8 @@ model PlayerSettings {
   smsNotifications   Json @default("{}") @map("sms_notifications") // { urgent: true, reminders: false }
 
   // Display Preferences
-  theme    String @default("LIGHT") @db.VarChar(20) // LIGHT, DARK, AUTO
-  language String @default("en") @db.VarChar(10)
+  theme    String  @default("LIGHT") @db.VarChar(20) // LIGHT, DARK, AUTO
+  language String  @default("en") @db.VarChar(10)
   timezone String? @db.VarChar(100)
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -1003,4 +1007,98 @@ model PlayerSettings {
   @@unique([tenantId, playerId])
   @@index([tenantId])
   @@map("player_settings")
+}
+
+// ============================================================================
+// PUBLIC API & WEBHOOKS (Sprint 10 - Week 3)
+// ============================================================================
+
+/**
+ * API Keys for external API access
+ * Stores hashed API keys for authentication
+ */
+model ApiKey {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  userId     String    @map("user_id")
+  name       String    @db.VarChar(255)
+  keyPrefix  String    @map("key_prefix") @db.VarChar(20) // First 15 chars for display
+  keyHash    String    @unique @map("key_hash") @db.VarChar(255) // bcrypt hash
+  tier       String    @default("free") @db.VarChar(20) // free, pro, enterprise
+  rateLimit  Int       @map("rate_limit") // requests per hour
+  lastUsedAt DateTime? @map("last_used_at")
+  expiresAt  DateTime? @map("expires_at") // NULL = never expires
+  isActive   Boolean   @default(true) @map("is_active")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  tenant   Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webhooks Webhook[]
+
+  @@index([tenantId])
+  @@index([keyHash], map: "idx_api_keys_hash_active")
+  @@index([isActive, expiresAt])
+  @@index([userId])
+  @@map("api_keys")
+}
+
+/**
+ * Webhook Subscriptions
+ * Stores webhook endpoint configurations and delivery stats
+ */
+model Webhook {
+  id                   String    @id @default(cuid())
+  tenantId             String    @map("tenant_id")
+  apiKeyId             String    @map("api_key_id")
+  url                  String    @db.VarChar(500)
+  secret               String    @db.VarChar(255) // HMAC secret
+  events               String[] // Array of event types
+  isActive             Boolean   @default(true) @map("is_active")
+  deliverySuccessCount Int       @default(0) @map("delivery_success_count")
+  deliveryFailureCount Int       @default(0) @map("delivery_failure_count")
+  lastDeliveryAt       DateTime? @map("last_delivery_at")
+  lastError            String?   @map("last_error") @db.Text
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  tenant     Organization      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  apiKey     ApiKey            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  deliveries WebhookDelivery[]
+
+  @@index([tenantId])
+  @@index([apiKeyId])
+  @@index([isActive], map: "idx_webhooks_active")
+  @@map("webhooks")
+}
+
+/**
+ * Webhook Delivery Logs
+ * Tracks every webhook delivery attempt with full details
+ */
+model WebhookDelivery {
+  id            String    @id @default(cuid())
+  webhookId     String    @map("webhook_id")
+  eventId       String    @map("event_id") @db.VarChar(100) // evt_abc123...
+  eventType     String    @map("event_type") @db.VarChar(100)
+  url           String    @db.VarChar(500) // Snapshot of URL
+  payload       Json // Full event payload
+  signature     String    @db.VarChar(255) // HMAC signature sent
+  attemptNumber Int       @default(1) @map("attempt_number")
+  statusCode    Int? // HTTP response code
+  responseBody  String?   @map("response_body") @db.Text // First 1000 chars
+  errorMessage  String?   @map("error_message") @db.Text
+  deliveredAt   DateTime? @map("delivered_at") // NULL if failed
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@index([webhookId, createdAt(sort: Desc)])
+  @@index([eventId])
+  @@index([createdAt(sort: Desc)])
+  @@index([statusCode], map: "idx_webhook_deliveries_failed")
+  @@map("webhook_deliveries")
 }

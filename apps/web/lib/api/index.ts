@@ -50,3 +50,60 @@ export {
   withOptimization,
   type OptimizedResponseOptions,
 } from './response-helpers';
+
+// ============================================================================
+// PUBLIC API - Sprint 10 Week 3
+// ============================================================================
+
+// API Types
+export * from './types/api';
+
+// API Key Service
+export {
+  generateApiKey,
+  hashApiKey,
+  validateApiKey,
+  getApiKeyByHash,
+  revokeApiKey,
+  updateLastUsed,
+  getTierRateLimit,
+  validateApiKeyFormat,
+  getApiKeysByTenant,
+  getApiKeyById,
+} from './services/api-key.service';
+
+// Rate Limiter Service
+export {
+  checkRateLimit,
+  incrementCounter,
+  getRemainingRequests,
+  resetCounter,
+  getRateLimitInfo,
+  isRateLimited,
+  getTimeUntilReset,
+} from './services/rate-limiter.service';
+
+// API Authentication Middleware
+export {
+  withApiAuth,
+  withApiAuthCustomError,
+} from './middleware/api-auth.middleware';
+
+// API Response Utilities
+export {
+  apiSuccess,
+  apiError,
+  apiPaginated,
+  apiUnauthorized,
+  apiForbidden,
+  apiNotFound,
+  apiRateLimitExceeded,
+  apiBadRequest,
+  apiInternalError,
+  apiServiceUnavailable,
+  apiConflict,
+  errorToApiResponse,
+  formatRateLimitHeaders,
+  getPaginationOffset,
+  validatePagination,
+} from './utils/response.utils';
