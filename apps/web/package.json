@@ -11,7 +11,11 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "workers": "tsx lib/analytics/jobs/start-workers.ts"
+    "workers": "tsx lib/analytics/jobs/start-workers.ts",
+    "lighthouse": "lhci autorun",
+    "lighthouse:mobile": "lhci autorun --config=lighthouserc.mobile.json",
+    "perf:audit": "npm run lighthouse && npm run lighthouse:mobile",
+    "perf:analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

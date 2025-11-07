@@ -44,6 +44,7 @@ model User {
   performedActions    UserModerationAction[] @relation("PerformedBy")
   analyticsEvents     AnalyticsEvent[]
   apiKeys             ApiKey[]
+  pushSubscriptions   PushSubscription[]
 
   @@index([role])
   @@index([status])
@@ -1101,4 +1102,30 @@ model WebhookDelivery {
   @@index([createdAt(sort: Desc)])
   @@index([statusCode], map: "idx_webhook_deliveries_failed")
   @@map("webhook_deliveries")
+}
+
+// ============================================================================
+// PWA PUSH NOTIFICATIONS
+// Sprint 10 Week 4 - PWA Install & Push Notifications
+// ============================================================================
+
+/**
+ * Push Subscriptions
+ * Stores PWA push notification subscriptions with preferences
+ */
+model PushSubscription {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  endpoint    String   @unique @db.VarChar(500)
+  p256dhKey   String   @map("p256dh_key") @db.VarChar(255)
+  authKey     String   @map("auth_key") @db.VarChar(255)
+  preferences Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
 }
