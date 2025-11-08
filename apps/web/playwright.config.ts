@@ -8,9 +8,10 @@
 
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
+import { config } from 'dotenv';
 
 // Load environment variables from .env.test for E2E tests
-require('dotenv').config({ path: path.resolve(__dirname, '.env.test') });
+config({ path: path.resolve(__dirname, '.env.test') });
 
 const PORT = process.env.PORT || 3000;
 const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || `http://localhost:${PORT}`;

@@ -268,7 +268,7 @@ export async function calculateAchievementProgress(
       });
       break;
 
-    case 'unique_opponents':
+    case 'unique_opponents': {
       const uniqueOpponents = await prisma.matchHistory.findMany({
         where: {
           playerId,
@@ -281,8 +281,9 @@ export async function calculateAchievementProgress(
       });
       current = uniqueOpponents.length;
       break;
+    }
 
-    case 'unique_venues':
+    case 'unique_venues': {
       const uniqueVenues = await prisma.$queryRaw<{ count: bigint }[]>`
         SELECT COUNT(DISTINCT t.venue_id) as count
         FROM match_history mh
@@ -291,6 +292,7 @@ export async function calculateAchievementProgress(
       `;
       current = Number(uniqueVenues[0]?.count || 0);
       break;
+    }
 
     case 'format_wins':
       if (requirements.same_format) {
@@ -341,7 +343,7 @@ export async function calculateAchievementProgress(
       }
       break;
 
-    case 'unique_formats':
+    case 'unique_formats': {
       const uniqueFormats = await prisma.matchHistory.findMany({
         where: {
           playerId,
@@ -354,6 +356,7 @@ export async function calculateAchievementProgress(
       });
       current = uniqueFormats.length;
       break;
+    }
 
     default:
       current = 0;

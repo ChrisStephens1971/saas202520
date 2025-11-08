@@ -433,7 +433,7 @@ export async function requestPeriodicSync(tag: string = 'tournament-sync'): Prom
   }
 
   try {
-    // @ts-ignore - periodicSync is not yet in TypeScript types
+    // @ts-expect-error - periodicSync is not yet in TypeScript types
     await self.registration.periodicSync.register(tag, {
       minInterval: 24 * 60 * 60 * 1000, // 1 day
     });
@@ -455,7 +455,7 @@ export async function unregisterPeriodicSync(tag: string = 'tournament-sync'): P
   }
 
   try {
-    // @ts-ignore
+    // @ts-expect-error - periodicSync is not yet in TypeScript types
     await self.registration.periodicSync.unregister(tag);
     console.log('[SyncManager] Periodic sync unregistered:', tag);
   } catch (error) {

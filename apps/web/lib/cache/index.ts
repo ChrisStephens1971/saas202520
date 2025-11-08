@@ -10,6 +10,12 @@ export { cacheService } from './redis';
 export type { CacheResult } from './redis';
 
 // Cache strategies
+import {
+  cacheAside,
+  writeThrough,
+  refreshCache,
+} from './strategies';
+
 export {
   CacheTTL,
   TournamentCache,

@@ -394,13 +394,15 @@ function generateCronExpression(schedule: ReportSchedule): string {
     case 'daily':
       return `${minute} ${hour} * * *`;
 
-    case 'weekly':
+    case 'weekly': {
       const dayOfWeek = schedule.dayOfWeek || 1; // Default Monday
       return `${minute} ${hour} * * ${dayOfWeek}`;
+    }
 
-    case 'monthly':
+    case 'monthly': {
       const dayOfMonth = schedule.dayOfMonth || 1; // Default 1st
       return `${minute} ${hour} ${dayOfMonth} * *`;
+    }
 
     case 'custom':
       if (!schedule.cronExpression) {

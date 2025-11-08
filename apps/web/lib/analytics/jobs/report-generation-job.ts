@@ -225,19 +225,21 @@ function calculateDateRange(
         end: now,
       };
 
-    case 'lastMonth':
+    case 'lastMonth': {
       const lastMonth = subMonths(now, 1);
       return {
         start: startOfMonth(lastMonth),
         end: endOfMonth(lastMonth),
       };
+    }
 
-    case 'lastQuarter':
+    case 'lastQuarter': {
       const lastQuarter = subMonths(now, 3);
       return {
         start: startOfQuarter(lastQuarter),
         end: endOfQuarter(lastQuarter),
       };
+    }
 
     case 'custom':
       if (!dateRangeConfig.customStart || !dateRangeConfig.customEnd) {

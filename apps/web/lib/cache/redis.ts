@@ -15,14 +15,15 @@ import Redis, { RedisOptions } from 'ioredis';
 // Performance tracking (optional - falls back gracefully if not available)
 let trackCacheOperation: ((requestId: string, operation: 'hit' | 'miss', key: string, duration: number) => void) | undefined;
 
-try {
-  // Try to import performance middleware if available
-  const perfMiddleware = require('../monitoring/performance-middleware');
-  trackCacheOperation = perfMiddleware.trackCacheOperation;
-} catch {
-  // Performance middleware not available, operations will work without tracking
-  trackCacheOperation = undefined;
-}
+// Try to import performance middleware if available (async initialization)
+import('../monitoring/performance-middleware')
+  .then((perfMiddleware) => {
+    trackCacheOperation = perfMiddleware.trackCacheOperation;
+  })
+  .catch(() => {
+    // Performance middleware not available, operations will work without tracking
+    trackCacheOperation = undefined;
+  });
 
 /**
  * Cache operation result with metadata

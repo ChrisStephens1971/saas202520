@@ -26,7 +26,6 @@ export function ConnectionStatus({
   const [lastConnectedTime, setLastConnectedTime] = useState<Date | null>(null);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
     if (isConnected) {
       setLastConnectedTime(new Date());

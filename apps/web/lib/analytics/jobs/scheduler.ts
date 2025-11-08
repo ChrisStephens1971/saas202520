@@ -431,11 +431,12 @@ export async function triggerTask(taskName: string): Promise<boolean> {
       case 'weekly-tournaments':
         jobData = { type: 'tournaments', periodType: 'week' };
         break;
-      case 'hourly-reports-check':
+      case 'hourly-reports-check': {
         // Trigger scheduled reports check manually
         const { scheduleReports } = await import('./report-generation-job');
         await scheduleReports();
         return true;
+      }
       default:
         throw new Error(`Unknown task type: ${taskName}`);
     }
