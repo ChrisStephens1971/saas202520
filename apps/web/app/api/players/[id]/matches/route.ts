@@ -24,7 +24,7 @@ const GetMatchesQuerySchema = z.object({
   tournamentId: z.string().optional(),
 });
 
-type GetMatchesQuery = z.infer<typeof GetMatchesQuerySchema>;
+type _GetMatchesQuery = z.infer<typeof GetMatchesQuerySchema>;
 
 // ============================================================================
 // GET /api/players/[id]/matches
@@ -135,7 +135,7 @@ export async function GET(
     if (query.status !== 'all') {
       // Note: The status filtering logic depends on your match status tracking
       // This is a placeholder - adjust based on your actual implementation
-      filteredMatches = matchHistory.filter((match) => {
+      filteredMatches = matchHistory.filter((_match) => {
         // If you track match status in metadata or have a status field
         return true; // Adjust filtering logic
       });

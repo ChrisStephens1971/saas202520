@@ -48,7 +48,7 @@ export default function NotificationSettingsPage() {
 
   // Test notification
   const [testRecipient, setTestRecipient] = useState('');
-  const [testType, setTestType] = useState<'email' | 'sms'>('email');
+  const [testType, _setTestType] = useState<'email' | 'sms'>('email');
   const [isSendingTest, setSendingTest] = useState(false);
 
   // Fetch notification settings

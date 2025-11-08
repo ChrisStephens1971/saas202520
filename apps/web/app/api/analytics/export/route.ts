@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       tenantId,
       exportType,
       format,
-      dateRange,
+      dateRange: _dateRange,
     }: {
       tenantId: string;
       exportType: 'revenue' | 'tournaments' | 'users';

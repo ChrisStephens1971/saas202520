@@ -39,7 +39,7 @@ const prisma = new PrismaClient();
 export async function processReportJob(
   job: Job<ScheduledReportJobData>
 ): Promise<{ success: boolean; deliveryId?: string }> {
-  const { reportId, tenantId, reportType, recipients } = job.data;
+  const { reportId, tenantId, reportType: _reportType, recipients } = job.data;
 
   console.log(`[ReportJob] Processing report job: ${reportId}`);
 

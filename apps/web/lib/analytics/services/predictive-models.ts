@@ -17,7 +17,6 @@ import {
   subMonths,
   addMonths,
   format,
-  differenceInMonths,
 } from 'date-fns';
 import * as RevenueCalculator from './revenue-calculator';
 import * as CacheManager from './cache-manager';

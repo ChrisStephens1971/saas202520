@@ -134,7 +134,7 @@ export default function AdminSettingsPage() {
                 </p>
               </div>
               <div className="space-y-0">
-                {Object.entries(FEATURE_FLAGS).map(([key, flag]) => (
+                {Object.entries(FEATURE_FLAGS).map(([_key, flag]) => (
                   <FeatureToggle
                     key={flag.id}
                     id={flag.id}

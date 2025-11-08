@@ -9,8 +9,6 @@ import {
   SkillLevel,
   MatchResult,
   PlayerProfile,
-  PlayerStatistics,
-  PlayerAchievement,
   MatchHistoryWithDetails,
   HeadToHeadStats,
   SocialLinks,

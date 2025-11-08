@@ -481,7 +481,7 @@ export function MobileScorer({
             Recent Actions
           </div>
           <div className="space-y-1">
-            {history.slice(-3).reverse().map((item, index) => (
+            {history.slice(-3).reverse().map((item, _index) => (
               <div
                 key={item.timestamp}
                 className="text-xs text-gray-700 dark:text-gray-300"

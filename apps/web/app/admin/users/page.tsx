@@ -6,13 +6,12 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import UserTable from '@/components/admin/UserTable';
 import {
   UserWithActivity,
-  UserRole,
   ModerationRequest,
 } from '@tournament/shared/types/user';
 

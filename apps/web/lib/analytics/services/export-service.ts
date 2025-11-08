@@ -17,7 +17,7 @@ import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
 import { addJob, getQueue } from '../jobs/queue';
 
-const prisma = new PrismaClient();
+const _prisma = new PrismaClient();
 
 // ============================================================================
 // TYPE DEFINITIONS

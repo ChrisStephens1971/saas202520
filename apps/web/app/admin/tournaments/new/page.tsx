@@ -56,7 +56,7 @@ export default function AdminNewTournamentPage() {
     },
   });
 
-  const watchName = watch('name');
+  const _watchName = watch('name');
   const watchFormat = watch('format');
 
   // Permission check

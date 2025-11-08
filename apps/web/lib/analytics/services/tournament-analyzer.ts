@@ -7,7 +7,7 @@
  * format popularity, attendance predictions, and benchmarking.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   startOfDay,
   startOfWeek,
@@ -18,7 +18,7 @@ import {
   subDays,
   subWeeks,
   subMonths,
-  addDays,
+  
   addWeeks,
   addMonths,
   differenceInDays,

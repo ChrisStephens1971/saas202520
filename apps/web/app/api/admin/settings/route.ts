@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 
 // Mock Prisma client - replace with actual import when database is connected
 // import { prisma } from '@/lib/prisma';

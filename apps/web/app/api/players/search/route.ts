@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { z } from 'zod';
 import { searchPlayers } from '@/lib/player-profiles/services/player-profile-service';
-import { SkillLevel } from '@/lib/player-profiles/types';
+import type { SkillLevel as _SkillLevel } from '@/lib/player-profiles/types';
 
 // ============================================================================
 // VALIDATION SCHEMA
@@ -28,7 +28,7 @@ const SearchPlayersSchema = z.object({
   offset: z.number().int().min(0).default(0),
 });
 
-type SearchPlayersRequest = z.infer<typeof SearchPlayersSchema>;
+type _SearchPlayersRequest = z.infer<typeof SearchPlayersSchema>;
 
 // ============================================================================
 // POST /api/players/search

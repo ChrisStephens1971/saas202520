@@ -7,13 +7,13 @@
  * growth rates, projections, and revenue breakdowns.
  */
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import {
   startOfMonth,
   endOfMonth,
   subMonths,
   addMonths,
-  differenceInMonths,
+  
   format,
 } from 'date-fns';
 

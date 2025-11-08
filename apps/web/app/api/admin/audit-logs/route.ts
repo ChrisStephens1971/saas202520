@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 
 // Mock Prisma client - replace with actual import when database is connected
 // import { prisma } from '@/lib/prisma';
@@ -20,11 +19,11 @@ export async function GET(request: NextRequest) {
 
     // Parse query parameters for filtering
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const action = searchParams.get('action');
-    const resource = searchParams.get('resource');
-    const startDate = searchParams.get('startDate');
-    const endDate = searchParams.get('endDate');
+    const _userId = searchParams.get('userId');
+    const _action = searchParams.get('action');
+    const _resource = searchParams.get('resource');
+    const _startDate = searchParams.get('startDate');
+    const _endDate = searchParams.get('endDate');
     const limit = parseInt(searchParams.get('limit') || '100');
     const offset = parseInt(searchParams.get('offset') || '0');
 

@@ -22,7 +22,7 @@ import {
   selectFieldsArray,
   parseSortParams,
   sortArray,
-  type PaginatedResponse,
+  type _PaginatedResponse,
 } from './optimization';
 
 /**

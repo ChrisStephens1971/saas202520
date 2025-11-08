@@ -11,7 +11,7 @@
  * Run these examples to test the implementation.
  */
 
-import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
+import { subDays, startOfMonth } from 'date-fns';
 
 // Import services
 import * as ExportService from './export-service';

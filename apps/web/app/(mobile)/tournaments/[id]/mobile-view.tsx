@@ -97,11 +97,11 @@ export function MobileTournamentView({
     }
   }, [currentRound, tournament.rounds.length]);
 
-  const handleSwipeLeft = useCallback(() => {
+  const _handleSwipeLeft = useCallback(() => {
     handleNextRound();
   }, [handleNextRound]);
 
-  const handleSwipeRight = useCallback(() => {
+  const _handleSwipeRight = useCallback(() => {
     handlePreviousRound();
   }, [handlePreviousRound]);
 

@@ -32,7 +32,7 @@ export default function UserDetailPage({ params }: Props) {
   >('overview');
 
   // Fetch user details
-  const { data, error, isLoading, mutate } = useSWR<UserDetailResponse>(
+  const { data, error, isLoading, mutate: _mutate } = useSWR<UserDetailResponse>(
     `/api/admin/users/${resolvedParams.id}`,
     fetcher,
     {

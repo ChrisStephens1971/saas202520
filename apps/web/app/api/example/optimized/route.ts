@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
  * This demonstrates the simpler API where you just return data
  * and the wrapper handles all optimizations.
  */
-const simpleHandler = async (request: NextRequest) => {
+const simpleHandler = async (_request: NextRequest) => {
   // Just return your data - no need to call createOptimizedResponse
   return {
     message: 'This response is automatically optimized',
