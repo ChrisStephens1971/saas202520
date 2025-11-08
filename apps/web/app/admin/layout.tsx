@@ -11,6 +11,7 @@ import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { isOwner } from '@/lib/permissions';
+import NotificationBell from '@/components/NotificationBell';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,6 +50,7 @@ export default async function AdminLayout({
 
             {/* User Info */}
             <div className="flex items-center gap-4">
+              <NotificationBell />
               <div className="text-sm text-right">
                 <p className="font-medium text-gray-900 dark:text-white">
                   {session.user.name || session.user.email}
