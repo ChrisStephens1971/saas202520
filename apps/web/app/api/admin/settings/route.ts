@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * GET /api/admin/settings
  * Fetch system settings for the organization
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get session and verify admin role
     // const session = await getServerSession();
