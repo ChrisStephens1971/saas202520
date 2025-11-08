@@ -230,7 +230,7 @@ export function parseFieldSelection(searchParams: URLSearchParams): FieldSelecti
  * // { id: '123', name: 'John', email: 'john@example.com' }
  * ```
  */
-export function selectFields<T extends Record<string, any>>(
+export function selectFields<T extends Record<string, unknown>>(
   obj: T,
   options: FieldSelectionOptions
 ): Partial<T> {
@@ -241,7 +241,7 @@ export function selectFields<T extends Record<string, any>>(
     return obj;
   }
 
-  const result: any = {};
+  const result: Record<string, unknown> = {};
 
   // Include whitelist
   if (include) {
@@ -275,7 +275,7 @@ export function selectFields<T extends Record<string, any>>(
  * @param options - Field selection options
  * @returns Array of filtered objects
  */
-export function selectFieldsArray<T extends Record<string, any>>(
+export function selectFieldsArray<T extends Record<string, unknown>>(
   items: T[],
   options: FieldSelectionOptions
 ): Partial<T>[] {
@@ -285,11 +285,12 @@ export function selectFieldsArray<T extends Record<string, any>>(
 /**
  * Get nested value from object
  */
-function getNestedValue(obj: any, path: string[]): any {
-  let current = obj;
+function getNestedValue(obj: Record<string, unknown>, path: string[]): unknown {
+  let current: unknown = obj;
   for (const key of path) {
     if (current === null || current === undefined) return undefined;
-    current = current[key];
+    if (typeof current !== 'object') return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
@@ -297,7 +298,7 @@ function getNestedValue(obj: any, path: string[]): any {
 /**
  * Set nested value in object
  */
-function setNestedValue(obj: any, path: string[], value: any): void {
+function setNestedValue(obj: Record<string, unknown>, path: string[], value: unknown): void {
   if (path.length === 0) return;
 
   if (path.length === 1) {
@@ -309,13 +310,13 @@ function setNestedValue(obj: any, path: string[], value: any): void {
   if (!obj[first]) {
     obj[first] = {};
   }
-  setNestedValue(obj[first], rest, value);
+  setNestedValue(obj[first] as Record<string, unknown>, rest, value);
 }
 
 /**
  * Delete nested value from object
  */
-function deleteNestedValue(obj: any, path: string[]): void {
+function deleteNestedValue(obj: Record<string, unknown>, path: string[]): void {
   if (path.length === 0) return;
 
   if (path.length === 1) {
@@ -324,8 +325,8 @@ function deleteNestedValue(obj: any, path: string[]): void {
   }
 
   const [first, ...rest] = path;
-  if (obj[first]) {
-    deleteNestedValue(obj[first], rest);
+  if (obj[first] && typeof obj[first] === 'object') {
+    deleteNestedValue(obj[first] as Record<string, unknown>, rest);
   }
 }
 
@@ -352,7 +353,7 @@ function deleteNestedValue(obj: any, path: string[]): void {
  * });
  * ```
  */
-export function generateETag(data: any): string {
+export function generateETag(data: unknown): string {
   const json = JSON.stringify(data);
   const hash = createHash('sha256').update(json).digest('hex');
   return `"${hash.substring(0, 32)}"`;
@@ -386,7 +387,7 @@ export interface BatchRequest {
   /** Request headers */
   headers?: Record<string, string>;
   /** Request body */
-  body?: any;
+  body?: unknown;
 }
 
 /**
@@ -400,7 +401,7 @@ export interface BatchResponse {
   /** Response headers */
   headers?: Record<string, string>;
   /** Response body */
-  body?: any;
+  body?: unknown;
   /** Error message if request failed */
   error?: string;
 }
@@ -516,7 +517,7 @@ export function parseSortParams(
  * @param params - Sort parameters
  * @returns Sorted array
  */
-export function sortArray<T extends Record<string, any>>(
+export function sortArray<T extends Record<string, unknown>>(
   items: T[],
   params: SortParams
 ): T[] {

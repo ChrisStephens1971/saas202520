@@ -52,7 +52,7 @@ export function tournamentKey(tournamentId: string): string {
 /**
  * Generate cache key for tournament list with filters
  */
-export function tournamentListKey(filters: Record<string, any>): string {
+export function tournamentListKey(filters: Record<string, unknown>): string {
   const filterStr = JSON.stringify(filters);
   const hash = simpleHash(filterStr);
   return `tournament:list:${hash}`;
@@ -106,7 +106,7 @@ export function analyticsKey(type: string, resourceId?: string): string {
 /**
  * Generate cache key for API response
  */
-export function apiResponseKey(endpoint: string, params: Record<string, any>): string {
+export function apiResponseKey(endpoint: string, params: Record<string, unknown>): string {
   const paramStr = JSON.stringify(params);
   const hash = simpleHash(paramStr);
   return `api:${endpoint}:${hash}`;
@@ -214,7 +214,7 @@ export async function warmCache(
   tenantId: string,
   dataLoaders: {
     key: string;
-    loader: () => Promise<any>;
+    loader: () => Promise<unknown>;
     ttl: number;
   }[]
 ): Promise<void> {
@@ -239,15 +239,15 @@ export async function warmCache(
  *
  * Automatically caches API responses
  */
-export function withCache(
-  handler: (req: any) => Promise<any>,
+export function withCache<TReq = unknown, TRes = unknown>(
+  handler: (req: TReq) => Promise<TRes>,
   options: {
-    keyGenerator: (req: any) => string;
+    keyGenerator: (req: TReq) => string;
     ttl: number;
-    tenantIdExtractor: (req: any) => string;
+    tenantIdExtractor: (req: TReq) => string;
   }
 ) {
-  return async (req: any) => {
+  return async (req: TReq): Promise<TRes | unknown> => {
     const { cacheService: cache } = await import('./redis');
     const tenantId = options.tenantIdExtractor(req);
     const cacheKey = options.keyGenerator(req);
@@ -283,7 +283,7 @@ export async function batchGet<T>(
 
 export async function batchSet(
   tenantId: string,
-  entries: Map<string, any>,
+  entries: Map<string, unknown>,
   ttl: number = 300
 ): Promise<number> {
   const { cacheService: cache } = await import('./redis');

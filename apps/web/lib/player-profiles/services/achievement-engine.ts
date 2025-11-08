@@ -18,6 +18,7 @@ import {
   AchievementError,
   AchievementDefinition,
   AchievementMetadata,
+  AchievementRequirements,
 } from '../types';
 
 const prisma = new PrismaClient();
@@ -70,7 +71,7 @@ export async function checkAchievements(
       }
 
       // Check if requirements are met
-      const meetsRequirements = await checkAchievementRequirements(playerId, tenantId, definition as any, event);
+      const meetsRequirements = await checkAchievementRequirements(playerId, tenantId, definition as AchievementDefinition, event);
 
       if (meetsRequirements) {
         // Unlock the achievement
@@ -133,7 +134,7 @@ export async function unlockAchievement(
     if (existing) {
       return {
         unlocked: false,
-        achievement: existing as any,
+        achievement: existing as PlayerAchievement,
         message: 'Achievement already unlocked',
       };
     }
@@ -145,7 +146,7 @@ export async function unlockAchievement(
         tenantId,
         achievementId: definition.id,
         progress: 100,
-        metadata: metadata as any,
+        metadata: (metadata as AchievementMetadata) || null,
       },
       include: {
         achievement: true,
@@ -156,7 +157,7 @@ export async function unlockAchievement(
 
     return {
       unlocked: true,
-      achievement: achievement as any,
+      achievement: achievement as PlayerAchievement,
       message: `Unlocked: ${definition.name}`,
     };
   } catch (error) {
@@ -203,20 +204,20 @@ export async function getAchievementProgress(
         achievementCode,
         progress: 100,
         isUnlocked: true,
-        requirement: definition.requirements as any,
+        requirement: definition.requirements as AchievementRequirements,
         currentValue: definition.requirements.value || 0,
         targetValue: definition.requirements.value || 0,
       };
     }
 
     // Calculate progress
-    const progress = await calculateAchievementProgress(playerId, tenantId, definition.requirements as any);
+    const progress = await calculateAchievementProgress(playerId, tenantId, definition.requirements as AchievementRequirements);
 
     return {
       achievementCode,
       progress: progress.percentage,
       isUnlocked: false,
-      requirement: definition.requirements as any,
+      requirement: definition.requirements as AchievementRequirements,
       currentValue: progress.current,
       targetValue: progress.target,
     };
@@ -237,7 +238,7 @@ export async function getAchievementProgress(
 export async function calculateAchievementProgress(
   playerId: string,
   tenantId: string,
-  requirements: any
+  requirements: AchievementRequirements
 ): Promise<{ current: number; target: number; percentage: number }> {
   const stats = await prisma.playerStatistics.findFirst({
     where: {
@@ -554,7 +555,7 @@ function checkExactPlacement(event: AchievementEvent, placement: number): boolea
   return event.data.finish === placement;
 }
 
-async function checkFormatWins(playerId: string, tenantId: string, requirements: any): Promise<boolean> {
+async function checkFormatWins(playerId: string, tenantId: string, requirements: AchievementRequirements): Promise<boolean> {
   const formatWins = await prisma.matchHistory.groupBy({
     by: ['format'],
     where: {
@@ -567,10 +568,10 @@ async function checkFormatWins(playerId: string, tenantId: string, requirements:
     },
   });
 
-  return formatWins.some((fw) => fw._count.id >= requirements.value);
+  return formatWins.some((fw) => fw._count.id >= (requirements.value || 0));
 }
 
-async function checkFormatWinRate(playerId: string, tenantId: string, requirements: any): Promise<boolean> {
+async function checkFormatWinRate(playerId: string, tenantId: string, requirements: AchievementRequirements): Promise<boolean> {
   const formatStats = await prisma.matchHistory.groupBy({
     by: ['format'],
     where: {

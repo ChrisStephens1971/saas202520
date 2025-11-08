@@ -23,6 +23,12 @@ import {
   SearchPlayersRequest,
   SearchPlayersResponse,
   PlayerSearchResult,
+  PrivacySettings,
+  SocialLinks,
+  PlayerAchievement,
+  SkillLevel,
+  MatchResult,
+  MatchMetadata,
 } from '../types';
 
 const prisma = new PrismaClient();
@@ -59,7 +65,7 @@ export async function getPlayerProfile(
     }
 
     // Check privacy settings
-    const privacySettings = profile.privacySettings as any;
+    const privacySettings = profile.privacySettings as PrivacySettings;
     const isOwner = viewerId === playerId;
 
     if (!isOwner && !privacySettings.profilePublic) {
@@ -98,7 +104,7 @@ export async function getPlayerProfile(
     return {
       profile: profile as PlayerProfile,
       statistics,
-      achievements: achievements as any,
+      achievements: achievements as PlayerAchievement[],
       recentMatches,
       rivalries,
     };
@@ -134,7 +140,7 @@ export async function updatePlayerProfile(
         photoUrl: data.photoUrl,
         location: data.location,
         skillLevel: data.skillLevel,
-        socialLinks: data.socialLinks as any,
+        socialLinks: (data.socialLinks as SocialLinks) || null,
         updatedAt: new Date(),
       },
       create: {
@@ -144,7 +150,7 @@ export async function updatePlayerProfile(
         photoUrl: data.photoUrl || null,
         location: data.location || null,
         skillLevel: data.skillLevel || 'BEGINNER',
-        socialLinks: data.socialLinks as any,
+        socialLinks: (data.socialLinks as SocialLinks) || null,
         privacySettings: {
           profilePublic: true,
           showStats: true,
@@ -267,7 +273,7 @@ export async function getPlayerMatchHistory(
             id: match.opponentId,
             name: opponentProfile?.playerId || 'Unknown',
             photoUrl: opponentProfile?.photoUrl || undefined,
-            skillLevel: opponentProfile?.skillLevel as any,
+            skillLevel: (opponentProfile?.skillLevel as SkillLevel) || 'BEGINNER',
           },
           tournament: {
             id: tournament.id,
@@ -275,8 +281,8 @@ export async function getPlayerMatchHistory(
             format: tournament.format,
             date: tournament.startDateTime,
           },
-          result: match.result as any,
-          metadata: match.metadata as any,
+          result: match.result as MatchResult,
+          metadata: match.metadata as MatchMetadata | null,
         });
       }
     }
@@ -488,7 +494,7 @@ async function getWinRateLeaderboard(tenantId: string, limit: number): Promise<L
     playerId: stat.playerId,
     playerName: stat.playerId, // Would get from profile
     photoUrl: null,
-    skillLevel: 'INTERMEDIATE' as any,
+    skillLevel: 'INTERMEDIATE' as SkillLevel,
     value: stat.winRate,
     formattedValue: `${stat.winRate.toFixed(1)}%`,
   }));
@@ -510,7 +516,7 @@ async function getTournamentsLeaderboard(tenantId: string, limit: number): Promi
     playerId: stat.playerId,
     playerName: stat.playerId,
     photoUrl: null,
-    skillLevel: 'INTERMEDIATE' as any,
+    skillLevel: 'INTERMEDIATE' as SkillLevel,
     value: stat.totalTournaments,
     formattedValue: stat.totalTournaments.toString(),
   }));
@@ -532,7 +538,7 @@ async function getPrizesLeaderboard(tenantId: string, limit: number): Promise<Le
     playerId: stat.playerId,
     playerName: stat.playerId,
     photoUrl: null,
-    skillLevel: 'INTERMEDIATE' as any,
+    skillLevel: 'INTERMEDIATE' as SkillLevel,
     value: stat.totalPrizeWon,
     formattedValue: `$${stat.totalPrizeWon.toFixed(2)}`,
   }));
@@ -561,7 +567,7 @@ async function getAchievementsLeaderboard(tenantId: string, limit: number): Prom
     playerId: count.playerId,
     playerName: count.playerId,
     photoUrl: null,
-    skillLevel: 'INTERMEDIATE' as any,
+    skillLevel: 'INTERMEDIATE' as SkillLevel,
     value: count._count.id,
     formattedValue: `${count._count.id} achievements`,
   }));
@@ -634,7 +640,7 @@ export async function searchPlayers(tenantId: string, request: SearchPlayersRequ
           id: profile.playerId,
           name: profile.playerId, // Would get from user/player
           photoUrl: profile.photoUrl,
-          skillLevel: profile.skillLevel as any,
+          skillLevel: profile.skillLevel as SkillLevel,
           location: profile.location,
           winRate,
           totalTournaments: stats.totalTournaments,
