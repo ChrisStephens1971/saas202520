@@ -22,7 +22,6 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
   const [lastScrollY, setLastScrollY] = useState(0);
 
   // Define context-aware actions based on current page
-  // eslint-disable-next-line react-compiler/react-compiler
   useEffect(() => {
     let currentAction: FABAction | null = null;
 
@@ -71,7 +70,6 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
   }, [pathname, router]);
 
   // Hide FAB on scroll down, show on scroll up
-  // eslint-disable-next-line react-compiler/react-compiler
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;

@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     // Perform bulk operation
     switch (operation) {
-      case 'delete':
+      case 'delete': {
         // Soft delete: Set status to cancelled
         const deleteResult = await prisma.tournament.updateMany({
           where: {
@@ -118,8 +118,9 @@ export async function POST(request: NextRequest) {
           request
         );
         break;
+      }
 
-      case 'archive':
+      case 'archive': {
         // Archive: Set status to completed
         const archiveResult = await prisma.tournament.updateMany({
           where: {
@@ -146,8 +147,9 @@ export async function POST(request: NextRequest) {
           request
         );
         break;
+      }
 
-      case 'changeStatus':
+      case 'changeStatus': {
         if (!newStatus) {
           return NextResponse.json(
             {
@@ -184,6 +186,7 @@ export async function POST(request: NextRequest) {
           request
         );
         break;
+      }
     }
 
     return NextResponse.json(

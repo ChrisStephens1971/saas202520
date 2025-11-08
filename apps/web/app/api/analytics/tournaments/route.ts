@@ -193,7 +193,7 @@ export async function GET(request: NextRequest) {
           previousStart.setDate(previousStart.getDate() - 1);
           previousEnd = new Date(periodStart);
           break;
-        case 'week':
+        case 'week': {
           const dayOfWeek = now.getDay();
           periodStart = new Date(now);
           periodStart.setDate(now.getDate() - dayOfWeek);
@@ -204,19 +204,21 @@ export async function GET(request: NextRequest) {
           previousStart.setDate(previousStart.getDate() - 7);
           previousEnd = new Date(periodStart);
           break;
+        }
         case 'month':
           periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
           periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
           previousStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
           previousEnd = new Date(now.getFullYear(), now.getMonth(), 1);
           break;
-        case 'quarter':
+        case 'quarter': {
           const quarter = Math.floor(now.getMonth() / 3);
           periodStart = new Date(now.getFullYear(), quarter * 3, 1);
           periodEnd = new Date(now.getFullYear(), (quarter + 1) * 3, 1);
           previousStart = new Date(now.getFullYear(), (quarter - 1) * 3, 1);
           previousEnd = new Date(now.getFullYear(), quarter * 3, 1);
           break;
+        }
         case 'year':
           periodStart = new Date(now.getFullYear(), 0, 1);
           periodEnd = new Date(now.getFullYear() + 1, 0, 1);

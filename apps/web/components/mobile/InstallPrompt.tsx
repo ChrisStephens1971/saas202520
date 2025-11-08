@@ -23,7 +23,6 @@ export function InstallPrompt({ onInstall, onDismiss }: InstallPromptProps) {
   const [showInstructions, setShowInstructions] = React.useState(false);
 
   // Show prompt after a delay if shouldShow is true
-  // eslint-disable-next-line react-compiler/react-compiler
   React.useEffect(() => {
     if (state.shouldShow) {
       const timer = setTimeout(() => {

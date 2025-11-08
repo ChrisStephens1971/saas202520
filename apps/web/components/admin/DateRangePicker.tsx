@@ -78,15 +78,17 @@ export function DateRangePicker({
         return { start: startOfDay(subDays(now, 29)), end: endOfDay(now) };
       case 'thisWeek':
         return { start: startOfWeek(now), end: endOfDay(now) };
-      case 'lastWeek':
+      case 'lastWeek': {
         const lastWeekStart = startOfWeek(subDays(now, 7));
         return { start: lastWeekStart, end: endOfDay(subDays(lastWeekStart, -6)) };
+      }
       case 'thisMonth':
         return { start: startOfMonth(now), end: endOfDay(now) };
-      case 'lastMonth':
+      case 'lastMonth': {
         const lastMonthStart = startOfMonth(subMonths(now, 1));
         const lastMonthEnd = startOfDay(startOfMonth(now));
         return { start: lastMonthStart, end: endOfDay(subDays(lastMonthEnd, 1)) };
+      }
       case 'last3Months':
         return { start: startOfDay(subMonths(now, 3)), end: endOfDay(now) };
       default:
