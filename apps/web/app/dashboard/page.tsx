@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -9,6 +10,38 @@ export default async function DashboardPage() {
   if (!session?.user) {
     redirect('/login');
   }
+
+  // Fetch real dashboard stats
+  const orgId = session.user.orgId;
+
+  // Count active tournaments (registration, active, paused)
+  const activeTournamentsCount = await prisma.tournament.count({
+    where: {
+      orgId,
+      status: {
+        in: ['registration', 'active', 'paused'],
+      },
+    },
+  });
+
+  // Count total players across all tournaments
+  const totalPlayersCount = await prisma.player.count({
+    where: {
+      tournament: {
+        orgId,
+      },
+    },
+  });
+
+  // Count completed matches across all tournaments
+  const completedMatchesCount = await prisma.match.count({
+    where: {
+      tournament: {
+        orgId,
+      },
+      state: 'completed',
+    },
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,17 +59,17 @@ export default async function DashboardPage() {
           {/* Quick stats */}
           <div className="rounded-lg bg-white p-6 shadow">
             <h3 className="text-sm font-medium text-gray-500">Active Tournaments</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">0</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-900">{activeTournamentsCount}</p>
           </div>
 
           <div className="rounded-lg bg-white p-6 shadow">
             <h3 className="text-sm font-medium text-gray-500">Total Players</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">0</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-900">{totalPlayersCount}</p>
           </div>
 
           <div className="rounded-lg bg-white p-6 shadow">
             <h3 className="text-sm font-medium text-gray-500">Completed Matches</h3>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">0</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-900">{completedMatchesCount}</p>
           </div>
         </div>
 
