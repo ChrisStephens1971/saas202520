@@ -14,7 +14,7 @@ import {
   TournamentCache,
   UserCache,
   AnalyticsCache,
-  APICache,
+  APICache as _APICache,
   StaticCache,
 } from './strategies';
 
@@ -220,7 +220,7 @@ export class CacheInvalidation {
   private static async handleMatchEvent(
     tenantId: string,
     tournamentId: string,
-    matchId: string
+    _matchId: string
   ): Promise<void> {
     // Invalidate matches
     await cacheService.delete(tenantId, `tournament:${tournamentId}:matches`);

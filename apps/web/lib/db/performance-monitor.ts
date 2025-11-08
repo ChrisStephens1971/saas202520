@@ -165,7 +165,7 @@ export async function getDatabaseHealth(): Promise<DatabaseHealth> {
  * @returns Slow query analysis with optimization hints
  */
 export async function getSlowQueryAnalysis() {
-  const report = getPerformanceReport();
+  const _report = getPerformanceReport();
   const slowQueries = getRecentSlowQueries();
 
   // Group queries by model and action

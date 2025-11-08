@@ -183,7 +183,7 @@ export async function getCacheHealth() {
  *
  * Returns statistics about cache usage
  */
-export async function getCacheStats(tenantId: string) {
+export async function getCacheStats(_tenantId: string) {
   const patterns = [
     'tournament:*',
     'user:*',

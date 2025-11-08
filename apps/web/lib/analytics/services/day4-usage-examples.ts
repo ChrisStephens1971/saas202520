@@ -608,7 +608,7 @@ export async function runAllExamples() {
     try {
       await example5_PredictRevenue();
       await example6_PredictUserGrowth();
-    } catch (error) {
+    } catch {
       console.log(
         'Skipping prediction examples (requires historical data)\n'
       );
@@ -617,7 +617,7 @@ export async function runAllExamples() {
 
     // Scheduled reports examples
     const dailyReport = await example8_CreateDailyReport();
-    const weeklyReport = await example9_CreateWeeklyReport();
+    const _weeklyReport = await example9_CreateWeeklyReport();
     await example10_ListReports();
 
     if (dailyReport.id) {

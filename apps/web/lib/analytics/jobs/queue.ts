@@ -317,7 +317,7 @@ export async function healthCheck(): Promise<{
   error?: string;
 }> {
   try {
-    const queue = getQueue();
+    const _queue = getQueue();
     const metrics = await getQueueMetrics();
 
     // Test Redis connection by pinging

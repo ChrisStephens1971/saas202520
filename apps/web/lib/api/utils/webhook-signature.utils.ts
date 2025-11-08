@@ -59,7 +59,7 @@ export function verifySignature(
       Buffer.from(signature),
       Buffer.from(expectedSignature)
     );
-  } catch (error) {
+  } catch {
     // If comparison fails (e.g., invalid encoding), return false
     return false;
   }

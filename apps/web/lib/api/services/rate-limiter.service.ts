@@ -226,10 +226,10 @@ export async function isRateLimited(
 /**
  * Get time until rate limit resets (in seconds)
  *
- * @param keyId - API key ID
+ * @param _keyId - API key ID
  * @returns Seconds until reset
  */
-export async function getTimeUntilReset(keyId: string): Promise<number> {
+export async function getTimeUntilReset(_keyId: string): Promise<number> {
   const now = Date.now();
   const currentHour = Math.floor(now / 3600000);
   const resetTimestamp = (currentHour + 1) * 3600;

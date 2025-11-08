@@ -111,7 +111,7 @@ function formatParams(params: any): string {
       return stringified.substring(0, QUERY_CONFIG.MAX_PARAMS_LENGTH) + '... (truncated)';
     }
     return stringified;
-  } catch (error) {
+  } catch {
     return '[Unable to stringify params]';
   }
 }

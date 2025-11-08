@@ -41,7 +41,7 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
     });
 
     // Get tournament participation
-    const tournaments = await prisma.player.findMany({
+    const _tournaments = await prisma.player.findMany({
       where: {
         // Note: This needs proper player-user relationship
         // For now, using match history to infer tournaments
@@ -52,7 +52,7 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
     const totalMatches = matches.length;
     const totalWins = matches.filter((m) => m.result === 'WIN').length;
     const totalLosses = matches.filter((m) => m.result === 'LOSS').length;
-    const totalDraws = matches.filter((m) => m.result === 'DRAW').length;
+    const _totalDraws = matches.filter((m) => m.result === 'DRAW').length;
 
     // Calculate win rate
     const winRate = totalMatches > 0 ? (totalWins / totalMatches) * 100 : 0;

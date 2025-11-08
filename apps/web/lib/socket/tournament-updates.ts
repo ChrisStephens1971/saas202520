@@ -310,7 +310,7 @@ export function notifyTournamentCompleted(
   tournamentId: string,
   tournamentName: string,
   winnerId: string,
-  winnerName: string
+  _winnerName: string
 ): void {
   emitToTournament(tournamentId, SocketEvent.TOURNAMENT_UPDATED, {
     tournamentId,

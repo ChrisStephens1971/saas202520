@@ -356,7 +356,7 @@ export async function example12_HealthMonitoring() {
 export async function example13_APIEndpointCaching() {
   const { withCache } = await import('@/lib/cache');
 
-  const handler = withCache(
+  const _handler = withCache(
     async (req: any) => {
       // Your API logic here
       const tenantId = req.headers['x-tenant-id'];

@@ -6,7 +6,7 @@
  * Stores audit logs in the database with full context.
  */
 
-import { prisma } from '@tournament/shared';
+import { prisma as _prisma } from '@tournament/shared';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -278,7 +278,7 @@ export async function logDataExport(
  * Get audit logs with filters
  * Note: This is a placeholder until we have a dedicated AuditLog table
  */
-export async function getAuditLogs(filters: {
+export async function getAuditLogs(_filters: {
   userId?: string;
   action?: AuditAction;
   resource?: AuditResource;

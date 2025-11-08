@@ -145,7 +145,7 @@ export async function predictRevenue(
         date: month,
         value: metrics.mrr,
       });
-    } catch (error) {
+    } catch {
       // No data for this month, use 0
       historicalMonths.push({
         date: month,

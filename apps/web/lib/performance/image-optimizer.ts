@@ -108,7 +108,7 @@ export function getOptimizedImageUrl(
     width,
     height,
     quality = 75,
-    format = 'webp',
+    format: _format = 'webp',
   } = options;
 
   const params = new URLSearchParams({

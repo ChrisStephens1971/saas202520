@@ -22,7 +22,7 @@ async function globalSetup() {
     try {
       await execAsync('psql -U postgres -c "CREATE DATABASE saas202520_test;"');
       console.log('✅ Test database created');
-    } catch (error) {
+    } catch {
       // Database might already exist
       console.log('ℹ️  Test database already exists');
     }

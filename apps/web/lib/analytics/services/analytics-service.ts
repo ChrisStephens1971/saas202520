@@ -283,7 +283,7 @@ export async function getCohortAnalytics(
     try {
       const analysis = await CohortAnalyzer.analyzeCohort(tenantId, cohortMonth);
       cohorts.push(analysis);
-    } catch (error) {
+    } catch {
       console.warn(
         `[Analytics] No data for cohort ${format(cohortMonth, 'yyyy-MM')}`
       );
@@ -483,7 +483,7 @@ export async function getDashboardSummary(
 ): Promise<DashboardSummary> {
   console.log(`[Analytics] Generating dashboard summary for ${tenantId}`);
 
-  const now = new Date();
+  const _now = new Date();
 
   // Get all analytics in parallel
   const [revenue, cohorts, tournaments] = await Promise.all([

@@ -7,7 +7,7 @@
 
 import {
   syncAllActions,
-  syncAction,
+  syncAction as _syncAction,
   getQueueStats,
   addQueueListener,
   QueueStats,

@@ -254,7 +254,7 @@ async function main(): Promise<void> {
     }
 
     // Start health check monitoring
-    const healthCheckTimer = startHealthCheck(60000); // Every 60 seconds
+    const _healthCheckTimer = startHealthCheck(60000); // Every 60 seconds
 
     // Register shutdown handlers
     process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
@@ -281,8 +281,8 @@ async function main(): Promise<void> {
 
 // Start the workers
 if (require.main === module) {
-  main().catch((error) => {
-    console.error('[Workers] Fatal error:', error);
+  main().catch(() => {
+    console.error('[Workers] Fatal error');
     process.exit(1);
   });
 }

@@ -87,7 +87,7 @@ export function createMockRedisClient(): Partial<Redis> {
 
   return {
     get: vi.fn(async (key: string) => store.get(key) || null),
-    set: vi.fn(async (key: string, value: string, ...args: any[]) => {
+    set: vi.fn(async (key: string, value: string, ..._args: any[]) => {
       store.set(key, value);
       return 'OK';
     }),

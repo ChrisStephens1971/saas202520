@@ -37,10 +37,10 @@ export interface AdminAuthResult {
 /**
  * Verify user is authenticated and has admin role
  *
- * @param request - Next.js request object
+ * @param _request - Next.js request object
  * @returns AdminAuthResult with user info or error
  */
-export async function verifyAdmin(request: NextRequest): Promise<AdminAuthResult> {
+export async function verifyAdmin(_request: NextRequest): Promise<AdminAuthResult> {
   try {
     // 1. Verify authentication
     const session = await auth();
