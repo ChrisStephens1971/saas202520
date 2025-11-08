@@ -291,8 +291,6 @@ export function resolveConflict(
     return;
   }
 
-  const conflict = conflicts[index];
-
   console.log('[SyncManager] Resolving conflict:', conflictId, resolution);
 
   // Remove from conflicts list
@@ -404,8 +402,8 @@ function notifySyncStatusChange(): void {
   for (const listener of statusListeners) {
     try {
       listener(syncStatus);
-    } catch (error) {
-      console.error('[SyncManager] Status listener error:', error);
+    } catch {
+      console.error('[SyncManager] Status listener error');
     }
   }
 }

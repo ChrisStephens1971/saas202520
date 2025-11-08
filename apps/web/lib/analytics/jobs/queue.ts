@@ -197,8 +197,8 @@ export function createWorker(
     console.log(`[Worker] Job ${job.id} completed successfully`);
   });
 
-  worker.on('failed', (job, err) => {
-    console.error(`[Worker] Job ${job?.id} failed:`, err);
+  worker.on('failed', (job) => {
+    console.error(`[Worker] Job ${job?.id} failed`);
   });
 
   worker.on('error', (err) => {

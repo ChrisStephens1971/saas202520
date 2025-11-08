@@ -288,12 +288,12 @@ export async function example5_PredictRevenue() {
     console.log('\n✓ Revenue forecast complete\n');
 
     return predictions;
-  } catch (error) {
-    console.error('❌ Revenue forecast failed:', error);
+  } catch {
+    console.error('❌ Revenue forecast failed');
     console.log(
       'Note: This requires historical revenue data. Run seed-test-data.ts first.\n'
     );
-    throw error;
+    throw new Error('Revenue forecast failed - requires historical data');
   }
 }
 
@@ -324,12 +324,12 @@ export async function example6_PredictUserGrowth() {
     console.log('\n✓ User growth forecast complete\n');
 
     return predictions;
-  } catch (error) {
-    console.error('❌ User growth forecast failed:', error);
+  } catch {
+    console.error('❌ User growth forecast failed');
     console.log(
       'Note: This requires historical user data. Run seed-test-data.ts first.\n'
     );
-    throw error;
+    throw new Error('User growth forecast failed - requires historical data');
   }
 }
 

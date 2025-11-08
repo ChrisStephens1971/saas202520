@@ -231,8 +231,8 @@ export async function getRevenueAnalytics(
       tenantId,
       6
     );
-  } catch (error) {
-    console.warn(`[Analytics] Could not generate projection: ${error}`);
+  } catch {
+    console.warn(`[Analytics] Could not generate projection`);
   }
 
   // Cache the result
@@ -303,16 +303,16 @@ export async function getCohortAnalytics(
         tenantId,
         cohortMonths.slice(0, Math.min(cohortMonths.length, 6))
       );
-    } catch (error) {
-      console.warn(`[Analytics] Could not generate cohort comparison: ${error}`);
+    } catch {
+      console.warn(`[Analytics] Could not generate cohort comparison`);
     }
   }
 
   // Add benchmarks
   try {
     result.benchmarks = await CohortAnalyzer.getRetentionBenchmarks(tenantId);
-  } catch (error) {
-    console.warn(`[Analytics] Could not generate benchmarks: ${error}`);
+  } catch {
+    console.warn(`[Analytics] Could not generate benchmarks`);
   }
 
   // Add predictions for latest cohort
@@ -325,8 +325,8 @@ export async function getCohortAnalytics(
         6
       );
       result.predictions = [prediction];
-    } catch (error) {
-      console.warn(`[Analytics] Could not generate predictions: ${error}`);
+    } catch {
+      console.warn(`[Analytics] Could not generate predictions`);
     }
   }
 

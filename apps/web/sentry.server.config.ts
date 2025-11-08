@@ -25,7 +25,7 @@ Sentry.init({
   ],
 
   // Filter out sensitive data
-  beforeSend(event, hint) {
+  beforeSend(event) {
     // Don't send events in development unless explicitly enabled
     if (process.env.NODE_ENV === 'development' && !process.env.SENTRY_DEBUG) {
       return null;
@@ -54,7 +54,7 @@ Sentry.init({
   },
 
   // Add context to all events
-  beforeBreadcrumb(breadcrumb, hint) {
+  beforeBreadcrumb(breadcrumb) {
     // Filter out noisy breadcrumbs
     if (breadcrumb.category === 'console') {
       return null;

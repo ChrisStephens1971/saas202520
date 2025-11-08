@@ -140,8 +140,8 @@ export async function getRemainingRequests(
     const currentCount = await redis.get(redisKey);
     const count = currentCount ? parseInt(currentCount, 10) : 0;
     return Math.max(0, limit - count);
-  } catch (error) {
-    console.error('Error getting remaining requests:', error);
+  } catch {
+    console.error('Error getting remaining requests');
     return limit; // Return full limit on error
   }
 }

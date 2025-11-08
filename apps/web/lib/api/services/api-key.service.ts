@@ -11,9 +11,7 @@ import crypto from 'crypto';
 import type {
   ApiKey,
   ApiTier,
-  CreateApiKeyInput,
   GeneratedApiKey,
-  RATE_LIMITS,
 } from '../types/api';
 
 // Rate limits for each tier

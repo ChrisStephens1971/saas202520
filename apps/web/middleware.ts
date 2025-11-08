@@ -19,12 +19,7 @@
 
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
-import {
-  compressResponse,
-  formatCompressionMetrics,
-  isCompressionBeneficial,
-  type CompressionResult,
-} from '@/lib/api/compression';
+// Compression imports removed - not used in middleware
 import {
   startRequestTracking,
   endRequestTracking,

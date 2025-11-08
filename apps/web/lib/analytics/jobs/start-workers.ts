@@ -181,8 +181,8 @@ async function gracefulShutdown(signal: string): Promise<void> {
 /**
  * Error handler for uncaught exceptions
  */
-function handleUncaughtError(error: Error, type: string): void {
-  console.error(`[Workers] ${type}:`, error);
+function handleUncaughtError(error: Error): void {
+  console.error(`[Workers] Uncaught error:`, error);
 
   // Don't exit immediately - log error and continue
   // Workers should be resilient to individual job failures
@@ -261,9 +261,9 @@ async function main(): Promise<void> {
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
     // Register error handlers
-    process.on('uncaughtException', (error) => handleUncaughtError(error, 'Uncaught Exception'));
+    process.on('uncaughtException', (error) => handleUncaughtError(error));
     process.on('unhandledRejection', (error) =>
-      handleUncaughtError(error as Error, 'Unhandled Rejection')
+      handleUncaughtError(error as Error)
     );
 
     console.log('='.repeat(60));

@@ -165,8 +165,8 @@ export class CacheInvalidation {
         default:
           console.warn(`[Cache Invalidation] Unknown event type: ${eventType}`);
       }
-    } catch (error) {
-      console.error('[Cache Invalidation] Error handling event:', error);
+    } catch {
+      console.error('[Cache Invalidation] Error handling event');
     }
   }
 
@@ -409,13 +409,13 @@ export class TimeBasedInvalidation {
   /**
    * Schedule cache refresh at specific time
    *
-   * @param tenantId - Tenant identifier
+   * @param _tenantId - Tenant identifier (unused, reserved for future use)
    * @param key - Cache key
    * @param refreshFn - Function to refresh cache
    * @param scheduleTime - Time to refresh (Date object)
    */
   static scheduleRefresh(
-    tenantId: string,
+    _tenantId: string,
     key: string,
     refreshFn: () => Promise<any>,
     scheduleTime: Date

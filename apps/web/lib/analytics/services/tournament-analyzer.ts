@@ -18,12 +18,9 @@ import {
   subDays,
   subWeeks,
   subMonths,
-  addMonths,
-  differenceInDays,
   differenceInMinutes,
   format,
   getDay,
-  isSameDay,
 } from 'date-fns';
 import * as CacheManager from '../cache-manager';
 

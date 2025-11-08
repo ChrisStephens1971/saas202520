@@ -76,7 +76,7 @@ export async function createWebhook(
     if (url.protocol !== 'https:') {
       throw new Error('Webhook URL must use HTTPS protocol');
     }
-  } catch (error) {
+  } catch {
     throw new Error(`Invalid webhook URL: ${input.url}`);
   }
 
@@ -234,7 +234,7 @@ export async function updateWebhook(
       if (url.protocol !== 'https:') {
         throw new Error('Webhook URL must use HTTPS protocol');
       }
-    } catch (error) {
+    } catch {
       throw new Error(`Invalid webhook URL: ${updates.url}`);
     }
   }

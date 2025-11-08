@@ -137,8 +137,8 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
     });
 
     return statistics;
-  } catch (error) {
-    console.error('[recalculatePlayerStatistics] Error:', error);
+  } catch {
+    console.error('[recalculatePlayerStatistics] Error');
     throw new PlayerProfileError('Failed to recalculate statistics', 'RECALCULATE_STATS_ERROR');
   }
 }
@@ -264,8 +264,8 @@ export async function updateStatisticsAfterMatch(
     });
 
     return updated;
-  } catch (error) {
-    console.error('[updateStatisticsAfterMatch] Error:', error);
+  } catch {
+    console.error('[updateStatisticsAfterMatch] Error');
     throw new PlayerProfileError('Failed to update statistics', 'UPDATE_STATS_ERROR');
   }
 }

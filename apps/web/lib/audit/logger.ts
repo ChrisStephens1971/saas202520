@@ -77,9 +77,9 @@ export async function logAdminAction(entry: AuditLogEntry): Promise<void> {
 
     // TODO: Store in dedicated AuditLog table when available
     // For now, we'll create a simple logging mechanism
-  } catch (error) {
+  } catch {
     // Never fail the main operation due to audit logging errors
-    console.error('Failed to log audit entry:', error);
+    console.error('Failed to log audit entry');
   }
 }
 
