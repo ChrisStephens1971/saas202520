@@ -37,6 +37,7 @@
     }
   },
   "scripts": {
+    "prebuild": "cd ../../ && prisma generate",
     "build": "tsc",
     "lint": "eslint src --ext .ts",
     "test": "vitest --run --passWithNoTests",
