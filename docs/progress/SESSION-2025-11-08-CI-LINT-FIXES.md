@@ -177,6 +177,58 @@ Started manual cleanup of unused variable warnings:
 
 ---
 
+**Batch 2 Completion - Agent-Assisted Cleanup (22 files):**
+
+**Files Fixed:**
+1. components/mobile/BottomSheet.tsx - Prefixed unused maxSnapPoint parameter
+2. components/mobile/OfflineIndicator.tsx - Removed unused startSync import
+3. components/mobile/PullToRefresh.tsx - Prefixed unused touchStart parameter
+4. components/mobile/SwipeableViews.tsx - Removed unused local currentContainerWidth
+5. hooks/usePWA.ts - Renamed setFeatures to _setFeatures
+6. hooks/useSocket.ts - Removed unused SocketEvent import
+7. components/analytics/CohortHeatmap.tsx - Removed unused import + prefixed cohortIndex (2 warnings)
+8. components/analytics/DateRangePicker.tsx - Removed unused useEffect import
+9. components/player-profiles/MatchHistoryTimeline.tsx - Removed MapPin import + prefixed playerId and index (3 warnings)
+10. components/player-profiles/NotificationSettingsForm.tsx - Prefixed playerId + fixed catch variable (2 warnings)
+11. components/player-profiles/PrivacySettingsForm.tsx - Prefixed playerId + fixed catch variable (2 warnings)
+12. components/player-profiles/ProfileEditForm.tsx - Fixed catch variable
+13. components/admin/TournamentStatusBadge.tsx - Prefixed unused dotColor
+14. components/admin/ExportButton.tsx - Removed unused autoTable assignment
+15. lib/analytics/services/cohort-analyzer.ts - Removed unused differenceInMonths import
+16. lib/analytics/services/day4-usage-examples.ts - Removed unused ReportGenerationJob import
+17. lib/analytics/services/revenue-calculator.ts - Prefixed unused endDate parameter
+18. lib/analytics/services/tournament-analyzer.ts - Removed unused addWeeks import
+19. lib/player-profiles/services/achievement-engine.ts - Removed unused AchievementEventType import
+20. lib/player-profiles/services/player-profile-service.ts - Prefixed unused query variable
+21. app/api/v1/venues/[id]/route.ts - Commented out unused VenueDetails interface
+22. app/tournaments/[id]/chip-format/analytics/page.tsx - Removed unused useState import
+
+**Progress (Batch 2):**
+- Starting count (after batch 1): 67 no-unused-vars warnings
+- After batch 2: 40 no-unused-vars warnings
+- Net reduction: 27 warnings eliminated (40% reduction)
+
+**Cumulative Progress (Batches 1+2):**
+- Starting count (continuation session): 91 no-unused-vars warnings
+- After batch 2: 40 no-unused-vars warnings
+- Total reduction: 51 warnings eliminated (56% reduction)
+
+**Fix Patterns Applied (same as batch 1):**
+- Unused imports: Removed completely (9 fixes)
+- Unused function parameters: Prefixed with underscore (6 fixes)
+- Unused catch variables: Changed `catch (error)` to `catch { }` (3 fixes)
+- Unused local variables: Prefixed or removed (8 fixes)
+- Unused interface: Commented out for future use (1 fix)
+
+**Remaining Work:**
+- 40 unused variable warnings to fix in batch 3
+- Approach: Continue agent-assisted fixes for remaining files
+- Types of fixes needed remain the same
+
+**Decision:** Batch 2 successful - decide if batch 3 needed or if 40 warnings is acceptable baseline
+
+---
+
 ## Summary Statistics
 
 ### Lint Progress
