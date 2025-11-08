@@ -6,7 +6,6 @@
 import { beforeAll, afterAll } from 'vitest';
 
 // Load environment variables for testing
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (process.env as any).NODE_ENV = 'test';
 process.env.DATABASE_URL = process.env.DATABASE_URL || 'postgresql://user:password@localhost:5432/tournament_test';
 process.env.STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || 'sk_test_mock_key_for_testing';

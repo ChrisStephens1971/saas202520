@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Admin Test Data Fixtures
  * Sprint 9 Phase 2 - Admin Dashboard Tests

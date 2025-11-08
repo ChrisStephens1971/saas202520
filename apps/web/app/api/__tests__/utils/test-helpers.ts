@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Test Helpers and Utilities for API Endpoint Tests
  *

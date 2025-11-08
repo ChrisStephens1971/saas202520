@@ -109,7 +109,6 @@ export async function awardChips(
 export async function adjustChips(
   playerId: string,
   chipAdjustment: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _reason: string // Preserved for audit trail in API layer
 ): Promise<Player> {
   const player = await prisma.player.findUnique({

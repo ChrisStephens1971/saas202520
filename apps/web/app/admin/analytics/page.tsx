@@ -57,7 +57,6 @@ export default function AdminAnalyticsPage() {
         endDate: dateRange.end.toISOString(),
         compareWithPrevious: dateRange.compareWithPrevious?.toString() || 'false',
       });
-      // eslint-disable-next-line no-undef
       const response = await fetch(`/api/admin/analytics/overview?${params}`);
       if (!response.ok) throw new Error('Failed to fetch analytics data');
       const data = await response.json();
