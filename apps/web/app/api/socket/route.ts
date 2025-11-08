@@ -6,12 +6,10 @@
  */
 
 import { NextRequest } from 'next/server';
-import { Server as HTTPServer } from 'http';
-import { initializeSocketServer, getIO } from '@/lib/socket/server';
-import { authMiddleware, loggingMiddleware } from '@/lib/socket/middleware';
+import { getIO } from '@/lib/socket/server';
 
 // This will be used to attach the Socket.io server to the Next.js server
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const io = getIO();
 

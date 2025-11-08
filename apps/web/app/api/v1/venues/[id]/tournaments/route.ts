@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface Tournament {
@@ -41,7 +40,7 @@ export async function GET(
     const page = parseInt(searchParams.get('page') || '1');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
 
-    const skip = (page - 1) * limit;
+    const _skip = (page - 1) * limit;
 
     // Note: This assumes tournaments have a venue_id field
     // If not, this endpoint will need to be updated

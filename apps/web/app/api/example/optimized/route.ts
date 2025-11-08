@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       compress: true,
       etag: true,
     });
-  } catch (error) {
+  } catch {
     return createErrorResponse('Failed to fetch data', 500);
   }
 }
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       selectFields: true, // Enable field selection
       sort: true, // Enable sorting
     });
-  } catch (error) {
+  } catch {
     return createErrorResponse('Failed to fetch paginated data', 500);
   }
 }

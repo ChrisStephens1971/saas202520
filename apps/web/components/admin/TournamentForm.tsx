@@ -21,7 +21,7 @@ import { generateSlug } from '@tournament/api-contracts';
 import { useEffect } from 'react';
 
 // Form validation schema
-const tournamentFormSchema = z.object({
+const _tournamentFormSchema = z.object({
   name: z.string().min(1, 'Tournament name is required').max(255, 'Name too long'),
   slug: z.string()
     .min(1, 'Slug is required')

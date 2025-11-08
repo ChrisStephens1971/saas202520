@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface VenueDetails {
@@ -43,9 +42,9 @@ export async function GET(
       );
     }
 
-    const tenantId = auth.context!.tenantId;
+    const _tenantId = auth.context!.tenantId;
 
-    const { id: venueId } = await params;
+    const { id: _venueId } = await params;
 
     // Note: This assumes venues table exists in schema
     // If not, this endpoint will need to be updated

@@ -38,7 +38,7 @@ export async function GET(
         maxChips: tournament._max.chipCount || 0,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch statistics' }, { status: 500 });
   }
 }

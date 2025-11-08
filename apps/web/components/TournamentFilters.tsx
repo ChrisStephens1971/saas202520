@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react';
 import {
   type TournamentFilters as Filters,
   DEFAULT_FILTERS,
-  getTournamentStats,
 } from '@/lib/tournament-filters';
 
 interface TournamentFiltersProps {

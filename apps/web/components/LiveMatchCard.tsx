@@ -48,7 +48,6 @@ export function LiveMatchCard({
   onMatchUpdate,
 }: LiveMatchCardProps) {
   const [match, setMatch] = useState<Match>(initialMatch);
-  const [isLive, setIsLive] = useState(initialMatch.status === 'in_progress');
   const [justUpdated, setJustUpdated] = useState(false);
 
   // Listen for match started events
@@ -61,7 +60,6 @@ export function LiveMatchCard({
         tableNumber: payload.tableNumber,
       };
       setMatch(updatedMatch);
-      setIsLive(true);
       setJustUpdated(true);
       onMatchUpdate?.(updatedMatch);
 
@@ -91,7 +89,6 @@ export function LiveMatchCard({
         } : match.player2,
       };
       setMatch(updatedMatch);
-      setIsLive(false);
       setJustUpdated(true);
       onMatchUpdate?.(updatedMatch);
 
@@ -103,7 +100,6 @@ export function LiveMatchCard({
   // Update state when prop changes
   useEffect(() => {
     setMatch(initialMatch);
-    setIsLive(initialMatch.status === 'in_progress');
   }, [initialMatch]);
 
   const getStatusColor = () => {

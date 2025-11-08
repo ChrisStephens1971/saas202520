@@ -28,7 +28,6 @@ export function TournamentListClient({
   const router = useRouter();
   const [tournaments, setTournaments] = useState<TournamentWithStats[]>(initialTournaments);
   const [filteredTournaments, setFilteredTournaments] = useState<TournamentWithStats[]>(initialTournaments);
-  const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<TournamentStatus | 'all'>('all');
 
   // Apply status filter

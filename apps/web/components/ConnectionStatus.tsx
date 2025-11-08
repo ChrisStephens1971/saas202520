@@ -49,12 +49,6 @@ export function ConnectionStatus({
     return 'Disconnected';
   };
 
-  const getStatusIcon = () => {
-    if (isConnected) return '✓';
-    if (isConnecting) return '⟳';
-    if (error) return '✕';
-    return '○';
-  };
 
   // Badge variant - minimal indicator
   if (variant === 'badge') {

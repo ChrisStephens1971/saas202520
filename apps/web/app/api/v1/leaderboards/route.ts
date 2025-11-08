@@ -163,8 +163,8 @@ async function getTournamentCountLeaderboard(
 }
 
 async function getPrizeMoneyLeaderboard(
-  tenantId: string,
-  limit: number
+  _tenantId: string,
+  _limit: number
 ): Promise<LeaderboardEntry[]> {
   // TODO: Implement prize money tracking
   // This requires a prizes/payouts table to track earnings

@@ -4,7 +4,6 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface Venue {
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const city = searchParams.get('city') || '';
 
-    const skip = (page - 1) * limit;
+    const _skip = (page - 1) * limit;
 
     // Note: This assumes venues table exists in schema
     // If not, this will need to be added
