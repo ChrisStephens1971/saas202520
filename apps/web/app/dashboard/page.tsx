@@ -9,6 +9,7 @@ export default async function DashboardPage() {
 
   if (!session?.user) {
     redirect('/login');
+    return; // Explicit return for tests (redirect throws in production)
   }
 
   // Fetch real dashboard stats
