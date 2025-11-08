@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import type { TournamentWithStats } from '@tournament/api-contracts';
 import { TournamentStatusBadge, StatusProgress } from '@/components/admin/TournamentStatusBadge';
 import { useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
+import TournamentBracket from '@/components/TournamentBracket';
 
 export default function AdminTournamentDetailsPage() {
   const router = useRouter();
@@ -262,6 +263,16 @@ export default function AdminTournamentDetailsPage() {
           <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 mb-6">
             <h3 className="text-xl font-semibold text-white mb-3">Description</h3>
             <p className="text-gray-300 whitespace-pre-wrap">{tournament.description}</p>
+          </div>
+        )}
+
+        {/* Tournament Bracket */}
+        {(tournament.format === 'single_elimination' || tournament.format === 'double_elimination') && (
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 mb-6">
+            <h3 className="text-xl font-semibold text-white mb-4">Tournament Bracket</h3>
+            <div className="bg-white rounded-lg p-4">
+              <TournamentBracket tournamentId={tournamentId} />
+            </div>
           </div>
         )}
 
