@@ -82,6 +82,58 @@ get_errors() // No filePaths = check everything
 
 ---
 
+## 🏗️ Build Validation - CRITICAL
+
+### ⚠️ ALWAYS Run Build After Commits
+
+**MANDATORY:** After committing significant code changes, ALWAYS run `pnpm build` to validate that everything compiles correctly BEFORE pushing to GitHub.
+
+### When to Run Build Validation
+
+Run `pnpm build` after:
+- ✅ Changes to package dependencies or package.json files
+- ✅ Modifications to TypeScript code that imports from generated clients (Prisma, etc.)
+- ✅ Changes to shared packages that other packages depend on
+- ✅ Any commits to Task C or larger feature implementations
+- ✅ Before pushing multiple commits to GitHub
+
+### Build Validation Workflow
+
+```bash
+# 1. After committing changes
+git commit -m "feat: implement feature"
+
+# 2. MANDATORY: Run build to catch errors
+pnpm build
+
+# 3. If build fails, fix the error immediately
+# (e.g., missing prebuild scripts, import errors, type errors)
+
+# 4. Commit the fix
+git commit -m "fix: resolve build error"
+
+# 5. Only then push to GitHub
+git push origin master
+```
+
+### Why This Matters
+
+- **Prevents broken builds on GitHub** - Catches compilation errors before they're pushed
+- **Catches missing dependencies** - Identifies when generated clients (Prisma) aren't available
+- **Validates cross-package changes** - Ensures monorepo packages compile together
+- **Saves time** - Finding errors locally is faster than discovering them after push
+
+### Example: Prisma Client Error
+
+Without build validation, you might miss errors like:
+```
+error TS2305: Module '"@prisma/client"' has no exported member 'PrismaClient'
+```
+
+This happens when Prisma client needs generation before TypeScript compilation. Running `pnpm build` catches this immediately, allowing you to add the fix (prebuild script) before pushing.
+
+---
+
 ## 🎯 Role Division
 
 **You (the user) make decisions:**
