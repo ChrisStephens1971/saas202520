@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface VenueDetails {
   id: string;
@@ -32,14 +33,19 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
+
     const { id: venueId } = await params;
-
-    // TODO: Add API key authentication middleware
-    // TODO: Add rate limiting
-    // TODO: Add tenant scoping from API key
-
-    // For now, use a placeholder tenant ID
-    const tenantId = 'placeholder-tenant-id';
 
     // Note: This assumes venues table exists in schema
     // If not, this endpoint will need to be updated

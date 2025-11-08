@@ -11,6 +11,7 @@ import { getWebhook } from '@/lib/api/services/webhook.service';
 import { createWebhookHeaders } from '@/lib/api/utils/webhook-signature.utils';
 import { WebhookEvent, WebhookPayload } from '@/lib/api/types/webhook-events.types';
 import fetch from 'node-fetch';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 /**
  * Test webhook endpoint
@@ -21,16 +22,17 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // TODO: Add API authentication middleware
-    // For now, extract tenantId from headers or session
-    const tenantId = request.headers.get('x-tenant-id');
-    if (!tenantId) {
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
       return NextResponse.json(
-        { error: 'Missing tenant ID' },
+        { error: auth.error!.message },
         { status: 401 }
       );
     }
 
+    const tenantId = auth.context!.tenantId;
     const webhookId = params.id;
 
     // Get webhook details

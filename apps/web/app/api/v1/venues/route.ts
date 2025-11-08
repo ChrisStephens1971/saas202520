@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface Venue {
   id: string;
@@ -15,19 +16,24 @@ interface Venue {
 
 export async function GET(request: NextRequest) {
   try {
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
+
     // Extract query parameters
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
     const search = searchParams.get('search') || '';
     const city = searchParams.get('city') || '';
-
-    // TODO: Add API key authentication middleware
-    // TODO: Add rate limiting
-    // TODO: Add tenant scoping from API key
-
-    // For now, use a placeholder tenant ID
-    const tenantId = 'placeholder-tenant-id';
 
     const skip = (page - 1) * limit;
 

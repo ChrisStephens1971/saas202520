@@ -5,7 +5,7 @@
  * Sprint 10 Week 3 - Public API & Webhooks
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@tournament/shared';
 import {
   apiSuccess,
@@ -20,6 +20,7 @@ import {
   safeValidateQuery,
 } from '@/lib/api/validation/public-api.validation';
 import type { TournamentMatchSummary } from '@/lib/api/types/public-api.types';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 /**
  * GET /api/v1/tournaments/:id/matches
@@ -38,7 +39,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const tenantId = request.nextUrl.searchParams.get('orgId') || 'placeholder';
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
 
     // Validate tournament ID
     const idValidation = cuidSchema.safeParse(params.id);

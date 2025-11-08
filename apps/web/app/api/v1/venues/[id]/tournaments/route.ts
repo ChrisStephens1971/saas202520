@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface Tournament {
   id: string;
@@ -20,6 +21,18 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
+
     const { id: venueId } = await params;
 
     // Extract query parameters
@@ -27,13 +40,6 @@ export async function GET(
     const status = searchParams.get('status') || 'all';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
-
-    // TODO: Add API key authentication middleware
-    // TODO: Add rate limiting
-    // TODO: Add tenant scoping from API key
-
-    // For now, use a placeholder tenant ID
-    const tenantId = 'placeholder-tenant-id';
 
     const skip = (page - 1) * limit;
 

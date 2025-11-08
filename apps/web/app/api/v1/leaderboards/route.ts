@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface LeaderboardEntry {
   rank: number;
@@ -18,17 +19,22 @@ interface LeaderboardEntry {
 
 export async function GET(request: NextRequest) {
   try {
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
+
     // Extract query parameters
     const searchParams = request.nextUrl.searchParams;
     const type = searchParams.get('type') || 'win-rate';
     const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 500);
-
-    // TODO: Add API key authentication middleware
-    // TODO: Add rate limiting
-    // TODO: Add tenant scoping from API key
-
-    // For now, use a placeholder tenant ID
-    const tenantId = 'placeholder-tenant-id';
 
     let leaderboard: LeaderboardEntry[] = [];
 

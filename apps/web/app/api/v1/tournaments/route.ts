@@ -5,11 +5,10 @@
  * Sprint 10 Week 3 - Public API & Webhooks
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@tournament/shared';
 import {
   apiPaginated,
-  apiError,
   internalError,
   validationError,
   calculatePaginationMeta,
@@ -21,6 +20,7 @@ import {
   safeValidateQuery,
 } from '@/lib/api/validation/public-api.validation';
 import type { TournamentSummary } from '@/lib/api/types/public-api.types';
+import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 /**
  * GET /api/v1/tournaments
@@ -38,9 +38,17 @@ import type { TournamentSummary } from '@/lib/api/types/public-api.types';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Note: tenantId will come from API auth middleware (Agent 1)
-    // For now, using orgId from query or default
-    const tenantId = request.nextUrl.searchParams.get('orgId') || 'placeholder';
+    // Authenticate API request and get tenant context
+    const auth = await authenticateApiRequest(request);
+
+    if (!auth.success) {
+      return NextResponse.json(
+        { error: auth.error!.message },
+        { status: 401 }
+      );
+    }
+
+    const tenantId = auth.context!.tenantId;
 
     // Validate query parameters
     const validation = safeValidateQuery(
