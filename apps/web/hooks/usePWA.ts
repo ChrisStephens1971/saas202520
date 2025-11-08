@@ -115,7 +115,7 @@ export function usePWA(): UsePWAResult {
   });
 
   // Features
-  const [features, setFeatures] = useState<PWAFeatures>(() =>
+  const [features, _setFeatures] = useState<PWAFeatures>(() =>
     typeof window !== 'undefined'
       ? detectPWAFeatures()
       : {

@@ -12,7 +12,7 @@
 
 'use client';
 
-import { use, useState } from 'react';
+import { use } from 'react';
 import useSWR from 'swr';
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area,

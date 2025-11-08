@@ -17,7 +17,7 @@ export default function PullToRefresh({
 }: PullToRefreshProps) {
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [touchStart, setTouchStart] = useState(0);
+  const [_touchStart, setTouchStart] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -132,7 +132,7 @@ export function ExportButton({
     try {
       // Dynamic import to reduce bundle size
       const { jsPDF } = await import('jspdf');
-      const autoTable = await import('jspdf-autotable');
+      await import('jspdf-autotable');
 
       // Create PDF
       const doc = new jsPDF();

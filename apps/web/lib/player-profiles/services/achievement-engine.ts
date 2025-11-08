@@ -11,7 +11,6 @@
 import { PrismaClient } from '@prisma/client';
 import {
   AchievementEvent,
-  AchievementEventType,
   PlayerAchievement,
   AchievementUnlockResult,
   AchievementProgress,

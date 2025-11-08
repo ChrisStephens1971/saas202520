@@ -6,26 +6,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
-interface VenueDetails {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  capacity: number;
-  amenities: string[];
-  contact: {
-    phone?: string;
-    email?: string;
-    website?: string;
-  };
-  statistics: {
-    total_tournaments: number;
-    active_tournaments: number;
-    total_players_hosted: number;
-  };
-}
+// interface VenueDetails {
+//   id: string;
+//   name: string;
+//   address: string;
+//   city: string;
+//   state: string;
+//   zip: string;
+//   capacity: number;
+//   amenities: string[];
+//   contact: {
+//     phone?: string;
+//     email?: string;
+//     website?: string;
+//   };
+//   statistics: {
+//     total_tournaments: number;
+//     active_tournaments: number;
+//     total_players_hosted: number;
+//   };
+// }
 
 export async function GET(
   request: NextRequest,

@@ -18,7 +18,7 @@ interface NotificationSettingsFormProps {
   playerId: string;
 }
 
-export function NotificationSettingsForm({ preferences, playerId }: NotificationSettingsFormProps) {
+export function NotificationSettingsForm({ preferences, playerId: _playerId }: NotificationSettingsFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<NotificationPreferences>(preferences);
@@ -44,7 +44,7 @@ export function NotificationSettingsForm({ preferences, playerId }: Notification
       } else {
         toast.error('Failed to update preferences');
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setLoading(false);

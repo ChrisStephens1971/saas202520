@@ -8,7 +8,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { scaleLinear } from 'd3-scale';
-import { interpolateBlues } from 'd3-scale-chromatic';
 import { CohortData } from './types';
 
 interface CohortHeatmapProps {
@@ -65,7 +64,7 @@ export function CohortHeatmap({
       .range(['#f7fbff', '#6baed6', '#08519c']);
 
     // Add cells
-    data.forEach((cohort, cohortIndex) => {
+    data.forEach((cohort, _cohortIndex) => {
       cohort.retentionByMonth.forEach((retention, monthIndex) => {
         const cell = g
           .append('rect')

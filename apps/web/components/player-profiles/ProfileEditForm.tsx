@@ -53,7 +53,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
       } else {
         toast.error('Failed to update profile');
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setLoading(false);

@@ -12,7 +12,6 @@ import { useSocketContext } from '@/contexts/SocketContext';
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
-  SocketEvent,
 } from '@/lib/socket/events';
 
 /**

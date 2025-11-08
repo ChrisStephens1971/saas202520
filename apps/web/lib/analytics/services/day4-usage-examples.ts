@@ -18,7 +18,6 @@ import * as ExportService from './export-service';
 import * as PredictiveModels from './predictive-models';
 import * as ScheduledReportsService from './scheduled-reports-service';
 import * as EmailService from './email-service';
-import * as ReportGenerationJob from '../jobs/report-generation-job';
 
 // ============================================================================
 // EXAMPLE 1: EXPORT ANALYTICS DATA

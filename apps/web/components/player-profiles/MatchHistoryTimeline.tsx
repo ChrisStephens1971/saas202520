@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { MatchHistoryWithDetails } from '@/lib/player-profiles/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Trophy, Calendar, MapPin } from 'lucide-react';
+import { Trophy, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MatchHistoryTimelineProps {
@@ -21,7 +21,7 @@ interface MatchHistoryTimelineProps {
   pageSize?: number;
 }
 
-export function MatchHistoryTimeline({ matches, playerId, showPagination = true, pageSize = 10 }: MatchHistoryTimelineProps) {
+export function MatchHistoryTimeline({ matches, playerId: _playerId, showPagination = true, pageSize = 10 }: MatchHistoryTimelineProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(matches.length / pageSize);
@@ -46,7 +46,7 @@ export function MatchHistoryTimeline({ matches, playerId, showPagination = true,
 
         {/* Matches */}
         <div className="space-y-6">
-          {displayedMatches.map((match, index) => {
+          {displayedMatches.map((match, _index) => {
             const isWin = match.result === 'WIN';
             const isDraw = match.result === 'DRAW';
 

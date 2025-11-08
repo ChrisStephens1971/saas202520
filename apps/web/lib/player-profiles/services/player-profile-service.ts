@@ -586,7 +586,7 @@ async function getAchievementsLeaderboard(tenantId: string, limit: number): Prom
  */
 export async function searchPlayers(tenantId: string, request: SearchPlayersRequest): Promise<SearchPlayersResponse> {
   try {
-    const { query, skillLevel, location, minWinRate, sortBy = 'name', sortOrder = 'asc', limit = 20, offset = 0 } = request;
+    const { query: _query, skillLevel, location, minWinRate, sortBy = 'name', sortOrder = 'asc', limit = 20, offset = 0 } = request;
 
     // Build where clause
     const where: Prisma.PlayerProfileWhereInput = {

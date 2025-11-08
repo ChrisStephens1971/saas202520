@@ -56,7 +56,6 @@ export default function SwipeableViews({
     if (!isDragging) return;
 
     const diff = clientX - startX;
-    const containerWidth = containerRef.current?.offsetWidth || 1;
 
     // Apply resistance at boundaries
     if (resistance) {
@@ -74,8 +73,8 @@ export default function SwipeableViews({
 
     setIsDragging(false);
 
-    const containerWidth = containerRef.current?.offsetWidth || 1;
-    const swipeThreshold = Math.min(threshold, containerWidth * 0.2);
+    const currentContainerWidth = containerRef.current?.offsetWidth || 1;
+    const swipeThreshold = Math.min(threshold, currentContainerWidth * 0.2);
 
     let newIndex = currentIndex;
 

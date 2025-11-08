@@ -114,7 +114,7 @@ export function TournamentStatusDot({
   size = 'md',
 }: TournamentStatusDotProps) {
   const config = STATUS_CONFIG[status];
-  const dotColor = config.colors.split(' ')[1]; // Extract text color for dot
+  const _dotColor = config.colors.split(' ')[1]; // Extract text color for dot
 
   return (
     <div className="inline-flex items-center gap-2">

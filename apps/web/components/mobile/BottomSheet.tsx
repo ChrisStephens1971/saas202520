@@ -98,7 +98,7 @@ export function BottomSheet({
     return 'auto';
   };
 
-  const maxSnapPoint = Math.max(...snapPoints);
+  const _maxSnapPoint = Math.max(...snapPoints);
 
   return (
     <AnimatePresence>

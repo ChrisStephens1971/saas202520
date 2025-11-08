@@ -11,7 +11,6 @@ import { useEffect, useState, useCallback } from 'react';
 import {
   getSyncStatus,
   addSyncStatusListener,
-  startSync,
   forceSync,
   getTimeUntilNextSync,
   SyncStatus,

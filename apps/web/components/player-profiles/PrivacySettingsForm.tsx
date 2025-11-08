@@ -18,7 +18,7 @@ interface PrivacySettingsFormProps {
   playerId: string;
 }
 
-export function PrivacySettingsForm({ settings, playerId }: PrivacySettingsFormProps) {
+export function PrivacySettingsForm({ settings, playerId: _playerId }: PrivacySettingsFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<PrivacySettings>(settings);
@@ -44,7 +44,7 @@ export function PrivacySettingsForm({ settings, playerId }: PrivacySettingsFormP
       } else {
         toast.error('Failed to update settings');
       }
-    } catch (error) {
+    } catch {
       toast.error('An error occurred');
     } finally {
       setLoading(false);

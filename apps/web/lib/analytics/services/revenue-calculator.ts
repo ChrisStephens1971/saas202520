@@ -481,7 +481,7 @@ export async function calculateRevenueProjection(
 export async function getRevenueBreakdown(
   tenantId: string,
   startDate: Date,
-  endDate: Date
+  _endDate: Date
 ): Promise<RevenueBreakdown> {
   const periodStart = startOfMonth(startDate);
 
