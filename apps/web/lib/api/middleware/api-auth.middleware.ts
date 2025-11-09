@@ -24,17 +24,29 @@ import {
 import type { ApiKey, ApiContext, ApiTier } from '../types/api';
 
 /**
- * API Authentication Result
+ * API Authentication Result - Success Case
  */
-interface ApiAuthResult {
-  success: boolean;
-  apiKey?: ApiKey;
-  rateLimit?: RateLimitResult;
-  error?: {
+interface ApiAuthSuccess {
+  success: true;
+  apiKey: ApiKey;
+  rateLimit: RateLimitResult;
+}
+
+/**
+ * API Authentication Result - Failure Case
+ */
+interface ApiAuthFailure {
+  success: false;
+  error: {
     status: number;
     response: NextResponse;
   };
 }
+
+/**
+ * API Authentication Result - Discriminated Union
+ */
+type ApiAuthResult = ApiAuthSuccess | ApiAuthFailure;
 
 /**
  * Extract API key from Authorization header
@@ -202,16 +214,16 @@ export function withApiAuth<T = any>(
       const authResult = await authenticateRequest(request);
 
       if (!authResult.success) {
-        return authResult.error!.response;
+        return authResult.error.response;
       }
 
       // Create API context
       const apiContext: ApiContext = {
-        apiKey: authResult.apiKey!,
-        tenantId: authResult.apiKey!.tenantId,
-        userId: authResult.apiKey!.userId,
-        tier: authResult.apiKey!.tier as ApiTier,
-        rateLimit: authResult.rateLimit!,
+        apiKey: authResult.apiKey,
+        tenantId: authResult.apiKey.tenantId,
+        userId: authResult.apiKey.userId,
+        tier: authResult.apiKey.tier as ApiTier,
+        rateLimit: authResult.rateLimit,
       };
 
       // Call handler with context
@@ -281,16 +293,16 @@ export function withApiAuthCustomError<T = any>(
       const authResult = await authenticateRequest(request);
 
       if (!authResult.success) {
-        return authResult.error!.response;
+        return authResult.error.response;
       }
 
       // Create API context
       const apiContext: ApiContext = {
-        apiKey: authResult.apiKey!,
-        tenantId: authResult.apiKey!.tenantId,
-        userId: authResult.apiKey!.userId,
-        tier: authResult.apiKey!.tier as ApiTier,
-        rateLimit: authResult.rateLimit!,
+        apiKey: authResult.apiKey,
+        tenantId: authResult.apiKey.tenantId,
+        userId: authResult.apiKey.userId,
+        tier: authResult.apiKey.tier as ApiTier,
+        rateLimit: authResult.rateLimit,
       };
 
       // Call handler with context
