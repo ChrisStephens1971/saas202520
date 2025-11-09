@@ -176,5 +176,18 @@ if command -v markdownlint &> /dev/null; then
     fi
 fi
 
+# Validate daily practices (strict mode)
+if [ -f "scripts/validate-daily-practices.sh" ]; then
+    echo "  Checking daily practices..."
+    if bash scripts/validate-daily-practices.sh 2>&1; then
+        echo "  ✅ Daily practices validated"
+    else
+        echo ""
+        echo "To bypass daily practices check (not recommended):"
+        echo "  git commit --no-verify"
+        exit 1
+    fi
+fi
+
 echo "✅ Pre-commit validation passed"
 exit 0

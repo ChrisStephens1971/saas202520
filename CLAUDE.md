@@ -878,6 +878,45 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 - Existing infrastructure
 
 ---
+
+### Strict Mode Enforcement (Default)
+
+**CRITICAL:** Workflow is STRICT by default. Phase transitions and daily practices are MANDATORY unless user explicitly disables.
+
+**Check strict mode status:**
+```bash
+cat .workflow-config.json | python3 -m json.tool
+```
+
+**If strict mode enabled (default):**
+
+#### Phase Transition Validation (MANDATORY)
+
+When user requests phase change, you MUST:
+1. Read current and target phase
+2. Check .project-workflow.json → phaseTransitions.<current>_to_<target>.mandatory
+3. If mandatory: true → VALIDATE CRITERIA FIRST
+4. Run: bash scripts/validate-phase-transition.sh <current> <target>
+5. If validation fails → BLOCK transition
+6. Show what criteria are missing
+7. Require completion OR explicit override
+
+#### Daily Practices Validation (MANDATORY)
+
+At session start:
+- Check if GitHub health check ran today
+- Run: bash scripts/validate-daily-practices.sh
+- If fails → Remind user to complete before proceeding
+
+Before commit:
+- Pre-commit hook runs validation
+- If fails → Blocks commit
+- User must complete practices or use --no-verify
+
+#### Override Process
+
+Users can override strict rules:
+1. Temporary override: override
 ## 🔗 Related Resources
 
 **Azure Naming Tool:** `C:\devop\.template-system\scripts\azure-name-*.py`

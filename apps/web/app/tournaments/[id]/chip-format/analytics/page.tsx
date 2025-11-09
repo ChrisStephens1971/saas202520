@@ -110,7 +110,20 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
     );
   }
 
-  const statistics = statsData.statistics!;
+  if (!statsData.statistics) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 className="text-yellow-800 font-semibold mb-2">No Statistics Available</h2>
+            <p className="text-yellow-600">Statistics data is not available for this tournament.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const statistics = statsData.statistics;
   const progression = progressionData.data || [];
 
   // Prepare chart data

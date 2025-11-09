@@ -63,7 +63,11 @@ export async function GET(
         });
       }
 
-      const progression = playerProgressionMap.get(playerId)!;
+      const progression = playerProgressionMap.get(playerId);
+      if (!progression) {
+        throw new Error(`Player progression not found for playerId: ${playerId}`);
+      }
+
       const currentTotal = progression.data[progression.data.length - 1].chips;
       const newTotal = currentTotal + award.chipsEarned;
 

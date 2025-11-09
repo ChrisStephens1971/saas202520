@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "strictMode": true,
+  "enforcePhaseTransitions": true,
+  "enforceDailyPractices": true,
+  "allowOverrides": true,
+  "requireOverrideReasons": true,
+  "requirements": {
+    "minimumTestCoverage": 60,
+    "githubActionsRequirement": "green",
+    "dailyCommitRequirement": false,
+    "dailyHealthCheckRequirement": true,
+    "blockPhaseSkipping": true
+  },
+  "overrides": {
+    "logOverrides": true,
+    "overrideLogFile": ".workflow-overrides.json",
+    "requireApproval": false
+  },
+  "notifications": {
+    "remindDailyPractices": true,
+    "warnOnSkippedPractices": true,
+    "blockOnMissedPractices": true
+  },
+  "comments": {
+    "strictMode": "Master toggle - set to false to disable all enforcement",
+    "enforcePhaseTransitions": "Validate criteria before allowing phase changes",
+    "enforceDailyPractices": "Require daily practices (GitHub health check, etc.)",
+    "allowOverrides": "Allow users to override strict rules when needed",
+    "requireOverrideReasons": "Must document reason when overriding"
+  }
+}

@@ -98,8 +98,15 @@ export async function POST(request: NextRequest) {
       where: { orgId },
     });
 
+    if (!account) {
+      return NextResponse.json(
+        { error: 'Failed to create or retrieve Stripe account' },
+        { status: 500 }
+      );
+    }
+
     const response: CreateStripeAccountResponse = {
-      account: account ? {
+      account: {
         id: account.id,
         orgId: account.orgId,
         stripeAccountId: account.stripeAccountId,
@@ -111,7 +118,7 @@ export async function POST(request: NextRequest) {
         currency: account.currency ?? 'usd',
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,
-      } : null!,
+      },
       onboardingUrl: accountLink.url,
     };
 

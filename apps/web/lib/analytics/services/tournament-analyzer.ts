@@ -429,7 +429,8 @@ export async function analyzeFormatPopularity(
           (t) => t.startedAt && t.completedAt
         );
         const totalDuration = tournamentsWithDuration.reduce((sum, t) => {
-          const duration = differenceInMinutes(t.completedAt!, t.startedAt!);
+          if (!t.completedAt || !t.startedAt) return sum;
+          const duration = differenceInMinutes(t.completedAt, t.startedAt);
           return sum + duration;
         }, 0);
         const avgDurationMinutes =
@@ -638,7 +639,8 @@ export async function calculateTournamentMetrics(
         (t) => t.status === 'completed' && t.startedAt && t.completedAt
       );
       const totalDuration = completedWithDuration.reduce((sum, t) => {
-        return sum + differenceInMinutes(t.completedAt!, t.startedAt!);
+        if (!t.completedAt || !t.startedAt) return sum;
+        return sum + differenceInMinutes(t.completedAt, t.startedAt);
       }, 0);
       const avgDurationMinutes =
         completedWithDuration.length > 0 ? totalDuration / completedWithDuration.length : 0;
@@ -682,7 +684,8 @@ export async function calculateTournamentMetrics(
             (m) => m.state === 'completed' && m.startedAt && m.completedAt
           );
           const totalTableMinutes = completedMatches.reduce((sum, m) => {
-            return sum + differenceInMinutes(m.completedAt!, m.startedAt!);
+            if (!m.completedAt || !m.startedAt) return sum;
+            return sum + differenceInMinutes(m.completedAt, m.startedAt);
           }, 0);
 
           // Calculate available table-minutes
