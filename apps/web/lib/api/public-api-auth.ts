@@ -18,14 +18,29 @@ export interface ApiAuthContext {
   rateLimit: number;
 }
 
-export interface ApiAuthResult {
-  success: boolean;
-  context?: ApiAuthContext;
-  error?: {
+/**
+ * API Authentication Result - Success Case
+ */
+export interface ApiAuthSuccess {
+  success: true;
+  context: ApiAuthContext;
+}
+
+/**
+ * API Authentication Result - Failure Case
+ */
+export interface ApiAuthFailure {
+  success: false;
+  error: {
     code: 'MISSING_API_KEY' | 'INVALID_API_KEY' | 'EXPIRED_API_KEY' | 'INACTIVE_API_KEY';
     message: string;
   };
 }
+
+/**
+ * API Authentication Result - Discriminated Union
+ */
+export type ApiAuthResult = ApiAuthSuccess | ApiAuthFailure;
 
 /**
  * Extract API key from Authorization header
@@ -174,5 +189,5 @@ export async function getTenantIdFromApiKey(
   request: NextRequest
 ): Promise<string | null> {
   const auth = await authenticateApiRequest(request);
-  return auth.success ? auth.context!.tenantId : null;
+  return auth.success ? auth.context.tenantId : null;
 }
