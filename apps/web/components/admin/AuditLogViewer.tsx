@@ -22,10 +22,10 @@ export interface AuditLogEntry {
   action: string;
   resource: string;
   resourceId?: string | null;
-  changes?: any;
+  changes?: unknown;
   ipAddress?: string | null;
   userAgent?: string | null;
-  metadata?: any;
+  metadata?: unknown;
   timestamp: Date | string;
 }
 

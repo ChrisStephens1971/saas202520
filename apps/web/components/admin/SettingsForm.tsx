@@ -62,7 +62,7 @@ export function SettingsForm({
     setHasChanges(changed);
   }, [formData, initialData]);
 
-  const handleChange = (field: keyof SettingsFormData, value: any) => {
+  const handleChange = (field: keyof SettingsFormData, value: SettingsFormData[typeof field]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setSaveStatus('idle');
   };

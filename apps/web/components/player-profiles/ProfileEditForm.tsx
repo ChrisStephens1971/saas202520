@@ -90,7 +90,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
       {/* Skill Level */}
       <div>
         <Label htmlFor="skillLevel">Skill Level</Label>
-        <Select value={formData.skillLevel} onValueChange={(value: any) => setFormData({ ...formData, skillLevel: value })}>
+        <Select value={formData.skillLevel} onValueChange={(value: string) => setFormData({ ...formData, skillLevel: value })}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
