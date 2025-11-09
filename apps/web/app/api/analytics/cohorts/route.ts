@@ -218,10 +218,9 @@ export async function GET(request: NextRequest) {
 
     cohortData.forEach((data) => {
       const cohortKey = data.cohortMonth.toISOString().substring(0, 7); // YYYY-MM
-      if (!cohortMap.has(cohortKey)) {
-        cohortMap.set(cohortKey, []);
-      }
-      cohortMap.get(cohortKey)!.push({
+      const existingData = cohortMap.get(cohortKey);
+
+      const newEntry: CohortData = {
         cohortMonth: data.cohortMonth.toISOString(),
         cohortSize: data.cohortSize,
         monthNumber: data.monthNumber,
@@ -229,7 +228,13 @@ export async function GET(request: NextRequest) {
         retentionRate: parseFloat(data.retentionRate.toString()),
         revenue: data.revenue ? parseFloat(data.revenue.toString()) : null,
         ltv: data.ltv ? parseFloat(data.ltv.toString()) : null,
-      });
+      };
+
+      if (existingData) {
+        existingData.push(newEntry);
+      } else {
+        cohortMap.set(cohortKey, [newEntry]);
+      }
     });
 
     // 8. Build cohort analysis
@@ -237,7 +242,7 @@ export async function GET(request: NextRequest) {
       ([cohortKey, data]) => {
         const initialData = data.find((d) => d.monthNumber === 0);
         const totalRevenue = data.reduce((sum, d) => sum + (d.revenue || 0), 0);
-        const ltvValues = data.filter((d) => d.ltv !== null).map((d) => d.ltv!);
+        const ltvValues = data.filter((d) => d.ltv !== null).map((d) => d.ltv as number);
         const averageLtv =
           ltvValues.length > 0
             ? ltvValues.reduce((sum, ltv) => sum + ltv, 0) / ltvValues.length
