@@ -41,12 +41,12 @@ export async function GET(
 
     if (!auth.success) {
       return NextResponse.json(
-        { error: auth.error!.message },
+        { error: auth.error.message },
         { status: 401 }
       );
     }
 
-    const tenantId = auth.context!.tenantId;
+    const tenantId = auth.context.tenantId;
 
     // Validate tournament ID
     const idValidation = cuidSchema.safeParse(params.id);
@@ -156,7 +156,10 @@ export async function GET(
         if (!roundsMap.has(match.round)) {
           roundsMap.set(match.round, []);
         }
-        roundsMap.get(match.round)!.push(matchNode);
+        const roundMatches = roundsMap.get(match.round);
+        if (roundMatches) {
+          roundMatches.push(matchNode);
+        }
       });
 
       const rounds: BracketRound[] = [];

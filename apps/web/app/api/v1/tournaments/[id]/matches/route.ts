@@ -44,12 +44,12 @@ export async function GET(
 
     if (!auth.success) {
       return NextResponse.json(
-        { error: auth.error!.message },
+        { error: auth.error.message },
         { status: 401 }
       );
     }
 
-    const tenantId = auth.context!.tenantId;
+    const tenantId = auth.context.tenantId;
 
     // Validate tournament ID
     const idValidation = cuidSchema.safeParse(params.id);
