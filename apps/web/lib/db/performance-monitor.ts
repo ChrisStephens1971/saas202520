@@ -43,6 +43,15 @@ export interface DatabaseHealth {
 }
 
 /**
+ * PostgreSQL connection stats query result
+ */
+interface ConnectionStatsRow {
+  total: bigint;
+  active: bigint;
+  idle: bigint;
+}
+
+/**
  * Get current database connection statistics
  *
  * Requires PostgreSQL privileges to query pg_stat_activity
@@ -51,7 +60,7 @@ export interface DatabaseHealth {
  */
 export async function getConnectionStats() {
   try {
-    const result = await prisma.$queryRaw<any[]>`
+    const result = await prisma.$queryRaw<ConnectionStatsRow[]>`
       SELECT
         count(*) as total,
         count(*) FILTER (WHERE state = 'active') as active,
@@ -60,11 +69,26 @@ export async function getConnectionStats() {
       WHERE datname = current_database()
     `;
 
-    return result[0] || { total: 0, active: 0, idle: 0 };
+    const row = result[0];
+    return row ? {
+      total: Number(row.total),
+      active: Number(row.active),
+      idle: Number(row.idle),
+    } : { total: 0, active: 0, idle: 0 };
   } catch (error) {
     console.error('Failed to get connection stats:', error);
     return { total: 0, active: 0, idle: 0 };
   }
+}
+
+/**
+ * PostgreSQL table stats query result
+ */
+interface TableStatsRow {
+  schemaname: string;
+  name: string;
+  size_bytes: bigint;
+  row_count: bigint;
 }
 
 /**
@@ -74,7 +98,7 @@ export async function getConnectionStats() {
  */
 export async function getTableStats() {
   try {
-    const result = await prisma.$queryRaw<any[]>`
+    const result = await prisma.$queryRaw<TableStatsRow[]>`
       SELECT
         schemaname,
         tablename as name,
@@ -87,13 +111,25 @@ export async function getTableStats() {
 
     return result.map(row => ({
       name: row.name,
-      rowCount: parseInt(row.row_count, 10),
-      sizeBytes: parseInt(row.size_bytes, 10),
+      rowCount: Number(row.row_count),
+      sizeBytes: Number(row.size_bytes),
     }));
   } catch (error) {
     console.error('Failed to get table stats:', error);
     return [];
   }
+}
+
+/**
+ * PostgreSQL index stats query result
+ */
+interface IndexStatsRow {
+  schemaname: string;
+  table_name: string;
+  index_name: string;
+  scans: bigint;
+  tups_read: bigint;
+  tups_fetch: bigint;
 }
 
 /**
@@ -105,7 +141,7 @@ export async function getTableStats() {
  */
 export async function getIndexStats() {
   try {
-    const result = await prisma.$queryRaw<any[]>`
+    const result = await prisma.$queryRaw<IndexStatsRow[]>`
       SELECT
         schemaname,
         tablename as table_name,
@@ -121,9 +157,9 @@ export async function getIndexStats() {
     return result.map(row => ({
       tableName: row.table_name,
       indexName: row.index_name,
-      scans: parseInt(row.scans, 10),
-      tupsRead: parseInt(row.tups_read, 10),
-      tupsFetch: parseInt(row.tups_fetch, 10),
+      scans: Number(row.scans),
+      tupsRead: Number(row.tups_read),
+      tupsFetch: Number(row.tups_fetch),
     }));
   } catch (error) {
     console.error('Failed to get index stats:', error);

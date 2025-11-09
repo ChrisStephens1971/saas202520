@@ -40,7 +40,7 @@ interface QueryMetrics {
   action: string;
   duration: number;
   timestamp: Date;
-  params?: any;
+  params?: unknown;
 }
 
 /**
