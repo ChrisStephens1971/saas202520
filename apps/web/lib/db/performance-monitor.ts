@@ -273,6 +273,16 @@ interface QueryPattern {
   avgDuration: number;
 }
 
+interface GroupedQuery {
+  model: string;
+  action: string;
+  count: number;
+  totalDuration: number;
+  maxDuration: number;
+  avgDuration: number;
+  examples: Array<{ duration: number; timestamp: Date }>;
+}
+
 function generateRecommendations(patterns: QueryPattern[]): string[] {
   const recommendations: string[] = [];
 
