@@ -7,8 +7,8 @@
  */
 
 import { notFound } from 'next/navigation';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import getServerSession from 'next-auth';
+import { authOptions } from '@/auth';
 import { getPlayerProfile } from '@/lib/player-profiles/services/player-profile-service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

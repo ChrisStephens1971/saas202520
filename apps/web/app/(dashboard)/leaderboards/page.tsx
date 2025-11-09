@@ -5,8 +5,8 @@
  * Display player leaderboards across multiple categories.
  */
 
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import getServerSession from 'next-auth';
+import { authOptions } from '@/auth';
 import { redirect } from 'next/navigation';
 import { getPlayerLeaderboard } from '@/lib/player-profiles/services/player-profile-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
