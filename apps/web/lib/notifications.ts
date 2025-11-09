@@ -63,11 +63,16 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
  */
 function subscriptionToJSON(subscription: PushSubscription): PushSubscriptionData {
   const json = subscription.toJSON();
+
+  if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) {
+    throw new Error('Invalid push subscription format');
+  }
+
   return {
-    endpoint: json.endpoint!,
+    endpoint: json.endpoint,
     keys: {
-      p256dh: json.keys!.p256dh!,
-      auth: json.keys!.auth!,
+      p256dh: json.keys.p256dh,
+      auth: json.keys.auth,
     },
   };
 }

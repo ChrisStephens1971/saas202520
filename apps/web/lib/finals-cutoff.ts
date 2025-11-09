@@ -220,7 +220,13 @@ export async function applyFinalsCutoff(
 
     const resolvedTiedFinalists = sortedTied
       .slice(0, chipConfig.finalsCount - nonTiedFinalists.length)
-      .map((result) => tiedPlayers.find((p) => p.playerId === result.playerId)!);
+      .map((result) => {
+        const player = tiedPlayers.find((p) => p.playerId === result.playerId);
+        if (!player) {
+          throw new Error(`Tied player not found: ${result.playerId}`);
+        }
+        return player;
+      });
 
     finalists = [...nonTiedFinalists, ...resolvedTiedFinalists];
   }
