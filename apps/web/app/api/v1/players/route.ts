@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@tournament/shared';
+import { prisma, Prisma } from '@tournament/shared';
 import {
   apiPaginated,
   internalError,
@@ -66,8 +66,7 @@ export async function GET(request: NextRequest) {
     const { page, limit, search, skillLevel } = validation.data;
 
     // Build where clause - get unique players from tournaments in this tenant
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = {
+    const where: Prisma.PlayerWhereInput = {
       tournament: {
         orgId: tenantId,
       },

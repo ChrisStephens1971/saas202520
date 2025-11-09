@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { requireAdmin } from '@/lib/auth/admin-middleware';
-import { prisma } from '@tournament/shared';
+import { prisma, Prisma } from '@tournament/shared';
 import { logAdminAction } from '@/lib/audit/logger';
 
 // ============================================================================
@@ -86,8 +86,7 @@ export async function GET(request: NextRequest) {
     } = validation.data;
 
     // Build where clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = {};
+    const where: Prisma.UserWhereInput = {};
 
     if (search) {
       where.OR = [

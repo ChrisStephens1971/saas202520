@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@tournament/shared';
+import { prisma, Prisma } from '@tournament/shared';
 import {
   apiPaginated,
   internalError,
@@ -66,8 +66,7 @@ export async function GET(request: NextRequest) {
     const { page, limit, status, tournamentId } = validation.data;
 
     // Build where clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = {
+    const where: Prisma.MatchWhereInput = {
       tournament: {
         orgId: tenantId,
       },

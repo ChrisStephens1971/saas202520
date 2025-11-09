@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@tournament/shared';
+import { prisma, Prisma } from '@tournament/shared';
 import {
   apiPaginated,
   notFoundError,
@@ -112,8 +112,7 @@ export async function GET(
     }
 
     // Build where clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = {
+    const where: Prisma.TournamentWhereInput = {
       tournamentId: {
         in: await prisma.player.findMany({
           where: { id: playerId },

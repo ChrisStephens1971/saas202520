@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
+import { Prisma } from '@tournament/shared';
 
 interface Venue {
   id: string;
@@ -41,8 +42,7 @@ export async function GET(request: NextRequest) {
     // For now, returning mock data structure
 
     // Build query filters
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const whereClause: any = {
+    const whereClause: Prisma.VenueWhereInput = {
       orgId: tenantId,
     };
 
