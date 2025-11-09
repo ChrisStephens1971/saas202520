@@ -15,8 +15,11 @@ import { useState } from 'react';
 
 export type ExportFormat = 'csv' | 'xlsx' | 'png' | 'pdf';
 
+// Generic data row type for export
+type ExportDataRow = Record<string, unknown>;
+
 interface ExportButtonProps {
-  data: any[];
+  data: ExportDataRow[];
   filename: string;
   formats?: ExportFormat[];
   onExport?: (format: ExportFormat) => void;
@@ -36,7 +39,7 @@ export function ExportButton({
   const [showDropdown, setShowDropdown] = useState(false);
 
   // Convert data to CSV
-  const exportToCSV = (data: any[], filename: string) => {
+  const exportToCSV = (data: ExportDataRow[], filename: string) => {
     if (!data || data.length === 0) {
       alert('No data to export');
       return;
@@ -74,7 +77,7 @@ export function ExportButton({
   };
 
   // Convert data to Excel (XLSX)
-  const exportToExcel = async (data: any[], filename: string) => {
+  const exportToExcel = async (data: ExportDataRow[], filename: string) => {
     try {
       // Dynamic import to reduce bundle size
       const XLSX = await import('xlsx');
@@ -128,11 +131,11 @@ export function ExportButton({
   };
 
   // Export to PDF
-  const exportToPDF = async (data: any[], filename: string) => {
+  const exportToPDF = async (data: ExportDataRow[], filename: string) => {
     try {
       // Dynamic import to reduce bundle size
       const { jsPDF } = await import('jspdf');
-      await import('jspdf-autotable');
+      const autoTable = await import('jspdf-autotable');
 
       // Create PDF
       const doc = new jsPDF();
@@ -150,7 +153,8 @@ export function ExportButton({
         const headers = Object.keys(data[0]);
         const rows = data.map(row => headers.map(header => row[header]));
 
-        (doc as any).autoTable({
+        // Use properly imported autoTable
+        autoTable.default(doc, {
           head: [headers],
           body: rows,
           startY: 35,
@@ -299,7 +303,7 @@ export function ExportButton({
  */
 export const exportHelpers = {
   // Export metrics summary
-  exportMetricsSummary: (metrics: Record<string, any>, filename: string) => {
+  exportMetricsSummary: (metrics: Record<string, unknown>, filename: string) => {
     const data = Object.entries(metrics).map(([key, value]) => ({
       Metric: key,
       Value: value,

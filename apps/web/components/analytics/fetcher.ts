@@ -3,7 +3,13 @@
  * Common fetcher function for all analytics API calls
  */
 
-export async function fetcher<T = any>(url: string): Promise<T> {
+// Extended Error type for fetch errors
+interface FetchError extends Error {
+  info?: unknown;
+  status?: number;
+}
+
+export async function fetcher<T = unknown>(url: string): Promise<T> {
   const res = await fetch(url, {
     method: 'GET',
     headers: {
@@ -13,17 +19,17 @@ export async function fetcher<T = any>(url: string): Promise<T> {
   });
 
   if (!res.ok) {
-    const error = new Error('An error occurred while fetching the data.');
+    const error = new Error('An error occurred while fetching the data.') as FetchError;
     // Attach extra info to the error object
-    (error as any).info = await res.json();
-    (error as any).status = res.status;
+    error.info = await res.json();
+    error.status = res.status;
     throw error;
   }
 
   return res.json();
 }
 
-export function buildQueryString(params: Record<string, any>): string {
+export function buildQueryString(params: Record<string, unknown>): string {
   const query = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {

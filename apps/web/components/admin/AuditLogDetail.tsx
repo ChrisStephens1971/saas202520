@@ -10,7 +10,7 @@ interface AuditLogDetailProps {
 }
 
 // Render JSON with syntax highlighting
-function JsonViewer({ data, title }: { data: any; title: string }) {
+function JsonViewer({ data, title }: { data: unknown; title: string }) {
   if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
     return null;
   }
@@ -26,7 +26,7 @@ function JsonViewer({ data, title }: { data: any; title: string }) {
 }
 
 // Render before/after comparison for updates
-function DiffViewer({ before, after }: { before: any; after: any }) {
+function DiffViewer({ before, after }: { before: unknown; after: unknown }) {
   const beforeKeys = before ? Object.keys(before) : [];
   const afterKeys = after ? Object.keys(after) : [];
   const allKeys = Array.from(new Set([...beforeKeys, ...afterKeys]));
@@ -93,7 +93,7 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
   const timestamp = typeof log.timestamp === 'string' ? new Date(log.timestamp) : log.timestamp;
 
   // Parse changes for diff view
-  const changes = log.changes as { before?: any; after?: any } | null | undefined;
+  const changes = log.changes as { before?: unknown; after?: unknown } | null | undefined;
   const hasDiff = changes && (changes.before || changes.after);
 
   return (

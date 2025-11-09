@@ -17,6 +17,25 @@ import { Search, Filter, MapPin, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { debounce } from 'lodash';
 
+interface PlayerResult {
+  id: string;
+  name: string;
+  skillLevel: string;
+  location?: string;
+  winRate: number;
+  totalTournaments: number;
+  lastPlayed?: string;
+  photoUrl?: string;
+}
+
+interface SearchParams {
+  query: string;
+  skillLevel?: string[];
+  sortBy: 'name' | 'winRate' | 'tournaments' | 'lastPlayed';
+  sortOrder: 'asc' | 'desc';
+  limit: number;
+}
+
 interface PlayerSearchProps {
   tenantId: string;
   onPlayerSelect?: (playerId: string) => void;
@@ -28,13 +47,13 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
   const [skillLevel, setSkillLevel] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'name' | 'winRate' | 'tournaments' | 'lastPlayed'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<PlayerResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   // Debounced search function
   const performSearch = useCallback(
-    debounce(async (searchParams: any) => {
+    debounce(async (searchParams: SearchParams) => {
       setLoading(true);
       try {
         const response = await fetch('/api/players/search', {
@@ -120,7 +139,7 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Sort By</label>
-              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'name' | 'winRate' | 'tournaments' | 'lastPlayed')}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -134,7 +153,7 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Order</label>
-              <Select value={sortOrder} onValueChange={(value: any) => setSortOrder(value)}>
+              <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
