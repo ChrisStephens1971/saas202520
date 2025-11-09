@@ -44,8 +44,8 @@ export function PresenceIndicator({
       if (payload.userId) {
         setOnlineUsers((prev) => {
           const next = new Map(prev);
-          next.set(payload.userId!, {
-            userId: payload.userId!,
+          next.set(payload.userId, {
+            userId: payload.userId,
             username: payload.username,
             status: 'online',
             connectedAt: payload.timestamp,
@@ -63,7 +63,7 @@ export function PresenceIndicator({
       if (payload.userId) {
         setOnlineUsers((prev) => {
           const next = new Map(prev);
-          next.delete(payload.userId!);
+          next.delete(payload.userId);
           return next;
         });
       }

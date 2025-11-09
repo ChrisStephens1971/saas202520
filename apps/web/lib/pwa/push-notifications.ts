@@ -166,6 +166,7 @@ class PushNotificationManager {
     if (!this.serviceWorkerRegistration) {
       const registration = await this.registerServiceWorker();
       if (!registration) return null;
+      this.serviceWorkerRegistration = registration;
     }
 
     try {
@@ -178,7 +179,7 @@ class PushNotificationManager {
       const convertedKey = urlBase64ToUint8Array(publicKey);
 
       const subscription =
-        await this.serviceWorkerRegistration!.pushManager.subscribe({
+        await this.serviceWorkerRegistration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: convertedKey,
         });

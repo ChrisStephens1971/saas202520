@@ -97,8 +97,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       // Add org context to session
-      if (token) {
-        session.user.id = token.sub!;
+      if (token?.sub) {
+        session.user.id = token.sub;
         session.user.orgId = token.orgId as string;
         session.user.orgSlug = token.orgSlug as string;
         session.user.role = token.role as string;

@@ -108,14 +108,14 @@ export async function verifyAdmin(_request: NextRequest): Promise<AdminAuthResul
     }
 
     // 5. Return authorized user
+    const adminMember = user.organizationMembers.find((m) => m.role === 'admin' || m.role === 'owner');
     return {
       authorized: true,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.organizationMembers.find((m) => m.role === 'admin' || m.role === 'owner')!
-          .role,
+        role: adminMember?.role || 'admin',
       },
     };
   } catch (error) {
@@ -158,25 +158,35 @@ export async function requireAdmin(
 > {
   const authResult = await verifyAdmin(request);
 
-  if (!authResult.authorized) {
-    const error = authResult.error!;
+  if (!authResult.authorized && authResult.error) {
     return {
       authorized: false,
       response: NextResponse.json(
         {
           error: {
-            code: error.code,
-            message: error.message,
+            code: authResult.error.code,
+            message: authResult.error.message,
           },
         },
-        { status: error.status }
+        { status: authResult.error.status }
       ),
     };
   }
 
+  if (authResult.authorized && authResult.user) {
+    return {
+      authorized: true,
+      user: authResult.user,
+    };
+  }
+
+  // Fallback error (should never happen)
   return {
-    authorized: true,
-    user: authResult.user!,
+    authorized: false,
+    response: NextResponse.json(
+      { error: { code: 'INTERNAL_ERROR', message: 'Authentication failed' } },
+      { status: 500 }
+    ),
   };
 }
 
