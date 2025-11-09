@@ -52,7 +52,7 @@ export interface ApiErrorResponse {
   error: {
     code: string;
     message: string;
-    details?: Record<string, any>;
+    details?: Record<string, unknown>;
   };
   timestamp: string;
 }
@@ -89,7 +89,7 @@ export interface TournamentDetails {
   matchCount: number;
   currentRound: number | null;
   location?: string;
-  rules?: Record<string, any>;
+  rules?: Record<string, unknown>;
   createdAt: string;
 }
 

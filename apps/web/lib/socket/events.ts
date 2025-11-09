@@ -70,7 +70,7 @@ export interface TournamentUpdatedPayload {
   changes: {
     name?: string;
     status?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   updatedBy: string;
   timestamp: string;
@@ -119,7 +119,7 @@ export interface MatchUpdatedPayload {
     status?: string;
     player1Chips?: number;
     player2Chips?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   updatedBy: string;
   timestamp: string;
