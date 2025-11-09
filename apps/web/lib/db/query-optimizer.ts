@@ -280,6 +280,17 @@ export const queryOptimizer: Prisma.Middleware = async (params, next) => {
 };
 
 /**
+ * Grouped slow query metrics
+ */
+interface GroupedSlowQuery {
+  count: number;
+  totalDuration: number;
+  maxDuration: number;
+  avgDuration: number;
+  queries: QueryMetrics[];
+}
+
+/**
  * Get detailed query performance report
  * Useful for debugging and optimization analysis
  *
@@ -297,6 +308,7 @@ export function getPerformanceReport() {
         count: 0,
         totalDuration: 0,
         maxDuration: 0,
+        avgDuration: 0,
         queries: [],
       };
     }
@@ -305,7 +317,7 @@ export function getPerformanceReport() {
     acc[key].maxDuration = Math.max(acc[key].maxDuration, query.duration);
     acc[key].queries.push(query);
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, GroupedSlowQuery>);
 
   // Calculate average duration for each group
   Object.keys(groupedSlowQueries).forEach(key => {
