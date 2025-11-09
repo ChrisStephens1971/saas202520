@@ -41,7 +41,7 @@ export interface ScheduledReportJobData {
   tenantId: string;
   reportType: string;
   recipients: string[];
-  parameters?: Record<string, any>;
+  parameters?: Record<string, unknown>;
 }
 
 export type JobData = AggregationJobData | ExportJobData | ScheduledReportJobData;
@@ -175,7 +175,7 @@ export async function addJob(
  * @returns The created Worker instance
  */
 export function createWorker(
-  processor: (job: Job<JobData, any, JobType>) => Promise<any>,
+  processor: (job: Job<JobData, unknown, JobType>) => Promise<unknown>,
   options?: Partial<WorkerOptions>
 ): Worker {
   console.log('[Queue] Creating analytics worker...');
@@ -313,7 +313,7 @@ export async function closeQueue(): Promise<void> {
  */
 export async function healthCheck(): Promise<{
   healthy: boolean;
-  metrics?: any;
+  metrics?: unknown;
   error?: string;
 }> {
   try {

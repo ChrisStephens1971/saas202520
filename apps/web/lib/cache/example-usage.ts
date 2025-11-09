@@ -81,7 +81,7 @@ export async function example2_CacheAsidePattern(
 export async function example3_WriteThroughPattern(
   tenantId: string,
   tournamentId: string,
-  updates: any
+  updates: Record<string, unknown>
 ) {
   const success = await writeThrough(
     tenantId,
@@ -167,7 +167,7 @@ export async function example5_EventBasedInvalidation(
 export async function example6_UserSessionCaching(
   tenantId: string,
   userId: string,
-  sessionData: any
+  sessionData: unknown
 ) {
   // Store session (24 hour TTL)
   await UserCache.setSession(tenantId, userId, sessionData);
@@ -357,9 +357,9 @@ export async function example13_APIEndpointCaching() {
   const { withCache } = await import('@/lib/cache');
 
   const _handler = withCache(
-    async (req: any) => {
+    async (req: Request) => {
       // Your API logic here
-      const tenantId = req.headers['x-tenant-id'];
+      const tenantId = req.headers.get('x-tenant-id') || '';
       const tournaments = await prisma.tournament.findMany({
         where: { orgId: tenantId },
       });
@@ -371,7 +371,7 @@ export async function example13_APIEndpointCaching() {
         return `api:tournaments:${url.search}`;
       },
       ttl: CacheTTL.API_RESPONSE,
-      tenantIdExtractor: (req) => req.headers['x-tenant-id'],
+      tenantIdExtractor: (req) => req.headers.get('x-tenant-id') || '',
     }
   );
 

@@ -204,6 +204,16 @@ export async function getSlowQueryAnalysis() {
   const _report = getPerformanceReport();
   const slowQueries = getRecentSlowQueries();
 
+  interface GroupedQuery {
+    model: string;
+    action: string;
+    count: number;
+    totalDuration: number;
+    maxDuration: number;
+    avgDuration: number;
+    examples: Array<{ duration: number; timestamp: Date }>;
+  }
+
   // Group queries by model and action
   const grouped = slowQueries.reduce((acc, query) => {
     const key = `${query.model}.${query.action}`;
@@ -231,21 +241,21 @@ export async function getSlowQueryAnalysis() {
     }
 
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, GroupedQuery>);
 
   // Calculate averages
-  Object.values(grouped).forEach((group: any) => {
+  Object.values(grouped).forEach((group) => {
     group.avgDuration = Math.round((group.totalDuration / group.count) * 100) / 100;
   });
 
   // Sort by count (most frequent slow queries first)
-  const sortedGroups = Object.values(grouped).sort((a: any, b: any) => b.count - a.count);
+  const sortedGroups = Object.values(grouped).sort((a, b) => b.count - a.count);
 
   return {
     summary: {
       totalSlowQueries: slowQueries.length,
       uniquePatterns: sortedGroups.length,
-      criticalQueries: sortedGroups.filter((g: any) => g.maxDuration > 500).length,
+      criticalQueries: sortedGroups.filter((g) => g.maxDuration > 500).length,
     },
     patterns: sortedGroups,
     recommendations: generateRecommendations(sortedGroups),
@@ -255,7 +265,15 @@ export async function getSlowQueryAnalysis() {
 /**
  * Generate optimization recommendations based on slow query patterns
  */
-function generateRecommendations(patterns: any[]): string[] {
+interface QueryPattern {
+  model: string;
+  action: string;
+  count: number;
+  maxDuration: number;
+  avgDuration: number;
+}
+
+function generateRecommendations(patterns: QueryPattern[]): string[] {
   const recommendations: string[] = [];
 
   patterns.forEach(pattern => {

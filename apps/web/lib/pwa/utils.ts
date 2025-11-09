@@ -171,7 +171,7 @@ export async function unregisterServiceWorker(): Promise<boolean> {
 /**
  * Send message to service worker
  */
-export async function sendMessageToSW(message: any): Promise<any> {
+export async function sendMessageToSW(message: unknown): Promise<unknown> {
   if (!navigator.serviceWorker.controller) {
     throw new Error('No active service worker');
   }
@@ -354,7 +354,13 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
 // INSTALLATION
 // =============================================================================
 
-let deferredPrompt: any = null;
+// BeforeInstallPromptEvent is not in standard TypeScript lib
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 /**
  * Setup install prompt listener

@@ -104,7 +104,7 @@ export function getQueryStats() {
  * Format query parameters for logging
  * Truncates long parameters to prevent huge logs
  */
-function formatParams(params: any): string {
+function formatParams(params: unknown): string {
   try {
     const stringified = JSON.stringify(params);
     if (stringified.length > QUERY_CONFIG.MAX_PARAMS_LENGTH) {
