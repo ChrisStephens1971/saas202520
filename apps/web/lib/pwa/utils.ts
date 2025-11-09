@@ -16,6 +16,34 @@ import type {
 } from './types';
 
 // =============================================================================
+// BROWSER API TYPE EXTENSIONS
+// =============================================================================
+
+/**
+ * Extended Navigator interface for iOS standalone mode detection
+ * iOS Safari adds a 'standalone' property to navigator
+ */
+interface NavigatorStandalone extends Navigator {
+  standalone?: boolean;
+}
+
+/**
+ * Extended Navigator interface for Network Information API
+ * https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API
+ */
+interface NavigatorConnection extends Navigator {
+  connection?: NetworkInformation;
+}
+
+/**
+ * Extended Navigator interface for Web Share API Level 2
+ * https://developer.mozilla.org/en-US/docs/Web/API/Navigator/canShare
+ */
+interface NavigatorShare extends Navigator {
+  canShare?(data?: ShareData): boolean;
+}
+
+// =============================================================================
 // FEATURE DETECTION
 // =============================================================================
 
@@ -65,7 +93,7 @@ export function isStandalone(): boolean {
   // Check if running in standalone mode
   const isStandalonePWA =
     window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone ||
+    (window.navigator as NavigatorStandalone).standalone ||
     document.referrer.includes('android-app://');
 
   return isStandalonePWA;
@@ -208,7 +236,7 @@ export function getNetworkState(): NetworkState {
   }
 
   // Get network information if available
-  const connection = (navigator as any).connection as NetworkInformation | undefined;
+  const connection = (navigator as NavigatorConnection).connection;
 
   if (connection) {
     const isSlow =
@@ -240,7 +268,7 @@ export function addNetworkListener(callback: (state: NetworkState) => void): () 
   window.addEventListener('online', handleChange);
   window.addEventListener('offline', handleChange);
 
-  const connection = (navigator as any).connection as NetworkInformation | undefined;
+  const connection = (navigator as NavigatorConnection).connection;
   if (connection) {
     connection.addEventListener('change', handleChange);
   }
@@ -439,7 +467,7 @@ export function canShare(data?: ShareData): boolean {
   }
 
   if (data) {
-    return (navigator as any).canShare?.(data) ?? true;
+    return (navigator as NavigatorShare).canShare?.(data) ?? true;
   }
 
   return true;
