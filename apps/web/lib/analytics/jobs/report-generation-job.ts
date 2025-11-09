@@ -259,6 +259,18 @@ function calculateDateRange(
 }
 
 /**
+ * User analytics summary interface
+ */
+interface UserAnalyticsSummary {
+  summary: {
+    total: number;
+    active: number;
+    new: number;
+    churn: number;
+  };
+}
+
+/**
  * Fetch analytics data based on report sections
  */
 async function fetchAnalyticsData(
@@ -267,11 +279,16 @@ async function fetchAnalyticsData(
   dateRange: { start: Date; end: Date }
 ): Promise<{
   revenue?: AnalyticsService.RevenueAnalytics;
-  users?: any;
+  users?: UserAnalyticsSummary;
   cohorts?: AnalyticsService.CohortAnalytics;
   tournaments?: AnalyticsService.TournamentAnalytics;
 }> {
-  const data: any = {};
+  const data: {
+    revenue?: AnalyticsService.RevenueAnalytics;
+    users?: UserAnalyticsSummary;
+    cohorts?: AnalyticsService.CohortAnalytics;
+    tournaments?: AnalyticsService.TournamentAnalytics;
+  } = {};
 
   const promises: Promise<void>[] = [];
 
@@ -354,10 +371,32 @@ async function fetchAnalyticsData(
 }
 
 /**
+ * CSV row data interface
+ */
+interface CSVRowData {
+  Type?: string;
+  Date?: string;
+  Category?: string;
+  Source?: string;
+  Amount?: number;
+  Format?: string;
+  Players?: number;
+  Revenue?: number | null;
+  Status?: string;
+  Cohort?: string;
+  Size?: number;
+  'Retention Rate'?: number;
+}
+
+/**
  * Prepare data for CSV export
  */
-function prepareCSVData(analyticsData: any): any[] {
-  const rows: any[] = [];
+function prepareCSVData(analyticsData: {
+  revenue?: { breakdown?: Array<{ date: string; type: string; source: string; amount: number }> };
+  tournaments?: { details?: Array<{ date: string; format: string; players: number; revenue: number | null; status: string }> };
+  cohorts?: { cohorts?: Array<{ cohort: string; cohortSize: number; metrics: { month1Retention: number }; revenue: { ltv: number } }> };
+}): CSVRowData[] {
+  const rows: CSVRowData[] = [];
 
   // Revenue data
   if (analyticsData.revenue?.breakdown) {
@@ -406,7 +445,30 @@ function prepareCSVData(analyticsData: any): any[] {
  * Prepare data for Excel/PDF export
  */
 function prepareExportData(
-  analyticsData: any,
+  analyticsData: {
+    revenue?: {
+      current?: { tenantId?: string; mrr?: number; arr?: number; totalRevenue?: number };
+      growth?: { revenueGrowth?: number };
+      breakdown?: { bySource?: unknown[] };
+    };
+    users?: UserAnalyticsSummary;
+    cohorts?: {
+      cohorts?: Array<{
+        cohort: string;
+        cohortSize: number;
+        metrics: { month1Retention: number };
+        revenue: { ltv: number };
+      }>;
+    };
+    tournaments?: {
+      metrics?: {
+        totalTournaments?: number;
+        completedTournaments?: number;
+        completionRate?: number;
+        avgPlayers?: number;
+      };
+    };
+  },
   organizationName: string,
   dateRange: { start: Date; end: Date }
 ): ExportService.AnalyticsExportData {

@@ -145,7 +145,8 @@ export function TouchFeedback({
         e.preventDefault();
         if (onPress) {
           triggerHaptic(hapticType);
-          onPress(e as any);
+          // Cast keyboard event to match onPress handler signature
+          onPress(e as unknown as React.MouseEvent | React.TouchEvent);
         }
       }
     },

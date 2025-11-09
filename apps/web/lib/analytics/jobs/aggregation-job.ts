@@ -174,10 +174,10 @@ export async function processAggregationJob(
  * @param processor - The actual job processor function
  * @returns Wrapped processor with timing
  */
-export function withTiming<T extends (...args: any[]) => Promise<any>>(
+export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(
   processor: T
 ): T {
-  return (async (...args: any[]) => {
+  return (async (...args: unknown[]) => {
     const startTime = Date.now();
     try {
       const result = await processor(...args);

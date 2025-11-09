@@ -90,10 +90,11 @@ export function useSocket() {
         return;
       }
 
+      // Type-safe event emission for tournament join
       socket.emit('tournament:join' as keyof ClientToServerEvents, {
         tournamentId,
         userId,
-      } as any);
+      } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
 
       console.log(`[useSocket] Joined tournament room: ${tournamentId}`);
     },
@@ -110,10 +111,11 @@ export function useSocket() {
         return;
       }
 
+      // Type-safe event emission for tournament leave
       socket.emit('tournament:leave' as keyof ClientToServerEvents, {
         tournamentId,
         userId,
-      } as any);
+      } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
 
       console.log(`[useSocket] Left tournament room: ${tournamentId}`);
     },
@@ -150,7 +152,7 @@ export function useSocket() {
 export function useSocketEvent<K extends keyof ServerToClientEvents>(
   event: K,
   handler: ServerToClientEvents[K],
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ) {
   const { socket, isConnected } = useSocketContext();
 
@@ -163,16 +165,16 @@ export function useSocketEvent<K extends keyof ServerToClientEvents>(
       return;
     }
 
-    // Wrap handler to use current ref value
-    const wrappedHandler = (...args: any[]) => {
-      handlerRef.current(...(args as Parameters<ServerToClientEvents[K]>));
+    // Wrap handler to use current ref value with proper typing
+    const wrappedHandler = (...args: Parameters<ServerToClientEvents[K]>) => {
+      handlerRef.current(...args);
     };
 
-    socket.on(event, wrappedHandler as any);
+    socket.on(event, wrappedHandler as ServerToClientEvents[K]);
     console.log(`[useSocketEvent] Listening to: ${String(event)}`);
 
     return () => {
-      socket.off(event, wrappedHandler as any);
+      socket.off(event, wrappedHandler as ServerToClientEvents[K]);
       console.log(`[useSocketEvent] Stopped listening to: ${String(event)}`);
     };
   }, [socket, isConnected, event, ...dependencies]);
@@ -266,7 +268,7 @@ export function usePresence(tournamentId: string) {
   useEffect(() => {
     if (socket && isConnected && tournamentId) {
       // Server will emit users:in:tournament event with current users
-      socket.emit('tournament:join' as any, { tournamentId });
+      socket.emit('tournament:join' as keyof ClientToServerEvents, { tournamentId } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
     }
   }, [socket, isConnected, tournamentId]);
 
