@@ -7,7 +7,7 @@ import TouchFeedback from './TouchFeedback';
 import { HapticFeedbackType } from '@/lib/pwa/haptics';
 
 export interface TouchOptimizedButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClick?: (e: React.MouseEvent | React.TouchEvent) => void;
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
