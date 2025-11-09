@@ -7,7 +7,7 @@
  * format popularity, attendance predictions, and benchmarking.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import {
   startOfDay,
   startOfWeek,
@@ -590,7 +590,7 @@ export async function calculateTournamentMetrics(
   return CacheManager.getOrSet(
     cacheKey,
     async () => {
-      const whereClause: any = {
+      const whereClause: Prisma.TournamentWhereInput = {
         orgId: tenantId,
       };
 
@@ -1152,9 +1152,20 @@ export async function getTournamentBenchmarks(
 // ============================================================================
 
 /**
+ * Tournament aggregate data structure
+ */
+interface TournamentAggregateData {
+  tournamentCount?: number;
+  completedCount?: number;
+  totalPlayers?: number;
+  avgDurationMinutes?: number | { toString: () => string };
+  revenue?: number | { toString: () => string };
+}
+
+/**
  * Calculate aggregate metrics from tournament aggregates
  */
-function calculateAggregateMetrics(aggregates: any[]) {
+function calculateAggregateMetrics(aggregates: TournamentAggregateData[]) {
   if (aggregates.length === 0) {
     return {
       tournamentCount: 0,
@@ -1210,9 +1221,19 @@ function calculateAggregateMetrics(aggregates: any[]) {
 }
 
 /**
+ * Metrics for comparison
+ */
+interface ComparisonMetrics {
+  tournamentCount: number;
+  completionRate: number;
+  avgPlayersPerTournament: number;
+  totalRevenue: number;
+}
+
+/**
  * Build comparison metrics between current and previous periods
  */
-function buildComparison(current: any, previous: any) {
+function buildComparison(current: ComparisonMetrics, previous: ComparisonMetrics) {
   return {
     tournamentCount: {
       value: previous.tournamentCount,
@@ -1238,11 +1259,19 @@ function buildComparison(current: any, previous: any) {
 }
 
 /**
+ * Comparison data structure
+ */
+interface ComparisonData {
+  tournamentCount: { value: number; change: number; trend: 'up' | 'down' | 'flat' };
+  revenue: { value: number; change: number; trend: 'up' | 'down' | 'flat' };
+}
+
+/**
  * Generate insights from metrics
  */
 function generateInsights(
-  metrics: any,
-  comparison?: any,
+  metrics: ComparisonMetrics,
+  comparison?: ComparisonData,
   formatBreakdown?: FormatPopularity[]
 ): string[] {
   const insights: string[] = [];

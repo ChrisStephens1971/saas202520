@@ -31,8 +31,8 @@ export interface SyncStatus {
 export interface SyncConflict {
   id: string;
   type: 'version' | 'deleted' | 'modified';
-  localData: any;
-  serverData: any;
+  localData: unknown;
+  serverData: unknown;
   timestamp: number;
 }
 

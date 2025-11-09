@@ -61,7 +61,7 @@ interface InvalidationEvent {
   resourceId?: string;
   relatedIds?: string[];
   timestamp: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -417,7 +417,7 @@ export class TimeBasedInvalidation {
   static scheduleRefresh(
     _tenantId: string,
     key: string,
-    refreshFn: () => Promise<any>,
+    refreshFn: () => Promise<unknown>,
     scheduleTime: Date
   ): NodeJS.Timeout {
     const delay = scheduleTime.getTime() - Date.now();
@@ -494,7 +494,7 @@ export async function emitCacheEvent(
   tenantId: string,
   resourceId?: string,
   relatedIds?: string[],
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const invalidationEvent: InvalidationEvent = {
     event,
@@ -523,13 +523,13 @@ export function InvalidateCache(
   resourceIdParam?: string
 ) {
   return function (
-    target: any,
-    propertyKey: string,
+    _target: unknown,
+    _propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       // Execute original method
       const result = await originalMethod.apply(this, args);
 

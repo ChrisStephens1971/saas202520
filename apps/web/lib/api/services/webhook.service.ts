@@ -5,7 +5,7 @@
  * Sprint 10 Week 3 - Public API & Webhooks
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { generateWebhookSecret } from '../utils/webhook-signature.utils';
 import { WebhookEvent } from '../types/webhook-events.types';
 
@@ -136,7 +136,7 @@ export async function listWebhooks(
   tenantId: string,
   status?: 'active' | 'inactive'
 ): Promise<WebhookWithStats[]> {
-  const where: any = { tenantId };
+  const where: Prisma.WebhookWhereInput = { tenantId };
 
   if (status !== undefined) {
     where.isActive = status === 'active';
@@ -245,7 +245,7 @@ export async function updateWebhook(
   }
 
   // Build update data
-  const data: any = {};
+  const data: Prisma.WebhookUpdateInput = {};
   if (updates.url) data.url = updates.url;
   if (updates.events) data.events = updates.events;
   if (updates.status === 'active') data.isActive = true;
@@ -348,11 +348,23 @@ export async function resumeWebhook(
  * @example
  * const logs = await getDeliveryLogs('wh_123', 'org_456', 20);
  */
+/**
+ * Webhook delivery log entry
+ */
+interface WebhookDeliveryLog {
+  id: string;
+  webhookId: string;
+  eventType: string;
+  payload: unknown;
+  deliveredAt: Date | null;
+  createdAt: Date;
+}
+
 export async function getDeliveryLogs(
   webhookId: string,
   tenantId: string,
   limit: number = 50
-): Promise<any[]> {
+): Promise<WebhookDeliveryLog[]> {
   // Verify webhook exists and belongs to tenant
   const webhook = await getWebhook(webhookId, tenantId);
   if (!webhook) {
@@ -419,7 +431,7 @@ export async function retryDelivery(
     webhookId: webhook.id,
     deliveryId: delivery.id,
     event: delivery.eventType as WebhookEvent,
-    payload: delivery.payload as any,
+    payload: delivery.payload as Record<string, unknown>,
   });
 
   return true;
