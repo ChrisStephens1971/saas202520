@@ -34,7 +34,7 @@ export interface ExportOptions {
   };
   includeCharts?: boolean;
   customHeaders?: Record<string, string>;
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 /**
@@ -154,7 +154,7 @@ export interface ExportJobStatus {
  * @returns CSV string
  */
 export function exportToCSV(
-  data: any[],
+  data: Record<string, unknown>[],
   filename: string,
   options?: Partial<ExportOptions>
 ): string {
@@ -213,7 +213,7 @@ function escapeCSVValue(value: string): string {
 /**
  * Format value for CSV output
  */
-function formatCSVValue(value: any): string {
+function formatCSVValue(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }

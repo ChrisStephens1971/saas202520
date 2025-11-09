@@ -16,7 +16,7 @@ export interface QueuedAction {
   type: 'score_update' | 'tournament_registration' | 'tournament_checkin' | 'player_update';
   endpoint: string;
   method: 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  data: any;
+  data: unknown;
   timestamp: number;
   retryCount: number;
   maxRetries: number;
@@ -86,7 +86,7 @@ export async function queueAction(
   type: QueuedAction['type'],
   endpoint: string,
   method: QueuedAction['method'],
-  data: any,
+  data: unknown,
   tenantId?: string
 ): Promise<string> {
   const db = await getDB();

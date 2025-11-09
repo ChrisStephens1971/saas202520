@@ -174,7 +174,7 @@ export async function updateScheduledReport(
   }
 
   // Prepare update data
-  const updateData: any = {};
+  const updateData: Record<string, unknown> = {};
 
   if (config.name !== undefined) updateData.name = config.name;
   if (config.description !== undefined) updateData.description = config.description;
@@ -243,7 +243,11 @@ export async function getScheduledReports(
   tenantId: string,
   includeDisabled: boolean = false
 ): Promise<ReportConfig[]> {
-  const where: any = {
+  const where: {
+    tenantId: string;
+    deletedAt: null;
+    enabled?: boolean;
+  } = {
     tenantId,
     deletedAt: null,
   };
@@ -341,8 +345,8 @@ export async function recordReportDelivery(
     id: record.id,
     reportId: record.reportId,
     tenantId: record.tenantId,
-    status: record.status as any,
-    format: record.format as any,
+    status: record.status as 'pending' | 'processing' | 'sent' | 'failed',
+    format: record.format as ReportFormat,
     recipients: JSON.parse(record.recipients || '[]'),
     deliveredAt: record.deliveredAt || undefined,
     errorMessage: record.errorMessage || undefined,
@@ -450,7 +454,23 @@ function calculateNextRunTime(schedule: ReportSchedule): Date {
 /**
  * Parse database record to ReportConfig
  */
-function parseReportRecord(record: any): ReportConfig {
+function parseReportRecord(record: {
+  id: string;
+  tenantId: string;
+  name: string;
+  description: string | null;
+  enabled: boolean;
+  schedule: string;
+  recipients: string;
+  format: string;
+  sections: string;
+  dateRange: string | null;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lastRunAt: Date | null;
+  nextRunAt: Date | null;
+}): ReportConfig {
   return {
     id: record.id,
     tenantId: record.tenantId,
