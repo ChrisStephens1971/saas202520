@@ -37,12 +37,12 @@ export async function GET(
 
     if (!auth.success) {
       return NextResponse.json(
-        { error: auth.error!.message },
+        { error: auth.error.message },
         { status: 401 }
       );
     }
 
-    const _tenantId = auth.context!.tenantId;
+    const _tenantId = auth.context.tenantId;
 
     const { id: _venueId } = await params;
 

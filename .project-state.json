@@ -1,7 +1,7 @@
 {
   "projectId": "saas202520",
   "created": "2025-11-03",
-  "templateType": "enterprise",
+  "templateType": "azure",
   "version": "2.0",
   "state": {
     "hasGreeted": true,

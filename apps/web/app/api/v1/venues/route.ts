@@ -20,12 +20,12 @@ export async function GET(request: NextRequest) {
 
     if (!auth.success) {
       return NextResponse.json(
-        { error: auth.error!.message },
+        { error: auth.error.message },
         { status: 401 }
       );
     }
 
-    const tenantId = auth.context!.tenantId;
+    const tenantId = auth.context.tenantId;
 
     // Extract query parameters
     const searchParams = request.nextUrl.searchParams;
