@@ -664,6 +664,220 @@ git push --no-verify
 ```
 
 ---
+
+## 🔄 Project Lifecycle Workflow (v2.1)
+
+**NEW in v2.1:** Comprehensive workflow system for project lifecycle management.
+
+### Quick Start
+
+**Check current workflow status:**
+```bash
+# View current phase
+cat .project-state.json | jq '.workflow.currentPhase'
+
+# View current tasks
+cat .project-workflow.json | jq '.phases[.currentPhase].checklist'
+
+# View completion percentage
+cat .project-workflow.json | jq '.phases[.currentPhase].completionPercent'
+```
+
+**Daily workflow:**
+1. **Morning:** Run `bash scripts/check-github-health.sh`
+2. **Work:** Complete tasks from current phase checklist
+3. **Evening:** Update `.project-workflow.json` with progress
+4. **Always:** Fix GitHub Actions failures immediately
+
+**Full guides:**
+- `PROJECT-WORKFLOW.md` - Complete lifecycle workflow
+- `workflows/DAILY-PRACTICES.md` - Daily and weekly practices
+
+### Five Project Phases
+
+1. **Planning (1-2 weeks):** Discovery, roadmap, architecture
+2. **Foundation (1-2 weeks):** Setup, database, auth, CI/CD
+3. **Development (4-8 weeks):** Sprint-based feature development
+4. **Testing & Polish (2-3 weeks):** QA, performance, security
+5. **Launch Preparation (1-2 weeks):** Deployment, monitoring, go-live
+
+### Virtual Agent: Workflow Manager
+
+**Trigger:** Session start, "what's next", "check progress", "update workflow"
+
+**Behavior:**
+1. Read `.project-state.json` → get current phase
+2. Read `.project-workflow.json` → get current checklist
+3. Show current phase and pending tasks
+4. Suggest next action based on workflow
+5. Remind about daily practices if not done
+6. Check GitHub Actions status
+7. Offer to update task status when work completed
+
+**Example interaction:**
+```
+User: "what's next"
+
+Claude: I see you're in the Foundation phase (65% complete).
+
+Current tasks:
+  ✅ Initialize project structure
+  ✅ Set up database schema
+  ✅ Implement authentication
+  ⏳ Set up CI/CD pipeline
+  ⏳ Configure testing framework
+
+Next task: "Set up CI/CD pipeline (GitHub Actions)"
+This involves creating workflow files in .github/workflows/
+
+Also, GitHub health check hasn't run today.
+Shall I check GitHub Actions status first?
+```
+
+### Phase-Specific AI Assistant Behavior
+
+**Planning Phase:**
+- Guide through discovery questions
+- Help create roadmap using `product/roadmap-template.md`
+- Create ADRs for architectural decisions
+- Set up Sprint 1 plan
+- Update `.project-workflow.json` planning checklist
+
+**Foundation Phase:**
+- Help with project scaffolding
+- Guide database schema design
+- Set up authentication
+- Configure CI/CD pipelines
+- Ensure GitHub Actions green before proceeding
+
+**Development Phase:**
+- Sprint planning assistance
+- Code review & quality gates
+- Test writing reminders
+- GitHub Actions monitoring
+- Update sprint progress in workflow
+
+**Testing Phase:**
+- Test coverage tracking
+- Performance optimization suggestions
+- Security checklist validation
+- Bug triage and prioritization
+
+**Launch Phase:**
+- Deployment checklist verification
+- Monitoring setup validation
+- Documentation completion check
+- Go-live preparation
+
+### Workflow State Management
+
+**Update workflow progress:**
+```javascript
+// When user completes a task
+// 1. Read .project-workflow.json
+// 2. Find task by id
+// 3. Update: status "pending" → "completed"
+// 4. Add completedDate
+// 5. Recalculate completionPercent
+// 6. Write back to file
+
+// Example
+const task = phases[currentPhase].checklist.find(t => t.id === 'plan-02')
+task.status = 'completed'
+task.completedDate = '2025-11-09'
+
+const completed = checklist.filter(t => t.status === 'completed').length
+const total = checklist.length
+phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
+```
+
+**Phase transitions:**
+```javascript
+// When all tasks in phase complete
+// 1. Ask user: "Ready to move to [next phase]?"
+// 2. If yes:
+//    - Update currentPhase in both files
+//    - Add completed phase to phasesCompleted array
+//    - Set lastPhaseTransition date
+//    - Show next phase tasks
+// 3. Check transition criteria (recommended, not mandatory)
+```
+
+**Phase transition criteria (recommended):**
+- Planning → Foundation: Roadmap complete, architecture decided
+- Foundation → Development: Infrastructure green, tests passing
+- Development → Testing: Core features complete, 60%+ coverage
+- Testing → Launch: 80%+ coverage, performance targets met
+- Launch → Production: Deployment tested, monitoring active
+
+### Integration with Existing Systems
+
+**GitHub Health Monitoring:**
+- Daily practices include `check-github-health.sh`
+- Pre-push hook enforces zero-tolerance policy
+- Part of every phase's daily routine
+- See `GITHUB-HEALTH-MONITORING.md`
+
+**Sprint Planning:**
+- Development phase uses sprint structure
+- Templates in `sprints/` directory
+- Weekly planning/review/retrospective
+- Velocity tracking
+
+**Documentation Automation:**
+- ADRs for architecture decisions
+- Session docs from commits
+- Changelog generation
+- Automated through git hooks
+
+**Verdaio Dashboard:**
+- `.project-state.json` syncs to database
+- Workflow progress visible across projects
+- Phase completion tracked
+
+### Daily Practices Enforcement
+
+**Morning:**
+- Check GitHub Actions health (mandatory)
+- Review yesterday's work
+- Plan today's tasks (1-3 from checklist)
+
+**During Work:**
+- Commit frequently (min once/day)
+- Update `.project-workflow.json` progress
+- Document decisions (ADRs)
+- Fix errors immediately
+
+**End of Day:**
+- Push all code
+- Update workflow state
+- Verify GitHub Actions green
+- Plan tomorrow
+
+**See:** `workflows/DAILY-PRACTICES.md` for complete guide
+
+### Build Approach Adaptation
+
+**MVP-First:**
+- Planning: 3-5 days
+- Foundation: 1 week
+- Development: 2-4 weeks (1-2 sprints)
+- Testing: 1 week (60% coverage OK)
+- Launch: 3-5 days
+
+**Complete Build:**
+- Planning: 2 weeks
+- Foundation: 2 weeks
+- Development: 6-8 weeks (3-4 sprints)
+- Testing: 3 weeks (80%+ coverage)
+- Launch: 2 weeks
+
+**Growth-Stage:**
+- Continuous development/testing
+- Feature-based launches
+- Existing infrastructure
+
+---
 ## 🔗 Related Resources
 
 **Azure Naming Tool:** `C:\devop\.template-system\scripts\azure-name-*.py`

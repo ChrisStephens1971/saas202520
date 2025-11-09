@@ -317,12 +317,10 @@ export async function GET(request: NextRequest) {
     // 5. Parse query parameters
     const searchParams = request.nextUrl.searchParams;
     const eventType = searchParams.get('eventType') || undefined;
-    const startDate = searchParams.get('startDate')
-      ? new Date(searchParams.get('startDate')!)
-      : undefined;
-    const endDate = searchParams.get('endDate')
-      ? new Date(searchParams.get('endDate')!)
-      : undefined;
+    const startDateParam = searchParams.get('startDate');
+    const startDate = startDateParam ? new Date(startDateParam) : undefined;
+    const endDateParam = searchParams.get('endDate');
+    const endDate = endDateParam ? new Date(endDateParam) : undefined;
     const userId = searchParams.get('userId') || undefined;
     const limitParam = parseInt(searchParams.get('limit') || '100');
     const offsetParam = parseInt(searchParams.get('offset') || '0');

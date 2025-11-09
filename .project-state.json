@@ -2,7 +2,7 @@
   "projectId": "saas202520",
   "created": "2025-11-03",
   "templateType": "azure",
-  "version": "2.0",
+  "version": "2.1",
   "state": {
     "hasGreeted": true,
     "setupComplete": true,
@@ -22,5 +22,12 @@
     "postgres": "5420",
     "redis": "6420",
     "mongo": "27020"
+  }
+  ,
+  "workflow": {
+    "currentPhase": "development",
+    "phasesCompleted": [],
+    "lastPhaseTransition": null,
+    "checklistSource": ".project-workflow.json"
   }
 }

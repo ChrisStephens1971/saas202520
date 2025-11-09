@@ -125,7 +125,7 @@ export async function POST(
 
     // Add game to history
     const gameNumber = (currentScore.games?.length || 0) + 1;
-    newScore.games!.push({
+    newScore.games.push({
       gameNumber,
       winner: player, // 'A' | 'B'
       timestamp: new Date(),

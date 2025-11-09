@@ -172,6 +172,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create organization and owner membership in a transaction
+    const userId = session.user.id; // Already validated above
     const result = await prisma.$transaction(async (tx) => {
       const organization = await tx.organization.create({
         data: {
@@ -183,7 +184,7 @@ export async function POST(request: NextRequest) {
       await tx.organizationMember.create({
         data: {
           orgId: organization.id,
-          userId: session.user!.id,
+          userId,
           role: 'owner',
         },
       });

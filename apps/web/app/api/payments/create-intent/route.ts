@@ -86,6 +86,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Verify client_secret exists
+    if (!paymentIntent.client_secret) {
+      return NextResponse.json(
+        { error: 'Failed to create payment intent: missing client_secret' },
+        { status: 500 }
+      );
+    }
+
     // Create payment record
     const payment = await prisma.payment.create({
       data: {
@@ -118,7 +126,7 @@ export async function POST(request: NextRequest) {
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
       },
-      clientSecret: paymentIntent.client_secret!,
+      clientSecret: paymentIntent.client_secret,
     };
 
     return NextResponse.json(response, { status: 200 });
