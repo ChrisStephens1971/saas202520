@@ -205,14 +205,6 @@ export function TournamentListClient({
         ))}
       </div>
 
-      {/* Error Display */}
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-6 py-4 rounded-lg">
-          <p className="font-semibold">Error</p>
-          <p className="text-sm">{error}</p>
-        </div>
-      )}
-
       {/* Status Filter Tabs */}
       <div className="flex gap-2 flex-wrap">
         <button
