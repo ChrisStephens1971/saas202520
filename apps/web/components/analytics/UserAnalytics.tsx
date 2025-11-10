@@ -128,8 +128,8 @@ export function UserAnalytics({ dateRange }: UserAnalyticsProps) {
         error={cohortError}
         onRefresh={() => mutateCohort()}
       >
-        {cohortData?.cohorts && cohortData.cohorts.length > 0 ? (
-          <CohortHeatmap data={cohortData.cohorts} />
+        {(cohortData as any)?.cohorts && (cohortData as any).cohorts.length > 0 ? (
+          <CohortHeatmap data={(cohortData as any).cohorts} />
         ) : (
           <div className="h-[400px] flex items-center justify-center text-gray-500 dark:text-gray-400">
             No cohort data available
@@ -146,7 +146,7 @@ export function UserAnalytics({ dateRange }: UserAnalyticsProps) {
         onRefresh={() => mutateCohort()}
       >
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={cohortData?.cohorts || []}>
+          <LineChart data={(cohortData as any)?.cohorts || []}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="cohortMonth" />
             <YAxis tickFormatter={(value) => formatCurrency(value)} />

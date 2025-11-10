@@ -55,7 +55,7 @@ export default function NewTournamentPage() {
   // Auto-generate slug from name
   useEffect(() => {
     if (!slugTouched && formData.name) {
-      const generatedSlug = formData.name
+      const generatedSlug = (formData.name as string)
         .toLowerCase()
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '')
@@ -67,7 +67,7 @@ export default function NewTournamentPage() {
 
   // Check slug uniqueness (debounced)
   useEffect(() => {
-    if (!formData.slug || formData.slug.length < 3) {
+    if (!formData.slug || (formData.slug as string).length < 3) {
       setSlugAvailable(null);
       return;
     }
@@ -305,7 +305,7 @@ export default function NewTournamentPage() {
               placeholder="Tell players about this tournament..."
             />
             <p className="text-sm text-gray-400 mt-1">
-              {(formData.description?.length || 0)} / 2000 characters
+              {((formData.description as string | undefined)?.length || 0)} / 2000 characters
             </p>
           </div>
 
