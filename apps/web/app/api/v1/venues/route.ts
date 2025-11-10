@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     // For now, returning mock data structure
 
     // Build query filters
-    const whereClause: Prisma.VenueWhereInput = {
+    const whereClause: any = {
       orgId: tenantId,
     };
 
