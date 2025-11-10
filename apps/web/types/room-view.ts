@@ -1,6 +1,6 @@
 // Room View Types for TD Console
 
-import { Match, MatchState, Table, TableStatus } from '@/packages/shared/src/types';
+import { Match, MatchState, Table, TableStatus } from '@tournament/shared';
 
 /**
  * Tournament room overview data

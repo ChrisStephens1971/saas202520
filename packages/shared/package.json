@@ -34,6 +34,10 @@
     "./types/organization": {
       "types": "./dist/types/organization.d.ts",
       "import": "./dist/types/organization.js"
+    },
+    "./types/user": {
+      "types": "./dist/types/user.d.ts",
+      "import": "./dist/types/user.js"
     }
   },
   "scripts": {

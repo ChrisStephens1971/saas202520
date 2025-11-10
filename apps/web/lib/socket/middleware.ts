@@ -6,7 +6,9 @@
  */
 
 import { Socket } from 'socket.io';
-import { ExtendedError } from 'socket.io/dist/namespace';
+
+// Define ExtendedError type locally (internal socket.io type not exported)
+type ExtendedError = Error & { data?: unknown };
 import {
   ServerToClientEvents,
   ClientToServerEvents,

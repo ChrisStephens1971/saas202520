@@ -13,8 +13,7 @@
 
 import { useState } from 'react';
 import type { RoomViewFilters } from '@/types/room-view';
-import { MatchState } from '@/packages/shared/src/types/match';
-import { TableStatus } from '@/packages/shared/src/types/tournament';
+import { MatchState, TableStatus } from '@tournament/shared';
 
 interface RoomViewFiltersProps {
   filters: RoomViewFilters;

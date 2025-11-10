@@ -13,7 +13,7 @@
 
 import { useMemo } from 'react';
 import type { TableWithMatch } from '@/types/room-view';
-import { TableStatus } from '@/packages/shared/src/types/tournament';
+import { TableStatus } from '@tournament/shared';
 
 interface TableStatusGridProps {
   tables: TableWithMatch[];
