@@ -414,5 +414,4 @@ export function sanitizePrivacySettings(settings: Partial<PrivacySettings>): Pri
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export { canViewField, getPlayerSettings, updatePlayerSettings, setDefaultPrivacySettings, getPublicProfiles };
+// Functions are already exported above with 'export function ...'

@@ -506,12 +506,4 @@ export async function incrementTournamentCount(playerId: string, tenantId: strin
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export {
-  updateStatisticsAfterMatch,
-  calculateWinRate,
-  calculateStreaks,
-  updateHeadToHeadRecord,
-  batchRecalculateStatistics,
-  incrementTournamentCount,
-};
+// Functions are already exported above with 'export async function ...'
