@@ -7,6 +7,7 @@
 
 import { Server } from 'socket.io';
 import type { Server as HTTPServer } from 'http';
+import { SocketEvent } from './socket/events';
 
 export interface SocketEvents {
   'standings:updated': { tournamentId: string };
@@ -37,7 +38,7 @@ export function initializeSocket(httpServer: HTTPServer) {
     console.log('[Socket.io] Client connected:', socket.id);
 
     // Join tournament room for scoped updates
-    socket.on('join:tournament', (tournamentId: string) => {
+    socket.on(SocketEvent.JOIN_TOURNAMENT, (tournamentId: string) => {
       if (!tournamentId) {
         console.error('[Socket.io] Invalid tournamentId provided');
         return;
@@ -47,7 +48,7 @@ export function initializeSocket(httpServer: HTTPServer) {
     });
 
     // Leave tournament room
-    socket.on('leave:tournament', (tournamentId: string) => {
+    socket.on(SocketEvent.LEAVE_TOURNAMENT, (tournamentId: string) => {
       if (!tournamentId) {
         console.error('[Socket.io] Invalid tournamentId provided');
         return;
@@ -75,7 +76,7 @@ export function initializeSocket(httpServer: HTTPServer) {
  * Emit standings update to all clients in tournament room
  */
 export function emitStandingsUpdate(io: Server, tournamentId: string) {
-  io.to(`tournament:${tournamentId}`).emit('standings:updated', { tournamentId });
+  io.to(`tournament:${tournamentId}`).emit(SocketEvent.STANDINGS_UPDATED, { tournamentId });
   console.log(`[Socket.io] Emitted standings:updated for tournament:${tournamentId}`);
 }
 
@@ -83,7 +84,7 @@ export function emitStandingsUpdate(io: Server, tournamentId: string) {
  * Emit queue update to all clients in tournament room
  */
 export function emitQueueUpdate(io: Server, tournamentId: string) {
-  io.to(`tournament:${tournamentId}`).emit('queue:updated', { tournamentId });
+  io.to(`tournament:${tournamentId}`).emit(SocketEvent.QUEUE_UPDATED, { tournamentId });
   console.log(`[Socket.io] Emitted queue:updated for tournament:${tournamentId}`);
 }
 
@@ -91,7 +92,7 @@ export function emitQueueUpdate(io: Server, tournamentId: string) {
  * Emit match assignment notification
  */
 export function emitMatchAssigned(io: Server, tournamentId: string, matchId: string) {
-  io.to(`tournament:${tournamentId}`).emit('match:assigned', { tournamentId, matchId });
+  io.to(`tournament:${tournamentId}`).emit(SocketEvent.MATCH_ASSIGNED, { tournamentId, matchId });
   console.log(`[Socket.io] Emitted match:assigned for tournament:${tournamentId}, match:${matchId}`);
 }
 
