@@ -66,7 +66,6 @@ export async function GET(
           select: {
             provider: true,
             type: true,
-            createdAt: true,
           },
         },
         sessions: {
