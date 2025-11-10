@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSocketEvent } from '@/hooks/useSocket';
+import { SocketEvent } from '@/lib/socket/events';
 import type { MatchCompletedPayload, MatchStartedPayload } from '@/lib/socket/events';
 
 export interface Match {
@@ -51,7 +52,7 @@ export function LiveMatchCard({
   const [justUpdated, setJustUpdated] = useState(false);
 
   // Listen for match started events
-  useSocketEvent('match:started', (payload: MatchStartedPayload) => {
+  useSocketEvent(SocketEvent.MATCH_STARTED, (payload: MatchStartedPayload) => {
     if (payload.matchId === match.id) {
       const updatedMatch: Match = {
         ...match,
@@ -69,7 +70,7 @@ export function LiveMatchCard({
   });
 
   // Listen for match completed events
-  useSocketEvent('match:completed', (payload: MatchCompletedPayload) => {
+  useSocketEvent(SocketEvent.MATCH_COMPLETED, (payload: MatchCompletedPayload) => {
     if (payload.matchId === match.id) {
       const payloadAny = payload as any;
       const updatedMatch: Match = {

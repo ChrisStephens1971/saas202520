@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useSocketEvent } from '@/hooks/useSocket';
+import { SocketEvent } from '@/lib/socket/events';
 import type {
   ChipsAwardedPayload,
   PlayerEliminatedPayload,
@@ -84,7 +85,7 @@ export function LiveLeaderboard({
   }, [sortedPlayers, players]);
 
   // Listen for chips awarded
-  useSocketEvent('chips:awarded', (payload: ChipsAwardedPayload) => {
+  useSocketEvent(SocketEvent.CHIPS_AWARDED, (payload: ChipsAwardedPayload) => {
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) => {
@@ -113,7 +114,7 @@ export function LiveLeaderboard({
   });
 
   // Listen for match completed (update win count)
-  useSocketEvent('match:completed', (payload: MatchCompletedPayload) => {
+  useSocketEvent(SocketEvent.MATCH_COMPLETED, (payload: MatchCompletedPayload) => {
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) => {
@@ -141,7 +142,7 @@ export function LiveLeaderboard({
   });
 
   // Listen for player eliminated
-  useSocketEvent('player:eliminated', (payload: PlayerEliminatedPayload) => {
+  useSocketEvent(SocketEvent.PLAYER_ELIMINATED, (payload: PlayerEliminatedPayload) => {
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) =>
