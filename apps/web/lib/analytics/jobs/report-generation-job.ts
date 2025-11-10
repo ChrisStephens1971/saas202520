@@ -151,7 +151,7 @@ export async function processReportJob(
         mrr: analyticsData.revenue?.current?.mrr,
         totalRevenue: analyticsData.revenue?.current?.totalRevenue,
         activeUsers: analyticsData.users?.summary?.active,
-        totalTournaments: analyticsData.tournaments?.summary?.total,
+        totalTournaments: (analyticsData.tournaments as any)?.summary?.total,
       },
     };
 

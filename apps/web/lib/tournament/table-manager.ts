@@ -416,7 +416,7 @@ export async function getAvailableTables(
   return tables.map((table) => {
     const isAvailable = checkAvailability(table);
     const currentMatch = table.currentMatchId
-      ? table.matches.find((m) => m.id === table.currentMatchId)
+      ? (table as any).matches.find((m) => m.id === table.currentMatchId)
       : null;
 
     return {

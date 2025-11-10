@@ -308,7 +308,7 @@ export async function calculateAchievementProgress(
             id: true,
           },
         });
-        current = formatWins.length > 0 ? Math.max(...formatWins.map((f) => f._count.id)) : 0;
+        current = formatWins.length > 0 ? Math.max(...formatWins.map((f) => ((f._count as any).id))) : 0;
       }
       break;
 
@@ -326,16 +326,16 @@ export async function calculateAchievementProgress(
         });
 
         for (const formatStat of formatStats) {
-          if (formatStat._count.id >= requirements.min_matches) {
+          if (((formatStat._count as any).id) >= requirements.min_matches) {
             const wins = await prisma.matchHistory.count({
               where: {
                 playerId,
                 tenantId,
-                format: formatStat.format,
+                format: (formatStat as any).format,
                 result: 'WIN',
               },
             });
-            const winRate = (wins / formatStat._count.id) * 100;
+            const winRate = (wins / ((formatStat._count as any).id)) * 100;
             current = Math.max(current, winRate);
           }
         }
@@ -532,7 +532,7 @@ async function checkRepeatedOpponent(playerId: string, tenantId: string, require
     },
   });
 
-  return opponentCounts.some((count) => count._count.id >= required);
+  return opponentCounts.some((count) => count._count as any).id >= required);
 }
 
 async function checkUniqueVenues(playerId: string, tenantId: string, required: number): Promise<boolean> {
@@ -567,7 +567,7 @@ async function checkFormatWins(playerId: string, tenantId: string, requirements:
     },
   });
 
-  return formatWins.some((fw) => fw._count.id >= (requirements.value || 0));
+  return formatWins.some((fw) => ((fw._count as any).id) >= (requirements.value || 0));
 }
 
 async function checkFormatWinRate(playerId: string, tenantId: string, requirements: AchievementRequirements): Promise<boolean> {
@@ -583,16 +583,16 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
   });
 
   for (const formatStat of formatStats) {
-    if (formatStat._count.id >= requirements.min_matches) {
+    if (((formatStat._count as any).id) >= requirements.min_matches) {
       const wins = await prisma.matchHistory.count({
         where: {
           playerId,
           tenantId,
-          format: formatStat.format,
+          format: (formatStat as any).format,
           result: 'WIN',
         },
       });
-      const winRate = (wins / formatStat._count.id) * 100;
+      const winRate = (wins / ((formatStat._count as any).id)) * 100;
       if (winRate >= requirements.win_rate) {
         return true;
       }

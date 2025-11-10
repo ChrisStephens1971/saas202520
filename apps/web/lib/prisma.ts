@@ -37,7 +37,8 @@ function createPrismaClient() {
 
   // Add query optimization middleware
   // This will log slow queries (> 100ms) and track performance metrics
-  client.$use(queryOptimizer);
+  // Note: $use is deprecated in Prisma 5+, use $extends instead
+  (client as any).$use(queryOptimizer);
 
   return client;
 }

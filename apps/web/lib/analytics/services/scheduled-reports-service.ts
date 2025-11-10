@@ -528,7 +528,7 @@ export async function updateReportLastRun(reportId: string): Promise<void> {
     throw new Error(`Report ${reportId} not found`);
   }
 
-  const schedule = JSON.parse(report.schedule) as ReportSchedule;
+  const schedule = JSON.parse((report as any).schedule) as ReportSchedule;
   const nextRunAt = calculateNextRunTime(schedule);
 
   await prisma.scheduledReport.update({

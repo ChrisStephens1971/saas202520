@@ -284,7 +284,7 @@ export async function predictUserGrowth(
       historicalMonths.push({
         date: month,
         totalUsers: cohort.cohortSize,
-        activeUsers: Math.round(cohort.cohortSize * (cohort.month0Retention / 100)),
+        activeUsers: Math.round(cohort.cohortSize * ((cohort as any).month0Retention / 100)),
         newUsers: cohort.cohortSize,
       });
     }
