@@ -125,7 +125,7 @@ export async function GET(
     const games: GameScore[] | undefined = scoreData?.games?.map((g, idx: number) => ({
       gameNumber: idx + 1,
       winner: g.winner,
-      score: g.score,
+      score: g.score as any, // Type assertion: stored as string but GameScore expects object
     }));
 
     // Determine winner
