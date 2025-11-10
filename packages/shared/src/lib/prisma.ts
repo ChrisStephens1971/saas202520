@@ -3,6 +3,9 @@
 
 import { PrismaClient } from '@prisma/client';
 
+// Re-export Prisma namespace for type usage
+export { Prisma } from '@prisma/client';
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
