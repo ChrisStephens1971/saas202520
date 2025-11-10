@@ -7,8 +7,9 @@
 
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSocketContext } from '@/contexts/SocketContext';
+import { SocketEvent } from '@/lib/socket/events';
 import type {
   ServerToClientEvents,
   ClientToServerEvents,
@@ -91,10 +92,10 @@ export function useSocket() {
       }
 
       // Type-safe event emission for tournament join
-      socket.emit('tournament:join' as keyof ClientToServerEvents, {
+      socket.emit(SocketEvent.JOIN_TOURNAMENT, {
         tournamentId,
         userId,
-      } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
+      });
 
       console.log(`[useSocket] Joined tournament room: ${tournamentId}`);
     },
@@ -112,10 +113,10 @@ export function useSocket() {
       }
 
       // Type-safe event emission for tournament leave
-      socket.emit('tournament:leave' as keyof ClientToServerEvents, {
+      socket.emit(SocketEvent.LEAVE_TOURNAMENT, {
         tournamentId,
         userId,
-      } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
+      });
 
       console.log(`[useSocket] Left tournament room: ${tournamentId}`);
     },
@@ -268,7 +269,7 @@ export function usePresence(tournamentId: string) {
   useEffect(() => {
     if (socket && isConnected && tournamentId) {
       // Server will emit users:in:tournament event with current users
-      socket.emit('tournament:join' as keyof ClientToServerEvents, { tournamentId } as Parameters<ClientToServerEvents[keyof ClientToServerEvents]>[0]);
+      socket.emit(SocketEvent.JOIN_TOURNAMENT, { tournamentId });
     }
   }, [socket, isConnected, tournamentId]);
 
