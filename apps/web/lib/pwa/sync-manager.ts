@@ -425,7 +425,7 @@ function updateStatusFromQueue(stats: QueueStats): void {
  * Request periodic background sync (if supported)
  */
 export async function requestPeriodicSync(tag: string = 'tournament-sync'): Promise<boolean> {
-  if (!('periodicSync' in self.registration)) {
+  if (!('periodicSync' in (self as any).registration)) {
     console.log('[SyncManager] Periodic Sync not supported');
     return false;
   }
@@ -448,7 +448,7 @@ export async function requestPeriodicSync(tag: string = 'tournament-sync'): Prom
  * Unregister periodic sync
  */
 export async function unregisterPeriodicSync(tag: string = 'tournament-sync'): Promise<void> {
-  if (!('periodicSync' in self.registration)) {
+  if (!('periodicSync' in (self as any).registration)) {
     return;
   }
 

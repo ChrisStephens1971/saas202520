@@ -229,7 +229,7 @@ export async function updateStatisticsAfterMatch(
         take: 1,
       });
 
-      favoriteFormat = formatCounts[0]?.format || favoriteFormat;
+      favoriteFormat = (formatCounts[0] as any)?.format || favoriteFormat;
     }
 
     // Update total prize won
