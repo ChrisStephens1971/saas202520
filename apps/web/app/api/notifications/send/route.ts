@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import webpush from 'web-push';
 import { VAPID_CONFIG } from '@/lib/pwa/vapid-keys';
 
