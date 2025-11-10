@@ -10,6 +10,7 @@
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { useSocket } from '@/hooks/useSocket';
+import { SocketEvent } from '@/lib/socket/events';
 
 interface QueueStats {
   availableCount: number;
@@ -55,12 +56,12 @@ export default function QueueDashboard({ tournamentId }: Props) {
       mutate();
     };
 
-    socket.on('queue:updated', handleQueueUpdate);
-    socket.on('match:assigned', handleMatchAssigned);
+    socket.on(SocketEvent.QUEUE_UPDATED, handleQueueUpdate);
+    socket.on(SocketEvent.MATCH_ASSIGNED, handleMatchAssigned);
 
     return () => {
-      socket.off('queue:updated', handleQueueUpdate);
-      socket.off('match:assigned', handleMatchAssigned);
+      socket.off(SocketEvent.QUEUE_UPDATED, handleQueueUpdate);
+      socket.off(SocketEvent.MATCH_ASSIGNED, handleMatchAssigned);
     };
   }, [socket, isConnected, mutate]);
 

@@ -10,6 +10,7 @@
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import { useSocket } from '@/hooks/useSocket';
+import { SocketEvent } from '@/lib/socket/events';
 
 interface ChipStanding {
   playerId: string;
@@ -71,14 +72,14 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
       mutate();
     };
 
-    socket.on('standings:updated', handleStandingsUpdate);
-    socket.on('finals:applied', handleFinalsApplied);
-    socket.on('chips:adjusted', handleChipsAdjusted);
+    socket.on(SocketEvent.STANDINGS_UPDATED, handleStandingsUpdate);
+    socket.on(SocketEvent.FINALS_APPLIED, handleFinalsApplied);
+    socket.on(SocketEvent.CHIPS_ADJUSTED, handleChipsAdjusted);
 
     return () => {
-      socket.off('standings:updated', handleStandingsUpdate);
-      socket.off('finals:applied', handleFinalsApplied);
-      socket.off('chips:adjusted', handleChipsAdjusted);
+      socket.off(SocketEvent.STANDINGS_UPDATED, handleStandingsUpdate);
+      socket.off(SocketEvent.FINALS_APPLIED, handleFinalsApplied);
+      socket.off(SocketEvent.CHIPS_ADJUSTED, handleChipsAdjusted);
     };
   }, [socket, isConnected, mutate]);
 
