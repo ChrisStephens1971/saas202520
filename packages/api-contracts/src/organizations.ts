@@ -56,7 +56,7 @@ export const OrganizationMemberSchema = z.object({
   id: z.string().cuid(),
   orgId: z.string().cuid(),
   userId: z.string().cuid(),
-  role: OrganizationRole,
+  role: OrganizationRoleEnum,
   createdAt: z.string().datetime(),
 });
 
@@ -68,7 +68,7 @@ export type OrganizationMember = z.infer<typeof OrganizationMemberSchema>;
  * Used when returning organizations with the current user's role.
  */
 export const OrganizationWithRoleSchema = OrganizationSchema.extend({
-  userRole: OrganizationRole,
+  userRole: OrganizationRoleEnum,
   memberCount: z.number().int().min(0).optional(),
 });
 
@@ -148,7 +148,7 @@ export type ListOrganizationsQuery = z.infer<typeof ListOrganizationsQuerySchema
  */
 export const AddOrganizationMemberRequestSchema = z.object({
   userId: z.string().cuid(),
-  role: OrganizationRole,
+  role: OrganizationRoleEnum,
 });
 
 export type AddOrganizationMemberRequest = z.infer<typeof AddOrganizationMemberRequestSchema>;
@@ -160,7 +160,7 @@ export type AddOrganizationMemberRequest = z.infer<typeof AddOrganizationMemberR
  * Only owners can update member roles.
  */
 export const UpdateOrganizationMemberRequestSchema = z.object({
-  role: OrganizationRole,
+  role: OrganizationRoleEnum,
 });
 
 export type UpdateOrganizationMemberRequest = z.infer<typeof UpdateOrganizationMemberRequestSchema>;

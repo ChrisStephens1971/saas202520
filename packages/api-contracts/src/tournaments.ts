@@ -98,13 +98,13 @@ export const TournamentSchema = z.object({
     .max(100)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens'),
   description: z.string().max(2000).nullable(),
-  status: TournamentStatus,
-  format: TournamentFormat,
+  status: TournamentStatusEnum,
+  format: TournamentFormatEnum,
 
   // Simplified config for MVP (v1)
   // Later versions will use sportConfigId + sportConfigVersion
-  sport: SportType,
-  gameType: GameType,
+  sport: SportTypeEnum,
+  gameType: GameTypeEnum,
   raceToWins: z.number().int().min(1).max(21),
   maxPlayers: z.number().int().min(8).max(128).nullable(),
 
@@ -155,11 +155,11 @@ export const CreateTournamentRequestSchema = z.object({
       message: 'Slug must be lowercase alphanumeric with hyphens'
     }),
   description: z.string().max(2000).optional(),
-  format: TournamentFormat,
+  format: TournamentFormatEnum,
 
   // Game configuration
-  sport: SportType.default('pool'),
-  gameType: GameType,
+  sport: SportTypeEnum.default('pool'),
+  gameType: GameTypeEnum,
   raceToWins: z.number().int().min(1, 'Race to wins must be at least 1').max(21, 'Race to wins cannot exceed 21'),
   maxPlayers: z.number().int().min(8).max(128).optional(),
 
@@ -185,11 +185,11 @@ export const UpdateTournamentRequestSchema = z.object({
     .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
     .optional(),
   description: z.string().max(2000).nullable().optional(),
-  status: TournamentStatus.optional(),
+  status: TournamentStatusEnum.optional(),
 
   // Game configuration (restricted after tournament starts)
-  format: TournamentFormat.optional(),
-  gameType: GameType.optional(),
+  format: TournamentFormatEnum.optional(),
+  gameType: GameTypeEnum.optional(),
   raceToWins: z.number().int().min(1).max(21).optional(),
   maxPlayers: z.number().int().min(8).max(128).nullable().optional(),
 
@@ -219,8 +219,8 @@ export type GetTournamentParams = z.infer<typeof GetTournamentParamsSchema>;
 export const ListTournamentsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
-  status: TournamentStatus.optional(), // Filter by status
-  format: TournamentFormat.optional(), // Filter by format
+  status: TournamentStatusEnum.optional(), // Filter by status
+  format: TournamentFormatEnum.optional(), // Filter by format
 });
 
 export type ListTournamentsQuery = z.infer<typeof ListTournamentsQuerySchema>;
