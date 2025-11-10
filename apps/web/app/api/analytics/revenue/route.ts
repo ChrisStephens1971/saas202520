@@ -165,6 +165,11 @@ export async function GET(request: NextRequest) {
     if (startDateParam && endDateParam) {
       periodStart = new Date(startDateParam);
       periodEnd = new Date(endDateParam);
+
+      // Calculate previous period based on the custom date range duration
+      const periodDuration = periodEnd.getTime() - periodStart.getTime();
+      previousEnd = new Date(periodStart);
+      previousStart = new Date(periodStart.getTime() - periodDuration);
     } else {
       // Calculate period based on type
       switch (periodType) {
