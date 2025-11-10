@@ -21,7 +21,7 @@ import { MatchQueue } from '@/components/console/MatchQueue';
 import { QuickActions, FloatingActionButton } from '@/components/console/QuickActions';
 import { RoomViewFiltersComponent } from '@/components/console/RoomViewFilters';
 import { useRoomView } from '@/hooks/useRoomView';
-import type { QuickAction, TableWithMatch, QueuedMatch } from '@/types/room-view';
+import type { QuickAction, QuickActionType, TableWithMatch, QueuedMatch } from '@/types/room-view';
 
 interface RoomViewPageProps {
   params: Promise<{
@@ -54,7 +54,7 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
   // Generate quick actions based on current state
   const quickActions: QuickAction[] = data ? [
     {
-      type: 'assign_to_table',
+      type: QuickActionType.ASSIGN_TO_TABLE,
       matchId: filteredMatches[0]?.match.id || '',
       label: 'Assign Next',
       icon: '🎯',
@@ -62,7 +62,7 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
       disabledReason: filteredMatches.length === 0 ? 'No matches in queue' : 'No tables available',
     },
     {
-      type: 'start_match',
+      type: QuickActionType.START_MATCH,
       matchId: '',
       label: 'Start Match',
       icon: '▶️',
@@ -70,7 +70,7 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
       disabledReason: 'All tables in use',
     },
     {
-      type: 'complete_match',
+      type: QuickActionType.COMPLETE_MATCH,
       matchId: '',
       label: 'Complete Match',
       icon: '✅',
@@ -78,7 +78,7 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
       disabledReason: 'No active matches',
     },
     {
-      type: 'update_score',
+      type: QuickActionType.UPDATE_SCORE,
       matchId: '',
       label: 'Update Score',
       icon: '📊',
@@ -90,17 +90,17 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
   const handleQuickAction = async (action: QuickAction) => {
     try {
       switch (action.type) {
-        case 'assign_to_table':
+        case QuickActionType.ASSIGN_TO_TABLE:
           if (action.matchId) {
             await assignMatch(action.matchId, action.tableId);
           }
           break;
-        case 'start_match':
+        case QuickActionType.START_MATCH:
           if (action.matchId) {
             await startMatch(action.matchId);
           }
           break;
-        case 'complete_match':
+        case QuickActionType.COMPLETE_MATCH:
           if (action.matchId) {
             await completeMatch(action.matchId);
           }
