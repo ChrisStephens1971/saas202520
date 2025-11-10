@@ -51,6 +51,14 @@ export enum SocketEvent {
 
   // Admin events
   ADMIN_BROADCAST = 'admin:broadcast',
+
+  // Additional events (chip format specific)
+  TOURNAMENT_CREATED = 'tournament:created',
+  STANDINGS_UPDATED = 'standings:updated',
+  FINALS_APPLIED = 'finals:applied',
+  CHIPS_ADJUSTED = 'chips:adjusted',
+  QUEUE_UPDATED = 'queue:updated',
+  MATCH_ASSIGNED = 'match:assigned',
 }
 
 // Event payload types
@@ -207,15 +215,71 @@ export interface AdminBroadcastPayload {
   priority: 'low' | 'medium' | 'high';
 }
 
+export interface TournamentCreatedPayload {
+  tournamentId: string;
+  name: string;
+  format: string;
+  createdBy: string;
+  timestamp: string;
+}
+
+export interface StandingsUpdatedPayload {
+  tournamentId: string;
+  standings: Array<{
+    playerId: string;
+    playerName: string;
+    chips: number;
+    rank: number;
+  }>;
+  timestamp: string;
+}
+
+export interface FinalsAppliedPayload {
+  tournamentId: string;
+  finalists: string[];
+  timestamp: string;
+}
+
+export interface ChipsAdjustedPayload {
+  tournamentId: string;
+  playerId: string;
+  previousChips: number;
+  newChips: number;
+  adjustedBy: string;
+  timestamp: string;
+}
+
+export interface QueueUpdatedPayload {
+  tournamentId: string;
+  queue: Array<{
+    playerId: string;
+    playerName: string;
+    position: number;
+  }>;
+  timestamp: string;
+}
+
+export interface MatchAssignedPayload {
+  tournamentId: string;
+  matchId: string;
+  tableId: string;
+  player1Id: string;
+  player2Id: string;
+  timestamp: string;
+}
+
 // Server-to-client events map
 export interface ServerToClientEvents {
   [SocketEvent.TOURNAMENT_UPDATED]: (payload: TournamentUpdatedPayload) => void;
   [SocketEvent.TOURNAMENT_STATUS_CHANGED]: (payload: TournamentStatusChangedPayload) => void;
+  [SocketEvent.TOURNAMENT_CREATED]: (payload: TournamentCreatedPayload) => void;
   [SocketEvent.MATCH_CREATED]: (payload: MatchCreatedPayload) => void;
   [SocketEvent.MATCH_STARTED]: (payload: MatchStartedPayload) => void;
   [SocketEvent.MATCH_UPDATED]: (payload: MatchUpdatedPayload) => void;
   [SocketEvent.MATCH_COMPLETED]: (payload: MatchCompletedPayload) => void;
+  [SocketEvent.MATCH_ASSIGNED]: (payload: MatchAssignedPayload) => void;
   [SocketEvent.CHIPS_AWARDED]: (payload: ChipsAwardedPayload) => void;
+  [SocketEvent.CHIPS_ADJUSTED]: (payload: ChipsAdjustedPayload) => void;
   [SocketEvent.PLAYER_JOINED]: (payload: PlayerJoinedPayload) => void;
   [SocketEvent.PLAYER_ELIMINATED]: (payload: PlayerEliminatedPayload) => void;
   [SocketEvent.USER_ONLINE]: (payload: UserPresencePayload) => void;
@@ -223,6 +287,9 @@ export interface ServerToClientEvents {
   [SocketEvent.USERS_IN_TOURNAMENT]: (payload: UsersInTournamentPayload) => void;
   [SocketEvent.NOTIFICATION]: (payload: NotificationPayload) => void;
   [SocketEvent.ADMIN_BROADCAST]: (payload: AdminBroadcastPayload) => void;
+  [SocketEvent.STANDINGS_UPDATED]: (payload: StandingsUpdatedPayload) => void;
+  [SocketEvent.FINALS_APPLIED]: (payload: FinalsAppliedPayload) => void;
+  [SocketEvent.QUEUE_UPDATED]: (payload: QueueUpdatedPayload) => void;
 }
 
 // Client-to-server events map
