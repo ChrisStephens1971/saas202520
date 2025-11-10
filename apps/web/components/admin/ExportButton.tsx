@@ -151,7 +151,7 @@ export function ExportButton({
       // Add table
       if (data && data.length > 0) {
         const headers = Object.keys(data[0]);
-        const rows = data.map(row => headers.map(header => row[header]));
+        const rows = data.map(row => headers.map(header => row[header])) as any;
 
         // Use properly imported autoTable
         autoTable.default(doc, {
