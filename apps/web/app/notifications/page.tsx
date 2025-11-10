@@ -36,7 +36,7 @@ export default function NotificationsPage() {
 
     async function fetchNotifications() {
       try {
-        const orgId = session.user.orgId;
+        const orgId = session!.user.orgId;
         const response = await fetch(
           `/api/notifications?orgId=${orgId}&type=in_app&limit=50`
         );
