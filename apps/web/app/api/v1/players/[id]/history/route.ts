@@ -115,7 +115,7 @@ export async function GET(
 
     // Build where clause
     const where: Prisma.TournamentWhereInput = {
-      tournamentId: {
+      id: {
         in: await prisma.player.findMany({
           where: { id: playerId },
           select: { tournamentId: true },
