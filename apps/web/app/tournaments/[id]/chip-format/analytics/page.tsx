@@ -326,7 +326,7 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={renderCustomizedLabel}
+                  label={renderCustomizedLabel as any}
                   outerRadius={120}
                   fill="#8884d8"
                   dataKey="value"
