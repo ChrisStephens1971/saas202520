@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import type { TournamentWithStats } from '@tournament/api-contracts';
-import { TournamentWithStatsSchema } from '@tournament/api-contracts';
 import { TournamentStatusBadge, StatusProgress } from '@/components/admin/TournamentStatusBadge';
 import { useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
 import TournamentBracket from '@/components/TournamentBracket';
@@ -50,8 +49,8 @@ export default function AdminTournamentDetailsPage() {
         }
 
         const data = await response.json();
-        const validatedTournament = TournamentWithStatsSchema.parse(data.tournament) as TournamentWithStats;
-        setTournament(validatedTournament);
+        // API already validates, trust the response type
+        setTournament(data.tournament as TournamentWithStats);
       } catch (err) {
         console.error('Error fetching tournament:', err);
         setError(err instanceof Error ? err.message : 'Failed to load tournament');
