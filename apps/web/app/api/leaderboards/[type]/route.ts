@@ -64,11 +64,13 @@ async function getTenantId(): Promise<string> {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { type: string } }
+  { params }: { params: Promise<{ type: string }> }
 ) {
   try {
+    const { type } = await params;
+
     // Validate leaderboard type
-    const typeValidation = LeaderboardTypeSchema.safeParse(params.type);
+    const typeValidation = LeaderboardTypeSchema.safeParse(type);
     if (!typeValidation.success) {
       return NextResponse.json(
         {
@@ -103,14 +105,14 @@ export async function GET(
     const tenantId = await getTenantId();
 
     // Map URL type to internal type
-    const leaderboardType = mapLeaderboardType(params.type);
+    const leaderboardType = mapLeaderboardType(type);
 
     // Fetch leaderboard data from service
     const leaderboardResult = await getPlayerLeaderboard(tenantId, leaderboardType, limit);
 
     // Format response
     return NextResponse.json({
-      type: params.type,
+      type,
       timeframe,
       leaderboard: {
         entries: leaderboardResult.entries.map((entry) => ({
