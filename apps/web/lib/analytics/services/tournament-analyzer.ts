@@ -22,7 +22,7 @@ import {
   format,
   getDay,
 } from 'date-fns';
-import * as CacheManager from '../cache-manager';
+import * as CacheManager from './cache-manager';
 
 const prisma = new PrismaClient();
 

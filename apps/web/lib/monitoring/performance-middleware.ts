@@ -101,10 +101,8 @@ export function endRequestTracking(
   metrics.duration = duration;
   metrics.statusCode = statusCode;
 
-  // Only track memory in Node.js runtime (not available in edge runtime)
-  if (typeof process !== 'undefined' && process.memoryUsage) {
-    metrics.memoryUsed = process.memoryUsage().heapUsed;
-  }
+  // Memory tracking removed - not available in Edge Runtime
+  // Memory metrics would need to be tracked server-side in API routes
 
   if (error) {
     metrics.error = error.message;
