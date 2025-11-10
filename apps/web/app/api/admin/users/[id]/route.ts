@@ -111,18 +111,18 @@ export async function GET(
           emailVerified: user.emailVerified?.toISOString() ?? null,
           createdAt: user.createdAt.toISOString(),
           updatedAt: user.updatedAt.toISOString(),
-          organizations: user.organizationMembers.map((m) => ({
+          organizations: (user as any).organizationMembers.map((m: any) => ({
             id: m.organization.id,
             name: m.organization.name,
             slug: m.organization.slug,
             role: m.role,
             joinedAt: m.createdAt.toISOString(),
           })),
-          accounts: user.accounts.map((a) => ({
+          accounts: (user as any).accounts.map((a: any) => ({
             provider: a.provider,
             type: a.type,
           })),
-          recentSessions: user.sessions.map((s) => ({
+          recentSessions: (user as any).sessions.map((s: any) => ({
             id: s.id,
             expires: s.expires.toISOString(),
           })),

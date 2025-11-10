@@ -134,9 +134,9 @@ export async function GET(request: NextRequest) {
       startedAt: tournament.startedAt?.toISOString() ?? null,
       completedAt: tournament.completedAt?.toISOString() ?? null,
       createdBy: tournament.createdBy,
-      playerCount: tournament._count.players,
-      matchCount: tournament._count.matches,
-      completedMatchCount: tournament.matches.length,
+      playerCount: (tournament as any)._count.players,
+      matchCount: (tournament as any)._count.matches,
+      completedMatchCount: (tournament as any).matches.length,
     }));
 
     const response: ListTournamentsResponse = {
