@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import * as ScheduledReportsService from '@/lib/analytics/services/scheduled-reports-service';
 
 /**
@@ -17,7 +17,7 @@ import * as ScheduledReportsService from '@/lib/analytics/services/scheduled-rep
 export async function GET(request: NextRequest) {
   try {
     // Authenticate user
-    const session = await getServerSession();
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Authenticate user
-    const session = await getServerSession();
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

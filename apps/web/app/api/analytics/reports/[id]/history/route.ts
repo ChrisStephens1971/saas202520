@@ -6,7 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@/auth';
 import * as ScheduledReportsService from '@/lib/analytics/services/scheduled-reports-service';
 
 /**
@@ -19,7 +19,7 @@ export async function GET(
 ) {
   try {
     // Authenticate user
-    const session = await getServerSession();
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
