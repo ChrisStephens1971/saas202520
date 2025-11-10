@@ -186,7 +186,6 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
               </div>
             </div>
 
-            {/* User Agent */}
             {log.userAgent ? (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
