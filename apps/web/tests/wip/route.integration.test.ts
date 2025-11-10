@@ -8,7 +8,7 @@
  * simulate real HTTP requests through the full Next.js stack.
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 describe('Health Check Endpoint - Integration Tests', () => {
   describe('Public Access (No Authentication)', () => {

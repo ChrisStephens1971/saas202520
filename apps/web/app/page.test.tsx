@@ -2,7 +2,7 @@
  * Tests for Landing Page Hero Section
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 describe('Landing Page Hero', () => {
   it('should have correct heading text', () => {

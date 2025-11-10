@@ -5,7 +5,7 @@
  * These are unit tests for middleware logic using a simplified test implementation.
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 // Simplified middleware logic for testing
 type AuthConfig = {

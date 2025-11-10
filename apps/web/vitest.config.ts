@@ -6,7 +6,7 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     setupFiles: ['./tests/setup.ts'],
-    include: ['./tests/**/*.test.{ts,tsx}', './app/**/*.test.{ts,tsx}'],
+    include: ['./tests/**/*.test.{ts,tsx}', './app/**/*.test.{ts,tsx}', './lib/**/*.test.{ts,tsx}'],
     exclude: [
       '**/node_modules/**',
       './tests/integration/**', // Skip integration tests that need real DB

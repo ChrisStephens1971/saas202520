@@ -5,20 +5,20 @@
  * Tests GET /api/tournaments/:id, PUT /api/tournaments/:id, DELETE /api/tournaments/:id endpoints.
  */
 
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock dependencies
-jest.mock('@/auth');
-jest.mock('next/headers');
-jest.mock('@tournament/shared');
+vi.mock('@/auth');
+vi.mock('next/headers');
+vi.mock('@tournament/shared');
 
-const _mockAuth = require('@/auth').auth as jest.Mock;
-const _mockHeaders = require('next/headers').headers as jest.Mock;
+const _mockAuth = require('@/auth').auth as vi.Mock;
+const _mockHeaders = require('next/headers').headers as vi.Mock;
 const _mockPrisma = require('@tournament/shared').prisma;
 
 describe('GET /api/tournaments/:id', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should require authentication', () => {
@@ -56,7 +56,7 @@ describe('GET /api/tournaments/:id', () => {
 
 describe('PUT /api/tournaments/:id', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should require authentication', () => {
@@ -139,7 +139,7 @@ describe('PUT /api/tournaments/:id', () => {
 
 describe('DELETE /api/tournaments/:id', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should require authentication', () => {

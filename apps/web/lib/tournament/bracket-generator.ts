@@ -319,7 +319,7 @@ export function generateDoubleElimination(
   const totalRounds = winnersRounds + losersRounds + 1; // +1 for grand finals
 
   const matches: BracketMatch[] = [];
-  let matchCounter = 0;
+  const matchCounter = 0;
 
   // ========== WINNERS BRACKET ==========
   const winnersMatches: BracketMatch[][] = [];

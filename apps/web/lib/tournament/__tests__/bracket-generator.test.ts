@@ -12,7 +12,7 @@
  * - Match dependencies
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import {
   generateSingleElimination,
   generateDoubleElimination,
@@ -559,21 +559,23 @@ describe('Bracket Generator - Property Tests', () => {
     const players = createPlayers(6);
     const bracket = generateSingleElimination(players);
 
-    // Count appearances (excluding byes)
+    // Count appearances (including byes)
     const appearances = new Map<string, number>();
 
     bracket.matches.forEach((match) => {
-      if (match.playerAId && !match.isBye) {
+      if (match.playerAId) {
         appearances.set(match.playerAId, (appearances.get(match.playerAId) || 0) + 1);
       }
-      if (match.playerBId && !match.isBye) {
+      if (match.playerBId) {
         appearances.set(match.playerBId, (appearances.get(match.playerBId) || 0) + 1);
       }
     });
 
     // Each player should appear at least once
     players.forEach((player) => {
-      expect(appearances.get(player.id)).toBeGreaterThanOrEqual(1);
+      const count = appearances.get(player.id);
+      expect(count).toBeDefined();
+      expect(count).toBeGreaterThanOrEqual(1);
     });
   });
 

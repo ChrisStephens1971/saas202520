@@ -5,18 +5,18 @@
  * Tests for statistics calculations and updates.
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { recalculatePlayerStatistics, updateStatisticsAfterMatch, calculateStreaks } from '../statistics-calculator';
 
 const mockPrisma = {
   matchHistory: {
-    findMany: jest.fn(),
+    findMany: vi.fn(),
   },
   playerStatistics: {
-    findFirst: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    upsert: jest.fn(),
+    findFirst: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    upsert: vi.fn(),
   },
 };
 
@@ -25,7 +25,7 @@ const mockPlayerId = 'player-123';
 
 describe('Statistics Calculator', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('calculateStreaks', () => {

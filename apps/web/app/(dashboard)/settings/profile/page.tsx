@@ -5,8 +5,7 @@
  * Player profile settings with privacy controls and notification preferences.
  */
 
-import getServerSession from 'next-auth';
-import { authOptions } from '@/auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { getPlayerProfile } from '@/lib/player-profiles/services/player-profile-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,12 +16,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Shield, Bell } from 'lucide-react';
 
 export default async function ProfileSettingsPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session?.user) {
     redirect('/auth/signin');
   }
 
-  const tenantId = session.user.organizationId;
+  const tenantId = session.user.orgId;
   const userId = session.user.id;
 
   // Get player profile

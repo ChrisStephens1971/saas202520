@@ -5,7 +5,7 @@
  * Comprehensive tests for player profile service functionality.
  */
 
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   getPlayerProfile,
   updatePlayerProfile,
@@ -19,31 +19,31 @@ import {
 // Mock Prisma Client
 const mockPrismaClient = {
   playerProfile: {
-    findFirst: jest.fn(),
-    findMany: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    upsert: jest.fn(),
-    count: jest.fn(),
+    findFirst: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    upsert: vi.fn(),
+    count: vi.fn(),
   },
   playerStatistics: {
-    findFirst: jest.fn(),
-    findMany: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    count: jest.fn(),
-    groupBy: jest.fn(),
+    findFirst: vi.fn(),
+    findMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    count: vi.fn(),
+    groupBy: vi.fn(),
   },
   playerAchievement: {
-    findMany: jest.fn(),
-    groupBy: jest.fn(),
+    findMany: vi.fn(),
+    groupBy: vi.fn(),
   },
   matchHistory: {
-    findMany: jest.fn(),
-    count: jest.fn(),
+    findMany: vi.fn(),
+    count: vi.fn(),
   },
   tournament: {
-    findUnique: jest.fn(),
+    findUnique: vi.fn(),
   },
 };
 
@@ -93,7 +93,7 @@ const mockStatistics = {
 
 describe('Player Profile Service', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getPlayerProfile', () => {

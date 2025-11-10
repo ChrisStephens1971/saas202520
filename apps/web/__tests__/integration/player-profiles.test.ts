@@ -5,7 +5,7 @@
  * End-to-end tests for complete player journey.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 
 describe('Player Profiles Integration', () => {
   const testTenantId = 'test-tenant-integration';

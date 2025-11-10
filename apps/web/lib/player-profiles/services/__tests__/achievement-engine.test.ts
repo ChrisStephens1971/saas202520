@@ -5,27 +5,27 @@
  * Tests for all 20 achievement types and unlock logic.
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { checkAchievements, unlockAchievement, getAchievementProgress } from '../achievement-engine';
 
 // Mock Prisma
 const mockPrisma = {
   achievementDefinition: {
-    findMany: jest.fn(),
-    findUnique: jest.fn(),
+    findMany: vi.fn(),
+    findUnique: vi.fn(),
   },
   playerAchievement: {
-    findMany: jest.fn(),
-    findFirst: jest.fn(),
-    create: jest.fn(),
+    findMany: vi.fn(),
+    findFirst: vi.fn(),
+    create: vi.fn(),
   },
   playerStatistics: {
-    findFirst: jest.fn(),
+    findFirst: vi.fn(),
   },
   matchHistory: {
-    findMany: jest.fn(),
-    count: jest.fn(),
-    groupBy: jest.fn(),
+    findMany: vi.fn(),
+    count: vi.fn(),
+    groupBy: vi.fn(),
   },
 };
 
@@ -58,7 +58,7 @@ const achievementDefs = [
 
 describe('Achievement Engine', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('checkAchievements', () => {

@@ -5,19 +5,19 @@
  * Tests the organization selector UI, creation flow, and selection logic.
  */
 
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock next-auth
-jest.mock('next-auth/react');
+vi.mock('next-auth/react');
 // Mock next/navigation
-jest.mock('next/navigation');
+vi.mock('next/navigation');
 
-const mockUseSession = require('next-auth/react').useSession as jest.Mock;
-const _mockUseRouter = require('next/navigation').useRouter as jest.Mock;
+const mockUseSession = require('next-auth/react').useSession as vi.Mock;
+const _mockUseRouter = require('next/navigation').useRouter as vi.Mock;
 
 describe('Select Organization Page', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Component Rendering', () => {
@@ -206,7 +206,7 @@ describe('Select Organization Page', () => {
     });
 
     it('should call update function with correct parameters', () => {
-      const mockUpdate = jest.fn();
+      const mockUpdate = vi.fn();
       mockUseSession.mockReturnValue({
         data: { user: { id: 'user123' } },
         update: mockUpdate,
