@@ -88,7 +88,9 @@ export function LiveLeaderboard({
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) => {
-          if (player.id === payload.playerId) {
+          // Find award for this player in the awards array
+          const award = payload.awards.find((a) => a.playerId === player.id);
+          if (award) {
             setRecentlyUpdated((set) => new Set(set).add(player.id));
             setTimeout(() => {
               setRecentlyUpdated((set) => {
@@ -100,7 +102,7 @@ export function LiveLeaderboard({
 
             return {
               ...player,
-              totalChips: payload.newTotal,
+              totalChips: award.totalChips,
               lastUpdate: new Date().toISOString(),
             };
           }
@@ -115,25 +117,20 @@ export function LiveLeaderboard({
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) => {
-          // Update player 1
-          if (payload.player1 && player.id === payload.player1.playerId) {
+          // Update winner
+          if (player.id === payload.winner.id) {
             return {
               ...player,
               matchesPlayed: player.matchesPlayed + 1,
-              matchesWon: payload.player1.isWinner
-                ? player.matchesWon + 1
-                : player.matchesWon,
+              matchesWon: player.matchesWon + 1,
               lastUpdate: new Date().toISOString(),
             };
           }
-          // Update player 2
-          if (payload.player2 && player.id === payload.player2.playerId) {
+          // Update loser
+          if (player.id === payload.loser.id) {
             return {
               ...player,
               matchesPlayed: player.matchesPlayed + 1,
-              matchesWon: payload.player2.isWinner
-                ? player.matchesWon + 1
-                : player.matchesWon,
               lastUpdate: new Date().toISOString(),
             };
           }
