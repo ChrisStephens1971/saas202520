@@ -68,7 +68,7 @@ export default function AdminTournamentDetailsPage() {
   useSocketEvent(SocketEvent.TOURNAMENT_UPDATED, (payload: TournamentUpdatedPayload) => {
     if (payload.tournamentId === tournamentId) {
       setTournament((prev) =>
-        prev ? { ...prev, ...payload.changes } : prev
+        prev ? { ...prev, ...(payload.changes as any) } : prev
       );
     }
   });
