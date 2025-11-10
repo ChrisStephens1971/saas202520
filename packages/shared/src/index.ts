@@ -7,6 +7,7 @@ export * from './types/match';
 export * from './types/organization';
 export * from './types/scoring';
 export * from './types/payment';
+export * from './types/user';
 export * from './constants';
 export * from './lib/prisma';
 export * from './lib/logger';
