@@ -15,6 +15,8 @@ import { TournamentWithStatsSchema } from '@tournament/api-contracts';
 import { TournamentStatusBadge, StatusProgress } from '@/components/admin/TournamentStatusBadge';
 import { useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
 import TournamentBracket from '@/components/TournamentBracket';
+import { SocketEvent } from '@/lib/socket/events';
+import type { TournamentUpdatedPayload } from '@/lib/socket/events';
 
 export default function AdminTournamentDetailsPage() {
   const router = useRouter();
@@ -48,7 +50,7 @@ export default function AdminTournamentDetailsPage() {
         }
 
         const data = await response.json();
-        const validatedTournament = TournamentWithStatsSchema.parse(data.tournament);
+        const validatedTournament = TournamentWithStatsSchema.parse(data.tournament) as TournamentWithStats;
         setTournament(validatedTournament);
       } catch (err) {
         console.error('Error fetching tournament:', err);
@@ -64,10 +66,10 @@ export default function AdminTournamentDetailsPage() {
   }, [tournamentId]);
 
   // Real-time updates
-  useSocketEvent('tournament:updated', (payload) => {
+  useSocketEvent(SocketEvent.TOURNAMENT_UPDATED, (payload: TournamentUpdatedPayload) => {
     if (payload.tournamentId === tournamentId) {
       setTournament((prev) =>
-        prev ? { ...prev, ...payload.updates } : prev
+        prev ? { ...prev, ...payload.changes } : prev
       );
     }
   });

@@ -20,11 +20,9 @@ import {
   createTable,
   createTablesBulk,
   getAllTables,
-  getAvailableTables,
 } from '@/lib/tournament/table-manager';
 import type {
   TableListResponse,
-  TableAvailabilityResponse,
 } from '@/lib/tournament/types';
 
 // ============================================================================

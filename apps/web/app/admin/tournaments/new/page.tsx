@@ -127,7 +127,6 @@ export default function AdminNewTournamentPage() {
       }
 
       const result = await response.json();
-      console.log('Tournament created:', result);
 
       // Navigate to tournament details
       router.push(`/admin/tournaments/${result.tournament.id}`);

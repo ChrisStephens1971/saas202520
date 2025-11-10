@@ -32,8 +32,6 @@ interface RoomViewPageProps {
 export default function RoomViewPage({ params }: RoomViewPageProps) {
   const { tournamentId } = use(params);
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedTable, setSelectedTable] = useState<TableWithMatch | null>(null);
-  const [selectedMatch, setSelectedMatch] = useState<QueuedMatch | null>(null);
 
   const {
     data,
@@ -108,20 +106,19 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
           }
           break;
         default:
-          console.log('Action not yet implemented:', action.type);
+          // Action not yet implemented
+          break;
       }
     } catch (err) {
       console.error('Error performing action:', err);
     }
   };
 
-  const handleTableClick = (table: TableWithMatch) => {
-    setSelectedTable(table);
+  const handleTableClick = (_table: TableWithMatch) => {
     // TODO: Open table details modal
   };
 
-  const handleMatchClick = (match: QueuedMatch) => {
-    setSelectedMatch(match);
+  const handleMatchClick = (_match: QueuedMatch) => {
     // TODO: Open match details modal
   };
 

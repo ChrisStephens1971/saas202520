@@ -48,12 +48,10 @@ export default function QueueDashboard({ tournamentId }: Props) {
     if (!socket || !isConnected) return;
 
     const handleQueueUpdate = () => {
-      console.log('[QueueDashboard] Received queue:updated event');
       mutate();
     };
 
     const handleMatchAssigned = () => {
-      console.log('[QueueDashboard] Received match:assigned event');
       mutate();
     };
 

@@ -34,11 +34,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log('Push subscription removed:', {
-      userId: session.user.id,
-      endpoint: subscription.endpoint.substring(0, 50) + '...',
-    });
-
     return NextResponse.json({
       success: true,
       message: 'Successfully unsubscribed from push notifications',

@@ -101,7 +101,7 @@ async function getAdminMetrics(orgId: string) {
     prisma.match.count({
       where: {
         tournament: { orgId },
-        status: 'in_progress',
+        state: 'active',
       },
     }),
     prisma.player.count({

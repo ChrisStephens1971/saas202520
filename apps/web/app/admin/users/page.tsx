@@ -47,9 +47,9 @@ export default function UsersPage() {
     router.push(`/admin/users/${userId}/edit`);
   };
 
-  const handleChangeRole = async (userId: string) => {
+  const handleChangeRole = async (_userId: string) => {
     // TODO: Implement role change modal
-    console.log('Change role for user:', userId);
+    // Role change functionality to be implemented
   };
 
   const openModerationModal = (

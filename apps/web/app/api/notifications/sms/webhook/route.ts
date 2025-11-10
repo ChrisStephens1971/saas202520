@@ -27,15 +27,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`SMS received from ${from}: ${body}`);
-
     // Find player by phone number
     const player = await prisma.player.findFirst({
       where: { phone: from },
     });
 
     if (!player) {
-      console.log(`No player found with phone number: ${from}`);
+      console.warn(`No player found with phone number: ${from}`);
       return new NextResponse(
         '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
         {
@@ -55,8 +53,6 @@ export async function POST(request: NextRequest) {
     ) {
       await handleSMSOptOut(player.id);
 
-      console.log(`Player ${player.id} opted out of SMS notifications`);
-
       // Send confirmation response
       return new NextResponse(
         `<?xml version="1.0" encoding="UTF-8"?>
@@ -72,8 +68,6 @@ export async function POST(request: NextRequest) {
     // Handle START command (opt-in)
     if (body === 'START' || body === 'YES' || body === 'UNSTOP') {
       await handleSMSOptIn(player.id);
-
-      console.log(`Player ${player.id} opted in to SMS notifications`);
 
       // Send confirmation response
       return new NextResponse(

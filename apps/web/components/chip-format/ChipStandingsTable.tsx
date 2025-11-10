@@ -60,17 +60,14 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
     if (!socket || !isConnected) return;
 
     const handleStandingsUpdate = () => {
-      console.log('[ChipStandingsTable] Received standings:updated event');
       mutate();
     };
 
     const handleFinalsApplied = () => {
-      console.log('[ChipStandingsTable] Received finals:applied event');
       mutate();
     };
 
     const handleChipsAdjusted = () => {
-      console.log('[ChipStandingsTable] Received chips:adjusted event');
       mutate();
     };
 

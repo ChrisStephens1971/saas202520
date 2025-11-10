@@ -42,7 +42,7 @@ export default function AdminTournamentEditPage() {
         }
 
         const data = await response.json();
-        setTournament(data.tournament);
+        setTournament(data.tournament as TournamentWithStats);
       } catch (err) {
         console.error('Error fetching tournament:', err);
         setError(err instanceof Error ? err.message : 'Failed to load tournament');
@@ -75,8 +75,7 @@ export default function AdminTournamentEditPage() {
         throw new Error(errorData?.error || 'Failed to update tournament');
       }
 
-      const result = await response.json();
-      console.log('Tournament updated:', result);
+      await response.json();
 
       // Navigate back to details page
       router.push(`/admin/tournaments/${tournamentId}`);

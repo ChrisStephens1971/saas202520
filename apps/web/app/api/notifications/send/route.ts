@@ -61,11 +61,6 @@ export async function POST(request: NextRequest) {
 
     await webpush.sendNotification(pushSubscription, payload);
 
-    console.log('Push notification sent:', {
-      userId: session.user.id,
-      title: notification.title,
-    });
-
     return NextResponse.json({
       success: true,
       message: 'Notification sent successfully',

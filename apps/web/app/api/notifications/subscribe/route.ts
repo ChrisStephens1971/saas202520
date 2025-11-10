@@ -47,11 +47,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log('Push subscription saved:', {
-      userId: session.user.id,
-      endpoint: subscription.endpoint.substring(0, 50) + '...',
-    });
-
     return NextResponse.json({
       success: true,
       message: 'Successfully subscribed to push notifications',
