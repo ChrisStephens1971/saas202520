@@ -33,9 +33,11 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Authenticate API request and get tenant context
     const auth = await authenticateApiRequest(request);
 
@@ -49,7 +51,7 @@ export async function GET(
     const tenantId = auth.context.tenantId;
 
     // Validate tournament ID
-    const idValidation = cuidSchema.safeParse(params.id);
+    const idValidation = cuidSchema.safeParse(id);
     if (!idValidation.success) {
       return validationError('Invalid tournament ID format');
     }
@@ -192,7 +194,8 @@ export async function GET(
     return apiSuccess(data, rateLimitHeaders);
 
   } catch (error) {
-    console.error(`[API Error] GET /api/v1/tournaments/${params.id}/bracket:`, error);
+    const { id } = await params;
+    console.error(`[API Error] GET /api/v1/tournaments/${id}/bracket:`, error);
     return internalError(
       'Failed to fetch tournament bracket',
       error instanceof Error ? { message: error.message } : undefined

@@ -19,9 +19,11 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     // Authenticate API request and get tenant context
     const auth = await authenticateApiRequest(request);
 
@@ -33,7 +35,7 @@ export async function POST(
     }
 
     const tenantId = auth.context.tenantId;
-    const webhookId = params.id;
+    const webhookId = id;
 
     // Get webhook details
     const webhook = await getWebhook(webhookId, tenantId);
