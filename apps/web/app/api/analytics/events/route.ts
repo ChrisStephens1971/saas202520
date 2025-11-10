@@ -13,7 +13,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { auth } from '@/auth';
-import { prisma } from '@tournament/shared';
+import { prisma, Prisma } from '@tournament/shared';
 import { checkAPIRateLimit } from '@/lib/rate-limiter';
 
 // ============================================================================
@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
       data: {
         tenantId,
         eventType: body.eventType,
-        eventData: body.eventData,
+        eventData: body.eventData as Prisma.InputJsonValue,
         userId: body.userId || session.user.id,
         sessionId: body.sessionId || null,
         timestamp: new Date(),
