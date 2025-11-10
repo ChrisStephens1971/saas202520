@@ -187,16 +187,16 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
             </div>
 
             {/* User Agent */}
-            {log.userAgent && (
+            {log.userAgent ? (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   User Agent
                 </label>
                 <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg font-mono break-all">
-                  {log.userAgent}
+                  {log.userAgent as string}
                 </div>
               </div>
-            )}
+            ) : null}
 
             {/* Changes (Diff View) */}
             {hasDiff && (
