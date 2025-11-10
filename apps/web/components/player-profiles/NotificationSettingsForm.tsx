@@ -62,7 +62,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="email">Email Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive notifications via email</p>
           </div>
-          <Switch id="email" checked={formData.email} onCheckedChange={(checked) => setFormData({ ...formData, email: checked })} />
+          <Switch id="email" checked={formData.email} onCheckedChange={(checked: boolean) => setFormData({ ...formData, email: checked })} />
         </div>
 
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -70,7 +70,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="sms">SMS Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive text message notifications</p>
           </div>
-          <Switch id="sms" checked={formData.sms} onCheckedChange={(checked) => setFormData({ ...formData, sms: checked })} />
+          <Switch id="sms" checked={formData.sms} onCheckedChange={(checked: boolean) => setFormData({ ...formData, sms: checked })} />
         </div>
 
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -78,7 +78,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="push">Push Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive browser push notifications</p>
           </div>
-          <Switch id="push" checked={formData.push} onCheckedChange={(checked) => setFormData({ ...formData, push: checked })} />
+          <Switch id="push" checked={formData.push} onCheckedChange={(checked: boolean) => setFormData({ ...formData, push: checked })} />
         </div>
       </div>
 
@@ -94,7 +94,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
           <Switch
             id="tournaments"
             checked={formData.categories.tournaments}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked: boolean) =>
               setFormData({
                 ...formData,
                 categories: { ...formData.categories, tournaments: checked },
@@ -111,7 +111,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
           <Switch
             id="matches"
             checked={formData.categories.matches}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked: boolean) =>
               setFormData({
                 ...formData,
                 categories: { ...formData.categories, matches: checked },
@@ -128,7 +128,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
           <Switch
             id="achievements"
             checked={formData.categories.achievements}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked: boolean) =>
               setFormData({
                 ...formData,
                 categories: { ...formData.categories, achievements: checked },
@@ -145,7 +145,7 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
           <Switch
             id="social"
             checked={formData.categories.social}
-            onCheckedChange={(checked) =>
+            onCheckedChange={(checked: boolean) =>
               setFormData({
                 ...formData,
                 categories: { ...formData.categories, social: checked },

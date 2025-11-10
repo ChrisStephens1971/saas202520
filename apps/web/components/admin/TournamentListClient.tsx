@@ -40,7 +40,7 @@ export function TournamentListClient({
   }, [tournaments, statusFilter]);
 
   // Real-time updates via Socket.io
-  useSocketEvent('tournament:created', (payload) => {
+  useSocketEvent('tournament:created', (payload: any) => {
     // Fetch full tournament data
     fetch(`/api/tournaments/${payload.tournamentId}`)
       .then((res) => res.json())
@@ -56,7 +56,7 @@ export function TournamentListClient({
       .catch(console.error);
   });
 
-  useSocketEvent('tournament:updated', (payload) => {
+  useSocketEvent('tournament:updated', (payload: any) => {
     setTournaments((prev) =>
       prev.map((t) =>
         t.id === payload.tournamentId ? { ...t, ...payload.updates } : t
@@ -64,7 +64,7 @@ export function TournamentListClient({
     );
   });
 
-  useSocketEvent('tournament:deleted', (payload) => {
+  useSocketEvent('tournament:deleted', (payload: any) => {
     setTournaments((prev) => prev.filter((t) => t.id !== payload.tournamentId));
   });
 
