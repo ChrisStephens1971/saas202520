@@ -658,5 +658,4 @@ export async function batchCheckAchievements(
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export { unlockAchievement, getAchievementProgress, calculateAchievementProgress, batchCheckAchievements };
+// Functions are already exported above with 'export async function ...'

@@ -677,13 +677,4 @@ export async function searchPlayers(tenantId: string, request: SearchPlayersRequ
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export {
-  // Profile operations
-  updatePlayerProfile,
-  getPlayerStatistics,
-  getPlayerMatchHistory,
-  getHeadToHeadRecord,
-  getPlayerLeaderboard,
-  searchPlayers,
-};
+// Functions are already exported above with 'export async function ...'
