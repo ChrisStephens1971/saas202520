@@ -63,7 +63,7 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
     // Calculate average finish (from match metadata)
     const finishes: number[] = [];
     matches.forEach((match) => {
-      const metadata = match.metadata as any;
+      const metadata = (match as any).metadata as any;
       if (metadata?.finish) {
         finishes.push(metadata.finish);
       }
@@ -73,7 +73,8 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
     // Calculate favorite format
     const formatCounts = matches.reduce(
       (acc, match) => {
-        acc[match.format] = (acc[match.format] || 0) + 1;
+        const format = (match as any).format || 'unknown';
+        acc[format] = (acc[format] || 0) + 1;
         return acc;
       },
       {} as Record<string, number>
@@ -83,12 +84,12 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
 
     // Calculate total prizes won (from match metadata)
     const totalPrizeWon = matches.reduce((sum, match) => {
-      const metadata = match.metadata as any;
+      const metadata = (match as any).metadata as any;
       return sum + (metadata?.prizeWon || 0);
     }, 0);
 
     // Get last played date
-    const lastPlayedAt = matches.length > 0 ? matches[matches.length - 1].matchDate : null;
+    const lastPlayedAt = matches.length > 0 ? ((matches[matches.length - 1] as any).matchDate || matches[matches.length - 1].playedAt) : null;
 
     // Get unique tournaments
     const uniqueTournaments = new Set(matches.map((m) => m.tournamentId)).size;
