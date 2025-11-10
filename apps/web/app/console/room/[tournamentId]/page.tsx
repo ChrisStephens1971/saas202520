@@ -21,7 +21,8 @@ import { MatchQueue } from '@/components/console/MatchQueue';
 import { QuickActions, FloatingActionButton } from '@/components/console/QuickActions';
 import { RoomViewFiltersComponent } from '@/components/console/RoomViewFilters';
 import { useRoomView } from '@/hooks/useRoomView';
-import type { QuickAction, QuickActionType, TableWithMatch, QueuedMatch } from '@/types/room-view';
+import { QuickActionType } from '@/types/room-view';
+import type { QuickAction, TableWithMatch, QueuedMatch } from '@/types/room-view';
 
 interface RoomViewPageProps {
   params: Promise<{
