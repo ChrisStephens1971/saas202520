@@ -15,13 +15,13 @@ export async function GET(
     const { id: tournamentId } = await params;
 
     const [players, matches, chipAwards, tournament] = await Promise.all([
-      prisma.tournamentPlayer.count({ where: { tournamentId } }),
+      (prisma as any).tournamentPlayer.count({ where: { tournamentId } }),
       prisma.match.count({ where: { tournamentId } }),
-      prisma.chipAward.aggregate({
+      (prisma as any).chipAward.aggregate({
         where: { match: { tournamentId } },
         _sum: { chipsEarned: true },
       }),
-      prisma.tournamentPlayer.aggregate({
+      (prisma as any).tournamentPlayer.aggregate({
         where: { tournamentId },
         _avg: { chipCount: true },
         _max: { chipCount: true },

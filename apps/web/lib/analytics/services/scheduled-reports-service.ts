@@ -297,7 +297,7 @@ export async function getReportHistory(
   reportId: string,
   limit: number = 10
 ): Promise<ReportDelivery[]> {
-  const deliveries = await prisma.reportDelivery.findMany({
+  const deliveries = await (prisma as any).reportDelivery.findMany({
     where: { reportId },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -327,7 +327,7 @@ export async function getReportHistory(
 export async function recordReportDelivery(
   delivery: Omit<ReportDelivery, 'id' | 'createdAt'>
 ): Promise<ReportDelivery> {
-  const record = await prisma.reportDelivery.create({
+  const record = await (prisma as any).reportDelivery.create({
     data: {
       reportId: delivery.reportId,
       tenantId: delivery.tenantId,
@@ -372,7 +372,7 @@ export async function updateDeliveryStatus(
     fileSize?: number;
   }
 ): Promise<void> {
-  await prisma.reportDelivery.update({
+  await (prisma as any).reportDelivery.update({
     where: { id: deliveryId },
     data: {
       status,

@@ -342,9 +342,10 @@ export async function GET(request: NextRequest) {
     // 11. Calculate top formats from trends
     const formatCounts = new Map<string, number>();
     trendData.forEach((data) => {
-      if (data.mostPopularFormat) {
-        const count = formatCounts.get(data.mostPopularFormat) || 0;
-        formatCounts.set(data.mostPopularFormat, count + (data.tournamentCount || 0));
+      const dataAny = data as any;
+      if (dataAny.mostPopularFormat) {
+        const count = formatCounts.get(dataAny.mostPopularFormat) || 0;
+        formatCounts.set(dataAny.mostPopularFormat, count + (dataAny.tournamentCount || 0));
       }
     });
 

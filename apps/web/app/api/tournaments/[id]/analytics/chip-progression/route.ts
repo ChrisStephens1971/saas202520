@@ -17,7 +17,7 @@ export async function GET(
     const { id: tournamentId } = await params;
 
     // Get all chip awards for this tournament, ordered by time
-    const chipAwards = await prisma.chipAward.findMany({
+    const chipAwards = await (prisma as any).chipAward.findMany({
       where: {
         match: {
           tournamentId,
