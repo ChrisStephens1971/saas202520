@@ -186,7 +186,7 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
               </div>
             </div>
 
-            {log.userAgent ? (
+            {(log.userAgent ? (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   User Agent
@@ -195,7 +195,7 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
                   {log.userAgent as string}
                 </div>
               </div>
-            ) : null}
+            ) : null) as any}
 
             {/* Changes (Diff View) */}
             {hasDiff && (
@@ -218,7 +218,7 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
                 <button
                   onClick={() => {
                     // Navigate to resource (implement based on resource type)
-                    const resourcePath = getResourcePath(log.resource, log.resourceId);
+                    const resourcePath = getResourcePath(log.resource, log.resourceId!);
                     if (resourcePath) {
                       window.location.href = resourcePath;
                     }
