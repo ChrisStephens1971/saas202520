@@ -532,7 +532,7 @@ async function checkRepeatedOpponent(playerId: string, tenantId: string, require
     },
   });
 
-  return opponentCounts.some((count) => count._count as any).id >= required);
+  return opponentCounts.some((count) => ((count._count as any).id) >= required);
 }
 
 async function checkUniqueVenues(playerId: string, tenantId: string, required: number): Promise<boolean> {
