@@ -15,6 +15,7 @@ import { Worker } from 'bullmq';
 import { createWorker, closeQueue, healthCheck } from './queue';
 import { processAggregationJob } from './aggregation-job';
 import { processExportJob } from './export-job';
+import { processScheduledReportJob } from './scheduled-report-job';
 import {
   initializeScheduler,
   startScheduler,
@@ -97,9 +98,7 @@ async function startWorkers(): Promise<void> {
         return await processExportJob(job as any);
 
       case 'scheduled-report':
-        // TODO: Implement scheduled report processor
-        console.log('[Workers] Scheduled report processor not yet implemented');
-        return { success: true, message: 'Scheduled report not implemented' };
+        return await processScheduledReportJob(job as any);
 
       default:
         throw new Error(`Unknown job type: ${job.name}`);
