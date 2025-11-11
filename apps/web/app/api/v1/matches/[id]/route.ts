@@ -19,6 +19,34 @@ import type { MatchDetails, GameScore } from '@/lib/api/types/public-api.types';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 /**
+ * Parse score field that may be stored as string or object
+ * @param score - Unknown score value from database
+ * @returns GameScore object with playerA and playerB scores
+ */
+function parseScore(score: unknown): GameScore {
+  // If already an object with playerA/playerB, return it
+  if (
+    typeof score === 'object' &&
+    score !== null &&
+    'playerA' in score &&
+    'playerB' in score
+  ) {
+    return score as GameScore;
+  }
+
+  // If string format (e.g., "21-15"), parse it
+  if (typeof score === 'string') {
+    const parts = score.split('-').map(Number);
+    if (parts.length === 2 && !parts.some(isNaN)) {
+      return { playerA: parts[0], playerB: parts[1] };
+    }
+  }
+
+  // Fallback: return zeros
+  return { playerA: 0, playerB: 0 };
+}
+
+/**
  * GET /api/v1/matches/:id
  *
  * Get detailed information about a specific match including:
@@ -125,7 +153,7 @@ export async function GET(
     const games: GameScore[] | undefined = scoreData?.games?.map((g, idx: number) => ({
       gameNumber: idx + 1,
       winner: g.winner,
-      score: g.score as any, // Type assertion: stored as string but GameScore expects object
+      score: parseScore(g.score),
     }));
 
     // Determine winner
