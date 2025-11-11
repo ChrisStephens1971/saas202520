@@ -27,6 +27,7 @@ export default function NotificationBell() {
 
     async function fetchUnreadCount() {
       try {
+        if (!session?.user?.orgId) return;
         const orgId = session.user.orgId;
         const response = await fetch(
           `/api/notifications?orgId=${orgId}&type=in_app&status=sent&limit=100`
