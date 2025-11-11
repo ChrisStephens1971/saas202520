@@ -1129,3 +1129,76 @@ model PushSubscription {
   @@index([userId])
   @@map("push_subscriptions")
 }
+
+// ============================================================================
+// CHIP FORMAT TRACKING (HIGH PRIORITY FIX)
+// ============================================================================
+
+/**
+ * ChipAward
+ * Tracks individual chip awards in chip format tournaments
+ * Note: Player.chipHistory also stores this as JSON for denormalized access
+ */
+model ChipAward {
+  id           String   @id @default(cuid())
+  tournamentId String   @map("tournament_id")
+  matchId      String   @map("match_id")
+  playerId     String   @map("player_id")
+  chipsEarned  Int      @map("chips_earned")
+  timestamp    DateTime @default(now())
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([tournamentId])
+  @@index([matchId])
+  @@index([playerId])
+  @@index([timestamp])
+  @@map("chip_awards")
+}
+
+/**
+ * TournamentPlayer
+ * Alternative player tracking for tournaments (test compatibility)
+ * Note: Main app uses Player model with tournamentId
+ */
+model TournamentPlayer {
+  id           String   @id @default(cuid())
+  tournamentId String   @map("tournament_id")
+  playerId     String   @map("player_id")
+  name         String
+  chipCount    Int      @default(0) @map("chip_count")
+  matchesPlayed Int     @default(0) @map("matches_played")
+  status       String   @default("active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([tournamentId, playerId])
+  @@index([tournamentId])
+  @@index([playerId])
+  @@index([chipCount])
+  @@map("tournament_players")
+}
+
+/**
+ * ReportDelivery
+ * Tracks scheduled analytics report delivery attempts
+ * Sprint 10 Week 1 - Scheduled Reports
+ */
+model ReportDelivery {
+  id           String    @id @default(cuid())
+  reportId     String    @map("report_id")
+  tenantId     String    @map("tenant_id")
+  status       String // pending, processing, sent, failed
+  format       String    @db.VarChar(20) // csv, excel, pdf
+  recipients   String[] // Array of email addresses
+  deliveredAt  DateTime? @map("delivered_at")
+  errorMessage String?   @map("error_message") @db.Text
+  downloadUrl  String?   @map("download_url") @db.VarChar(500)
+  fileSize     Int? // Size in bytes
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([reportId])
+  @@index([tenantId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("report_deliveries")
+}
