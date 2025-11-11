@@ -57,7 +57,7 @@ export async function checkProfileVisibility(
       };
     }
 
-    const privacySettings = profile.privacySettings as any;
+    const privacySettings = profile.privacySettings as PrivacySettings;
     const isOwner = viewerId === playerId;
 
     // Owner can always see everything
@@ -166,7 +166,7 @@ export async function getPlayerSettings(playerId: string, tenantId: string): Pro
       };
     }
 
-    return profile.privacySettings as any;
+    return profile.privacySettings as PrivacySettings;
   } catch (error) {
     console.error('[getPlayerSettings] Error:', error);
     throw new PlayerProfileError('Failed to get player settings', 'GET_SETTINGS_ERROR');
@@ -225,7 +225,7 @@ export async function updatePlayerSettings(playerId: string, tenantId: string, r
 
       if (request.privacySettings) {
         // Merge with existing privacy settings
-        const currentSettings = (profile.privacySettings as any) || {};
+        const currentSettings = (profile.privacySettings as PrivacySettings) || {} as PrivacySettings;
         updateData.privacySettings = {
           ...currentSettings,
           ...request.privacySettings,
@@ -234,7 +234,7 @@ export async function updatePlayerSettings(playerId: string, tenantId: string, r
 
       if (request.notificationPreferences) {
         // Merge with existing notification preferences
-        const currentPreferences = (profile.notificationPreferences as any) || {};
+        const currentPreferences = (profile.notificationPreferences as NotificationPreferences) || {} as NotificationPreferences;
         updateData.notificationPreferences = {
           ...currentPreferences,
           ...request.notificationPreferences,
