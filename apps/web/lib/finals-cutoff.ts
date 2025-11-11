@@ -10,6 +10,14 @@ import { prisma } from '@/lib/prisma';
 import type { Player } from '@prisma/client';
 import type { ChipConfig, ChipStanding } from '@/lib/chip-tracker';
 import { getChipStandings } from '@/lib/chip-tracker';
+import {
+  generateSingleElimination,
+  generateDoubleElimination,
+  type PlayerWithRating,
+  type BracketStructure,
+} from '@/lib/tournament/bracket-generator';
+import { emitToTournament } from '@/lib/socket/server';
+import { SocketEvent, type BracketAdvancedPayload } from '@/lib/socket/events';
 
 // ============================================================================
 // TYPES
@@ -336,14 +344,81 @@ export async function generateFinalsBracket(
     )
   );
 
-  // TODO: Call bracket generation logic
-  // This would integrate with existing bracket generator
-  // For now, just return the seeded finalists
+  // Transform ChipStanding[] to PlayerWithRating[] format for bracket generator
+  const playersWithRating: PlayerWithRating[] = seededFinalists.map((finalist) => ({
+    id: finalist.playerId,
+    name: finalist.name,
+    rating: finalist.rating || null,
+  }));
+
+  // Generate bracket structure using existing bracket generator
+  // Use manual seeding to preserve chip-based seed order
+  let bracketStructure: BracketStructure;
+
+  if (bracketFormat === 'single_elimination') {
+    bracketStructure = generateSingleElimination(playersWithRating, {
+      type: 'manual',
+      manualOrder: playersWithRating.map((p) => p.id),
+    });
+  } else {
+    bracketStructure = generateDoubleElimination(playersWithRating, {
+      type: 'manual',
+      manualOrder: playersWithRating.map((p) => p.id),
+    });
+  }
+
+  // Create Match records in database from bracket structure
+  const createdMatches = await Promise.all(
+    bracketStructure.matches.map((bracketMatch) =>
+      prisma.match.create({
+        data: {
+          tournamentId,
+          round: bracketMatch.round,
+          position: bracketMatch.position,
+          playerAId: bracketMatch.playerAId,
+          playerBId: bracketMatch.playerBId,
+          state: bracketMatch.state,
+          winnerId: bracketMatch.winnerId,
+          bracket: bracketMatch.bracket,
+          isBye: bracketMatch.isBye,
+          // Store bracket match IDs in metadata for linking
+          metadata: {
+            bracketMatchId: bracketMatch.id,
+            nextMatchId: bracketMatch.nextMatchId,
+            loserNextMatchId: bracketMatch.loserNextMatchId,
+          },
+        },
+      })
+    )
+  );
+
+  // Emit socket event for real-time bracket update
+  const bracketAdvancedPayload: BracketAdvancedPayload = {
+    tournamentId,
+    round: 1,
+    advancingPlayers: seededFinalists.map((finalist) => ({
+      playerId: finalist.playerId,
+      playerName: finalist.name,
+      seed: finalist.seed,
+    })),
+    timestamp: new Date().toISOString(),
+  };
+
+  emitToTournament(tournamentId, SocketEvent.BRACKET_ADVANCED, bracketAdvancedPayload);
+
+  console.log(
+    `[Finals Cutoff] Generated ${bracketFormat} bracket for tournament ${tournamentId}: ${createdMatches.length} matches created`
+  );
 
   return {
     format: bracketFormat,
     finalists: seededFinalists,
-    message: 'Finals bracket ready to generate with existing bracket system',
+    matches: createdMatches,
+    bracketStructure: {
+      rounds: bracketStructure.rounds,
+      totalMatches: bracketStructure.matches.length,
+      metadata: bracketStructure.metadata,
+    },
   };
 }
 

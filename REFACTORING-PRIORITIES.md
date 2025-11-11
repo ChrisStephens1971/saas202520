@@ -259,8 +259,8 @@ model User {
 - ✅ Add suspendedUntil to User (already in schema)
 - ✅ Tenant extraction
 
-**MEDIUM PRIORITY (Features):** ⏳ 0/2 complete
-- ⏳ Finals cutoff bracket generation
+**MEDIUM PRIORITY (Features):** ✅ 1/2 complete (50%)
+- ✅ Finals cutoff bracket generation
 - ⏳ Production webhook queue
 
 **LOW PRIORITY:** ⏳ 0/5 complete
