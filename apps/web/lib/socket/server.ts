@@ -18,6 +18,7 @@ import {
   JoinTournamentPayload,
   LeaveTournamentPayload,
 } from './events';
+import { authMiddleware, rateLimitMiddleware, loggingMiddleware } from './middleware';
 
 let io: SocketIOServer<
   ClientToServerEvents,
@@ -81,12 +82,15 @@ export function initializeSocketServer(httpServer: HTTPServer): SocketIOServer<
     console.log('No Redis URL configured, running in single-instance mode');
   }
 
+  // Apply middleware
+  io.use(loggingMiddleware);
+  io.use(rateLimitMiddleware);
+  io.use(authMiddleware);
+  console.log('Socket.io middleware applied: logging, rate limiting, authentication');
+
   // Connection handler
   io.on(SocketEvent.CONNECTION, (socket) => {
-    console.log(`Client connected: ${socket.id}`);
-
-    // Initialize socket data
-    socket.data.tournaments = new Set();
+    console.log(`Client connected: ${socket.id} (user: ${socket.data.userId || 'anonymous'}, role: ${socket.data.role})`);
 
     // Join tournament room
     socket.on(SocketEvent.JOIN_TOURNAMENT, ({ tournamentId, userId }: JoinTournamentPayload) => {

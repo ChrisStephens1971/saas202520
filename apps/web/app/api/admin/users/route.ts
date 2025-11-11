@@ -268,6 +268,7 @@ export async function POST(request: NextRequest) {
     await logAdminAction({
       userId: authResult.user.id,
       userEmail: authResult.user.email,
+      orgId: authResult.user.orgId,
       action: 'CREATE',
       resource: 'USER',
       resourceId: user.id,

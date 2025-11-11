@@ -22,6 +22,7 @@ export interface AdminAuthResult {
     email: string;
     name: string | null;
     role: string;
+    orgId: string;
   };
   error?: {
     code: string;
@@ -109,13 +110,24 @@ export async function verifyAdmin(_request: NextRequest): Promise<AdminAuthResul
 
     // 5. Return authorized user
     const adminMember = user.organizationMembers.find((m) => m.role === 'admin' || m.role === 'owner');
+    if (!adminMember) {
+      return {
+        authorized: false,
+        error: {
+          code: 'NO_ORG_MEMBERSHIP',
+          message: 'User is not a member of any organization.',
+          status: 403,
+        },
+      };
+    }
     return {
       authorized: true,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: adminMember?.role || 'admin',
+        role: adminMember.role,
+        orgId: adminMember.orgId,
       },
     };
   } catch (error) {

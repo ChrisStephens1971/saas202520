@@ -1,137 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Mock Prisma client - replace with actual import when database is connected
-// import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth/admin-middleware';
+import { getAuditLogs, AuditAction, AuditResource } from '@/lib/audit/logger';
 
 /**
  * GET /api/admin/audit-logs
  * Fetch audit logs with optional filtering
  */
 export async function GET(request: NextRequest) {
-  try {
-    // Get session and verify admin role
-    // const session = await getServerSession();
-    // if (!session || !isAdmin(session.user)) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+  // Verify admin authentication
+  const authResult = await requireAdmin(request);
+  if (!authResult.authorized) {
+    return authResult.response;
+  }
 
-    // const orgId = session.user.orgId;
+  try {
+    const orgId = authResult.user.orgId;
 
     // Parse query parameters for filtering
     const { searchParams } = new URL(request.url);
-    const _userId = searchParams.get('userId');
-    const _action = searchParams.get('action');
-    const _resource = searchParams.get('resource');
-    const _startDate = searchParams.get('startDate');
-    const _endDate = searchParams.get('endDate');
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const userId = searchParams.get('userId') || undefined;
+    const action = searchParams.get('action') as AuditAction | undefined;
+    const resource = searchParams.get('resource') as AuditResource | undefined;
+    const startDate = searchParams.get('startDate') ? new Date(searchParams.get('startDate')!) : undefined;
+    const endDate = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined;
+    const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    // Build filter query
-    // const where: any = { orgId };
-    // if (userId) where.userId = userId;
-    // if (action) where.action = action;
-    // if (resource) where.resource = resource;
-    // if (startDate || endDate) {
-    //   where.timestamp = {};
-    //   if (startDate) where.timestamp.gte = new Date(startDate);
-    //   if (endDate) where.timestamp.lte = new Date(endDate);
-    // }
-
-    // Fetch audit logs from database
-    // const [logs, total] = await Promise.all([
-    //   prisma.auditLog.findMany({
-    //     where,
-    //     orderBy: { timestamp: 'desc' },
-    //     take: limit,
-    //     skip: offset,
-    //   }),
-    //   prisma.auditLog.count({ where }),
-    // ]);
-
-    // Mock response with sample data
-    const logs = [
-      {
-        id: 'log_1',
-        orgId: 'org_123',
-        userId: 'user_1',
-        userName: 'John Doe',
-        action: 'create',
-        resource: 'tournament',
-        resourceId: 'tournament_1',
-        changes: null,
-        ipAddress: '192.168.1.1',
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        metadata: { source: 'web' },
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-      },
-      {
-        id: 'log_2',
-        orgId: 'org_123',
-        userId: 'user_2',
-        userName: 'Jane Smith',
-        action: 'update',
-        resource: 'settings',
-        resourceId: null,
-        changes: {
-          before: { siteName: 'Old Name' },
-          after: { siteName: 'New Name' },
-        },
-        ipAddress: '192.168.1.2',
-        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
-        metadata: null,
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-      },
-      {
-        id: 'log_3',
-        orgId: 'org_123',
-        userId: 'user_1',
-        userName: 'John Doe',
-        action: 'login',
-        resource: 'user',
-        resourceId: 'user_1',
-        changes: null,
-        ipAddress: '192.168.1.1',
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        metadata: { loginMethod: 'credentials' },
-        timestamp: new Date(Date.now() - 10800000).toISOString(),
-      },
-      {
-        id: 'log_4',
-        orgId: 'org_123',
-        userId: 'user_3',
-        userName: 'Bob Johnson',
-        action: 'delete',
-        resource: 'player',
-        resourceId: 'player_5',
-        changes: {
-          before: { name: 'Player Name', status: 'active' },
-          after: null,
-        },
-        ipAddress: '192.168.1.3',
-        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)',
-        metadata: null,
-        timestamp: new Date(Date.now() - 14400000).toISOString(),
-      },
-      {
-        id: 'log_5',
-        orgId: 'org_123',
-        userId: 'user_2',
-        userName: 'Jane Smith',
-        action: 'failed_login',
-        resource: 'user',
-        resourceId: null,
-        changes: null,
-        ipAddress: '192.168.1.100',
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-        metadata: { reason: 'Invalid password', attemptCount: 3 },
-        timestamp: new Date(Date.now() - 18000000).toISOString(),
-      },
-    ];
+    // Fetch audit logs from database using the audit logger
+    const { logs, total } = await getAuditLogs({
+      orgId,
+      userId,
+      action,
+      resource,
+      startDate,
+      endDate,
+      limit,
+      offset,
+    });
 
     return NextResponse.json({
       logs,
-      total: logs.length,
+      total,
       limit,
       offset,
     });
@@ -146,17 +55,16 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/admin/audit-logs
- * Create a new audit log entry
+ * Create a new audit log entry (for manual logging)
  */
 export async function POST(request: NextRequest) {
-  try {
-    // Get session
-    // const session = await getServerSession();
-    // if (!session) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+  // Verify admin authentication
+  const authResult = await requireAdmin(request);
+  if (!authResult.authorized) {
+    return authResult.response;
+  }
 
-    // const orgId = session.user.orgId;
+  try {
     const body = await request.json();
 
     // Validate required fields
@@ -169,39 +77,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create audit log
-    // const log = await prisma.auditLog.create({
-    //   data: {
-    //     orgId,
-    //     userId: session.user.id,
-    //     userName: session.user.name,
-    //     action,
-    //     resource,
-    //     resourceId,
-    //     changes,
-    //     ipAddress: request.headers.get('x-forwarded-for') || request.ip,
-    //     userAgent: request.headers.get('user-agent'),
-    //     metadata,
-    //   },
-    // });
+    // Create audit log using the audit logger
+    const { logAdminAction } = await import('@/lib/audit/logger');
 
-    // Mock response
-    const log = {
-      id: `log_${Date.now()}`,
-      orgId: 'org_123',
-      userId: 'user_1',
-      userName: 'Current User',
-      action,
-      resource,
+    await logAdminAction({
+      userId: authResult.user.id,
+      userEmail: authResult.user.email,
+      orgId: authResult.user.orgId,
+      action: action.toUpperCase() as AuditAction,
+      resource: resource.toUpperCase() as AuditResource,
       resourceId,
       changes,
-      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
-      userAgent: request.headers.get('user-agent'),
       metadata,
-      timestamp: new Date().toISOString(),
-    };
+      ipAddress: request.headers.get('x-forwarded-for') || undefined,
+      userAgent: request.headers.get('user-agent') || undefined,
+    });
 
-    return NextResponse.json({ log }, { status: 201 });
+    return NextResponse.json({
+      success: true,
+      message: 'Audit log created successfully'
+    }, { status: 201 });
   } catch (error) {
     console.error('Error creating audit log:', error);
     return NextResponse.json(
@@ -211,7 +106,5 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to check admin role
-// function isAdmin(user: any): boolean {
-//   return user.role === 'owner' || user.role === 'td';
-// }
+// Disable static optimization
+export const dynamic = 'force-dynamic';

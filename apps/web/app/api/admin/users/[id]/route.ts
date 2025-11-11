@@ -376,6 +376,7 @@ export async function DELETE(
     await logAdminAction({
       userId: authResult.user.id,
       userEmail: authResult.user.email,
+      orgId: authResult.user.orgId,
       action: 'DELETE',
       resource: 'USER',
       resourceId: id,
