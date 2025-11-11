@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { extractTenantContext } from '@/lib/auth/tenant';
 import { z } from 'zod';
 import { searchPlayers } from '@/lib/player-profiles/services/player-profile-service';
 import type { SkillLevel as _SkillLevel } from '@/lib/player-profiles/types';
@@ -40,23 +40,13 @@ type _SearchPlayersRequest = z.infer<typeof SearchPlayersSchema>;
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify authentication
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        {
-          error: {
-            code: 'UNAUTHORIZED',
-            message: 'Authentication required',
-          },
-        },
-        { status: 401 }
-      );
+    // Extract tenant context (authentication + org validation)
+    const tenantResult = await extractTenantContext();
+    if (!tenantResult.success) {
+      return tenantResult.response;
     }
 
-    // Get tenant ID from session
-    // TODO: Update this when proper tenant extraction is implemented
-    const tenantId = (session as { organizationId?: string; user: { id: string } }).organizationId || session.user.id;
+    const { orgId: tenantId } = tenantResult.context;
 
     // Parse and validate request body
     const body = await request.json();

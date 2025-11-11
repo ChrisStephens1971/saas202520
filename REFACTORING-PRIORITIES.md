@@ -254,10 +254,10 @@ model User {
 - ✅ Rate limiting
 - ✅ Audit log database
 
-**MEDIUM PRIORITY (Schema):** ✅ 2/3 complete (67%)
+**MEDIUM PRIORITY (Schema):** ✅ 3/3 complete (100%)
 - ✅ Add updatedAt to Tournament
 - ✅ Add suspendedUntil to User (already in schema)
-- ⏳ Tenant extraction
+- ✅ Tenant extraction
 
 **MEDIUM PRIORITY (Features):** ⏳ 0/2 complete
 - ⏳ Finals cutoff bracket generation

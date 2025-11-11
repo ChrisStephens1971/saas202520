@@ -15,6 +15,7 @@ import {
   updateETAsAfterMatchCompletion,
 } from '@/lib/tournament/eta-calculator';
 import { getQueueStatus } from '@/lib/tournament/ready-queue';
+import { extractTenantContext } from '@/lib/auth/tenant';
 import { prisma } from '@/lib/prisma';
 
 // ============================================================================
@@ -137,11 +138,21 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Extract tenant context (authentication + org validation)
+    const tenantResult = await extractTenantContext();
+    if (!tenantResult.success) {
+      return tenantResult.response;
+    }
+
+    const { orgId } = tenantResult.context;
     const { id: tournamentId } = await params;
 
-    // Verify tournament exists and is tenant-scoped
-    const tournament = await prisma.tournament.findUnique({
-      where: { id: tournamentId },
+    // Verify tournament exists and belongs to user's organization
+    const tournament = await prisma.tournament.findFirst({
+      where: {
+        id: tournamentId,
+        orgId, // Multi-tenant isolation
+      },
       select: {
         id: true,
         orgId: true,
@@ -153,20 +164,11 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          error: 'Tournament not found',
+          error: 'Tournament not found or access denied',
         },
         { status: 404 }
       );
     }
-
-    // TODO: Add tenant verification when auth is implemented
-    // const session = await getServerSession();
-    // if (session?.user?.orgId !== tournament.orgId) {
-    //   return NextResponse.json(
-    //     { success: false, error: 'Unauthorized' },
-    //     { status: 403 }
-    //   );
-    // }
 
     // Recalculate ETAs
     const etaUpdate = await updateETAsAfterMatchCompletion(tournamentId);
