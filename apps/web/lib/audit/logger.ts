@@ -37,6 +37,7 @@ export type AuditResource =
 export interface AuditLogEntry {
   userId: string; // Admin who performed the action
   userEmail: string;
+  orgId: string; // Organization context for multi-tenancy
   action: AuditAction;
   resource: AuditResource;
   resourceId?: string; // ID of the resource (if applicable)
@@ -52,34 +53,39 @@ export interface AuditLogEntry {
 
 /**
  * Log an admin action to the audit log
+ * Writes to database for persistent storage and compliance
  */
 export async function logAdminAction(entry: AuditLogEntry): Promise<void> {
   try {
-    // Store in TournamentEvent table (event-sourced audit log)
-    // Note: We'll need to add a system-level audit log table in future
-    // For now, we'll log to console and consider adding a dedicated AuditLog table
+    // Write to database for persistent audit trail
+    await _prisma.auditLog.create({
+      data: {
+        orgId: entry.orgId,
+        userId: entry.userId,
+        userName: entry.userEmail, // Use email as name for now
+        action: entry.action.toLowerCase(),
+        resource: entry.resource.toLowerCase(),
+        resourceId: entry.resourceId,
+        changes: entry.changes as any, // Prisma Json type
+        metadata: entry.metadata as any, // Prisma Json type
+        ipAddress: entry.ipAddress,
+        userAgent: entry.userAgent,
+      },
+    });
 
-    const logData = {
+    // Also log to console for real-time monitoring
+    console.log('[AUDIT]', JSON.stringify({
       timestamp: new Date().toISOString(),
+      orgId: entry.orgId,
       userId: entry.userId,
       userEmail: entry.userEmail,
       action: entry.action,
       resource: entry.resource,
       resourceId: entry.resourceId,
-      changes: entry.changes,
-      metadata: entry.metadata,
-      ipAddress: entry.ipAddress,
-      userAgent: entry.userAgent,
-    };
-
-    // Log to console for monitoring systems
-    console.log('[AUDIT]', JSON.stringify(logData));
-
-    // TODO: Store in dedicated AuditLog table when available
-    // For now, we'll create a simple logging mechanism
-  } catch {
+    }));
+  } catch (error) {
     // Never fail the main operation due to audit logging errors
-    console.error('Failed to log audit entry');
+    console.error('Failed to log audit entry:', error);
   }
 }
 
@@ -276,9 +282,10 @@ export async function logDataExport(
 
 /**
  * Get audit logs with filters
- * Note: This is a placeholder until we have a dedicated AuditLog table
+ * Queries from database with pagination and filtering
  */
-export async function getAuditLogs(_filters: {
+export async function getAuditLogs(filters: {
+  orgId: string; // Required for multi-tenant isolation
   userId?: string;
   action?: AuditAction;
   resource?: AuditResource;
@@ -287,13 +294,57 @@ export async function getAuditLogs(_filters: {
   limit?: number;
   offset?: number;
 }): Promise<{
-  logs: AuditLogEntry[];
+  logs: Array<{
+    id: string;
+    userId: string;
+    userName: string;
+    action: string;
+    resource: string;
+    resourceId: string | null;
+    changes: any;
+    metadata: any;
+    ipAddress: string | null;
+    userAgent: string | null;
+    timestamp: Date;
+  }>;
   total: number;
 }> {
-  // TODO: Implement when AuditLog table is created
-  // For now, return empty results
-  return {
-    logs: [],
-    total: 0,
-  };
+  try {
+    const where = {
+      orgId: filters.orgId,
+      ...(filters.userId && { userId: filters.userId }),
+      ...(filters.action && { action: filters.action.toLowerCase() }),
+      ...(filters.resource && { resource: filters.resource.toLowerCase() }),
+      ...(filters.startDate || filters.endDate
+        ? {
+            timestamp: {
+              ...(filters.startDate && { gte: filters.startDate }),
+              ...(filters.endDate && { lte: filters.endDate }),
+            },
+          }
+        : {}),
+    };
+
+    // Query logs with pagination
+    const [logs, total] = await Promise.all([
+      _prisma.auditLog.findMany({
+        where,
+        orderBy: { timestamp: 'desc' },
+        take: filters.limit || 50,
+        skip: filters.offset || 0,
+      }),
+      _prisma.auditLog.count({ where }),
+    ]);
+
+    return {
+      logs,
+      total,
+    };
+  } catch (error) {
+    console.error('Failed to fetch audit logs:', error);
+    return {
+      logs: [],
+      total: 0,
+    };
+  }
 }
