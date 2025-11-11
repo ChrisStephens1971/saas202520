@@ -264,9 +264,81 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
  */
 function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
-  // TODO: Implement PWA install prompt logic
-  // This would check if the app is installable and show a prompt
+  useEffect(() => {
+    // Check if already dismissed recently (within 7 days)
+    const dismissedAt = localStorage.getItem('pwa-install-dismissed');
+    if (dismissedAt) {
+      const dismissedDate = new Date(dismissedAt);
+      const daysSinceDismissed = (Date.now() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
+      if (daysSinceDismissed < 7) {
+        return; // Don't show prompt if dismissed within last 7 days
+      }
+    }
+
+    // Listen for beforeinstallprompt event (PWA installable)
+    const handleBeforeInstallPrompt = (e: Event) => {
+      // Prevent the default browser install prompt
+      e.preventDefault();
+
+      // Stash the event so it can be triggered later
+      setDeferredPrompt(e);
+
+      // Show our custom install prompt after a short delay
+      setTimeout(() => {
+        setShowPrompt(true);
+      }, 3000); // Wait 3 seconds before showing prompt
+    };
+
+    // Listen for successful app installation
+    const handleAppInstalled = () => {
+      console.log('[PWA] App installed successfully');
+      setShowPrompt(false);
+      setDeferredPrompt(null);
+      localStorage.removeItem('pwa-install-dismissed');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) {
+      console.warn('[PWA] Install prompt not available');
+      return;
+    }
+
+    // Show the native install prompt
+    deferredPrompt.prompt();
+
+    // Wait for the user's response
+    const choiceResult = await deferredPrompt.userChoice;
+
+    if (choiceResult.outcome === 'accepted') {
+      console.log('[PWA] User accepted the install prompt');
+    } else {
+      console.log('[PWA] User dismissed the install prompt');
+
+      // Store dismissal timestamp
+      localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
+    }
+
+    // Clear the deferred prompt since it can only be used once
+    setDeferredPrompt(null);
+    setShowPrompt(false);
+  };
+
+  const handleDismiss = () => {
+    setShowPrompt(false);
+    // Store dismissal timestamp
+    localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
+  };
 
   if (!showPrompt) return null;
 
@@ -282,16 +354,13 @@ function InstallPrompt() {
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  // TODO: Trigger install
-                  setShowPrompt(false);
-                }}
+                onClick={handleInstall}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors"
               >
                 Install
               </button>
               <button
-                onClick={() => setShowPrompt(false)}
+                onClick={handleDismiss}
                 className="px-4 py-2 bg-white/10 hover:bg-white/20 text-gray-300 rounded-lg text-sm font-semibold transition-colors"
               >
                 Not Now
@@ -299,7 +368,7 @@ function InstallPrompt() {
             </div>
           </div>
           <button
-            onClick={() => setShowPrompt(false)}
+            onClick={handleDismiss}
             className="text-gray-400 hover:text-white transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
