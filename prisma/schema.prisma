@@ -157,6 +157,7 @@ model Tournament {
   sportConfigVersion String    @map("sport_config_version") // Frozen at creation
   createdBy          String    @map("created_by")
   createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
   startedAt          DateTime? @map("started_at")
   completedAt        DateTime? @map("completed_at")
 

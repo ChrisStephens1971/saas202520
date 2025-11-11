@@ -254,8 +254,8 @@ model User {
 - ✅ Rate limiting
 - ✅ Audit log database
 
-**MEDIUM PRIORITY (Schema):** ✅ 1/3 complete (33%)
-- ⏳ Add updatedAt to Tournament
+**MEDIUM PRIORITY (Schema):** ✅ 2/3 complete (67%)
+- ✅ Add updatedAt to Tournament
 - ✅ Add suspendedUntil to User (already in schema)
 - ⏳ Tenant extraction
 

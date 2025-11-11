@@ -130,7 +130,7 @@ export async function GET(request: NextRequest) {
       raceToWins: 7,
       maxPlayers: null,
       createdAt: tournament.createdAt.toISOString(),
-      updatedAt: new Date().toISOString(), // TODO: Add updatedAt to schema
+      updatedAt: tournament.updatedAt.toISOString(),
       startedAt: tournament.startedAt?.toISOString() ?? null,
       completedAt: tournament.completedAt?.toISOString() ?? null,
       createdBy: tournament.createdBy,
