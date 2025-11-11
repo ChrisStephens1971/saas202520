@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
-import { Prisma } from '@tournament/shared';
+import { prisma } from '@/lib/prisma';
 
 interface Venue {
   id: string;
@@ -35,11 +35,7 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
     const city = searchParams.get('city') || '';
 
-    const _skip = (page - 1) * limit;
-
-    // Note: This assumes venues table exists in schema
-    // If not, this will need to be added
-    // For now, returning mock data structure
+    const skip = (page - 1) * limit;
 
     // Build query filters
     const whereClause: any = {
@@ -49,39 +45,51 @@ export async function GET(request: NextRequest) {
     if (search) {
       whereClause.name = {
         contains: search,
-        mode: 'insensitive',
+        mode: 'insensitive' as const,
       };
     }
 
     if (city) {
       whereClause.city = {
         contains: city,
-        mode: 'insensitive',
+        mode: 'insensitive' as const,
       };
     }
 
-    // Mock response - replace with actual venue query when schema is updated
-    const venues: Venue[] = [];
-    const total = 0;
+    // Query venues from database
+    const [venues, total] = await Promise.all([
+      prisma.venue.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          name: true,
+          address: true,
+          city: true,
+          state: true,
+          zip: true,
+          phone: true,
+          email: true,
+          _count: {
+            select: { tournaments: true },
+          },
+        },
+        skip,
+        take: limit,
+        orderBy: { name: 'asc' },
+      }),
+      prisma.venue.count({ where: whereClause }),
+    ]);
 
-    // TODO: Implement actual venue query when venues table is added:
-    // const venues = await prisma.venue.findMany({
-    //   where: whereClause,
-    //   select: {
-    //     id: true,
-    //     name: true,
-    //     address: true,
-    //     city: true,
-    //     _count: {
-    //       select: { tournaments: true }
-    //     }
-    //   },
-    //   skip,
-    //   take: limit,
-    // });
+    // Transform to API response format
+    const formattedVenues: Venue[] = venues.map((v) => ({
+      id: v.id,
+      name: v.name,
+      location: [v.city, v.state].filter(Boolean).join(', ') || 'Unknown',
+      tournament_count: v._count.tournaments,
+    }));
 
     return NextResponse.json({
-      data: venues,
+      data: formattedVenues,
       meta: {
         page,
         limit,

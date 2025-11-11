@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { Prisma } from '@tournament/shared';
+import { prisma } from '@/lib/prisma';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 interface Tournament {
@@ -41,44 +41,49 @@ export async function GET(
     const page = parseInt(searchParams.get('page') || '1');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
 
-    const _skip = (page - 1) * limit;
-
-    // Note: This assumes tournaments have a venue_id field
-    // If not, this endpoint will need to be updated
+    const skip = (page - 1) * limit;
 
     // Build query filters
-    const whereClause: Prisma.TournamentWhereInput = {
+    const whereClause: any = {
       orgId: tenantId,
-      // venueId: venueId, // Uncomment when venue_id is added to tournaments
+      venueId: venueId,
     };
 
     if (status !== 'all') {
       whereClause.status = status;
     }
 
-    // Mock response - replace with actual tournament query
-    // TODO: Implement actual tournament query:
-    // const tournaments = await prisma.tournament.findMany({
-    //   where: whereClause,
-    //   select: {
-    //     id: true,
-    //     name: true,
-    //     format: true,
-    //     status: true,
-    //     startedAt: true,
-    //     _count: {
-    //       select: { players: true }
-    //     }
-    //   },
-    //   orderBy: [
-    //     { startedAt: 'desc' },
-    //   ],
-    //   skip,
-    //   take: limit,
-    // });
+    // Query tournaments at venue
+    const [tournamentData, total] = await Promise.all([
+      prisma.tournament.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          name: true,
+          format: true,
+          status: true,
+          startedAt: true,
+          createdAt: true,
+          _count: {
+            select: { players: true },
+          },
+        },
+        orderBy: [{ startedAt: 'desc' }, { createdAt: 'desc' }],
+        skip,
+        take: limit,
+      }),
+      prisma.tournament.count({ where: whereClause }),
+    ]);
 
-    const tournaments: Tournament[] = [];
-    const total = 0;
+    // Transform to API response format
+    const tournaments: Tournament[] = tournamentData.map((t) => ({
+      id: t.id,
+      name: t.name,
+      format: t.format,
+      status: t.status,
+      start_date: t.startedAt?.toISOString() || t.createdAt.toISOString(),
+      player_count: t._count.players,
+    }));
 
     return NextResponse.json({
       data: tournaments,

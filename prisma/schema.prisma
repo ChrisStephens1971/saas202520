@@ -120,6 +120,7 @@ model Organization {
   scheduledReports     ScheduledReport[]
   apiKeys              ApiKey[]
   webhooks             Webhook[]
+  venues               Venue[]
 
   @@map("organizations")
 }
@@ -143,12 +144,44 @@ model OrganizationMember {
 }
 
 // ============================================================================
+// VENUES
+// ============================================================================
+
+model Venue {
+  id      String  @id @default(cuid())
+  orgId   String  @map("org_id") // Multi-tenant: organization scope
+  name    String  @db.VarChar(255)
+  address String? @db.VarChar(500)
+  city    String? @db.VarChar(100)
+  state   String? @db.VarChar(100)
+  zip     String? @db.VarChar(20)
+  country String? @default("US") @db.VarChar(2)
+  phone   String? @db.VarChar(50)
+  email   String? @db.VarChar(255)
+  website String? @db.VarChar(500)
+  notes   String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  tournaments  Tournament[]
+
+  @@index([orgId])
+  @@index([city])
+  @@index([orgId, name])
+  @@map("venues")
+}
+
+// ============================================================================
 // TOURNAMENTS
 // ============================================================================
 
 model Tournament {
   id                 String    @id @default(cuid())
   orgId              String    @map("org_id") // Tenant ID
+  venueId            String?   @map("venue_id") // Optional venue location
   name               String
   description        String? // Optional tournament description
   status             String // draft, registration, active, paused, completed, cancelled
@@ -167,12 +200,14 @@ model Tournament {
 
   // Relations
   organization Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  venue        Venue?            @relation(fields: [venueId], references: [id], onDelete: SetNull)
   players      Player[]
   matches      Match[]
   tables       Table[]
   events       TournamentEvent[]
 
   @@index([orgId])
+  @@index([venueId])
   @@index([status])
   @@index([createdAt])
   @@map("tournaments")
@@ -399,8 +434,10 @@ model Refund {
 
 model Payout {
   id           String    @id @default(cuid())
+  orgId        String    @map("org_id") // Denormalized for cross-tournament queries
   tournamentId String    @map("tournament_id")
   playerId     String    @map("player_id")
+  playerName   String    @map("player_name") // Denormalized for performance
   placement    Int // 1st, 2nd, 3rd, etc.
   amount       Int // Payout amount in cents
   source       String // prize_pool, side_pot
@@ -411,6 +448,8 @@ model Payout {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
 
+  @@index([orgId])
+  @@index([orgId, playerName]) // For prize money leaderboards
   @@index([tournamentId])
   @@index([playerId])
   @@index([status])

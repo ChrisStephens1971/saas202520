@@ -5,27 +5,25 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
+import { prisma } from '@/lib/prisma';
 
-// interface VenueDetails {
-//   id: string;
-//   name: string;
-//   address: string;
-//   city: string;
-//   state: string;
-//   zip: string;
-//   capacity: number;
-//   amenities: string[];
-//   contact: {
-//     phone?: string;
-//     email?: string;
-//     website?: string;
-//   };
-//   statistics: {
-//     total_tournaments: number;
-//     active_tournaments: number;
-//     total_players_hosted: number;
-//   };
-// }
+interface VenueDetails {
+  id: string;
+  name: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  contact: {
+    phone?: string;
+    email?: string;
+    website?: string;
+  };
+  statistics: {
+    total_tournaments: number;
+    active_tournaments: number;
+  };
+}
 
 export async function GET(
   request: NextRequest,
@@ -42,52 +40,67 @@ export async function GET(
       );
     }
 
-    const _tenantId = auth.context.tenantId;
+    const tenantId = auth.context.tenantId;
 
-    const { id: _venueId } = await params;
+    const { id: venueId } = await params;
 
-    // Note: This assumes venues table exists in schema
-    // If not, this endpoint will need to be updated
-
-    // Mock response - replace with actual venue query when schema is updated
-    // TODO: Implement actual venue query:
-    // const venue = await prisma.venue.findUnique({
-    //   where: {
-    //     id: venueId,
-    //     orgId: tenantId,
-    //   },
-    //   include: {
-    //     tournaments: {
-    //       select: {
-    //         id: true,
-    //         status: true,
-    //       },
-    //     },
-    //   },
-    // });
-
-    // if (!venue) {
-    //   return NextResponse.json(
-    //     {
-    //       error: {
-    //         code: 'not_found',
-    //         message: 'Venue not found',
-    //       },
-    //     },
-    //     { status: 404 }
-    //   );
-    // }
-
-    return NextResponse.json(
-      {
-        error: {
-          code: 'not_implemented',
-          message:
-            'Venues table not yet implemented in database schema. This endpoint will be available once the venues table is added.',
+    // Query venue with tournament statistics
+    const venue = await prisma.venue.findFirst({
+      where: {
+        id: venueId,
+        orgId: tenantId,
+      },
+      include: {
+        _count: {
+          select: {
+            tournaments: true,
+          },
+        },
+        tournaments: {
+          where: {
+            status: {
+              in: ['registration', 'active'],
+            },
+          },
+          select: {
+            id: true,
+          },
         },
       },
-      { status: 501 }
-    );
+    });
+
+    if (!venue) {
+      return NextResponse.json(
+        {
+          error: {
+            code: 'not_found',
+            message: 'Venue not found',
+          },
+        },
+        { status: 404 }
+      );
+    }
+
+    // Format response
+    const response: VenueDetails = {
+      id: venue.id,
+      name: venue.name,
+      address: venue.address || undefined,
+      city: venue.city || undefined,
+      state: venue.state || undefined,
+      zip: venue.zip || undefined,
+      contact: {
+        phone: venue.phone || undefined,
+        email: venue.email || undefined,
+        website: venue.website || undefined,
+      },
+      statistics: {
+        total_tournaments: venue._count.tournaments,
+        active_tournaments: venue.tournaments.length,
+      },
+    };
+
+    return NextResponse.json({ data: response });
   } catch (error) {
     console.error('Venue details API error:', error);
     return NextResponse.json(

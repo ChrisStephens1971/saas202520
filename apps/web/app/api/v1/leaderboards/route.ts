@@ -163,11 +163,36 @@ async function getTournamentCountLeaderboard(
 }
 
 async function getPrizeMoneyLeaderboard(
-  _tenantId: string,
-  _limit: number
+  tenantId: string,
+  limit: number
 ): Promise<LeaderboardEntry[]> {
-  // TODO: Implement prize money tracking
-  // This requires a prizes/payouts table to track earnings
-  // For now, return empty array
-  return [];
+  // Query payouts aggregated by player name
+  const playerEarnings = await prisma.$queryRaw<
+    Array<{
+      player_name: string;
+      total_earnings: bigint;
+      tournament_count: bigint;
+    }>
+  >`
+    SELECT
+      player_name,
+      SUM(amount) as total_earnings,
+      COUNT(DISTINCT tournament_id) as tournament_count
+    FROM payouts
+    WHERE org_id = ${tenantId}::text
+      AND status = 'paid'
+    GROUP BY player_name
+    ORDER BY total_earnings DESC
+    LIMIT ${limit}
+  `;
+
+  return playerEarnings.map((player, index) => ({
+    rank: index + 1,
+    player: {
+      id: player.player_name.toLowerCase().replace(/\s+/g, '-'), // Generate ID from name
+      name: player.player_name,
+    },
+    metric_value: Number(player.total_earnings) / 100, // Convert cents to dollars
+    change: '+0', // TODO: Calculate change from last period
+  }));
 }
