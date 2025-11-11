@@ -217,9 +217,9 @@ export function RevenueAnalytics({ dateRange }: RevenueAnalyticsProps) {
                 </div>
               </div>
               <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                {data?.paymentSuccessRate >= 95
+                {(data?.paymentSuccessRate ?? 0) >= 95
                   ? 'Excellent payment reliability'
-                  : data?.paymentSuccessRate >= 85
+                  : (data?.paymentSuccessRate ?? 0) >= 85
                   ? 'Good payment reliability'
                   : 'Review payment failures'}
               </p>

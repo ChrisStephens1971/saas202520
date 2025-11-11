@@ -124,6 +124,7 @@ export interface MatchStartedPayload {
     name: string;
   };
   startedAt: string;
+  tableNumber?: number; // Optional table assignment
 }
 
 export interface MatchUpdatedPayload {
@@ -154,6 +155,19 @@ export interface MatchCompletedPayload {
     chipsWon: number;
   };
   completedAt: string;
+  // Alternative player structure (for components expecting player1/player2)
+  player1?: {
+    playerId: string;
+    playerName: string;
+    score: number;
+    isWinner: boolean;
+  };
+  player2?: {
+    playerId: string;
+    playerName: string;
+    score: number;
+    isWinner: boolean;
+  };
 }
 
 export interface ChipsAwardedPayload {

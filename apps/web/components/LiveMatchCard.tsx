@@ -58,7 +58,7 @@ export function LiveMatchCard({
         ...match,
         status: 'in_progress',
         startedAt: payload.startedAt,
-        tableNumber: (payload as any).tableNumber,
+        tableNumber: payload.tableNumber,
       };
       setMatch(updatedMatch);
       setJustUpdated(true);
@@ -72,22 +72,21 @@ export function LiveMatchCard({
   // Listen for match completed events
   useSocketEvent(SocketEvent.MATCH_COMPLETED, (payload: MatchCompletedPayload) => {
     if (payload.matchId === match.id) {
-      const payloadAny = payload as any;
       const updatedMatch: Match = {
         ...match,
         status: 'completed',
         completedAt: payload.completedAt,
-        player1: payloadAny.player1 ? {
-          id: payloadAny.player1.playerId,
-          name: payloadAny.player1.playerName,
-          score: payloadAny.player1.score,
-          isWinner: payloadAny.player1.isWinner,
+        player1: payload.player1 ? {
+          id: payload.player1.playerId,
+          name: payload.player1.playerName,
+          score: payload.player1.score,
+          isWinner: payload.player1.isWinner,
         } : match.player1,
-        player2: payloadAny.player2 ? {
-          id: payloadAny.player2.playerId,
-          name: payloadAny.player2.playerName,
-          score: payloadAny.player2.score,
-          isWinner: payloadAny.player2.isWinner,
+        player2: payload.player2 ? {
+          id: payload.player2.playerId,
+          name: payload.player2.playerName,
+          score: payload.player2.score,
+          isWinner: payload.player2.isWinner,
         } : match.player2,
       };
       setMatch(updatedMatch);
