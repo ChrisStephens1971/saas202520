@@ -14,7 +14,7 @@
 
 'use client';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect } from 'react';
 import { TournamentOverviewComponent } from '@/components/console/TournamentOverview';
 import { TableStatusGrid } from '@/components/console/TableStatusGrid';
 import { MatchQueue } from '@/components/console/MatchQueue';

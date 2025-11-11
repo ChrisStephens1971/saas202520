@@ -126,7 +126,7 @@ export function RoomViewFiltersComponent({
               {(['all', 'pending', 'ready', 'assigned', 'active', 'completed'] as const).map((status) => (
                 <button
                   key={status}
-                  onClick={() => handleMatchStatusChange(status)}
+                  onClick={() => handleMatchStatusChange(status as MatchState | 'all')}
                   className={`
                     px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
                     ${filters.matchStatus === status
@@ -150,7 +150,7 @@ export function RoomViewFiltersComponent({
               {(['all', 'available', 'in_use', 'blocked'] as const).map((status) => (
                 <button
                   key={status}
-                  onClick={() => handleTableStatusChange(status)}
+                  onClick={() => handleTableStatusChange(status as TableStatus | 'all')}
                   className={`
                     px-3 py-1.5 rounded-lg text-sm font-semibold transition-all
                     ${filters.tableStatus === status

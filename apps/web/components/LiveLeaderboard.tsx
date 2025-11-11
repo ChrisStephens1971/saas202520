@@ -146,7 +146,7 @@ export function LiveLeaderboard({
     if (payload.tournamentId === tournamentId) {
       setPlayers((prev) =>
         prev.map((player) =>
-          player.id === payload.playerId
+          player.id === payload.player.id
             ? {
                 ...player,
                 isEliminated: true,

@@ -44,7 +44,7 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
   // WebSocket connection for real-time updates
-  const { socket, isConnected } = useSocket(tournamentId);
+  const { socket, isConnected } = useSocket();
 
   // Fetch standings (no polling, WebSocket-triggered updates only)
   const { data, error, isLoading, mutate } = useSWR(

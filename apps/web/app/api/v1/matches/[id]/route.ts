@@ -21,9 +21,9 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 /**
  * Parse score field that may be stored as string or object
  * @param score - Unknown score value from database
- * @returns GameScore object with playerA and playerB scores
+ * @returns Score object with playerA and playerB scores
  */
-function parseScore(score: unknown): GameScore {
+function parseScore(score: unknown): { playerA: number; playerB: number } {
   // If already an object with playerA/playerB, return it
   if (
     typeof score === 'object' &&
@@ -31,7 +31,7 @@ function parseScore(score: unknown): GameScore {
     'playerA' in score &&
     'playerB' in score
   ) {
-    return score as GameScore;
+    return score as { playerA: number; playerB: number };
   }
 
   // If string format (e.g., "21-15"), parse it

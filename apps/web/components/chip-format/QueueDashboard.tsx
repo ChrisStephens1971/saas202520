@@ -33,7 +33,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function QueueDashboard({ tournamentId }: Props) {
   // WebSocket connection for real-time updates
-  const { socket, isConnected } = useSocket(tournamentId);
+  const { socket, isConnected } = useSocket();
 
   const { data, error, isLoading, mutate } = useSWR<QueueStats>(
     `/api/tournaments/${tournamentId}/queue-stats`,
