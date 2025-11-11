@@ -216,7 +216,7 @@ async function fetchAnalyticsData(
   // Revenue data
   const revenueData = await prisma.revenueAggregate.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       periodStart: {
         gte: startDate,
         lte: endDate,
@@ -229,18 +229,18 @@ async function fetchAnalyticsData(
 
   const revenueSummary = revenueData.reduce(
     (acc, item) => ({
-      mrr: acc.mrr + (item.mrr || 0),
-      arr: acc.arr + (item.arr || 0),
-      totalRevenue: acc.totalRevenue + (item.totalRevenue || 0),
-      growth: item.growthRate || 0, // Use latest growth rate
+      mrr: acc.mrr + Number(item.mrr || 0),
+      arr: acc.arr + Number(item.arr || 0),
+      totalRevenue: acc.totalRevenue + Number(item.totalRevenue || 0),
+      growth: 0, // growthRate doesn't exist in schema
     }),
     { mrr: 0, arr: 0, totalRevenue: 0, growth: 0 }
   );
 
   // Users/Cohort data
-  const cohortData = await prisma.cohortAggregate.findMany({
+  const cohortData = await prisma.userCohort.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       cohortMonth: {
         gte: startDate,
         lte: endDate,
@@ -254,9 +254,9 @@ async function fetchAnalyticsData(
   const usersSummary = cohortData.reduce(
     (acc, cohort) => ({
       total: acc.total + cohort.cohortSize,
-      active: acc.active + Math.round(cohort.cohortSize * (cohort.month0Retention / 100)),
+      active: acc.active + cohort.retainedUsers,
       new: acc.new + cohort.cohortSize,
-      churn: cohort.churnRate || 0, // Use latest churn rate
+      churn: 0, // churnRate doesn't exist in UserCohort schema
     }),
     { total: 0, active: 0, new: 0, churn: 0 }
   );
@@ -264,7 +264,7 @@ async function fetchAnalyticsData(
   // Tournament data
   const tournamentData = await prisma.tournamentAggregate.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       periodStart: {
         gte: startDate,
         lte: endDate,
@@ -277,10 +277,10 @@ async function fetchAnalyticsData(
 
   const tournamentSummary = tournamentData.reduce(
     (acc, item) => ({
-      total: acc.total + item.totalTournaments,
-      completed: acc.completed + item.completedTournaments,
-      completionRate: item.completionRate || 0, // Use latest completion rate
-      avgPlayers: (acc.avgPlayers + (item.avgPlayersPerTournament || 0)) / 2, // Average
+      total: acc.total + (item.tournamentCount || 0),
+      completed: acc.completed + (item.completedCount || 0),
+      completionRate: Number(item.completionRate || 0),
+      avgPlayers: (acc.avgPlayers + Number(item.avgPlayers || 0)) / 2,
     }),
     { total: 0, completed: 0, completionRate: 0, avgPlayers: 0 }
   );
@@ -290,7 +290,7 @@ async function fetchAnalyticsData(
       summary: revenueSummary,
       breakdown: revenueData.map((item) => ({
         date: item.periodStart,
-        amount: item.totalRevenue,
+        amount: Number(item.totalRevenue || 0),
         type: item.periodType,
         source: 'tournaments',
       })),
@@ -300,8 +300,8 @@ async function fetchAnalyticsData(
       cohorts: cohortData.map((cohort) => ({
         cohort: cohort.cohortMonth,
         size: cohort.cohortSize,
-        retention: cohort.month0Retention,
-        revenue: cohort.totalRevenue,
+        retention: Number(cohort.retentionRate || 0),
+        revenue: Number(cohort.revenue || 0),
       })),
     },
     tournaments: {
@@ -309,8 +309,8 @@ async function fetchAnalyticsData(
       details: tournamentData.map((item) => ({
         date: item.periodStart,
         format: 'mixed',
-        players: item.totalPlayers,
-        revenue: item.totalRevenue,
+        players: item.totalPlayers || 0,
+        revenue: Number(item.revenue || 0),
         status: 'completed',
       })),
     },
