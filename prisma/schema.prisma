@@ -903,9 +903,11 @@ model MatchHistory {
   result     String @db.VarChar(20) // WIN, LOSS, DRAW
 
   // Match Details
-  score       Json @map("score") // Detailed score data { playerScore, opponentScore, games: [...] }
-  matchNumber Int  @map("match_number")
-  roundNumber Int  @map("round_number")
+  score       Json    @map("score") // Detailed score data { playerScore, opponentScore, games: [...] }
+  matchNumber Int     @map("match_number")
+  roundNumber Int     @map("round_number")
+  format      String? @db.VarChar(50) // Tournament format (single_elimination, double_elimination, etc.)
+  metadata    Json?   // Additional match metadata (finish position, prizeWon, etc.)
 
   // Performance Metrics
   durationMinutes   Int?     @map("duration_minutes")

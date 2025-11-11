@@ -241,7 +241,7 @@ export async function getPlayerMatchHistory(
         tenantId,
       },
       orderBy: {
-        matchDate: 'desc',
+        playedAt: 'desc',
       },
       take: limit,
       skip: offset,
@@ -279,10 +279,10 @@ export async function getPlayerMatchHistory(
             id: tournament.id,
             name: tournament.name,
             format: tournament.format,
-            date: (tournament as any).startDateTime || tournament.startedAt,
+            date: tournament.startedAt,
           },
           result: match.result as MatchResult,
-          metadata: (match as any).metadata as MatchMetadata | null,
+          metadata: match.metadata as MatchMetadata | null,
         });
       }
     }
@@ -347,7 +347,7 @@ export async function getHeadToHeadRecord(
 
     const lastPlayed =
       allMatches.length > 0
-        ? allMatches.reduce((latest, match) => ((match as any).matchDate > latest ? (match as any).matchDate : latest), (allMatches[0] as any).matchDate)
+        ? allMatches.reduce((latest, match) => (match.playedAt > latest ? match.playedAt : latest), allMatches[0].playedAt)
         : new Date();
 
     // Get recent matches with details
