@@ -82,7 +82,7 @@ export async function processScheduledReportJob(
 
     // Step 2: Determine date range based on schedule (20% progress)
     console.log('[ScheduledReportJob] Calculating date range...');
-    const dateRange = calculateDateRange(report.schedule);
+    const dateRange = calculateDateRange(report.frequency);
 
     await job.updateProgress(20);
 
@@ -100,7 +100,7 @@ export async function processScheduledReportJob(
 
     // Step 4: Generate report file (70% progress)
     console.log('[ScheduledReportJob] Generating report file...');
-    const format = (parameters?.format as 'csv' | 'excel' | 'pdf') || report.format || 'pdf';
+    const format = (parameters?.format as 'csv' | 'excel' | 'pdf') || 'pdf'; // Default to PDF
     const filename = generateFilename(reportType as any, format, tenantId);
 
     let reportFile: Buffer | string;
@@ -151,23 +151,26 @@ export async function processScheduledReportJob(
 
     // Step 6: Update report execution record (100% progress)
     console.log('[ScheduledReportJob] Creating execution record...');
-    await prisma.reportExecution.create({
-      data: {
-        reportId,
-        executedAt: new Date(),
-        status: 'completed',
-        recipientCount: recipients.length,
-        fileSize: Buffer.isBuffer(reportFile) ? reportFile.length : Buffer.byteLength(reportFile),
-        metadata: {
-          jobId: job.id,
-          dateRange: {
-            start: dateRange.start.toISOString(),
-            end: dateRange.end.toISOString(),
-          },
-          format,
-        } as any,
-      },
-    });
+    // TODO: Add ReportExecution model to prisma/schema.prisma
+    // Model should include: reportId, executedAt, status, recipientCount, fileSize, metadata
+    // await prisma.reportExecution.create({
+    //   data: {
+    //     reportId,
+    //     executedAt: new Date(),
+    //     status: 'completed',
+    //     recipientCount: recipients.length,
+    //     fileSize: Buffer.isBuffer(reportFile) ? reportFile.length : Buffer.byteLength(reportFile),
+    //     metadata: {
+    //       jobId: job.id,
+    //       dateRange: {
+    //         start: dateRange.start.toISOString(),
+    //         end: dateRange.end.toISOString(),
+    //       },
+    //       format,
+    //     } as any,
+    //   },
+    // });
+    console.log('[ScheduledReportJob] Report execution record skipped (model not yet in schema)');
 
     await job.updateProgress(100);
 
@@ -185,23 +188,25 @@ export async function processScheduledReportJob(
     console.error(`[ScheduledReportJob] Job ${job.id} failed:`, error);
 
     // Create failed execution record
-    try {
-      await prisma.reportExecution.create({
-        data: {
-          reportId,
-          executedAt: new Date(),
-          status: 'failed',
-          recipientCount: recipients.length,
-          fileSize: 0,
-          metadata: {
-            jobId: job.id,
-            error: error instanceof Error ? error.message : 'Unknown error',
-          } as any,
-        },
-      });
-    } catch (dbError) {
-      console.error('[ScheduledReportJob] Failed to create error record:', dbError);
-    }
+    // TODO: Uncomment when ReportExecution model is added to schema
+    // try {
+    //   await prisma.reportExecution.create({
+    //     data: {
+    //       reportId,
+    //       executedAt: new Date(),
+    //       status: 'failed',
+    //       recipientCount: recipients.length,
+    //       fileSize: 0,
+    //       metadata: {
+    //         jobId: job.id,
+    //         error: error instanceof Error ? error.message : 'Unknown error',
+    //       } as any,
+    //     },
+    //   });
+    // } catch (dbError) {
+    //   console.error('[ScheduledReportJob] Failed to create error record:', dbError);
+    // }
+    console.log('[ScheduledReportJob] Failed execution record creation skipped (model not yet in schema)');
 
     // Re-throw to mark job as failed in BullMQ
     throw error;
@@ -256,7 +261,7 @@ async function fetchAnalyticsDataForReport(
   // Revenue data
   const revenueData = await prisma.revenueAggregate.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       periodStart: {
         gte: startDate,
         lte: endDate,
@@ -269,18 +274,18 @@ async function fetchAnalyticsDataForReport(
 
   const revenueSummary = revenueData.reduce(
     (acc, item) => ({
-      mrr: acc.mrr + (item.mrr || 0),
-      arr: acc.arr + (item.arr || 0),
-      totalRevenue: acc.totalRevenue + (item.totalRevenue || 0),
-      growth: item.growthRate || 0,
+      mrr: acc.mrr + Number(item.mrr || 0),
+      arr: acc.arr + Number(item.arr || 0),
+      totalRevenue: acc.totalRevenue + Number(item.totalRevenue || 0),
+      growth: 0, // growthRate doesn't exist in schema
     }),
     { mrr: 0, arr: 0, totalRevenue: 0, growth: 0 }
   );
 
   // Users/Cohort data
-  const cohortData = await prisma.cohortAggregate.findMany({
+  const cohortData = await prisma.userCohort.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       cohortMonth: {
         gte: startDate,
         lte: endDate,
@@ -294,9 +299,9 @@ async function fetchAnalyticsDataForReport(
   const usersSummary = cohortData.reduce(
     (acc, cohort) => ({
       total: acc.total + cohort.cohortSize,
-      active: acc.active + Math.round(cohort.cohortSize * (cohort.month0Retention / 100)),
+      active: acc.active + cohort.retainedUsers,
       new: acc.new + cohort.cohortSize,
-      churn: cohort.churnRate || 0,
+      churn: 0, // churnRate doesn't exist in UserCohort schema
     }),
     { total: 0, active: 0, new: 0, churn: 0 }
   );
@@ -304,7 +309,7 @@ async function fetchAnalyticsDataForReport(
   // Tournament data
   const tournamentData = await prisma.tournamentAggregate.findMany({
     where: {
-      orgId: tenantId,
+      tenantId,
       periodStart: {
         gte: startDate,
         lte: endDate,
@@ -317,10 +322,10 @@ async function fetchAnalyticsDataForReport(
 
   const tournamentSummary = tournamentData.reduce(
     (acc, item) => ({
-      total: acc.total + item.totalTournaments,
-      completed: acc.completed + item.completedTournaments,
-      completionRate: item.completionRate || 0,
-      avgPlayers: (acc.avgPlayers + (item.avgPlayersPerTournament || 0)) / 2,
+      total: acc.total + (item.tournamentCount || 0),
+      completed: acc.completed + (item.completedCount || 0),
+      completionRate: Number(item.completionRate || 0),
+      avgPlayers: (acc.avgPlayers + Number(item.avgPlayers || 0)) / 2,
     }),
     { total: 0, completed: 0, completionRate: 0, avgPlayers: 0 }
   );
@@ -336,7 +341,7 @@ async function fetchAnalyticsDataForReport(
       summary: revenueSummary,
       breakdown: revenueData.map((item) => ({
         date: item.periodStart,
-        amount: item.totalRevenue,
+        amount: Number(item.totalRevenue || 0),
         type: item.periodType,
         source: 'tournaments',
       })),
@@ -346,8 +351,8 @@ async function fetchAnalyticsDataForReport(
       cohorts: cohortData.map((cohort) => ({
         cohort: cohort.cohortMonth,
         size: cohort.cohortSize,
-        retention: cohort.month0Retention,
-        revenue: cohort.totalRevenue,
+        retention: Number(cohort.retentionRate || 0),
+        revenue: Number(cohort.revenue || 0),
       })),
     },
     tournaments: {
@@ -355,8 +360,8 @@ async function fetchAnalyticsDataForReport(
       details: tournamentData.map((item) => ({
         date: item.periodStart,
         format: 'mixed',
-        players: item.totalPlayers,
-        revenue: item.totalRevenue,
+        players: item.totalPlayers || 0,
+        revenue: Number(item.revenue || 0),
         status: 'completed',
       })),
     },
