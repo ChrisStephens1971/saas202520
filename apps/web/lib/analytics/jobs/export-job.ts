@@ -130,26 +130,29 @@ export async function processExportJob(
 
     // Step 5: Create export record in database (100% progress)
     console.log('[ExportJob] Creating export record...');
-    await prisma.analyticsExport.create({
-      data: {
-        orgId: tenantId,
-        userId,
-        exportType,
-        format: exportFormat,
-        filename,
-        fileSize,
-        status: 'completed',
-        downloadUrl,
-        dateRange: {
-          start: dateRange.start,
-          end: dateRange.end,
-        } as any,
-        metadata: {
-          jobId: job.id,
-          generatedAt: new Date().toISOString(),
-        } as any,
-      },
-    });
+    // TODO: Add AnalyticsExport model to prisma/schema.prisma
+    // Model should include: orgId, userId, exportType, format, filename, fileSize, status, downloadUrl, dateRange, metadata
+    // await prisma.analyticsExport.create({
+    //   data: {
+    //     orgId: tenantId,
+    //     userId,
+    //     exportType,
+    //     format: exportFormat,
+    //     filename,
+    //     fileSize,
+    //     status: 'completed',
+    //     downloadUrl,
+    //     dateRange: {
+    //       start: dateRange.start,
+    //       end: dateRange.end,
+    //     } as any,
+    //     metadata: {
+    //       jobId: job.id,
+    //       generatedAt: new Date().toISOString(),
+    //     } as any,
+    //   },
+    // });
+    console.log('[ExportJob] Export record creation skipped (model not yet in schema)');
 
     await job.updateProgress(100);
 
@@ -168,29 +171,31 @@ export async function processExportJob(
     console.error(`[ExportJob] Job ${job.id} failed:`, error);
 
     // Create failed export record
-    try {
-      await prisma.analyticsExport.create({
-        data: {
-          orgId: tenantId,
-          userId,
-          exportType,
-          format: exportFormat,
-          filename: generateFilename(exportType, exportFormat, tenantId),
-          fileSize: 0,
-          status: 'failed',
-          dateRange: {
-            start: dateRange.start,
-            end: dateRange.end,
-          } as any,
-          metadata: {
-            jobId: job.id,
-            error: error instanceof Error ? error.message : 'Unknown error',
-          } as any,
-        },
-      });
-    } catch (dbError) {
-      console.error('[ExportJob] Failed to create error record:', dbError);
-    }
+    // TODO: Uncomment when AnalyticsExport model is added to schema
+    // try {
+    //   await prisma.analyticsExport.create({
+    //     data: {
+    //       orgId: tenantId,
+    //       userId,
+    //       exportType,
+    //       format: exportFormat,
+    //       filename: generateFilename(exportType, exportFormat, tenantId),
+    //       fileSize: 0,
+    //       status: 'failed',
+    //       dateRange: {
+    //         start: dateRange.start,
+    //         end: dateRange.end,
+    //       } as any,
+    //       metadata: {
+    //         jobId: job.id,
+    //         error: error instanceof Error ? error.message : 'Unknown error',
+    //       } as any,
+    //     },
+    //   });
+    // } catch (dbError) {
+    //   console.error('[ExportJob] Failed to create error record:', dbError);
+    // }
+    console.log('[ExportJob] Failed export record creation skipped (model not yet in schema)');
 
     // Re-throw to mark job as failed in BullMQ
     throw error;

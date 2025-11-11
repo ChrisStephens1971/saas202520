@@ -136,8 +136,10 @@ export async function POST(
           // For now, we'll leave playerId null until rankings are finalized
           return await prisma.payout.create({
             data: {
+              orgId: tournament.orgId,
               tournamentId,
               playerId: '', // Will be updated when tournament completes
+              playerName: `TBD - Place #${payout.placement}`, // Will be updated when tournament completes
               placement: payout.placement,
               amount: payout.amount,
               source: 'prize_pool',

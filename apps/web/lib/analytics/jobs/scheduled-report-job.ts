@@ -54,7 +54,7 @@ export async function processScheduledReportJob(
     const report = await prisma.scheduledReport.findUnique({
       where: { id: reportId },
       include: {
-        organization: {
+        tenant: {
           select: { name: true },
         },
       },
@@ -64,11 +64,11 @@ export async function processScheduledReportJob(
       throw new Error(`Scheduled report ${reportId} not found`);
     }
 
-    if (report.orgId !== tenantId) {
+    if (report.tenantId !== tenantId) {
       throw new Error(`Report ${reportId} does not belong to tenant ${tenantId}`);
     }
 
-    if (!report.enabled) {
+    if (!report.isActive) {
       console.log(`[ScheduledReportJob] Report ${reportId} is disabled, skipping`);
       return {
         success: true,
@@ -93,7 +93,7 @@ export async function processScheduledReportJob(
       reportType,
       dateRange.start,
       dateRange.end,
-      report.organization.name
+      report.tenant.name
     );
 
     await job.updateProgress(50);
@@ -144,7 +144,7 @@ export async function processScheduledReportJob(
         content: reportFile,
         mimeType,
       },
-      organizationName: report.organization.name,
+      organizationName: report.tenant.name,
     });
 
     await job.updateProgress(90);
