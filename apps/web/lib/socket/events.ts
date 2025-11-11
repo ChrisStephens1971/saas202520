@@ -92,6 +92,12 @@ export interface TournamentStatusChangedPayload {
   timestamp: string;
 }
 
+export interface TournamentDeletedPayload {
+  tournamentId: string;
+  deletedBy: string;
+  timestamp: string;
+}
+
 export interface MatchCreatedPayload {
   tournamentId: string;
   match: {
@@ -273,6 +279,7 @@ export interface ServerToClientEvents {
   [SocketEvent.TOURNAMENT_UPDATED]: (payload: TournamentUpdatedPayload) => void;
   [SocketEvent.TOURNAMENT_STATUS_CHANGED]: (payload: TournamentStatusChangedPayload) => void;
   [SocketEvent.TOURNAMENT_CREATED]: (payload: TournamentCreatedPayload) => void;
+  [SocketEvent.TOURNAMENT_DELETED]: (payload: TournamentDeletedPayload) => void;
   [SocketEvent.MATCH_CREATED]: (payload: MatchCreatedPayload) => void;
   [SocketEvent.MATCH_STARTED]: (payload: MatchStartedPayload) => void;
   [SocketEvent.MATCH_UPDATED]: (payload: MatchUpdatedPayload) => void;
