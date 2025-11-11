@@ -59,6 +59,7 @@ export enum SocketEvent {
   CHIPS_ADJUSTED = 'chips:adjusted',
   QUEUE_UPDATED = 'queue:updated',
   MATCH_ASSIGNED = 'match:assigned',
+  BRACKET_ADVANCED = 'bracket:advanced',
 }
 
 // Event payload types
@@ -288,6 +289,17 @@ export interface MatchAssignedPayload {
   timestamp: string;
 }
 
+export interface BracketAdvancedPayload {
+  tournamentId: string;
+  round: number;
+  advancingPlayers: Array<{
+    playerId: string;
+    playerName: string;
+    seed?: number;
+  }>;
+  timestamp: string;
+}
+
 // Server-to-client events map
 export interface ServerToClientEvents {
   [SocketEvent.TOURNAMENT_UPDATED]: (payload: TournamentUpdatedPayload) => void;
@@ -311,6 +323,7 @@ export interface ServerToClientEvents {
   [SocketEvent.STANDINGS_UPDATED]: (payload: StandingsUpdatedPayload) => void;
   [SocketEvent.FINALS_APPLIED]: (payload: FinalsAppliedPayload) => void;
   [SocketEvent.QUEUE_UPDATED]: (payload: QueueUpdatedPayload) => void;
+  [SocketEvent.BRACKET_ADVANCED]: (payload: BracketAdvancedPayload) => void;
 }
 
 // Client-to-server events map

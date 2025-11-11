@@ -269,7 +269,7 @@ export function notifyBracketAdvanced(
     timestamp: new Date().toISOString(),
   };
 
-  emitToTournament(tournamentId, (SocketEvent as any).BRACKET_ADVANCED, payload);
+  emitToTournament(tournamentId, SocketEvent.BRACKET_ADVANCED, payload);
 
   // Notify each advancing player
   advancingPlayers.forEach((player) => {

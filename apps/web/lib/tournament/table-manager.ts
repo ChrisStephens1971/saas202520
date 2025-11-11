@@ -7,11 +7,27 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import type { Table, Match } from '@prisma/client';
+import type { Table, Match, Prisma } from '@prisma/client';
 
 // ============================================================================
 // TYPES
 // ============================================================================
+
+// Type for table with included matches and player data
+type TableWithMatches = Prisma.TableGetPayload<{
+  include: {
+    matches: {
+      include: {
+        playerA: {
+          select: { name: true };
+        };
+        playerB: {
+          select: { name: true };
+        };
+      };
+    };
+  };
+}>;
 
 export type TableStatus = 'available' | 'in_use' | 'maintenance';
 
@@ -383,7 +399,7 @@ export async function getAvailableTables(
   tournamentId: string,
   orgId: string
 ): Promise<TableAvailability[]> {
-  const tables = await prisma.table.findMany({
+  const tables: TableWithMatches[] = await prisma.table.findMany({
     where: {
       tournamentId,
       tournament: {
@@ -416,7 +432,7 @@ export async function getAvailableTables(
   return tables.map((table) => {
     const isAvailable = checkAvailability(table);
     const currentMatch = table.currentMatchId
-      ? (table as any).matches.find((m) => m.id === table.currentMatchId)
+      ? table.matches.find((m) => m.id === table.currentMatchId)
       : null;
 
     return {

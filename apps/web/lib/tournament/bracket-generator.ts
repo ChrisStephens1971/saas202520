@@ -542,9 +542,9 @@ export function generateRoundRobin(
   const matchesPerRound = schedulePlayerCount / 2;
 
   // Create player array (with bye if needed)
-  const schedulePlayers = [...seededPlayers];
+  const schedulePlayers: (PlayerWithRating | null)[] = [...seededPlayers];
   if (hasOddPlayers) {
-    schedulePlayers.push(null as any); // Placeholder for bye
+    schedulePlayers.push(null); // Placeholder for bye
   }
 
   // Circle method for round robin
