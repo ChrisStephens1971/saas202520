@@ -70,7 +70,7 @@ export async function checkAchievements(
       }
 
       // Check if requirements are met
-      const meetsRequirements = await checkAchievementRequirements(playerId, tenantId, definition as AchievementDefinition, event);
+      const meetsRequirements = await checkAchievementRequirements(playerId, tenantId, definition as any, event);
 
       if (meetsRequirements) {
         // Unlock the achievement
@@ -145,7 +145,7 @@ export async function unlockAchievement(
         tenantId,
         achievementId: definition.id,
         progress: 100,
-        metadata: (metadata as AchievementMetadata) || null,
+        metadata: (metadata || null) as any,
       },
       include: {
         achievement: true,
@@ -199,24 +199,25 @@ export async function getAchievementProgress(
     });
 
     if (unlocked) {
+      const req = definition.requirements as any as AchievementRequirements;
       return {
         achievementCode,
         progress: 100,
         isUnlocked: true,
-        requirement: definition.requirements as AchievementRequirements,
-        currentValue: definition.requirements.value || 0,
-        targetValue: definition.requirements.value || 0,
+        requirement: req,
+        currentValue: req?.value || 0,
+        targetValue: req?.value || 0,
       };
     }
 
     // Calculate progress
-    const progress = await calculateAchievementProgress(playerId, tenantId, definition.requirements as AchievementRequirements);
+    const progress = await calculateAchievementProgress(playerId, tenantId, definition.requirements as any as AchievementRequirements);
 
     return {
       achievementCode,
       progress: progress.percentage,
       isUnlocked: false,
-      requirement: definition.requirements as AchievementRequirements,
+      requirement: definition.requirements as any as AchievementRequirements,
       currentValue: progress.current,
       targetValue: progress.target,
     };
@@ -339,7 +340,7 @@ export async function calculateAchievementProgress(
             current = Math.max(current, winRate);
           }
         }
-        target = requirements.win_rate;
+        target = requirements.win_rate || 0;
       }
       break;
 
@@ -390,10 +391,10 @@ async function checkAchievementRequirements(
 
   switch (requirements.type) {
     case 'tournament_count':
-      return checkTournamentCount(playerId, tenantId, requirements.value);
+      return checkTournamentCount(playerId, tenantId, requirements.value || 0);
 
     case 'tournament_wins':
-      return checkTournamentWins(playerId, tenantId, requirements.value);
+      return checkTournamentWins(playerId, tenantId, requirements.value || 0);
 
     case 'tournament_perfect':
       return checkPerfectTournament(playerId, tenantId, event);
@@ -408,22 +409,22 @@ async function checkAchievementRequirements(
       return checkLowestSeedWin(event);
 
     case 'early_registration':
-      return checkEarlyRegistration(event, requirements.hours_before);
+      return checkEarlyRegistration(event, requirements.hours_before || 0);
 
     case 'unique_opponents':
-      return checkUniqueOpponents(playerId, tenantId, requirements.value);
+      return checkUniqueOpponents(playerId, tenantId, requirements.value || 0);
 
     case 'repeated_opponent':
-      return checkRepeatedOpponent(playerId, tenantId, requirements.value);
+      return checkRepeatedOpponent(playerId, tenantId, requirements.value || 0);
 
     case 'unique_venues':
-      return checkUniqueVenues(playerId, tenantId, requirements.value);
+      return checkUniqueVenues(playerId, tenantId, requirements.value || 0);
 
     case 'tournament_duration':
-      return checkTournamentDuration(event, requirements.hours);
+      return checkTournamentDuration(event, requirements.hours || 0);
 
     case 'exact_placement':
-      return checkExactPlacement(event, requirements.placement);
+      return checkExactPlacement(event, requirements.placement || 0);
 
     case 'format_wins':
       return checkFormatWins(playerId, tenantId, requirements);
@@ -432,7 +433,7 @@ async function checkAchievementRequirements(
       return checkFormatWinRate(playerId, tenantId, requirements);
 
     case 'unique_formats':
-      return checkUniqueFormats(playerId, tenantId, requirements.value);
+      return checkUniqueFormats(playerId, tenantId, requirements.value || 0);
 
     default:
       console.warn(`[checkAchievementRequirements] Unknown requirement type: ${requirements.type}`);
@@ -583,7 +584,7 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
   });
 
   for (const formatStat of formatStats) {
-    if (((formatStat._count as any).id) >= requirements.min_matches) {
+    if (((formatStat._count as any).id) >= (requirements.min_matches || 0)) {
       const wins = await prisma.matchHistory.count({
         where: {
           playerId,
@@ -593,7 +594,7 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
         },
       });
       const winRate = (wins / ((formatStat._count as any).id)) * 100;
-      if (winRate >= requirements.win_rate) {
+      if (winRate >= (requirements.win_rate || 0)) {
         return true;
       }
     }
