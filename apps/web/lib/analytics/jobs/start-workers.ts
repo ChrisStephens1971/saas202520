@@ -14,6 +14,7 @@
 import { Worker } from 'bullmq';
 import { createWorker, closeQueue, healthCheck } from './queue';
 import { processAggregationJob } from './aggregation-job';
+import { processExportJob } from './export-job';
 import {
   initializeScheduler,
   startScheduler,
@@ -93,9 +94,7 @@ async function startWorkers(): Promise<void> {
         return await processAggregationJob(job as any);
 
       case 'export':
-        // TODO: Implement export job processor
-        console.log('[Workers] Export job processor not yet implemented');
-        return { success: true, message: 'Export not implemented' };
+        return await processExportJob(job as any);
 
       case 'scheduled-report':
         // TODO: Implement scheduled report processor

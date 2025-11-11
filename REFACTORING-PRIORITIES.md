@@ -263,9 +263,9 @@ model User {
 - ✅ Finals cutoff bracket generation
 - ⏳ Production webhook queue
 
-**LOW PRIORITY:** ✅ 1/5 complete (20%)
+**LOW PRIORITY:** ✅ 2/5 complete (40%)
 - ✅ PWA install prompt
-- ⏳ Export job processor
+- ✅ Export job processor
 - ⏳ Scheduled report processor
 - ⏳ Prize money tracking
 - ⏳ Venue API
