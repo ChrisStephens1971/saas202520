@@ -430,7 +430,14 @@ export async function calculateRevenueProjection(
   const lastRevenue = lastAggregate ? parseFloat(lastAggregate.toString()) : 0;
 
   // Project forward
-  const projections = [];
+  const projections: Array<{
+    month: Date;
+    projectedRevenue: number;
+    confidenceInterval: {
+      low: number;
+      high: number;
+    };
+  }> = [];
   let currentProjection = lastRevenue;
 
   for (let i = 1; i <= months; i++) {
