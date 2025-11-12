@@ -483,7 +483,12 @@ function prepareExportData(
         totalRevenue: analyticsData.revenue?.current?.totalRevenue || 0,
         growth: analyticsData.revenue?.growth?.revenueGrowth || 0,
       },
-      breakdown: (analyticsData.revenue?.breakdown?.bySource as any) || [],
+      breakdown: ((analyticsData.revenue?.breakdown?.bySource as any) || []) as Array<{
+        date: Date;
+        amount: number;
+        type: string;
+        source: string;
+      }>,
     },
     users: {
       summary: {
