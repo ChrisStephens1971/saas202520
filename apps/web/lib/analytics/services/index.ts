@@ -77,8 +77,6 @@ export {
 
 /**
  * Quick access namespaces
+ * Note: These modules use named exports, not default exports.
+ * Import them as: import * as RevenueCalculator from '@/lib/analytics/services/revenue-calculator';
  */
-export { default as RevenueCalculator } from './revenue-calculator';
-export { default as CohortAnalyzer } from './cohort-analyzer';
-export { default as AnalyticsService } from './analytics-service';
-export { default as CacheManager } from './cache-manager';
