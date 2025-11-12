@@ -94,7 +94,7 @@ export async function processReportJob(
     if (reportConfig.format === 'csv') {
       // Generate CSV
       const csvData = prepareCSVData(analyticsData as any); // Type assertion needed - analytics types don't match CSV export structure
-      const csv = ExportService.exportToCSV(csvData, reportConfig.name);
+      const csv = ExportService.exportToCSV(csvData as Record<string, unknown>[], reportConfig.name);
       fileBuffer = Buffer.from(csv, 'utf-8');
       filename = ExportService.generateFilename('revenue', 'csv', tenantId);
     } else if (reportConfig.format === 'excel') {
