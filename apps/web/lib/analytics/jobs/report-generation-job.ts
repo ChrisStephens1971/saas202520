@@ -100,7 +100,7 @@ export async function processReportJob(
     } else if (reportConfig.format === 'excel') {
       // Generate Excel
       const exportData = prepareExportData(
-        analyticsData,
+        analyticsData as any, // Type assertion needed - analytics types don't match export structure
         organizationName,
         dateRange
       );
@@ -109,7 +109,7 @@ export async function processReportJob(
     } else if (reportConfig.format === 'pdf') {
       // Generate PDF
       const exportData = prepareExportData(
-        analyticsData,
+        analyticsData as any, // Type assertion needed - analytics types don't match export structure
         organizationName,
         dateRange
       );
