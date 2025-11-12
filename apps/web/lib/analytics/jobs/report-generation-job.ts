@@ -483,7 +483,7 @@ function prepareExportData(
         totalRevenue: analyticsData.revenue?.current?.totalRevenue || 0,
         growth: analyticsData.revenue?.growth?.revenueGrowth || 0,
       },
-      breakdown: analyticsData.revenue?.breakdown?.bySource || [],
+      breakdown: (analyticsData.revenue?.breakdown?.bySource as any) || [],
     },
     users: {
       summary: {
