@@ -10,7 +10,7 @@
 import { useState, useCallback } from 'react';
 import { useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
 import { SocketEvent } from '@/lib/socket/events';
-import type { UserOnlinePayload, UserOfflinePayload } from '@/lib/socket/events';
+import type { UserPresencePayload } from '@/lib/socket/events';
 
 export interface OnlineUser {
   userId: string;
@@ -41,7 +41,7 @@ export function PresenceIndicator({
   // Listen for user online events
   useSocketEvent(
     SocketEvent.USER_ONLINE,
-    useCallback((payload: UserOnlinePayload) => {
+    useCallback((payload: UserPresencePayload) => {
       if (payload.userId) {
         setOnlineUsers((prev) => {
           const next = new Map(prev);
@@ -60,7 +60,7 @@ export function PresenceIndicator({
   // Listen for user offline events
   useSocketEvent(
     SocketEvent.USER_OFFLINE,
-    useCallback((payload: UserOfflinePayload) => {
+    useCallback((payload: UserPresencePayload) => {
       if (payload.userId) {
         setOnlineUsers((prev) => {
           const next = new Map(prev);

@@ -139,28 +139,18 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Sort By</label>
-              <Select value={sortBy} onValueChange={(value) => setSortBy(value as 'name' | 'winRate' | 'tournaments' | 'lastPlayed')}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="winRate">Win Rate</SelectItem>
-                  <SelectItem value="tournaments">Tournaments</SelectItem>
-                  <SelectItem value="lastPlayed">Last Played</SelectItem>
-                </SelectContent>
+              <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'winRate' | 'tournaments' | 'lastPlayed')}>
+                <SelectItem value="name">Name</SelectItem>
+                <SelectItem value="winRate">Win Rate</SelectItem>
+                <SelectItem value="tournaments">Tournaments</SelectItem>
+                <SelectItem value="lastPlayed">Last Played</SelectItem>
               </Select>
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Order</label>
-              <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                  <SelectItem value="desc">Descending</SelectItem>
-                </SelectContent>
+              <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}>
+                <SelectItem value="asc">Ascending</SelectItem>
+                <SelectItem value="desc">Descending</SelectItem>
               </Select>
             </div>
           </div>

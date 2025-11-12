@@ -10,7 +10,7 @@ import { PlayerProfile } from '@/lib/player-profiles/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectItem } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -90,16 +90,11 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
       {/* Skill Level */}
       <div>
         <Label htmlFor="skillLevel">Skill Level</Label>
-        <Select value={formData.skillLevel} onValueChange={(value: string) => setFormData({ ...formData, skillLevel: value })}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="BEGINNER">Beginner</SelectItem>
-            <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
-            <SelectItem value="ADVANCED">Advanced</SelectItem>
-            <SelectItem value="EXPERT">Expert</SelectItem>
-          </SelectContent>
+        <Select value={formData.skillLevel} onChange={(e) => setFormData({ ...formData, skillLevel: e.target.value as PlayerProfile['skillLevel'] })}>
+          <SelectItem value="BEGINNER">Beginner</SelectItem>
+          <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
+          <SelectItem value="ADVANCED">Advanced</SelectItem>
+          <SelectItem value="EXPERT">Expert</SelectItem>
         </Select>
       </div>
 

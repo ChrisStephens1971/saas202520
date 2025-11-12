@@ -104,23 +104,23 @@ export function SocketProvider({
       setIsConnected(false);
     });
 
-    newSocket.on('reconnect', (attemptNumber) => {
+    (newSocket as any).on('reconnect', (attemptNumber: number) => {
       console.log(`Socket.io reconnected after ${attemptNumber} attempts`);
       setIsConnected(true);
       setError(null);
     });
 
-    newSocket.on('reconnect_attempt', (attemptNumber) => {
+    (newSocket as any).on('reconnect_attempt', (attemptNumber: number) => {
       console.log(`Socket.io reconnection attempt ${attemptNumber}`);
       setIsConnecting(true);
     });
 
-    newSocket.on('reconnect_error', (err) => {
+    (newSocket as any).on('reconnect_error', (err: Error) => {
       console.error('Socket.io reconnection error:', err.message);
       setError(err.message);
     });
 
-    newSocket.on('reconnect_failed', () => {
+    (newSocket as any).on('reconnect_failed', () => {
       console.error('Socket.io reconnection failed after all attempts');
       setError('Failed to reconnect after multiple attempts');
       setIsConnecting(false);

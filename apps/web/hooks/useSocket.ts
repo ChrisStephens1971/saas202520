@@ -49,12 +49,12 @@ export function useSocket() {
         return () => {};
       }
 
-      socket.on(event, handler);
+      socket.on(event, handler as any);
       console.log(`[useSocket] Listening to event: ${String(event)}`);
 
       // Return cleanup function
       return () => {
-        socket.off(event, handler);
+        socket.off(event, handler as any);
         console.log(`[useSocket] Stopped listening to event: ${String(event)}`);
       };
     },
@@ -168,7 +168,7 @@ export function useSocketEvent<K extends keyof ServerToClientEvents>(
 
     // Wrap handler to use current ref value with proper typing
     const wrappedHandler = (...args: Parameters<ServerToClientEvents[K]>) => {
-      handlerRef.current(...args);
+      (handlerRef.current as any)(...args);
     };
 
     socket.on(event, wrappedHandler as ServerToClientEvents[K]);
