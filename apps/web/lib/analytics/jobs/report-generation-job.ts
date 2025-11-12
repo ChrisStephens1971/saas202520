@@ -344,10 +344,8 @@ async function fetchAnalyticsData(
           };
         })
       );
-    } else {
-      // Will be extracted from cohorts data
-      data.users = {};
     }
+    // If users not populated, it will be extracted from cohorts data later
   }
 
   await Promise.all(promises);
