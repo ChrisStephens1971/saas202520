@@ -675,7 +675,11 @@ export async function getAnalyticsHealth(
       cohortCompleteness: latestCohort ? 100 : 0,
       tournamentCompleteness: latestTournament ? 100 : 0,
     },
-    cacheStats,
+    cacheStats: {
+      hitRate: cacheStats.hitRate,
+      missRate: cacheStats.missRate,
+      avgResponseTime: 0, // TODO: Implement response time tracking in cache-manager
+    },
     recommendations,
   };
 }
