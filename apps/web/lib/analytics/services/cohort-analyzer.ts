@@ -22,13 +22,7 @@ const prisma = new PrismaClient();
 export interface CohortAnalysis {
   cohort: Date;
   cohortSize: number;
-  retentionCurve: Array<{
-    monthNumber: number;
-    retainedUsers: number;
-    retentionRate: number;
-    churnedUsers: number;
-    churnRate: number;
-  }>;
+  retentionCurve: RetentionDataPoint[];
   metrics: {
     avgRetentionRate: number;
     month1Retention: number;
