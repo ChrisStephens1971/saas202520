@@ -680,10 +680,10 @@ export async function getExportStatus(jobId: string): Promise<ExportJobStatus> {
  */
 export function generateFilename(
   type: 'revenue' | 'users' | 'tournaments',
-  format: 'csv' | 'excel' | 'pdf',
+  fileFormat: 'csv' | 'excel' | 'pdf',
   tenantId: string
 ): string {
   const timestamp = format(new Date(), 'yyyy-MM-dd-HHmmss');
-  const extension = format === 'excel' ? 'xlsx' : format;
+  const extension = fileFormat === 'excel' ? 'xlsx' : fileFormat;
   return `analytics-${type}-${tenantId}-${timestamp}.${extension}`;
 }
