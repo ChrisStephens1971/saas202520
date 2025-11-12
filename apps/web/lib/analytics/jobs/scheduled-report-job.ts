@@ -120,6 +120,8 @@ export async function processScheduledReportJob(
 
       case 'pdf':
         const pdfBlob = await exportToPDF(analyticsData, {
+          tenantId,
+          dateRange,
           title: `${reportType.toUpperCase()} Report`,
           subtitle: `${format(dateRange.start, 'MMM dd, yyyy')} - ${format(dateRange.end, 'MMM dd, yyyy')}`,
         });
