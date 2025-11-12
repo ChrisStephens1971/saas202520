@@ -74,14 +74,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-lg bg-white p-6 shadow">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Session Info</h2>
-          <pre className="text-xs bg-gray-50 p-4 rounded overflow-x-auto">
-            {JSON.stringify(session, null, 2)}
-          </pre>
-        </div>
-
-        <div className="mt-4">
+        <div className="mt-8">
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
