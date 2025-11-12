@@ -92,7 +92,7 @@ function createTransporter() {
     // For now, just log and use standard config
   }
 
-  return nodemailer.createTransporter(config);
+  return nodemailer.createTransport(config);
 }
 
 // ============================================================================
