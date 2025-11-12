@@ -171,11 +171,11 @@ export function useSocketEvent<K extends keyof ServerToClientEvents>(
       (handlerRef.current as any)(...args);
     };
 
-    socket.on(event, wrappedHandler as ServerToClientEvents[K]);
+    socket.on(event, wrappedHandler as any);
     console.log(`[useSocketEvent] Listening to: ${String(event)}`);
 
     return () => {
-      socket.off(event, wrappedHandler as ServerToClientEvents[K]);
+      socket.off(event, wrappedHandler as any);
       console.log(`[useSocketEvent] Stopped listening to: ${String(event)}`);
     };
   }, [socket, isConnected, event, ...dependencies]);
@@ -242,7 +242,7 @@ export function usePresence(tournamentId: string) {
   const [onlineUsers, setOnlineUsers] = React.useState<string[]>([]);
 
   useSocketEvent(
-    'user:online',
+    SocketEvent.USER_ONLINE,
     useCallback(
       (payload) => {
         if (payload.userId) {
@@ -254,7 +254,7 @@ export function usePresence(tournamentId: string) {
   );
 
   useSocketEvent(
-    'user:offline',
+    SocketEvent.USER_OFFLINE,
     useCallback(
       (payload) => {
         if (payload.userId) {
