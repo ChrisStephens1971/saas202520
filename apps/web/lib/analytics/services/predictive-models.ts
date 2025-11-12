@@ -276,7 +276,7 @@ export async function predictUserGrowth(
     const cohort = await prisma.userCohort.findFirst({
       where: {
         tenantId,
-        cohort: month,
+        cohortMonth: month,
       },
     });
 
