@@ -100,13 +100,13 @@ export async function processScheduledReportJob(
 
     // Step 4: Generate report file (70% progress)
     console.log('[ScheduledReportJob] Generating report file...');
-    const format = (parameters?.format as 'csv' | 'excel' | 'pdf') || 'pdf'; // Default to PDF
-    const filename = generateFilename(reportType as any, format, tenantId);
+    const reportFormat = (parameters?.format as 'csv' | 'excel' | 'pdf') || 'pdf'; // Default to PDF
+    const filename = generateFilename(reportType as any, reportFormat, tenantId);
 
     let reportFile: Buffer | string;
     let mimeType: string;
 
-    switch (format) {
+    switch (reportFormat) {
       case 'csv':
         const csvData = convertToCSVFormat(analyticsData, reportType);
         reportFile = exportToCSV(csvData, filename);
@@ -130,7 +130,7 @@ export async function processScheduledReportJob(
         break;
 
       default:
-        throw new Error(`Unknown format: ${format}`);
+        throw new Error(`Unknown format: ${reportFormat}`);
     }
 
     await job.updateProgress(70);
@@ -168,7 +168,7 @@ export async function processScheduledReportJob(
     //         start: dateRange.start.toISOString(),
     //         end: dateRange.end.toISOString(),
     //       },
-    //       format,
+    //       format: reportFormat,
     //     } as any,
     //   },
     // });
