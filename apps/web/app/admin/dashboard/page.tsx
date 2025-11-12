@@ -11,18 +11,30 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import {
+  Users,
+  Trophy,
+  Target,
+  Circle,
+  Zap,
+  CheckCircle,
+  TrendingUp,
+  Settings,
+  FileText,
+  Home,
+} from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
 interface MetricCardProps {
   title: string;
   value: string | number;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   description?: string;
   href?: string;
 }
 
-function MetricCard({ title, value, icon, description, href }: MetricCardProps) {
+function MetricCard({ title, value, icon: Icon, description, href }: MetricCardProps) {
   const content = (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:bg-gray-800 dark:border-gray-700">
       <div className="flex items-center justify-between">
@@ -33,7 +45,7 @@ function MetricCard({ title, value, icon, description, href }: MetricCardProps) 
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{description}</p>
           )}
         </div>
-        <div className="text-4xl">{icon}</div>
+        <Icon className="h-10 w-10 text-gray-400 dark:text-gray-500" />
       </div>
     </div>
   );
@@ -52,17 +64,17 @@ function MetricCard({ title, value, icon, description, href }: MetricCardProps) 
 interface QuickLinkProps {
   title: string;
   description: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   href: string;
 }
 
-function QuickLink({ title, description, icon, href }: QuickLinkProps) {
+function QuickLink({ title, description, icon: Icon, href }: QuickLinkProps) {
   return (
     <Link
       href={href}
       className="flex items-start gap-4 rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-500 hover:shadow-md dark:bg-gray-800 dark:border-gray-700 dark:hover:border-blue-500"
     >
-      <span className="text-3xl">{icon}</span>
+      <Icon className="h-8 w-8 text-gray-400 dark:text-gray-500 mt-0.5" />
       <div>
         <h3 className="font-medium text-gray-900 dark:text-white">{title}</h3>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{description}</p>
@@ -164,40 +176,40 @@ export default async function AdminDashboardPage() {
         <MetricCard
           title="Total Users"
           value={metrics.totalUsers}
-          icon="👥"
+          icon={Users}
           description="Organization members"
           href="/admin/users"
         />
         <MetricCard
           title="Total Tournaments"
           value={metrics.totalTournaments}
-          icon="🏆"
+          icon={Trophy}
           description={`${metrics.activeTournaments} active`}
           href="/admin/tournaments"
         />
         <MetricCard
           title="Total Players"
           value={metrics.totalPlayers}
-          icon="🎯"
+          icon={Target}
           description="Across all tournaments"
         />
         <MetricCard
           title="Total Matches"
           value={metrics.totalMatches}
-          icon="🎱"
+          icon={Circle}
           description={`${metrics.activeMatches} in progress`}
         />
         <MetricCard
           title="Active Tournaments"
           value={metrics.activeTournaments}
-          icon="⚡"
+          icon={Zap}
           description="Currently running"
           href="/admin/tournaments?status=active"
         />
         <MetricCard
           title="System Status"
           value="✓"
-          icon="💚"
+          icon={CheckCircle}
           description="All systems operational"
         />
       </div>
@@ -209,37 +221,37 @@ export default async function AdminDashboardPage() {
           <QuickLink
             title="Manage Tournaments"
             description="View, edit, and configure tournaments"
-            icon="🏆"
+            icon={Trophy}
             href="/admin/tournaments"
           />
           <QuickLink
             title="User Management"
             description="Add, remove, and manage user roles"
-            icon="👥"
+            icon={Users}
             href="/admin/users"
           />
           <QuickLink
             title="View Analytics"
             description="Reports, insights, and data analysis"
-            icon="📈"
+            icon={TrendingUp}
             href="/admin/analytics"
           />
           <QuickLink
             title="System Settings"
             description="Configure organization settings"
-            icon="⚙️"
+            icon={Settings}
             href="/admin/settings"
           />
           <QuickLink
             title="Audit Logs"
             description="View system activity and changes"
-            icon="📝"
+            icon={FileText}
             href="/admin/audit"
           />
           <QuickLink
             title="Back to Main"
             description="Return to main dashboard"
-            icon="🏠"
+            icon={Home}
             href="/dashboard"
           />
         </div>
