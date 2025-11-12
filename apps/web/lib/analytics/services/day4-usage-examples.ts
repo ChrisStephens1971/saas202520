@@ -223,6 +223,8 @@ export async function example3_ExportToPDF() {
 
   // Export to PDF
   const pdfBlob = await ExportService.exportToPDF(exportData, {
+    tenantId: exportData.tenantId,
+    dateRange: exportData.dateRange,
     orientation: 'portrait',
     title: 'Monthly Analytics Report',
     subtitle: 'January 2025',
