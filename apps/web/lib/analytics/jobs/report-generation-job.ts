@@ -114,6 +114,8 @@ export async function processReportJob(
         dateRange
       );
       const pdfBlob = await ExportService.exportToPDF(exportData, {
+        tenantId,
+        dateRange,
         title: reportConfig.name,
         subtitle: `${organizationName} - Analytics Report`,
       });
