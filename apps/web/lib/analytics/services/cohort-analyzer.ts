@@ -510,7 +510,14 @@ export async function predictFutureRetention(
   const decayRate = calculateDecayRate(retentionRates);
 
   // Generate predictions
-  const predictions = [];
+  const predictions: Array<{
+    monthNumber: number;
+    predictedRetention: number;
+    confidenceInterval: {
+      low: number;
+      high: number;
+    };
+  }> = [];
   for (let i = 1; i <= months; i++) {
     const futureMonth = lastMonth + i;
     const predictedRetention = lastRetention * Math.exp(-decayRate * i);
