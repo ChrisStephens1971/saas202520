@@ -199,18 +199,18 @@ export default function NewTournamentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900 p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => router.push('/tournaments')}
-            className="text-gray-300 hover:text-white mb-4 flex items-center"
+            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white mb-4 flex items-center"
           >
             ← Back to Tournaments
           </button>
-          <h1 className="text-4xl font-bold text-white mb-2">Create Tournament</h1>
-          <p className="text-gray-300">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Create Tournament</h1>
+          <p className="text-gray-700 dark:text-gray-300">
             Set up a new tournament for your organization
           </p>
         </div>

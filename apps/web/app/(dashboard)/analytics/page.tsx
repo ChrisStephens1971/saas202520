@@ -129,7 +129,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 dark:from-gray-900 dark:via-purple-900 dark:to-gray-900 text-gray-900 dark:text-white">
       <div className="p-8">
         <h1 className="text-4xl font-bold mb-8">Analytics Dashboard</h1>
 
@@ -142,15 +142,15 @@ export default function AnalyticsPage() {
         <KPICards metrics={kpiMetrics} />
 
         {/* Tab Navigation */}
-        <div className="mt-8 mb-4 flex space-x-4 border-b border-white/20">
+        <div className="mt-8 mb-4 flex space-x-4 border-b border-gray-300 dark:border-white/20">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`pb-2 px-4 transition-all ${
                 activeTab === tab.id
-                  ? 'border-b-2 border-blue-400 text-blue-400'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'border-b-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               <span className="mr-2">{tab.icon}</span>
