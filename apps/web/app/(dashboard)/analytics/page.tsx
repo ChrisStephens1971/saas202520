@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo } from 'react';
 import useSWR from 'swr';
+import { BarChart3, DollarSign, Trophy, Users } from 'lucide-react';
 import { KPICards } from '@/components/analytics/KPICards';
 import { RevenueAnalytics } from '@/components/analytics/RevenueAnalytics';
 import { UserAnalytics } from '@/components/analytics/UserAnalytics';
@@ -122,10 +123,10 @@ export default function AnalyticsPage() {
   );
 
   const tabs = [
-    { id: 'overview' as const, label: 'Overview', icon: '📊' },
-    { id: 'revenue' as const, label: 'Revenue', icon: '💰' },
-    { id: 'users' as const, label: 'Users', icon: '👥' },
-    { id: 'tournaments' as const, label: 'Tournaments', icon: '🏆' },
+    { id: 'overview' as const, label: 'Overview', Icon: BarChart3 },
+    { id: 'revenue' as const, label: 'Revenue', Icon: DollarSign },
+    { id: 'users' as const, label: 'Users', Icon: Users },
+    { id: 'tournaments' as const, label: 'Tournaments', Icon: Trophy },
   ];
 
   return (
@@ -143,20 +144,23 @@ export default function AnalyticsPage() {
 
         {/* Tab Navigation */}
         <div className="mt-8 mb-4 flex space-x-4 border-b border-gray-300 dark:border-white/20">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`pb-2 px-4 transition-all ${
-                activeTab === tab.id
-                  ? 'border-b-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-              }`}
-            >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
+          {tabs.map((tab) => {
+            const IconComponent = tab.Icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`pb-2 px-4 transition-all flex items-center gap-2 ${
+                  activeTab === tab.id
+                    ? 'border-b-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                }`}
+              >
+                <IconComponent className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab Content */}
