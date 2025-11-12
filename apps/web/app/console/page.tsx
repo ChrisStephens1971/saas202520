@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { prisma, withTenantContext } from '@tournament/shared';
 
 export default async function ConsolePage() {
@@ -31,9 +32,12 @@ export default async function ConsolePage() {
               <p className="text-sm text-gray-600">{session.user.orgSlug}</p>
             </div>
             <div className="flex gap-3">
-              <button className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+              <Link
+                href="/tournaments/new"
+                className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
                 + New Tournament
-              </button>
+              </Link>
               <form action="/api/auth/signout" method="POST">
                 <button
                   type="submit"
@@ -158,9 +162,12 @@ export default async function ConsolePage() {
                 Get started by creating your first tournament.
               </p>
               <div className="mt-6">
-                <button className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                <Link
+                  href="/tournaments/new"
+                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                >
                   + Create Tournament
-                </button>
+                </Link>
               </div>
             </div>
           ) : (
@@ -195,9 +202,12 @@ export default async function ConsolePage() {
                       >
                         {tournament.status}
                       </span>
-                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                      <Link
+                        href={`/tournaments/${tournament.id}`}
+                        className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      >
                         Open →
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
