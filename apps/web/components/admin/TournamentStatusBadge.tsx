@@ -3,11 +3,16 @@
  * Sprint 9 Phase 2 - Admin Dashboard
  *
  * Reusable status badge with color coding for tournament states
+ *
+ * Performance: Memoized to prevent unnecessary re-renders in tables
  */
 
 'use client';
 
+import { memo } from 'react';
 import type { TournamentStatus } from '@tournament/api-contracts';
+import { FileEdit, ClipboardList, Target, Pause, Trophy, XCircle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface TournamentStatusBadgeProps {
   status: TournamentStatus;
@@ -21,44 +26,44 @@ const STATUS_CONFIG: Record<
   {
     label: string;
     colors: string;
-    icon: string;
+    icon: LucideIcon;
     description: string;
   }
 > = {
   draft: {
     label: 'Draft',
     colors: 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600',
-    icon: '📝',
+    icon: FileEdit,
     description: 'Tournament is being set up',
   },
   registration: {
     label: 'Registration',
     colors: 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-600',
-    icon: '📋',
+    icon: ClipboardList,
     description: 'Open for player registration',
   },
   active: {
     label: 'Active',
     colors: 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-200 dark:border-green-600',
-    icon: '🎯',
+    icon: Target,
     description: 'Tournament in progress',
   },
   paused: {
     label: 'Paused',
     colors: 'bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-600',
-    icon: '⏸️',
+    icon: Pause,
     description: 'Temporarily stopped',
   },
   completed: {
     label: 'Completed',
     colors: 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900 dark:text-purple-200 dark:border-purple-600',
-    icon: '🏆',
+    icon: Trophy,
     description: 'Tournament finished',
   },
   cancelled: {
     label: 'Cancelled',
     colors: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900 dark:text-red-200 dark:border-red-600',
-    icon: '❌',
+    icon: XCircle,
     description: 'Tournament cancelled',
   },
 };
@@ -69,13 +74,14 @@ const SIZE_CLASSES = {
   lg: 'px-4 py-1.5 text-base',
 };
 
-export function TournamentStatusBadge({
+export const TournamentStatusBadge = memo(function TournamentStatusBadge({
   status,
   size = 'md',
   showIcon = true,
   className = '',
 }: TournamentStatusBadgeProps) {
   const config = STATUS_CONFIG[status];
+  const IconComponent = config.icon;
 
   return (
     <span
@@ -87,11 +93,11 @@ export function TournamentStatusBadge({
       `}
       title={config.description}
     >
-      {showIcon && <span>{config.icon}</span>}
+      {showIcon && <IconComponent className="w-4 h-4" aria-hidden="true" />}
       <span>{config.label}</span>
     </span>
   );
-}
+});
 
 /**
  * TournamentStatusDot - Minimal indicator

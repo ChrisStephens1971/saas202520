@@ -12,6 +12,7 @@ import {
   type TournamentFilters as Filters,
   DEFAULT_FILTERS,
 } from '@/lib/tournament-filters';
+import { Search, Play, Check, FileEdit, X, Calendar, Clock, Users } from 'lucide-react';
 
 interface TournamentFiltersProps {
   onFiltersChange: (filters: Filters) => void;
@@ -85,40 +86,37 @@ export function TournamentFilters({
     filters.dateRange.end;
 
   const statuses = [
-    { value: 'active', label: 'Active', color: 'green', icon: '▶️' },
-    { value: 'completed', label: 'Completed', color: 'blue', icon: '✓' },
-    { value: 'draft', label: 'Draft', color: 'gray', icon: '📝' },
-    { value: 'cancelled', label: 'Cancelled', color: 'red', icon: '✕' },
+    { value: 'active', label: 'Active', color: 'green', IconComponent: Play },
+    { value: 'completed', label: 'Completed', color: 'blue', IconComponent: Check },
+    { value: 'draft', label: 'Draft', color: 'gray', IconComponent: FileEdit },
+    { value: 'cancelled', label: 'Cancelled', color: 'red', IconComponent: X },
   ];
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 space-y-6">
       {/* Search Bar */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-          🔍 Search Tournaments
+        <label
+          htmlFor="tournament-search"
+          className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+        >
+          <Search className="w-4 h-4" aria-hidden="true" />
+          Search Tournaments
         </label>
         <div className="relative">
           <input
+            id="tournament-search"
             type="text"
             value={filters.searchQuery}
             onChange={e => handleSearchChange(e.target.value)}
             placeholder="Search by name, format, location..."
             className="w-full px-4 py-2 pl-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            aria-label="Search tournaments"
           />
-          <svg
+          <Search
             className="absolute left-3 top-2.5 w-5 h-5 text-slate-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+            aria-hidden="true"
+          />
         </div>
       </div>
 
@@ -151,31 +149,30 @@ export function TournamentFilters({
               Status
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {statuses.map(status => (
-                <button
-                  key={status.value}
-                  onClick={() => handleStatusToggle(status.value)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${
-                    filters.status.includes(status.value)
-                      ? `border-${status.color}-500 bg-${status.color}-50 dark:bg-${status.color}-900/20`
-                      : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
-                  }`}
-                >
-                  <span>{status.icon}</span>
-                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {status.label}
-                  </span>
-                  {filters.status.includes(status.value) && (
-                    <svg className="w-4 h-4 ml-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
-                </button>
-              ))}
+              {statuses.map(status => {
+                const StatusIcon = status.IconComponent;
+                return (
+                  <button
+                    key={status.value}
+                    onClick={() => handleStatusToggle(status.value)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${
+                      filters.status.includes(status.value)
+                        ? `border-${status.color}-500 bg-${status.color}-50 dark:bg-${status.color}-900/20`
+                        : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
+                    }`}
+                    aria-label={`Filter by ${status.label} tournaments`}
+                    aria-pressed={filters.status.includes(status.value)}
+                  >
+                    <StatusIcon className="w-4 h-4" aria-hidden="true" />
+                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                      {status.label}
+                    </span>
+                    {filters.status.includes(status.value) && (
+                      <Check className="w-4 h-4 ml-auto text-green-600" aria-hidden="true" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -241,31 +238,36 @@ export function TournamentFilters({
             </label>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { value: 'name' as const, label: 'Name', icon: 'A-Z' },
-                { value: 'startDate' as const, label: 'Start Date', icon: '📅' },
-                { value: 'createdAt' as const, label: 'Created', icon: '🕐' },
-                { value: 'playerCount' as const, label: 'Players', icon: '👥' },
-              ].map(sort => (
-                <button
-                  key={sort.value}
-                  onClick={() => handleSortChange(sort.value)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${
-                    filters.sortBy === sort.value
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
-                  }`}
-                >
-                  <span>{sort.icon}</span>
-                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {sort.label}
-                  </span>
-                  {filters.sortBy === sort.value && (
-                    <span className="ml-auto text-xs font-bold text-blue-600">
-                      {filters.sortOrder === 'asc' ? '↑' : '↓'}
+                { value: 'name' as const, label: 'Name', IconComponent: FileEdit },
+                { value: 'startDate' as const, label: 'Start Date', IconComponent: Calendar },
+                { value: 'createdAt' as const, label: 'Created', IconComponent: Clock },
+                { value: 'playerCount' as const, label: 'Players', IconComponent: Users },
+              ].map(sort => {
+                const SortIcon = sort.IconComponent;
+                return (
+                  <button
+                    key={sort.value}
+                    onClick={() => handleSortChange(sort.value)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg border-2 transition-all ${
+                      filters.sortBy === sort.value
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-500'
+                    }`}
+                    aria-label={`Sort by ${sort.label}`}
+                    aria-pressed={filters.sortBy === sort.value}
+                  >
+                    <SortIcon className="w-4 h-4" aria-hidden="true" />
+                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                      {sort.label}
                     </span>
-                  )}
-                </button>
-              ))}
+                    {filters.sortBy === sort.value && (
+                      <span className="ml-auto text-xs font-bold text-blue-600" aria-hidden="true">
+                        {filters.sortOrder === 'asc' ? '↑' : '↓'}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

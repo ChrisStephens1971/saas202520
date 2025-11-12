@@ -16,9 +16,23 @@
 }
 
 /**
- * Dark Mode (manual .dark class or system preference)
+ * Dark Mode - Manual .dark class
  */
-.dark,
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #60a5fa;
+  --secondary: #34d399;
+  --accent: #a78bfa;
+  --muted: #1e293b;
+  --border: #334155;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+}
+
+/**
+ * Dark Mode - System preference
+ */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     --background: #0a0a0a;
@@ -31,21 +45,6 @@
     --card: #1e293b;
     --card-foreground: #f1f5f9;
   }
-}
-
-/**
- * Force dark mode with .dark class
- */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --primary: #60a5fa;
-  --secondary: #34d399;
-  --accent: #a78bfa;
-  --muted: #1e293b;
-  --border: #334155;
-  --card: #1e293b;
-  --card-foreground: #f1f5f9;
 }
 
 @theme inline {

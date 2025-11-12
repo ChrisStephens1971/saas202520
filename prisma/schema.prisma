@@ -1,6 +1,3 @@
-// Tournament Platform - Prisma Schema
-// Multi-tenant architecture with Row-Level Security (RLS)
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,45 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ============================================================================
-// USERS & AUTHENTICATION
-// ============================================================================
-
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  password      String? // For credentials provider (hashed)
-
-  // User management fields (Sprint 9 Phase 2)
-  role             String    @default("player") // admin, organizer, player
-  status           String    @default("active") // active, suspended, banned, pending
-  lastLoginAt      DateTime? @map("last_login_at")
-  bannedAt         DateTime? @map("banned_at")
-  bannedBy         String?   @map("banned_by")
-  banReason        String?   @map("ban_reason")
-  suspendedUntil   DateTime? @map("suspended_until")
-  suspensionReason String?   @map("suspension_reason")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
+  id                  String               @id @default(cuid())
+  name                String?
+  email               String               @unique
+  emailVerified       DateTime?            @map("email_verified")
+  image               String?
+  password            String?
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
   accounts            Account[]
-  sessions            Session[]
-  organizationMembers OrganizationMember[]
-  activityLogs        UserActivity[]
-  moderationActions   UserModerationAction[]
-  performedActions    UserModerationAction[] @relation("PerformedBy")
   analyticsEvents     AnalyticsEvent[]
-  apiKeys             ApiKey[]
-  pushSubscriptions   PushSubscription[]
+  organizationMembers OrganizationMember[]
+  sessions            Session[]
 
-  @@index([role])
-  @@index([status])
-  @@index([lastLoginAt])
   @@map("users")
 }
 
@@ -65,8 +37,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -77,8 +48,7 @@ model Session {
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -92,48 +62,29 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// ============================================================================
-// ORGANIZATIONS (Multi-Tenant)
-// ============================================================================
-
 model Organization {
-  id   String @id @default(cuid())
-  name String
-  slug String @unique
-
-  // Notification settings (Sprint 4)
-  twilioAccountSid  String? @map("twilio_account_sid") // Encrypted
-  twilioAuthToken   String? @map("twilio_auth_token") // Encrypted
-  twilioPhoneNumber String? @map("twilio_phone_number")
-  kioskPin          String? @map("kiosk_pin") // 4-digit PIN for kiosk mode
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  members              OrganizationMember[]
-  tournaments          Tournament[]
+  id                   String                @id @default(cuid())
+  name                 String
+  slug                 String                @unique
+  createdAt            DateTime              @default(now()) @map("created_at")
+  updatedAt            DateTime              @updatedAt @map("updated_at")
   analyticsEvents      AnalyticsEvent[]
+  members              OrganizationMember[]
   revenueAggregates    RevenueAggregate[]
-  userCohorts          UserCohort[]
-  tournamentAggregates TournamentAggregate[]
   scheduledReports     ScheduledReport[]
-  apiKeys              ApiKey[]
-  webhooks             Webhook[]
-  venues               Venue[]
+  tournamentAggregates TournamentAggregate[]
+  tournaments          Tournament[]
+  userCohorts          UserCohort[]
 
   @@map("organizations")
 }
 
 model OrganizationMember {
-  id     String @id @default(cuid())
-  orgId  String @map("org_id")
-  userId String @map("user_id")
-  role   String // owner, td, scorekeeper, streamer
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Relations
+  id           String       @id @default(cuid())
+  orgId        String       @map("org_id")
+  userId       String       @map("user_id")
+  role         String
+  createdAt    DateTime     @default(now()) @map("created_at")
   organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -143,91 +94,40 @@ model OrganizationMember {
   @@map("organization_members")
 }
 
-// ============================================================================
-// VENUES
-// ============================================================================
-
-model Venue {
-  id      String  @id @default(cuid())
-  orgId   String  @map("org_id") // Multi-tenant: organization scope
-  name    String  @db.VarChar(255)
-  address String? @db.VarChar(500)
-  city    String? @db.VarChar(100)
-  state   String? @db.VarChar(100)
-  zip     String? @db.VarChar(20)
-  country String? @default("US") @db.VarChar(2)
-  phone   String? @db.VarChar(50)
-  email   String? @db.VarChar(255)
-  website String? @db.VarChar(500)
-  notes   String? @db.Text
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  tournaments  Tournament[]
-
-  @@index([orgId])
-  @@index([city])
-  @@index([orgId, name])
-  @@map("venues")
-}
-
-// ============================================================================
-// TOURNAMENTS
-// ============================================================================
-
 model Tournament {
-  id                 String    @id @default(cuid())
-  orgId              String    @map("org_id") // Tenant ID
-  venueId            String?   @map("venue_id") // Optional venue location
+  id                 String            @id @default(cuid())
+  orgId              String            @map("org_id")
   name               String
-  description        String? // Optional tournament description
-  status             String // draft, registration, active, paused, completed, cancelled
-  format             String // single_elimination, double_elimination, round_robin, modified_single, chip_format
-  sportConfigId      String    @map("sport_config_id")
-  sportConfigVersion String    @map("sport_config_version") // Frozen at creation
-  createdBy          String    @map("created_by")
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime  @updatedAt @map("updated_at")
-  startedAt          DateTime? @map("started_at")
-  completedAt        DateTime? @map("completed_at")
-
-  // Chip Format Configuration (Sprint 4 - CHIP-001, CHIP-002, CHIP-003)
-  chipConfig          Json?   @map("chip_config") // { winnerChips, loserChips, qualificationRounds, finalsCount, pairingStrategy, tiebreaker }
-  qualificationLocked Boolean @default(false) @map("qualification_locked") // True after finals cutoff applied
-
-  // Relations
-  organization Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  venue        Venue?            @relation(fields: [venueId], references: [id], onDelete: SetNull)
-  players      Player[]
-  matches      Match[]
-  tables       Table[]
-  events       TournamentEvent[]
+  status             String
+  format             String
+  sportConfigId      String            @map("sport_config_id")
+  sportConfigVersion String            @map("sport_config_version")
+  createdBy          String            @map("created_by")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  startedAt          DateTime?         @map("started_at")
+  completedAt        DateTime?         @map("completed_at")
+  description        String?
+  matches            Match[]
+  players            Player[]
+  tables             Table[]
+  events             TournamentEvent[]
+  organization       Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
 
   @@index([orgId])
-  @@index([venueId])
   @@index([status])
   @@index([createdAt])
   @@map("tournaments")
 }
 
-// ============================================================================
-// EVENT-SOURCED AUDIT LOG (Append-Only)
-// ============================================================================
-
 model TournamentEvent {
-  id           String   @id @default(cuid())
-  tournamentId String   @map("tournament_id")
-  kind         String // event type (tournament.created, player.registered, etc.)
-  actor        String // User ID who performed the action
-  device       String // Device ID for CRDT sync
-  payload      Json // Event-specific data
-  timestamp    DateTime @default(now())
-
-  // Relations
-  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  tournamentId String     @map("tournament_id")
+  kind         String
+  actor        String
+  device       String
+  payload      Json
+  timestamp    DateTime   @default(now())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
 
   @@index([tournamentId])
   @@index([timestamp])
@@ -235,63 +135,45 @@ model TournamentEvent {
   @@map("tournament_events")
 }
 
-// ============================================================================
-// PLAYERS
-// ============================================================================
-
 model Player {
-  id           String    @id @default(cuid())
-  tournamentId String    @map("tournament_id")
-  name         String
-  email        String?
-  phone        String?
-  rating       Json? // { system: "apa" | "fargo" | "bca", value: number | string }
-  status       String // registered, checked_in, active, eliminated, no_show, withdrawn
-  seed         Int?
-  checkedInAt  DateTime? @map("checked_in_at")
-  createdAt    DateTime  @default(now()) @map("created_at")
-
-  // Chip Format Fields (Sprint 4 - CHIP-002)
-  chipCount     Int   @default(0) @map("chip_count") // Current chip total
-  matchesPlayed Int   @default(0) @map("matches_played") // Qualification matches completed
-  chipHistory   Json? @map("chip_history") // Array of chip awards: [{ matchId, chipsEarned, timestamp }]
-
-  // Relations
-  tournament       Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  id               String     @id @default(cuid())
+  tournamentId     String     @map("tournament_id")
+  name             String
+  email            String?
+  phone            String?
+  rating           Json?
+  status           String
+  seed             Int?
+  checkedInAt      DateTime?  @map("checked_in_at")
+  createdAt        DateTime   @default(now()) @map("created_at")
   matchesAsPlayerA Match[]    @relation("PlayerA")
   matchesAsPlayerB Match[]    @relation("PlayerB")
+  tournament       Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
 
   @@index([tournamentId])
   @@index([status])
-  @@index([chipCount]) // For chip standings queries
   @@map("players")
 }
 
-// ============================================================================
-// MATCHES
-// ============================================================================
-
 model Match {
-  id           String    @id @default(cuid())
-  tournamentId String    @map("tournament_id")
+  id           String     @id @default(cuid())
+  tournamentId String     @map("tournament_id")
   round        Int
-  bracket      String? // winners, losers (null for non-bracket formats)
-  position     Int // Position in bracket/round
-  playerAId    String?   @map("player_a_id")
-  playerBId    String?   @map("player_b_id")
-  state        String // pending, ready, assigned, active, completed, cancelled
-  winnerId     String?   @map("winner_id")
-  score        Json // { playerA: number, playerB: number, raceTo?: number, games?: GameScore[] }
-  tableId      String?   @map("table_id")
-  startedAt    DateTime? @map("started_at")
-  completedAt  DateTime? @map("completed_at")
-  rev          Int       @default(0) // Optimistic locking
-
-  // Relations
-  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  playerA    Player?    @relation("PlayerA", fields: [playerAId], references: [id])
-  playerB    Player?    @relation("PlayerB", fields: [playerBId], references: [id])
-  table      Table?     @relation(fields: [tableId], references: [id])
+  bracket      String?
+  position     Int
+  playerAId    String?    @map("player_a_id")
+  playerBId    String?    @map("player_b_id")
+  state        String
+  winnerId     String?    @map("winner_id")
+  score        Json
+  tableId      String?    @map("table_id")
+  startedAt    DateTime?  @map("started_at")
+  completedAt  DateTime?  @map("completed_at")
+  rev          Int        @default(0)
+  playerA      Player?    @relation("PlayerA", fields: [playerAId], references: [id])
+  playerB      Player?    @relation("PlayerB", fields: [playerBId], references: [id])
+  table        Table?     @relation(fields: [tableId], references: [id])
+  tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
 
   @@index([tournamentId])
   @@index([state])
@@ -300,39 +182,29 @@ model Match {
   @@map("matches")
 }
 
-// ============================================================================
-// TABLES
-// ============================================================================
-
 model Table {
-  id             String    @id @default(cuid())
-  tournamentId   String    @map("tournament_id")
-  label          String // e.g., "Table 1", "Back Corner"
-  status         String // available, in_use, blocked
-  blockedUntil   DateTime? @map("blocked_until")
-  currentMatchId String?   @map("current_match_id")
-
-  // Relations
-  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  matches    Match[]
+  id             String     @id @default(cuid())
+  tournamentId   String     @map("tournament_id")
+  label          String
+  status         String
+  blockedUntil   DateTime?  @map("blocked_until")
+  currentMatchId String?    @map("current_match_id")
+  matches        Match[]
+  tournament     Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
 
   @@index([tournamentId])
   @@index([status])
   @@map("tables")
 }
 
-// ============================================================================
-// SPORT CONFIGURATIONS (Versioned, Frozen per Tournament)
-// ============================================================================
-
 model SportConfig {
   id               String   @id @default(cuid())
-  name             String // e.g., "Pool 8-Ball", "Pool 9-Ball"
-  sport            String // pool, darts, cornhole (future)
-  rules            Json // Sport-specific rules
+  name             String
+  sport            String
+  rules            Json
   scoringSchema    Json     @map("scoring_schema")
   bracketTemplates Json     @map("bracket_templates")
-  version          String // Semantic version
+  version          String
   createdAt        DateTime @default(now()) @map("created_at")
 
   @@unique([name, version])
@@ -340,314 +212,17 @@ model SportConfig {
   @@map("sport_configs")
 }
 
-// ============================================================================
-// SCORING SYSTEM (Sprint 3 - SCORE-001 to SCORE-007)
-// ============================================================================
-
-model ScoreUpdate {
-  id            String   @id @default(cuid())
-  matchId       String   @map("match_id")
-  tournamentId  String   @map("tournament_id")
-  actor         String // User ID who entered the score
-  device        String // Device ID
-  action        String // increment_a, increment_b, undo
-  previousScore Json     @map("previous_score") // Score snapshot before this action
-  newScore      Json     @map("new_score") // Score snapshot after this action
-  timestamp     DateTime @default(now())
-  undone        Boolean  @default(false) // True if this action was undone
-
-  @@index([matchId])
-  @@index([tournamentId])
-  @@index([timestamp])
-  @@map("score_updates")
-}
-
-// ============================================================================
-// PAYMENT SYSTEM (Sprint 3 - PAY-001 to PAY-008)
-// ============================================================================
-
-model StripeAccount {
-  id                 String   @id @default(cuid())
-  orgId              String   @unique @map("org_id") // One Stripe account per organization
-  stripeAccountId    String   @unique @map("stripe_account_id") // Stripe Connect account ID
-  onboardingComplete Boolean  @default(false) @map("onboarding_complete")
-  chargesEnabled     Boolean  @default(false) @map("charges_enabled")
-  payoutsEnabled     Boolean  @default(false) @map("payouts_enabled")
-  detailsSubmitted   Boolean  @default(false) @map("details_submitted")
-  country            String?
-  currency           String?  @default("usd")
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  payments Payment[]
-
-  @@index([orgId])
-  @@map("stripe_accounts")
-}
-
-model Payment {
-  id                  String   @id @default(cuid())
-  tournamentId        String   @map("tournament_id")
-  playerId            String?  @map("player_id") // Optional - may be null for manual payments
-  stripeAccountId     String   @map("stripe_account_id")
-  stripePaymentIntent String   @unique @map("stripe_payment_intent") // Stripe PaymentIntent ID
-  amount              Int // Amount in cents
-  currency            String   @default("usd")
-  status              String // pending, succeeded, failed, refunded, partially_refunded
-  purpose             String // entry_fee, side_pot, addon
-  description         String?
-  refundedAmount      Int      @default(0) @map("refunded_amount") // Amount refunded in cents
-  receiptUrl          String?  @map("receipt_url")
-  createdAt           DateTime @default(now()) @map("created_at")
-  updatedAt           DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  stripeAccount StripeAccount @relation(fields: [stripeAccountId], references: [id])
-  refunds       Refund[]
-
-  @@index([tournamentId])
-  @@index([playerId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("payments")
-}
-
-model Refund {
-  id             String   @id @default(cuid())
-  paymentId      String   @map("payment_id")
-  stripeRefundId String   @unique @map("stripe_refund_id") // Stripe Refund ID
-  amount         Int // Amount refunded in cents
-  reason         String // duplicate, fraudulent, requested_by_customer
-  status         String // pending, succeeded, failed, cancelled
-  processedBy    String   @map("processed_by") // User ID who processed the refund
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-
-  @@index([paymentId])
-  @@index([createdAt])
-  @@map("refunds")
-}
-
-model Payout {
-  id           String    @id @default(cuid())
-  orgId        String    @map("org_id") // Denormalized for cross-tournament queries
-  tournamentId String    @map("tournament_id")
-  playerId     String    @map("player_id")
-  playerName   String    @map("player_name") // Denormalized for performance
-  placement    Int // 1st, 2nd, 3rd, etc.
-  amount       Int // Payout amount in cents
-  source       String // prize_pool, side_pot
-  status       String // pending, paid, voided
-  paidAt       DateTime? @map("paid_at")
-  paidBy       String?   @map("paid_by") // User ID who marked as paid
-  notes        String?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-
-  @@index([orgId])
-  @@index([orgId, playerName]) // For prize money leaderboards
-  @@index([tournamentId])
-  @@index([playerId])
-  @@index([status])
-  @@map("payouts")
-}
-
-// ============================================================================
-// NOTIFICATIONS (Sprint 4)
-// ============================================================================
-
-model Notification {
-  id           String    @id @default(cuid())
-  orgId        String    @map("org_id") // Multi-tenant: organization scope
-  tournamentId String?   @map("tournament_id") // Optional: notification context
-  playerId     String?   @map("player_id") // Optional: recipient if player-specific
-  type         String // in_app, email, sms
-  channel      String // in_app, email, sms_twilio
-  recipient    String // Email address or phone number
-  subject      String? // Optional: for email notifications
-  message      String // Notification message body
-  status       String // pending, sent, failed, delivered
-  sentAt       DateTime? @map("sent_at")
-  deliveredAt  DateTime? @map("delivered_at")
-  errorMessage String?   @map("error_message")
-  metadata     Json? // Additional data (e.g., Twilio message SID, retry count)
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-
-  @@index([orgId])
-  @@index([tournamentId])
-  @@index([playerId])
-  @@index([status])
-  @@index([type])
-  @@index([createdAt])
-  @@map("notifications")
-}
-
-model NotificationPreference {
-  id              String    @id @default(cuid())
-  playerId        String    @unique @map("player_id") // One preference per player
-  smsEnabled      Boolean   @default(true) @map("sms_enabled")
-  emailEnabled    Boolean   @default(true) @map("email_enabled")
-  smsOptedOut     Boolean   @default(false) @map("sms_opted_out") // User sent STOP
-  smsOptedOutAt   DateTime? @map("sms_opted_out_at")
-  quietHoursStart String?   @map("quiet_hours_start") // Time format: "22:00"
-  quietHoursEnd   String?   @map("quiet_hours_end") // Time format: "08:00"
-  timezone        String? // e.g., "America/New_York"
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-
-  @@index([playerId])
-  @@index([smsOptedOut])
-  @@map("notification_preferences")
-}
-
-// ============================================================================
-// AUDIT LOGS (Sprint 9 - Phase 2)
-// ============================================================================
-
-model AuditLog {
-  id         String   @id @default(cuid())
-  orgId      String   @map("org_id") // Multi-tenant: organization scope
-  userId     String   @map("user_id") // Actor who performed the action
-  userName   String   @map("user_name") // Denormalized for performance
-  action     String // create, update, delete, login, logout, failed_login, ban, suspend, etc.
-  resource   String // user, tournament, match, player, settings, etc.
-  resourceId String?  @map("resource_id") // ID of affected resource (optional for some actions)
-  changes    Json? // Before/after values for updates: { before: {...}, after: {...} }
-  ipAddress  String?  @map("ip_address")
-  userAgent  String?  @map("user_agent")
-  metadata   Json? // Additional context (e.g., error details, request params)
-  timestamp  DateTime @default(now())
-
-  @@index([orgId])
-  @@index([userId])
-  @@index([action])
-  @@index([resource])
-  @@index([timestamp])
-  @@index([orgId, timestamp]) // Composite for fast org-scoped queries
-  @@map("audit_logs")
-}
-
-// ============================================================================
-// SYSTEM SETTINGS (Sprint 9 - Phase 2)
-// ============================================================================
-
-model SystemSettings {
-  id    String @id @default(cuid())
-  orgId String @unique @map("org_id") // One settings record per organization
-
-  // General Settings
-  siteName        String? @map("site_name")
-  siteDescription String? @map("site_description")
-  timezone        String? @default("America/New_York")
-  language        String? @default("en")
-
-  // Email Settings
-  smtpHost      String? @map("smtp_host")
-  smtpPort      Int?    @map("smtp_port")
-  smtpUser      String? @map("smtp_user")
-  smtpPassword  String? @map("smtp_password") // Encrypted
-  smtpFromEmail String? @map("smtp_from_email")
-  smtpFromName  String? @map("smtp_from_name")
-
-  // Security Settings
-  sessionTimeout             Int?    @map("session_timeout") // Minutes
-  require2FA                 Boolean @default(false) @map("require_2fa")
-  passwordMinLength          Int?    @default(8) @map("password_min_length")
-  passwordRequireSpecialChar Boolean @default(true) @map("password_require_special_char")
-  maxLoginAttempts           Int?    @default(5) @map("max_login_attempts")
-  lockoutDuration            Int?    @map("lockout_duration") // Minutes
-
-  // Feature Flags
-  features Json? // { liveScoring: true, notifications: true, payments: false, ... }
-
-  // Performance Settings
-  cacheTTL  Int? @map("cache_ttl") // Seconds
-  rateLimit Int? @map("rate_limit") // Requests per minute
-
-  // Notification Settings
-  enableEmailNotifications Boolean @default(true) @map("enable_email_notifications")
-  enableSmsNotifications   Boolean @default(true) @map("enable_sms_notifications")
-  enablePushNotifications  Boolean @default(false) @map("enable_push_notifications")
-
-  // Integration Settings (stored as JSON for flexibility)
-  integrations Json? // { stripe: {...}, twilio: {...}, analytics: {...} }
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@index([orgId])
-  @@map("system_settings")
-}
-
-// ============================================================================
-// USER MANAGEMENT (Sprint 9 - Phase 2)
-// ============================================================================
-
-model UserActivity {
-  id         String   @id @default(cuid())
-  userId     String   @map("user_id")
-  action     String // login, logout, view_tournament, create_tournament, etc.
-  resource   String // tournament, player, match, settings
-  resourceId String?  @map("resource_id")
-  metadata   Json? // Additional context
-  ipAddress  String?  @map("ip_address")
-  userAgent  String?  @map("user_agent")
-  timestamp  DateTime @default(now())
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([action])
-  @@index([timestamp])
-  @@index([userId, timestamp]) // Composite for user activity timeline
-  @@map("user_activities")
-}
-
-model UserModerationAction {
-  id          String    @id @default(cuid())
-  userId      String    @map("user_id") // User being moderated
-  actionType  String    @map("action_type") // warn, suspend, ban, unban, unsuspend
-  reason      String
-  performedBy String    @map("performed_by") // Admin user ID
-  performedAt DateTime  @default(now()) @map("performed_at")
-  expiresAt   DateTime? @map("expires_at") // For temporary suspensions
-  metadata    Json? // Additional details
-
-  // Relations
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  performer User @relation("PerformedBy", fields: [performedBy], references: [id])
-
-  @@index([userId])
-  @@index([performedBy])
-  @@index([actionType])
-  @@index([performedAt])
-  @@map("user_moderation_actions")
-}
-
-// ============================================================================
-// ADVANCED ANALYTICS (Sprint 10 - Week 1)
-// ============================================================================
-
-// Raw event tracking for all analytics-relevant activities
 model AnalyticsEvent {
-  id        String   @id @default(cuid())
-  tenantId  String   @map("tenant_id")
-  eventType String   @map("event_type") @db.VarChar(100) // payment_completed, user_signup, tournament_completed, etc.
-  eventData Json     @map("event_data") // Flexible event-specific data
-  userId    String?  @map("user_id")
-  sessionId String?  @map("session_id") @db.VarChar(255)
-  timestamp DateTime @default(now())
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Relations
-  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user   User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id        String       @id @default(cuid())
+  tenantId  String       @map("tenant_id")
+  eventType String       @map("event_type") @db.VarChar(100)
+  eventData Json         @map("event_data")
+  userId    String?      @map("user_id")
+  sessionId String?      @map("session_id") @db.VarChar(255)
+  timestamp DateTime     @default(now())
+  createdAt DateTime     @default(now()) @map("created_at")
+  tenant    Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User?        @relation(fields: [userId], references: [id])
 
   @@index([tenantId, eventType])
   @@index([tenantId, timestamp(sort: Desc)])
@@ -655,147 +230,107 @@ model AnalyticsEvent {
   @@map("analytics_events")
 }
 
-// Pre-computed revenue metrics for fast dashboard queries
 model RevenueAggregate {
-  id                  String   @id @default(cuid())
-  tenantId            String   @map("tenant_id")
-  periodStart         DateTime @map("period_start") @db.Date
-  periodEnd           DateTime @map("period_end") @db.Date
-  periodType          String   @map("period_type") @db.VarChar(20) // day, week, month, quarter, year
-  mrr                 Decimal? @db.Decimal(10, 2)
-  arr                 Decimal? @db.Decimal(10, 2)
-  newRevenue          Decimal? @map("new_revenue") @db.Decimal(10, 2)
-  churnedRevenue      Decimal? @map("churned_revenue") @db.Decimal(10, 2)
-  expansionRevenue    Decimal? @map("expansion_revenue") @db.Decimal(10, 2)
-  totalRevenue        Decimal? @map("total_revenue") @db.Decimal(10, 2)
-  paymentCount        Int?     @map("payment_count")
-  paymentSuccessCount Int?     @map("payment_success_count")
-  refundCount         Int?     @map("refund_count")
-  refundAmount        Decimal? @map("refund_amount") @db.Decimal(10, 2)
-  updatedAt           DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id                  String       @id @default(cuid())
+  tenantId            String       @map("tenant_id")
+  periodStart         DateTime     @map("period_start") @db.Date
+  periodEnd           DateTime     @map("period_end") @db.Date
+  periodType          String       @map("period_type") @db.VarChar(20)
+  mrr                 Decimal?     @db.Decimal(10, 2)
+  arr                 Decimal?     @db.Decimal(10, 2)
+  newRevenue          Decimal?     @map("new_revenue") @db.Decimal(10, 2)
+  churnedRevenue      Decimal?     @map("churned_revenue") @db.Decimal(10, 2)
+  expansionRevenue    Decimal?     @map("expansion_revenue") @db.Decimal(10, 2)
+  totalRevenue        Decimal?     @map("total_revenue") @db.Decimal(10, 2)
+  paymentCount        Int?         @map("payment_count")
+  paymentSuccessCount Int?         @map("payment_success_count")
+  refundCount         Int?         @map("refund_count")
+  refundAmount        Decimal?     @map("refund_amount") @db.Decimal(10, 2)
+  updatedAt           DateTime     @default(now()) @updatedAt @map("updated_at")
+  tenant              Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, periodType, periodStart])
   @@index([tenantId, periodStart(sort: Desc)])
   @@map("revenue_aggregates")
 }
 
-// User retention analysis by signup cohort
 model UserCohort {
-  id            String   @id @default(cuid())
-  tenantId      String   @map("tenant_id")
-  cohortMonth   DateTime @map("cohort_month") @db.Date // First day of signup month (YYYY-MM-01)
-  cohortSize    Int      @map("cohort_size")
-  monthNumber   Int      @map("month_number") // 0 = signup month, 1 = month 1, etc.
-  retainedUsers Int      @map("retained_users")
-  retentionRate Decimal  @map("retention_rate") @db.Decimal(5, 2)
-  revenue       Decimal? @db.Decimal(10, 2)
-  ltv           Decimal? @db.Decimal(10, 2)
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id            String       @id @default(cuid())
+  tenantId      String       @map("tenant_id")
+  cohortMonth   DateTime     @map("cohort_month") @db.Date
+  cohortSize    Int          @map("cohort_size")
+  monthNumber   Int          @map("month_number")
+  retainedUsers Int          @map("retained_users")
+  retentionRate Decimal      @map("retention_rate") @db.Decimal(5, 2)
+  revenue       Decimal?     @db.Decimal(10, 2)
+  ltv           Decimal?     @db.Decimal(10, 2)
+  updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at")
+  tenant        Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, cohortMonth, monthNumber])
   @@index([tenantId, cohortMonth(sort: Desc)])
   @@map("user_cohorts")
 }
 
-// Tournament performance metrics by time period
 model TournamentAggregate {
-  id                 String   @id @default(cuid())
-  tenantId           String   @map("tenant_id")
-  periodStart        DateTime @map("period_start") @db.Date
-  periodEnd          DateTime @map("period_end") @db.Date
-  periodType         String   @map("period_type") @db.VarChar(20)
-  tournamentCount    Int?     @map("tournament_count")
-  completedCount     Int?     @map("completed_count")
-  completionRate     Decimal? @map("completion_rate") @db.Decimal(5, 2)
-  totalPlayers       Int?     @map("total_players")
-  avgPlayers         Decimal? @map("avg_players") @db.Decimal(10, 2)
-  avgDurationMinutes Decimal? @map("avg_duration_minutes") @db.Decimal(10, 2)
-  mostPopularFormat  String?  @map("most_popular_format") @db.VarChar(100)
-  revenue            Decimal? @db.Decimal(10, 2)
-  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id                 String       @id @default(cuid())
+  tenantId           String       @map("tenant_id")
+  periodStart        DateTime     @map("period_start") @db.Date
+  periodEnd          DateTime     @map("period_end") @db.Date
+  periodType         String       @map("period_type") @db.VarChar(20)
+  tournamentCount    Int?         @map("tournament_count")
+  completedCount     Int?         @map("completed_count")
+  completionRate     Decimal?     @map("completion_rate") @db.Decimal(5, 2)
+  totalPlayers       Int?         @map("total_players")
+  avgPlayers         Decimal?     @map("avg_players") @db.Decimal(10, 2)
+  avgDurationMinutes Decimal?     @map("avg_duration_minutes") @db.Decimal(10, 2)
+  mostPopularFormat  String?      @map("most_popular_format") @db.VarChar(100)
+  revenue            Decimal?     @db.Decimal(10, 2)
+  updatedAt          DateTime     @default(now()) @updatedAt @map("updated_at")
+  tenant             Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, periodType, periodStart])
   @@index([tenantId, periodStart(sort: Desc)])
   @@map("tournament_aggregates")
 }
 
-// Configuration for automated report delivery
 model ScheduledReport {
-  id         String    @id @default(cuid())
-  tenantId   String    @map("tenant_id")
-  name       String    @db.VarChar(255)
-  reportType String    @map("report_type") @db.VarChar(50)
-  frequency  String    @db.VarChar(20) // daily, weekly, monthly
-  recipients String[] // Array of email addresses
+  id         String       @id @default(cuid())
+  tenantId   String       @map("tenant_id")
+  name       String       @db.VarChar(255)
+  reportType String       @map("report_type") @db.VarChar(50)
+  frequency  String       @db.VarChar(20)
+  recipients String[]
   parameters Json?
-  lastRunAt  DateTime? @map("last_run_at")
-  nextRunAt  DateTime  @map("next_run_at")
-  isActive   Boolean   @default(true) @map("is_active")
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lastRunAt  DateTime?    @map("last_run_at")
+  nextRunAt  DateTime     @map("next_run_at")
+  isActive   Boolean      @default(true) @map("is_active")
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
+  tenant     Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
   @@index([nextRunAt], map: "idx_scheduled_reports_next_run")
   @@map("scheduled_reports")
 }
 
-// ============================================================================
-// PLAYER PROFILES & ENHANCED EXPERIENCE (Sprint 10 - Week 2)
-// ============================================================================
-// This file contains schema additions for player profiles, statistics,
-// achievements, match history, and enhanced player experience features.
-//
-// Multi-Tenant: All tables include tenantId for row-level isolation
-// Usage: Add these models to the main schema.prisma file
-
-// ============================================================================
-// PLAYER PROFILE EXTENSIONS
-// ============================================================================
-
-/**
- * Extended player profile information
- * Provides rich player profiles with bio, photos, social links, and preferences
- */
+/// *
+///  * Extended player profile information
+///  * Provides rich player profiles with bio, photos, social links, and preferences
 model PlayerProfile {
-  id       String @id @default(cuid())
-  playerId String @unique @map("player_id")
-  tenantId String @map("tenant_id")
-
-  // Profile Information
-  bio      String? @db.Text
-  photoUrl String? @map("photo_url") @db.VarChar(500)
-  location String? @db.VarChar(255)
-
-  // Skill & Rating
-  skillLevel String @default("BEGINNER") @map("skill_level") @db.VarChar(50) // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
-
-  // Privacy & Settings
-  privacySettings         Json @default("{}") @map("privacy_settings") // { profilePublic, showStats, showHistory }
-  notificationPreferences Json @default("{}") @map("notification_preferences") // { email, sms, push, categories }
-
-  // Social Links
-  socialLinks Json? @map("social_links") // { twitter, facebook, instagram, website }
-
-  // Tenant-Specific Custom Fields
-  customFields Json? @map("custom_fields") // Flexible storage for tenant customization
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations (defined in main schema)
-  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  id                      String   @id @default(cuid())
+  playerId                String   @unique @map("player_id")
+  tenantId                String   @map("tenant_id")
+  bio                     String?
+  photoUrl                String?  @map("photo_url") @db.VarChar(500)
+  location                String?  @db.VarChar(255)
+  skillLevel              String   @default("BEGINNER") @map("skill_level") @db.VarChar(50)
+  privacySettings         Json     @default("{}") @map("privacy_settings")
+  notificationPreferences Json     @default("{}") @map("notification_preferences")
+  socialLinks             Json?    @map("social_links")
+  customFields            Json?    @map("custom_fields")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
 
   @@index([tenantId])
   @@index([tenantId, skillLevel])
@@ -803,85 +338,51 @@ model PlayerProfile {
   @@map("player_profiles")
 }
 
-// ============================================================================
-// PLAYER STATISTICS
-// ============================================================================
-
-/**
- * Aggregated player statistics across all tournaments
- * Pre-computed metrics for fast profile loading
- */
+/// *
+///  * Aggregated player statistics across all tournaments
+///  * Pre-computed metrics for fast profile loading
 model PlayerStatistics {
-  id       String @id @default(cuid())
-  playerId String @unique @map("player_id")
-  tenantId String @map("tenant_id")
-
-  // Tournament Statistics
-  totalTournaments Int @default(0) @map("total_tournaments")
-  totalMatches     Int @default(0) @map("total_matches")
-  totalWins        Int @default(0) @map("total_wins")
-  totalLosses      Int @default(0) @map("total_losses")
-
-  // Calculated Metrics
-  winRate Decimal @default(0) @map("win_rate") @db.Decimal(5, 2) // 0.00 to 100.00
-
-  // Streaks
-  currentStreak Int @default(0) @map("current_streak") // Positive = win streak, negative = loss streak
-  longestStreak Int @default(0) @map("longest_streak") // Best win streak
-
-  // Performance
-  averageFinish  Decimal?  @map("average_finish") @db.Decimal(6, 2) // Average placement
-  favoriteFormat String?   @map("favorite_format") @db.VarChar(100) // Most played format
-  totalPrizeWon  Decimal   @default(0) @map("total_prize_won") @db.Decimal(10, 2)
-  lastPlayedAt   DateTime? @map("last_played_at")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations (defined in main schema)
-  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  id               String    @id @default(cuid())
+  playerId         String    @unique @map("player_id")
+  tenantId         String    @map("tenant_id")
+  totalTournaments Int       @default(0) @map("total_tournaments")
+  totalMatches     Int       @default(0) @map("total_matches")
+  totalWins        Int       @default(0) @map("total_wins")
+  totalLosses      Int       @default(0) @map("total_losses")
+  winRate          Decimal   @default(0) @map("win_rate") @db.Decimal(5, 2)
+  currentStreak    Int       @default(0) @map("current_streak")
+  longestStreak    Int       @default(0) @map("longest_streak")
+  averageFinish    Decimal?  @map("average_finish") @db.Decimal(6, 2)
+  favoriteFormat   String?   @map("favorite_format") @db.VarChar(100)
+  totalPrizeWon    Decimal   @default(0) @map("total_prize_won") @db.Decimal(10, 2)
+  lastPlayedAt     DateTime? @map("last_played_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 
   @@index([tenantId, playerId])
-  @@index([tenantId, winRate(sort: Desc)]) // For leaderboards
-  @@index([tenantId, totalTournaments(sort: Desc)]) // For participation tracking
-  @@index([tenantId, totalPrizeWon(sort: Desc)]) // For earnings leaderboard
+  @@index([tenantId, winRate(sort: Desc)])
+  @@index([tenantId, totalTournaments(sort: Desc)])
+  @@index([tenantId, totalPrizeWon(sort: Desc)])
   @@map("player_statistics")
 }
 
-// ============================================================================
-// ACHIEVEMENT DEFINITIONS
-// ============================================================================
-
-/**
- * System-wide achievement definitions
- * Defines all possible achievements players can unlock
- */
+/// *
+///  * System-wide achievement definitions
+///  * Defines all possible achievements players can unlock
 model AchievementDefinition {
-  id   String @id @default(cuid())
-  code String @unique @db.VarChar(100) // Unique identifier (FIRST_STEPS, WINNER, etc.)
-
-  // Display Information
-  name        String  @db.VarChar(255)
-  description String  @db.Text
-  iconUrl     String? @map("icon_url") @db.VarChar(500)
-  badgeUrl    String? @map("badge_url") @db.VarChar(500)
-
-  // Categorization
-  category String @db.VarChar(50) // PARTICIPATION, PERFORMANCE, ENGAGEMENT, FORMAT_MASTERY
-  tier     String @db.VarChar(50) // BRONZE, SILVER, GOLD, PLATINUM
-
-  // Unlock Requirements
-  requirements Json @map("requirements") // { type: "tournament_count", value: 10, format: "8-ball" }
-
-  // Gamification
-  points   Int     @default(0)
-  isActive Boolean @default(true) @map("is_active")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  playerAchievements PlayerAchievement[]
+  id           String   @id @default(cuid())
+  code         String   @unique @db.VarChar(100)
+  name         String   @db.VarChar(255)
+  description  String
+  iconUrl      String?  @map("icon_url") @db.VarChar(500)
+  badgeUrl     String?  @map("badge_url") @db.VarChar(500)
+  category     String   @db.VarChar(50)
+  tier         String   @db.VarChar(50)
+  requirements Json     @map("requirements")
+  points       Int      @default(0)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@index([category])
   @@index([tier])
@@ -889,32 +390,18 @@ model AchievementDefinition {
   @@map("achievement_definitions")
 }
 
-// ============================================================================
-// PLAYER ACHIEVEMENTS
-// ============================================================================
-
-/**
- * Tracks unlocked achievements for each player
- * Records when and how achievements were earned
- */
+/// *
+///  * Tracks unlocked achievements for each player
+///  * Records when and how achievements were earned
 model PlayerAchievement {
-  id            String @id @default(cuid())
-  playerId      String @map("player_id")
-  tenantId      String @map("tenant_id")
-  achievementId String @map("achievement_id")
-
-  // Unlock Information
-  unlockedAt DateTime @default(now()) @map("unlocked_at")
-  progress   Int      @default(100) @map("progress") // 0-100, for progressive achievements
-
-  // Context
-  metadata Json? // Additional unlock data (tournamentId, matchId, etc.)
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Relations
-  achievement AchievementDefinition @relation(fields: [achievementId], references: [id], onDelete: Cascade)
-  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  playerId      String   @map("player_id")
+  tenantId      String   @map("tenant_id")
+  achievementId String   @map("achievement_id")
+  unlockedAt    DateTime @default(now()) @map("unlocked_at")
+  progress      Int      @default(100) @map("progress")
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
 
   @@unique([playerId, achievementId])
   @@index([tenantId, playerId])
@@ -923,87 +410,49 @@ model PlayerAchievement {
   @@map("player_achievements")
 }
 
-// ============================================================================
-// MATCH HISTORY
-// ============================================================================
-
-/**
- * Complete match history for each player
- * Tracks every match played with detailed statistics
- */
+/// *
+///  * Complete match history for each player
+///  * Tracks every match played with detailed statistics
 model MatchHistory {
-  id           String @id @default(cuid())
-  matchId      String @map("match_id")
-  playerId     String @map("player_id")
-  tenantId     String @map("tenant_id")
-  tournamentId String @map("tournament_id")
-
-  // Opponent Information
-  opponentId String @map("opponent_id")
-  result     String @db.VarChar(20) // WIN, LOSS, DRAW
-
-  // Match Details
-  score       Json    @map("score") // Detailed score data { playerScore, opponentScore, games: [...] }
-  matchNumber Int     @map("match_number")
-  roundNumber Int     @map("round_number")
-  format      String? @db.VarChar(50) // Tournament format (single_elimination, double_elimination, etc.)
-  metadata    Json?   // Additional match metadata (finish position, prizeWon, etc.)
-
-  // Performance Metrics
+  id                String   @id @default(cuid())
+  matchId           String   @map("match_id")
+  playerId          String   @map("player_id")
+  tenantId          String   @map("tenant_id")
+  tournamentId      String   @map("tournament_id")
+  opponentId        String   @map("opponent_id")
+  result            String   @db.VarChar(20)
+  score             Json     @map("score")
+  matchNumber       Int      @map("match_number")
+  roundNumber       Int      @map("round_number")
   durationMinutes   Int?     @map("duration_minutes")
   skillRatingBefore Decimal? @map("skill_rating_before") @db.Decimal(10, 2)
   skillRatingAfter  Decimal? @map("skill_rating_after") @db.Decimal(10, 2)
-
-  // Timing
-  playedAt  DateTime @map("played_at")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Relations (defined in main schema)
-  // match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
-  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
-  // tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  playedAt          DateTime @map("played_at")
+  createdAt         DateTime @default(now()) @map("created_at")
 
   @@index([tenantId, playerId, playedAt(sort: Desc)])
-  @@index([tenantId, playerId, opponentId]) // For head-to-head queries
+  @@index([tenantId, playerId, opponentId])
   @@index([tenantId, tournamentId, playerId])
   @@index([matchId])
   @@map("match_history")
 }
 
-// ============================================================================
-// HEAD-TO-HEAD RECORDS
-// ============================================================================
-
-/**
- * Aggregated head-to-head records between two players
- * Pre-computed for fast rivalry tracking
- */
+/// *
+///  * Aggregated head-to-head records between two players
+///  * Pre-computed for fast rivalry tracking
 model HeadToHeadRecord {
-  id       String @id @default(cuid())
-  tenantId String @map("tenant_id")
-
-  // Player IDs (ordered: player1Id < player2Id for consistency)
-  player1Id String @map("player1_id")
-  player2Id String @map("player2_id")
-
-  // Record Tracking
-  player1Wins Int @default(0) @map("player1_wins")
-  player2Wins Int @default(0) @map("player2_wins")
-  draws       Int @default(0) @map("draws")
-
-  // Aggregate Stats
-  totalMatches Int      @default(0) @map("total_matches")
-  lastPlayedAt DateTime @map("last_played_at")
-
-  // Advantage Indicator
-  favorsPlayer1 Boolean @default(true) @map("favors_player1") // True if player1 has more wins
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations (defined in main schema)
-  // player1 Player @relation("Player1HeadToHead", fields: [player1Id], references: [id], onDelete: Cascade)
-  // player2 Player @relation("Player2HeadToHead", fields: [player2Id], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  player1Id     String   @map("player1_id")
+  player2Id     String   @map("player2_id")
+  player1Wins   Int      @default(0) @map("player1_wins")
+  player2Wins   Int      @default(0) @map("player2_wins")
+  draws         Int      @default(0) @map("draws")
+  totalMatches  Int      @default(0) @map("total_matches")
+  lastPlayedAt  DateTime @map("last_played_at")
+  favorsPlayer1 Boolean  @default(true) @map("favors_player1")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@unique([tenantId, player1Id, player2Id])
   @@index([tenantId, player1Id])
@@ -1012,235 +461,27 @@ model HeadToHeadRecord {
   @@map("head_to_head_records")
 }
 
-// ============================================================================
-// PLAYER SETTINGS
-// ============================================================================
-
-/**
- * Player-specific settings and preferences
- * Granular control over privacy, notifications, and display
- */
+/// *
+///  * Player-specific settings and preferences
+///  * Granular control over privacy, notifications, and display
 model PlayerSettings {
-  id       String @id @default(cuid())
-  playerId String @unique @map("player_id")
-  tenantId String @map("tenant_id")
-
-  // Privacy Settings
-  isProfilePublic  Boolean @default(true) @map("is_profile_public")
-  showStatistics   Boolean @default(true) @map("show_statistics")
-  showAchievements Boolean @default(true) @map("show_achievements")
-  showHistory      Boolean @default(true) @map("show_history")
-
-  // Notification Preferences (detailed JSON structure)
-  emailNotifications Json @default("{}") @map("email_notifications") // { tournaments: true, matches: true, achievements: true }
-  pushNotifications  Json @default("{}") @map("push_notifications") // { tournaments: true, matches: true, achievements: true }
-  smsNotifications   Json @default("{}") @map("sms_notifications") // { urgent: true, reminders: false }
-
-  // Display Preferences
-  theme    String  @default("LIGHT") @db.VarChar(20) // LIGHT, DARK, AUTO
-  language String  @default("en") @db.VarChar(10)
-  timezone String? @db.VarChar(100)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations (defined in main schema)
-  // player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  id                 String   @id @default(cuid())
+  playerId           String   @unique @map("player_id")
+  tenantId           String   @map("tenant_id")
+  isProfilePublic    Boolean  @default(true) @map("is_profile_public")
+  showStatistics     Boolean  @default(true) @map("show_statistics")
+  showAchievements   Boolean  @default(true) @map("show_achievements")
+  showHistory        Boolean  @default(true) @map("show_history")
+  emailNotifications Json     @default("{}") @map("email_notifications")
+  pushNotifications  Json     @default("{}") @map("push_notifications")
+  smsNotifications   Json     @default("{}") @map("sms_notifications")
+  theme              String   @default("LIGHT") @db.VarChar(20)
+  language           String   @default("en") @db.VarChar(10)
+  timezone           String?  @db.VarChar(100)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
   @@unique([tenantId, playerId])
   @@index([tenantId])
   @@map("player_settings")
-}
-
-// ============================================================================
-// PUBLIC API & WEBHOOKS (Sprint 10 - Week 3)
-// ============================================================================
-
-/**
- * API Keys for external API access
- * Stores hashed API keys for authentication
- */
-model ApiKey {
-  id         String    @id @default(cuid())
-  tenantId   String    @map("tenant_id")
-  userId     String    @map("user_id")
-  name       String    @db.VarChar(255)
-  keyPrefix  String    @map("key_prefix") @db.VarChar(20) // First 15 chars for display
-  keyHash    String    @unique @map("key_hash") @db.VarChar(255) // bcrypt hash
-  tier       String    @default("free") @db.VarChar(20) // free, pro, enterprise
-  rateLimit  Int       @map("rate_limit") // requests per hour
-  lastUsedAt DateTime? @map("last_used_at")
-  expiresAt  DateTime? @map("expires_at") // NULL = never expires
-  isActive   Boolean   @default(true) @map("is_active")
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
-
-  // Relations
-  tenant   Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  webhooks Webhook[]
-
-  @@index([tenantId])
-  @@index([keyHash], map: "idx_api_keys_hash_active")
-  @@index([isActive, expiresAt])
-  @@index([userId])
-  @@map("api_keys")
-}
-
-/**
- * Webhook Subscriptions
- * Stores webhook endpoint configurations and delivery stats
- */
-model Webhook {
-  id                   String    @id @default(cuid())
-  tenantId             String    @map("tenant_id")
-  apiKeyId             String    @map("api_key_id")
-  url                  String    @db.VarChar(500)
-  secret               String    @db.VarChar(255) // HMAC secret
-  events               String[] // Array of event types
-  isActive             Boolean   @default(true) @map("is_active")
-  deliverySuccessCount Int       @default(0) @map("delivery_success_count")
-  deliveryFailureCount Int       @default(0) @map("delivery_failure_count")
-  lastDeliveryAt       DateTime? @map("last_delivery_at")
-  lastError            String?   @map("last_error") @db.Text
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
-
-  // Relations
-  tenant     Organization      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  apiKey     ApiKey            @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  deliveries WebhookDelivery[]
-
-  @@index([tenantId])
-  @@index([apiKeyId])
-  @@index([isActive], map: "idx_webhooks_active")
-  @@map("webhooks")
-}
-
-/**
- * Webhook Delivery Logs
- * Tracks every webhook delivery attempt with full details
- */
-model WebhookDelivery {
-  id            String    @id @default(cuid())
-  webhookId     String    @map("webhook_id")
-  eventId       String    @map("event_id") @db.VarChar(100) // evt_abc123...
-  eventType     String    @map("event_type") @db.VarChar(100)
-  url           String    @db.VarChar(500) // Snapshot of URL
-  payload       Json // Full event payload
-  signature     String    @db.VarChar(255) // HMAC signature sent
-  attemptNumber Int       @default(1) @map("attempt_number")
-  statusCode    Int? // HTTP response code
-  responseBody  String?   @map("response_body") @db.Text // First 1000 chars
-  errorMessage  String?   @map("error_message") @db.Text
-  deliveredAt   DateTime? @map("delivered_at") // NULL if failed
-  createdAt     DateTime  @default(now()) @map("created_at")
-
-  // Relations
-  webhook Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
-
-  @@index([webhookId, createdAt(sort: Desc)])
-  @@index([eventId])
-  @@index([createdAt(sort: Desc)])
-  @@index([statusCode], map: "idx_webhook_deliveries_failed")
-  @@map("webhook_deliveries")
-}
-
-// ============================================================================
-// PWA PUSH NOTIFICATIONS
-// Sprint 10 Week 4 - PWA Install & Push Notifications
-// ============================================================================
-
-/**
- * Push Subscriptions
- * Stores PWA push notification subscriptions with preferences
- */
-model PushSubscription {
-  id          String   @id @default(cuid())
-  userId      String   @map("user_id")
-  endpoint    String   @unique @db.VarChar(500)
-  p256dhKey   String   @map("p256dh_key") @db.VarChar(255)
-  authKey     String   @map("auth_key") @db.VarChar(255)
-  preferences Json     @default("{}")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("push_subscriptions")
-}
-
-// ============================================================================
-// CHIP FORMAT TRACKING (HIGH PRIORITY FIX)
-// ============================================================================
-
-/**
- * ChipAward
- * Tracks individual chip awards in chip format tournaments
- * Note: Player.chipHistory also stores this as JSON for denormalized access
- */
-model ChipAward {
-  id           String   @id @default(cuid())
-  tournamentId String   @map("tournament_id")
-  matchId      String   @map("match_id")
-  playerId     String   @map("player_id")
-  chipsEarned  Int      @map("chips_earned")
-  timestamp    DateTime @default(now())
-  createdAt    DateTime @default(now()) @map("created_at")
-
-  @@index([tournamentId])
-  @@index([matchId])
-  @@index([playerId])
-  @@index([timestamp])
-  @@map("chip_awards")
-}
-
-/**
- * TournamentPlayer
- * Alternative player tracking for tournaments (test compatibility)
- * Note: Main app uses Player model with tournamentId
- */
-model TournamentPlayer {
-  id           String   @id @default(cuid())
-  tournamentId String   @map("tournament_id")
-  playerId     String   @map("player_id")
-  name         String
-  chipCount    Int      @default(0) @map("chip_count")
-  matchesPlayed Int     @default(0) @map("matches_played")
-  status       String   @default("active")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  @@unique([tournamentId, playerId])
-  @@index([tournamentId])
-  @@index([playerId])
-  @@index([chipCount])
-  @@map("tournament_players")
-}
-
-/**
- * ReportDelivery
- * Tracks scheduled analytics report delivery attempts
- * Sprint 10 Week 1 - Scheduled Reports
- */
-model ReportDelivery {
-  id           String    @id @default(cuid())
-  reportId     String    @map("report_id")
-  tenantId     String    @map("tenant_id")
-  status       String // pending, processing, sent, failed
-  format       String    @db.VarChar(20) // csv, excel, pdf
-  recipients   String[] // Array of email addresses
-  deliveredAt  DateTime? @map("delivered_at")
-  errorMessage String?   @map("error_message") @db.Text
-  downloadUrl  String?   @map("download_url") @db.VarChar(500)
-  fileSize     Int? // Size in bytes
-  createdAt    DateTime  @default(now()) @map("created_at")
-
-  @@index([reportId])
-  @@index([tenantId])
-  @@index([status])
-  @@index([createdAt(sort: Desc)])
-  @@map("report_deliveries")
 }

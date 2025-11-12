@@ -78,45 +78,23 @@ CREATE INDEX IF NOT EXISTS idx_users_role_status ON users(role, status);
 -- ============================================================================
 -- AUDIT LOGS - Query Optimization
 -- ============================================================================
-
--- Composite index for org + timestamp queries (optimized for time-range queries)
--- Use case: Admin dashboard audit log with date filters
--- Example: SELECT * FROM audit_logs WHERE org_id = 'xxx' AND timestamp > NOW() - INTERVAL '7 days'
--- Note: Already exists in schema (@@index([orgId, timestamp])), ensuring it's applied
-CREATE INDEX IF NOT EXISTS idx_audit_logs_org_timestamp ON audit_logs(org_id, timestamp);
-
--- Composite index for user activity timeline
--- Use case: View all actions by a specific user, sorted by time
--- Example: SELECT * FROM audit_logs WHERE user_id = 'xxx' ORDER BY timestamp DESC
-CREATE INDEX IF NOT EXISTS idx_audit_logs_user_timestamp ON audit_logs(user_id, timestamp);
+-- DISABLED: audit_logs table does not exist yet
+-- CREATE INDEX IF NOT EXISTS idx_audit_logs_org_timestamp ON audit_logs(org_id, timestamp);
+-- CREATE INDEX IF NOT EXISTS idx_audit_logs_user_timestamp ON audit_logs(user_id, timestamp);
 
 -- ============================================================================
 -- NOTIFICATIONS - Query Optimization
 -- ============================================================================
-
--- Composite index for org + status queries
--- Use case: Get pending notifications for an organization
--- Example: SELECT * FROM notifications WHERE org_id = 'xxx' AND status = 'pending'
-CREATE INDEX IF NOT EXISTS idx_notifications_org_status ON notifications(org_id, status);
-
--- Composite index for tournament notifications
--- Use case: Get all notifications for a specific tournament
--- Example: SELECT * FROM notifications WHERE tournament_id = 'xxx' AND status = 'sent'
-CREATE INDEX IF NOT EXISTS idx_notifications_tournament_status ON notifications(tournament_id, status);
+-- DISABLED: notifications table does not exist yet
+-- CREATE INDEX IF NOT EXISTS idx_notifications_org_status ON notifications(org_id, status);
+-- CREATE INDEX IF NOT EXISTS idx_notifications_tournament_status ON notifications(tournament_id, status);
 
 -- ============================================================================
 -- PAYMENTS - Query Optimization
 -- ============================================================================
-
--- Composite index for tournament + status queries
--- Use case: Get payment status for a tournament
--- Example: SELECT * FROM payments WHERE tournament_id = 'xxx' AND status = 'succeeded'
-CREATE INDEX IF NOT EXISTS idx_payments_tournament_status ON payments(tournament_id, status);
-
--- Index for timestamp-based queries
--- Use case: Financial reports, recent payment history
--- Example: SELECT * FROM payments WHERE created_at > NOW() - INTERVAL '30 days'
-CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at);
+-- DISABLED: payments table does not exist yet
+-- CREATE INDEX IF NOT EXISTS idx_payments_tournament_status ON payments(tournament_id, status);
+-- CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at);
 
 -- ============================================================================
 -- ORGANIZATION MEMBERS - Query Optimization

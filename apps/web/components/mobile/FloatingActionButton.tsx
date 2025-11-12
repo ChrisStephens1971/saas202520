@@ -2,9 +2,11 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Plus, Target, FileText, RefreshCw } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface FABAction {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   onClick: () => void;
   ariaLabel: string;
@@ -28,14 +30,14 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
     if (pathname.startsWith('/tournaments')) {
       if (pathname === '/tournaments') {
         currentAction = {
-          icon: '➕',
+          icon: Plus,
           label: 'New Tournament',
           ariaLabel: 'Create new tournament',
           onClick: () => router.push('/tournaments/create'),
         };
       } else if (pathname.includes('/bracket')) {
         currentAction = {
-          icon: '🎯',
+          icon: Target,
           label: 'Record Score',
           ariaLabel: 'Record match score',
           onClick: () => {
@@ -47,7 +49,7 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
       }
     } else if (pathname.startsWith('/scoring')) {
       currentAction = {
-        icon: '📝',
+        icon: FileText,
         label: 'Quick Score',
         ariaLabel: 'Quick score entry',
         onClick: () => {
@@ -57,7 +59,7 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
       };
     } else if (pathname.startsWith('/leaderboard')) {
       currentAction = {
-        icon: '🔄',
+        icon: RefreshCw,
         label: 'Refresh',
         ariaLabel: 'Refresh leaderboard',
         onClick: () => {
@@ -105,6 +107,8 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
     action.onClick();
   };
 
+  const IconComponent = action.icon;
+
   return (
     <button
       onClick={handleClick}
@@ -118,9 +122,7 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
         marginBottom: 'env(safe-area-inset-bottom)',
       }}
     >
-      <span className="text-2xl" aria-hidden="true">
-        {action.icon}
-      </span>
+      <IconComponent className="w-6 h-6" aria-hidden="true" />
       <span className="sr-only">{action.label}</span>
     </button>
   );

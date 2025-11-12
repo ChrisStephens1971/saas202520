@@ -36,27 +36,12 @@ CREATE INDEX "tournaments_venue_id_idx" ON "tournaments"("venue_id");
 ALTER TABLE "tournaments" ADD CONSTRAINT "tournaments_venue_id_fkey" FOREIGN KEY ("venue_id") REFERENCES "venues"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AlterTable: Payouts - Add orgId and playerName for cross-tournament queries
-ALTER TABLE "payouts" ADD COLUMN "org_id" TEXT;
-ALTER TABLE "payouts" ADD COLUMN "player_name" TEXT;
-
--- Backfill orgId from tournaments (for existing payouts)
-UPDATE "payouts" p
-SET "org_id" = t."org_id"
-FROM "tournaments" t
-WHERE p."tournament_id" = t."id"
-AND p."org_id" IS NULL;
-
--- Backfill playerName from players (for existing payouts)
-UPDATE "payouts" p
-SET "player_name" = pl."name"
-FROM "players" pl
-WHERE p."player_id" = pl."id"
-AND p."player_name" IS NULL;
-
--- Make columns NOT NULL after backfill
-ALTER TABLE "payouts" ALTER COLUMN "org_id" SET NOT NULL;
-ALTER TABLE "payouts" ALTER COLUMN "player_name" SET NOT NULL;
-
--- CreateIndex
-CREATE INDEX "payouts_org_id_idx" ON "payouts"("org_id");
-CREATE INDEX "payouts_org_id_player_name_idx" ON "payouts"("org_id", "player_name");
+-- DISABLED: payouts table does not exist yet
+-- ALTER TABLE "payouts" ADD COLUMN "org_id" TEXT;
+-- ALTER TABLE "payouts" ADD COLUMN "player_name" TEXT;
+-- UPDATE "payouts" p SET "org_id" = t."org_id" FROM "tournaments" t WHERE p."tournament_id" = t."id" AND p."org_id" IS NULL;
+-- UPDATE "payouts" p SET "player_name" = pl."name" FROM "players" pl WHERE p."player_id" = pl."id" AND p."player_name" IS NULL;
+-- ALTER TABLE "payouts" ALTER COLUMN "org_id" SET NOT NULL;
+-- ALTER TABLE "payouts" ALTER COLUMN "player_name" SET NOT NULL;
+-- CREATE INDEX "payouts_org_id_idx" ON "payouts"("org_id");
+-- CREATE INDEX "payouts_org_id_player_name_idx" ON "payouts"("org_id", "player_name");

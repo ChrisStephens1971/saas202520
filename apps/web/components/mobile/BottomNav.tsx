@@ -2,49 +2,51 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Trophy, Target, BarChart3, User, Menu } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface NavTab {
   id: string;
   label: string;
-  icon: string;
+  icon: LucideIcon;
   path: string;
-  activeIcon: string;
+  activeIcon: LucideIcon;
 }
 
 const navTabs: NavTab[] = [
   {
     id: 'tournaments',
     label: 'Tournaments',
-    icon: '🏆',
-    activeIcon: '🏆',
+    icon: Trophy,
+    activeIcon: Trophy,
     path: '/tournaments',
   },
   {
     id: 'scoring',
     label: 'Scoring',
-    icon: '🎯',
-    activeIcon: '🎯',
+    icon: Target,
+    activeIcon: Target,
     path: '/scoring',
   },
   {
     id: 'leaderboard',
     label: 'Leaders',
-    icon: '📊',
-    activeIcon: '📊',
+    icon: BarChart3,
+    activeIcon: BarChart3,
     path: '/leaderboard',
   },
   {
     id: 'profile',
     label: 'Profile',
-    icon: '👤',
-    activeIcon: '👤',
+    icon: User,
+    activeIcon: User,
     path: '/profile',
   },
   {
     id: 'more',
     label: 'More',
-    icon: '☰',
-    activeIcon: '☰',
+    icon: Menu,
+    activeIcon: Menu,
     path: '/more',
   },
 ];
@@ -82,6 +84,7 @@ export default function BottomNav() {
       <div className="flex justify-around items-center h-16">
         {navTabs.map((tab) => {
           const isActive = activeTab === tab.id;
+          const IconComponent = isActive ? tab.activeIcon : tab.icon;
 
           return (
             <button
@@ -95,13 +98,12 @@ export default function BottomNav() {
               aria-label={tab.label}
               aria-current={isActive ? 'page' : undefined}
             >
-              <span
-                className={`text-2xl mb-1 transition-transform duration-200 ${
+              <IconComponent
+                className={`w-6 h-6 mb-1 transition-transform duration-200 ${
                   isActive ? 'scale-110' : 'scale-100'
                 }`}
-              >
-                {isActive ? tab.activeIcon : tab.icon}
-              </span>
+                aria-hidden="true"
+              />
               <span
                 className={`text-xs font-medium ${
                   isActive ? 'font-semibold' : ''
