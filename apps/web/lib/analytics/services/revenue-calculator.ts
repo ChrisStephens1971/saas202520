@@ -410,12 +410,10 @@ export async function calculateRevenueProjection(
   let growthRateCount = 0;
 
   for (let i = 1; i < aggregates.length; i++) {
-    const current = aggregates[i].totalRevenue
-      ? parseFloat(aggregates[i].totalRevenue.toString())
-      : 0;
-    const previous = aggregates[i - 1].totalRevenue
-      ? parseFloat(aggregates[i - 1].totalRevenue.toString())
-      : 0;
+    const currentRevenue = aggregates[i].totalRevenue;
+    const current = currentRevenue ? parseFloat(currentRevenue.toString()) : 0;
+    const previousRevenue = aggregates[i - 1].totalRevenue;
+    const previous = previousRevenue ? parseFloat(previousRevenue.toString()) : 0;
 
     if (previous > 0) {
       const growthRate = ((current - previous) / previous) * 100;
@@ -428,9 +426,8 @@ export async function calculateRevenueProjection(
     growthRateCount > 0 ? totalGrowthRate / growthRateCount : 0;
 
   // Get last month's revenue as baseline
-  const lastRevenue = aggregates[aggregates.length - 1].totalRevenue
-    ? parseFloat(aggregates[aggregates.length - 1].totalRevenue.toString())
-    : 0;
+  const lastAggregate = aggregates[aggregates.length - 1].totalRevenue;
+  const lastRevenue = lastAggregate ? parseFloat(lastAggregate.toString()) : 0;
 
   // Project forward
   const projections = [];
