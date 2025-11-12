@@ -222,8 +222,9 @@ export async function analyzeCohort(
 
   const avgRevenuePerUser = cohortSize > 0 ? totalRevenue / cohortSize : 0;
 
-  const latestLTV = cohortData[cohortData.length - 1].ltv
-    ? parseFloat(cohortData[cohortData.length - 1].ltv.toString())
+  const lastCohort = cohortData[cohortData.length - 1];
+  const latestLTV = lastCohort?.ltv
+    ? parseFloat(lastCohort.ltv.toString())
     : avgRevenuePerUser;
 
   // Determine cohort status
