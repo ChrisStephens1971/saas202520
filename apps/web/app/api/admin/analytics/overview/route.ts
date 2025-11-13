@@ -48,9 +48,10 @@ export async function GET(request: NextRequest) {
       totalMatches,
       completedMatches,
       totalPlayers,
-      totalPayments,
-      totalRevenue,
-      revenueByStatus,
+      // TODO: Add payment tracking when Payment model is created
+      // totalPayments,
+      // totalRevenue,
+      // revenueByStatus,
     ] = await Promise.all([
       // User metrics
       prisma.user.count(),
@@ -103,22 +104,23 @@ export async function GET(request: NextRequest) {
       // Player metrics
       prisma.player.count(),
 
+      // TODO: Add payment tracking when Payment model is created
       // Payment metrics
-      prisma.payment.count(),
-      prisma.payment.aggregate({
-        _sum: {
-          amount: true,
-        },
-      }),
-      prisma.payment.groupBy({
-        by: ['status'],
-        _sum: {
-          amount: true,
-        },
-        _count: {
-          id: true,
-        },
-      }),
+      // prisma.payment.count(),
+      // prisma.payment.aggregate({
+      //   _sum: {
+      //     amount: true,
+      //   },
+      // }),
+      // prisma.payment.groupBy({
+      //   by: ['status'],
+      //   _sum: {
+      //     amount: true,
+      //   },
+      //   _count: {
+      //     id: true,
+      //   },
+      // }),
     ]);
 
     // Calculate growth rates
@@ -130,21 +132,22 @@ export async function GET(request: NextRequest) {
         ? ((newTournamentsLast30Days / totalTournaments) * 100).toFixed(2)
         : '0';
 
-    // Format revenue by status
+    // TODO: Add payment tracking when Payment model is created
+    // Format revenue by status (placeholder until Payment model exists)
     const revenueMetrics = {
-      total: totalRevenue._sum.amount || 0,
+      total: 0, // totalRevenue._sum.amount || 0,
       succeeded: 0,
       pending: 0,
       failed: 0,
       refunded: 0,
     };
 
-    revenueByStatus.forEach((item) => {
-      const status = item.status as keyof typeof revenueMetrics;
-      if (status in revenueMetrics && status !== 'total') {
-        revenueMetrics[status] = item._sum.amount || 0;
-      }
-    });
+    // revenueByStatus.forEach((item) => {
+    //   const status = item.status as keyof typeof revenueMetrics;
+    //   if (status in revenueMetrics && status !== 'total') {
+    //     revenueMetrics[status] = item._sum.amount || 0;
+    //   }
+    // });
 
     // Response
     return NextResponse.json(
@@ -187,11 +190,11 @@ export async function GET(request: NextRequest) {
             pending: revenueMetrics.pending,
             failed: revenueMetrics.failed,
             refunded: revenueMetrics.refunded,
-            totalPayments: totalPayments,
-            averagePayment:
-              totalPayments > 0
-                ? parseFloat((revenueMetrics.total / totalPayments / 100).toFixed(2))
-                : 0, // Convert cents to dollars
+            totalPayments: 0, // totalPayments - TODO: Add when Payment model exists
+            averagePayment: 0, // TODO: Calculate when Payment model exists
+              // totalPayments > 0
+              //   ? parseFloat((revenueMetrics.total / totalPayments / 100).toFixed(2))
+              //   : 0, // Convert cents to dollars
           },
         },
         generatedAt: now.toISOString(),
