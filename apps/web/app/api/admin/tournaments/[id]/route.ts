@@ -79,7 +79,7 @@ export async function GET(
             name: true,
             email: true,
             status: true,
-            chipCount: true,
+            // chipCount: true, // TODO: Add chipCount field to Player model if needed
             createdAt: true,
           },
           orderBy: {
