@@ -87,8 +87,8 @@ export default auth(async (req) => {
 
   // Redirect logged-in users away from login/signup pages
   if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/signup')) {
-    // If user has org, go to dashboard; otherwise go to org selector
-    const redirectPath = hasOrgSelected ? '/dashboard' : '/select-organization';
+    // If user has org, go to console; otherwise go to org selector
+    const redirectPath = hasOrgSelected ? '/console' : '/select-organization';
     const response = NextResponse.redirect(new URL(redirectPath, nextUrl));
 
     // End performance tracking
