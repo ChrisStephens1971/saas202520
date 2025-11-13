@@ -10,7 +10,7 @@ import {
   CreateOrganizationRequestSchema,
   UpdateOrganizationRequestSchema,
   AddOrganizationMemberRequestSchema,
-  OrganizationRole,
+  OrganizationRoleEnum,
 } from './organizations';
 
 describe('Organization Contracts', () => {
@@ -289,7 +289,7 @@ describe('Organization Contracts', () => {
       const roles = ['owner', 'td', 'scorekeeper', 'streamer'];
 
       roles.forEach((role) => {
-        const result = OrganizationRole.safeParse(role);
+        const result = OrganizationRoleEnum.safeParse(role);
         expect(result.success).toBe(true);
       });
     });
@@ -298,7 +298,7 @@ describe('Organization Contracts', () => {
       const invalidRoles = ['admin', 'user', 'member', 'guest'];
 
       invalidRoles.forEach((role) => {
-        const result = OrganizationRole.safeParse(role);
+        const result = OrganizationRoleEnum.safeParse(role);
         expect(result.success).toBe(false);
       });
     });

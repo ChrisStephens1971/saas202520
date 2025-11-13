@@ -10,7 +10,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getWebhook } from '@/lib/api/services/webhook.service';
 import { createWebhookHeaders } from '@/lib/api/utils/webhook-signature.utils';
 import { WebhookEvent, WebhookPayload } from '@/lib/api/types/webhook-events.types';
-import fetch from 'node-fetch';
 import { authenticateApiRequest } from '@/lib/api/public-api-auth';
 
 /**

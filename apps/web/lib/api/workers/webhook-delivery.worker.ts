@@ -7,7 +7,6 @@
 
 import { Job } from 'bull';
 import { PrismaClient } from '@prisma/client';
-import fetch from 'node-fetch';
 import { webhookQueue } from '../queues/webhook.queue';
 import { WebhookJobData } from '../types/webhook-events.types';
 import { createWebhookHeaders } from '../utils/webhook-signature.utils';

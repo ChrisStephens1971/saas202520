@@ -6,11 +6,11 @@
 
 // Jest globals (describe, it, expect) are available automatically
 import {
-  // Enums
-  TournamentStatus,
-  TournamentFormat,
-  SportType,
-  GameType,
+  // Zod Enum Schemas (for validation)
+  TournamentStatusEnum,
+  TournamentFormatEnum,
+  SportTypeEnum,
+  GameTypeEnum,
 
   // Entity Schemas
   TournamentSchema,
@@ -43,62 +43,62 @@ describe('Tournament API Contracts', () => {
 
   describe('TournamentStatus Enum', () => {
     it('should accept valid tournament status values', () => {
-      expect(TournamentStatus.parse('draft')).toBe('draft');
-      expect(TournamentStatus.parse('registration')).toBe('registration');
-      expect(TournamentStatus.parse('active')).toBe('active');
-      expect(TournamentStatus.parse('paused')).toBe('paused');
-      expect(TournamentStatus.parse('completed')).toBe('completed');
-      expect(TournamentStatus.parse('cancelled')).toBe('cancelled');
+      expect(TournamentStatusEnum.parse('draft')).toBe('draft');
+      expect(TournamentStatusEnum.parse('registration')).toBe('registration');
+      expect(TournamentStatusEnum.parse('active')).toBe('active');
+      expect(TournamentStatusEnum.parse('paused')).toBe('paused');
+      expect(TournamentStatusEnum.parse('completed')).toBe('completed');
+      expect(TournamentStatusEnum.parse('cancelled')).toBe('cancelled');
     });
 
     it('should reject invalid tournament status values', () => {
-      expect(() => TournamentStatus.parse('invalid')).toThrow();
-      expect(() => TournamentStatus.parse('DRAFT')).toThrow();
-      expect(() => TournamentStatus.parse('')).toThrow();
-      expect(() => TournamentStatus.parse(null)).toThrow();
+      expect(() => TournamentStatusEnum.parse('invalid')).toThrow();
+      expect(() => TournamentStatusEnum.parse('DRAFT')).toThrow();
+      expect(() => TournamentStatusEnum.parse('')).toThrow();
+      expect(() => TournamentStatusEnum.parse(null)).toThrow();
     });
   });
 
   describe('TournamentFormat Enum', () => {
     it('should accept valid tournament format values', () => {
-      expect(TournamentFormat.parse('single_elimination')).toBe('single_elimination');
-      expect(TournamentFormat.parse('double_elimination')).toBe('double_elimination');
-      expect(TournamentFormat.parse('round_robin')).toBe('round_robin');
-      expect(TournamentFormat.parse('modified_single')).toBe('modified_single');
-      expect(TournamentFormat.parse('chip_format')).toBe('chip_format');
+      expect(TournamentFormatEnum.parse('single_elimination')).toBe('single_elimination');
+      expect(TournamentFormatEnum.parse('double_elimination')).toBe('double_elimination');
+      expect(TournamentFormatEnum.parse('round_robin')).toBe('round_robin');
+      expect(TournamentFormatEnum.parse('modified_single')).toBe('modified_single');
+      expect(TournamentFormatEnum.parse('chip_format')).toBe('chip_format');
     });
 
     it('should reject invalid tournament format values', () => {
-      expect(() => TournamentFormat.parse('invalid_format')).toThrow();
-      expect(() => TournamentFormat.parse('single-elimination')).toThrow();
-      expect(() => TournamentFormat.parse('')).toThrow();
+      expect(() => TournamentFormatEnum.parse('invalid_format')).toThrow();
+      expect(() => TournamentFormatEnum.parse('single-elimination')).toThrow();
+      expect(() => TournamentFormatEnum.parse('')).toThrow();
     });
   });
 
   describe('SportType Enum', () => {
     it('should accept valid sport type values', () => {
-      expect(SportType.parse('pool')).toBe('pool');
+      expect(SportTypeEnum.parse('pool')).toBe('pool');
     });
 
     it('should reject invalid sport type values', () => {
-      expect(() => SportType.parse('darts')).toThrow();
-      expect(() => SportType.parse('Pool')).toThrow();
-      expect(() => SportType.parse('')).toThrow();
+      expect(() => SportTypeEnum.parse('darts')).toThrow();
+      expect(() => SportTypeEnum.parse('Pool')).toThrow();
+      expect(() => SportTypeEnum.parse('')).toThrow();
     });
   });
 
   describe('GameType Enum', () => {
     it('should accept valid game type values', () => {
-      expect(GameType.parse('eight-ball')).toBe('eight-ball');
-      expect(GameType.parse('nine-ball')).toBe('nine-ball');
-      expect(GameType.parse('ten-ball')).toBe('ten-ball');
-      expect(GameType.parse('straight-pool')).toBe('straight-pool');
+      expect(GameTypeEnum.parse('eight-ball')).toBe('eight-ball');
+      expect(GameTypeEnum.parse('nine-ball')).toBe('nine-ball');
+      expect(GameTypeEnum.parse('ten-ball')).toBe('ten-ball');
+      expect(GameTypeEnum.parse('straight-pool')).toBe('straight-pool');
     });
 
     it('should reject invalid game type values', () => {
-      expect(() => GameType.parse('8-ball')).toThrow();
-      expect(() => GameType.parse('nineball')).toThrow();
-      expect(() => GameType.parse('')).toThrow();
+      expect(() => GameTypeEnum.parse('8-ball')).toThrow();
+      expect(() => GameTypeEnum.parse('nineball')).toThrow();
+      expect(() => GameTypeEnum.parse('')).toThrow();
     });
   });
 
