@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {}
+export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, ...props }, ref) => {
@@ -22,10 +22,10 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 
 Select.displayName = "Select"
 
-export interface SelectTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export type SelectTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 export interface SelectValueProps { placeholder?: string }
-export interface SelectContentProps extends React.HTMLAttributes<HTMLDivElement> {}
-export interface SelectItemProps extends React.OptionHTMLAttributes<HTMLOptionElement> {}
+export type SelectContentProps = React.HTMLAttributes<HTMLDivElement>
+export type SelectItemProps = React.OptionHTMLAttributes<HTMLOptionElement>
 
 const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
   ({ className, children, ...props }, ref) => (

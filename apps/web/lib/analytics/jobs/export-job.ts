@@ -95,23 +95,25 @@ export async function processExportJob(
     let fileSize = 0;
 
     switch (exportFormat) {
-      case 'csv':
+      case 'csv': {
         // For CSV, convert analytics data to flat array format
         const csvData = convertToCSVFormat(data, exportType);
         fileBuffer = exportToCSV(csvData, filename);
         fileSize = Buffer.byteLength(fileBuffer, 'utf8');
         break;
+      }
 
       case 'excel':
         fileBuffer = await exportToExcel(data, filename);
         fileSize = fileBuffer.length;
         break;
 
-      case 'pdf':
+      case 'pdf': {
         const pdfBlob = await exportToPDF(data);
         fileBuffer = Buffer.from(await pdfBlob.arrayBuffer());
         fileSize = fileBuffer.length;
         break;
+      }
 
       default:
         throw new Error(`Unknown export format: ${exportFormat}`);
