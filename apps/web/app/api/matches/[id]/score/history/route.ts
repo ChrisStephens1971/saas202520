@@ -31,39 +31,35 @@ export async function GET(
       return NextResponse.json({ error: 'Match not found' }, { status: 404 });
     }
 
+    // TODO: Implement score history tracking when ScoreUpdate model is added to schema
     // Get score updates
-    const [updates, total] = await Promise.all([
-      prisma.scoreUpdate.findMany({
-        where: { matchId },
-        orderBy: { timestamp: 'desc' },
-        take: limit,
-      }),
-      prisma.scoreUpdate.count({
-        where: { matchId },
-      }),
-    ]);
+    // const [updates, total] = await Promise.all([
+    //   prisma.scoreUpdate.findMany({
+    //     where: { matchId },
+    //     orderBy: { timestamp: 'desc' },
+    //     take: limit,
+    //   }),
+    //   prisma.scoreUpdate.count({
+    //     where: { matchId },
+    //   }),
+    // ]);
 
-    // Check if undo is available
-    const undoableCount = await prisma.scoreUpdate.count({
-      where: {
-        matchId,
-        undone: false,
-        action: { in: ['increment_a', 'increment_b'] },
-      },
-    });
+    // // Check if undo is available
+    // const undoableCount = await prisma.scoreUpdate.count({
+    //   where: {
+    //     matchId,
+    //     undone: false,
+    //     action: { in: ['increment_a', 'increment_b'] },
+    //   },
+    // });
 
-    const canUndo = undoableCount > 0;
+    // const canUndo = undoableCount > 0;
 
+    // Temporary placeholder response until ScoreUpdate model is implemented
     const response: ScoreHistoryResponse = {
-      updates: updates.map(u => ({
-        ...u,
-        action: u.action as 'increment_a' | 'increment_b' | 'undo',
-        timestamp: u.timestamp,
-        previousScore: u.previousScore as never,
-        newScore: u.newScore as never,
-      })),
-      total,
-      canUndo,
+      updates: [],
+      total: 0,
+      canUndo: false,
     };
 
     return NextResponse.json(response, { status: 200 });
