@@ -142,7 +142,7 @@ export async function GET(
             name: p.name,
             email: p.email,
             status: p.status,
-            chipCount: p.chipCount,
+            // chipCount: p.chipCount, // TODO: Add chipCount field to Player model if needed
             createdAt: p.createdAt.toISOString(),
           })),
           recentMatches: tournament.matches.map((m) => ({
