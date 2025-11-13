@@ -107,18 +107,19 @@ export async function processScheduledReportJob(
     let mimeType: string;
 
     switch (reportFormat) {
-      case 'csv':
+      case 'csv': {
         const csvData = convertToCSVFormat(analyticsData, reportType);
         reportFile = exportToCSV(csvData, filename);
         mimeType = 'text/csv';
         break;
+      }
 
       case 'excel':
         reportFile = await exportToExcel(analyticsData, filename);
         mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         break;
 
-      case 'pdf':
+      case 'pdf': {
         const pdfBlob = await exportToPDF(analyticsData, {
           tenantId,
           dateRange,
@@ -128,6 +129,7 @@ export async function processScheduledReportJob(
         reportFile = Buffer.from(await pdfBlob.arrayBuffer());
         mimeType = 'application/pdf';
         break;
+      }
 
       default:
         throw new Error(`Unknown format: ${reportFormat}`);

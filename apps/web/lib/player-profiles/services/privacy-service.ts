@@ -9,7 +9,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { PrivacySettings, UpdateSettingsRequest, PlayerProfileError } from '../types';
+import { PrivacySettings, UpdateSettingsRequest, PlayerProfileError, NotificationPreferences } from '../types';
 
 const prisma = new PrismaClient();
 
