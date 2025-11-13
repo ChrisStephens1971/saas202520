@@ -42,7 +42,7 @@ export function LoginForm() {
         return;
       }
 
-      router.push('/dashboard');
+      router.push('/console');
       router.refresh();
     } catch (err) {
       if (err instanceof ZodError) {

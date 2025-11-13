@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { prisma, withTenantContext } from '@tournament/shared';
+import { SignOutButton } from '@/components/auth/SignOutButton';
 
 export default async function ConsolePage() {
   const session = await auth();
@@ -38,14 +39,7 @@ export default async function ConsolePage() {
               >
                 + New Tournament
               </Link>
-              <form action="/api/auth/signout" method="POST">
-                <button
-                  type="submit"
-                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  Sign out
-                </button>
-              </form>
+              <SignOutButton />
             </div>
           </div>
         </div>
