@@ -8,14 +8,22 @@ import { auth } from '@/auth';
 import webpush from 'web-push';
 import { VAPID_CONFIG } from '@/lib/pwa/vapid-keys';
 
-// Configure web-push
-webpush.setVapidDetails(
-  VAPID_CONFIG.subject,
-  VAPID_CONFIG.publicKey,
-  VAPID_CONFIG.privateKey
-);
+let vapidConfigured = false;
+
+// Configure web-push on first request
+function ensureVapidConfigured() {
+  if (!vapidConfigured) {
+    webpush.setVapidDetails(
+      VAPID_CONFIG.subject,
+      VAPID_CONFIG.publicKey,
+      VAPID_CONFIG.privateKey
+    );
+    vapidConfigured = true;
+  }
+}
 
 export async function POST(request: NextRequest) {
+  ensureVapidConfigured();
   try {
     const session = await auth();
     if (!session?.user?.id) {

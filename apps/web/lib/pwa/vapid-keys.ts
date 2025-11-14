@@ -17,7 +17,7 @@ export const VAPID_CONFIG = {
   publicKey:
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
     'BEl62iUYgUivxIkv69yViEuiBIa-Ib27SzkkpGzEZ3lAGKv_U_8h1TFf9Kw3LQ6O4dFz5r1JxL5lKx1c9KqK2Zo', // Default for development
-  privateKey: process.env.VAPID_PRIVATE_KEY || '',
+  privateKey: process.env.VAPID_PRIVATE_KEY || 'dev-key-placeholder-for-build-only-do-not-use-in-production',
   subject:
     process.env.VAPID_SUBJECT || 'mailto:admin@tournamentplatform.com',
 };

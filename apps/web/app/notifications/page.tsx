@@ -10,6 +10,9 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 
+// Force dynamic rendering - this page requires authentication
+export const dynamic = 'force-dynamic';
+
 interface Notification {
   id: string;
   type: string;
@@ -22,7 +25,9 @@ interface Notification {
 }
 
 export default function NotificationsPage() {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
+  const session = sessionData?.data;
+  const status = sessionData?.status || 'loading';
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
