@@ -339,9 +339,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: false,
-        smsOptedOut: true,
-        smsOptedOutAt: new Date(),
+        sms: false,
       };
 
       vi.mocked(prisma.notificationPreference.upsert).mockResolvedValueOnce(
@@ -354,14 +352,10 @@ describe('notification-service', () => {
         where: { playerId: 'player-123' },
         create: {
           playerId: 'player-123',
-          smsOptedOut: true,
-          smsOptedOutAt: expect.any(Date),
-          smsEnabled: false,
+          sms: false,
         },
         update: {
-          smsOptedOut: true,
-          smsOptedOutAt: expect.any(Date),
-          smsEnabled: false,
+          sms: false,
         },
       });
     });
@@ -370,9 +364,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: true,
-        smsOptedOut: false,
-        smsOptedOutAt: null,
+        sms: true,
       };
 
       vi.mocked(prisma.notificationPreference.upsert).mockResolvedValueOnce(
@@ -385,13 +377,10 @@ describe('notification-service', () => {
         where: { playerId: 'player-123' },
         create: {
           playerId: 'player-123',
-          smsOptedOut: false,
-          smsEnabled: true,
+          sms: true,
         },
         update: {
-          smsOptedOut: false,
-          smsOptedOutAt: null,
-          smsEnabled: true,
+          sms: true,
         },
       });
     });
@@ -402,9 +391,8 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: true,
+        sms: true,
         emailEnabled: true,
-        smsOptedOut: false,
         quietHoursStart: '22:00',
         quietHoursEnd: '08:00',
         timezone: 'America/New_York',
@@ -426,7 +414,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: false,
+        sms: false,
         emailEnabled: true,
         quietHoursStart: '23:00',
         quietHoursEnd: '07:00',
@@ -438,7 +426,7 @@ describe('notification-service', () => {
       );
 
       const result = await updateNotificationPreferences('player-123', {
-        smsEnabled: false,
+        sms: false,
         quietHoursStart: '23:00',
         quietHoursEnd: '07:00',
         timezone: 'America/Los_Angeles',
@@ -449,13 +437,13 @@ describe('notification-service', () => {
         where: { playerId: 'player-123' },
         create: {
           playerId: 'player-123',
-          smsEnabled: false,
+          sms: false,
           quietHoursStart: '23:00',
           quietHoursEnd: '07:00',
           timezone: 'America/Los_Angeles',
         },
         update: {
-          smsEnabled: false,
+          sms: false,
           quietHoursStart: '23:00',
           quietHoursEnd: '07:00',
           timezone: 'America/Los_Angeles',
@@ -495,8 +483,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: true,
-        smsOptedOut: false,
+        sms: true,
         emailEnabled: true,
         quietHoursStart: null,
         quietHoursEnd: null,
@@ -616,8 +603,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: true,
-        smsOptedOut: false,
+        sms: true,
         emailEnabled: true,
         quietHoursStart: null,
         quietHoursEnd: null,
@@ -684,8 +670,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-456',
         playerId: 'player-456',
-        smsEnabled: true,
-        smsOptedOut: false,
+        sms: true,
         emailEnabled: true,
         quietHoursStart: null,
         quietHoursEnd: null,
@@ -752,8 +737,7 @@ describe('notification-service', () => {
       const mockPreference = {
         id: 'pref-123',
         playerId: 'player-123',
-        smsEnabled: true,
-        smsOptedOut: false,
+        sms: true,
         emailEnabled: true,
         quietHoursStart: null,
         quietHoursEnd: null,

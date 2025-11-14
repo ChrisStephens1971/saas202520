@@ -19,6 +19,10 @@ const mockPrisma = {
     upsert: vi.fn(),
   },
 };
+n// Mock @/lib/prisma module
+vi.mock("@/lib/prisma", () => ({
+  prisma: mockPrisma,
+}));
 
 const mockTenantId = 'tenant-123';
 const mockPlayerId = 'player-123';

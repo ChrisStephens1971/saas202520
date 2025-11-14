@@ -174,7 +174,7 @@ describe('rate-limiter', () => {
     it('should return true when player has opted out', async () => {
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce({
         playerId: 'player-123',
-        smsOptedOut: true,
+        sms: false,
       } as never);
 
       const result = await isPlayerOptedOut('player-123');
@@ -185,7 +185,7 @@ describe('rate-limiter', () => {
     it('should return false when player has not opted out', async () => {
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce({
         playerId: 'player-123',
-        smsOptedOut: false,
+        sms: true,
       } as never);
 
       const result = await isPlayerOptedOut('player-123');
@@ -257,7 +257,7 @@ describe('rate-limiter', () => {
     it('should block SMS when player has opted out', async () => {
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce({
         playerId: 'player-123',
-        smsOptedOut: true,
+        sms: false,
       } as never);
 
       const result = await validateNotificationDelivery('player-123', 'sms');
@@ -274,7 +274,7 @@ describe('rate-limiter', () => {
       vi.mocked(prisma.notificationPreference.findUnique)
         .mockResolvedValueOnce({
           playerId: 'player-123',
-          smsOptedOut: false,
+          sms: true,
         } as never)
         // Mock quiet hours check (within quiet hours)
         .mockResolvedValueOnce({
@@ -295,7 +295,7 @@ describe('rate-limiter', () => {
       vi.mocked(prisma.notificationPreference.findUnique)
         .mockResolvedValueOnce({
           playerId: 'player-123',
-          smsOptedOut: false,
+          sms: true,
         } as never)
         // Mock quiet hours check (no quiet hours)
         .mockResolvedValueOnce({

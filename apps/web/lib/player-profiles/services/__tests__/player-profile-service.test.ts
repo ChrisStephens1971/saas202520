@@ -46,6 +46,10 @@ const mockPrismaClient = {
     findUnique: vi.fn(),
   },
 };
+n// Mock @/lib/prisma module
+vi.mock("@/lib/prisma", () => ({
+  prisma: mockPrismaClient,
+}));
 
 // Mock data
 const mockTenantId = 'tenant-123';
