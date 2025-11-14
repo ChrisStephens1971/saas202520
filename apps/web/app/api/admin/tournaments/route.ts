@@ -269,6 +269,7 @@ export async function POST(request: NextRequest) {
 
     // Log audit trail
     await logTournamentCreated(
+      tournament.orgId,
       authResult.user.id,
       authResult.user.email,
       tournament.id,

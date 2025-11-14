@@ -97,6 +97,7 @@ export async function logAdminAction(entry: AuditLogEntry): Promise<void> {
  * Log tournament creation
  */
 export async function logTournamentCreated(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   tournamentId: string,
@@ -104,6 +105,7 @@ export async function logTournamentCreated(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'CREATE',
@@ -119,6 +121,7 @@ export async function logTournamentCreated(
  * Log tournament update
  */
 export async function logTournamentUpdated(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   tournamentId: string,
@@ -127,6 +130,7 @@ export async function logTournamentUpdated(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'UPDATE',
@@ -142,6 +146,7 @@ export async function logTournamentUpdated(
  * Log tournament deletion
  */
 export async function logTournamentDeleted(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   tournamentId: string,
@@ -149,6 +154,7 @@ export async function logTournamentDeleted(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'DELETE',
@@ -164,6 +170,7 @@ export async function logTournamentDeleted(
  * Log user ban
  */
 export async function logUserBanned(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   targetUserId: string,
@@ -171,6 +178,7 @@ export async function logUserBanned(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'BAN',
@@ -186,6 +194,7 @@ export async function logUserBanned(
  * Log user suspension
  */
 export async function logUserSuspended(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   targetUserId: string,
@@ -194,6 +203,7 @@ export async function logUserSuspended(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'SUSPEND',
@@ -209,6 +219,7 @@ export async function logUserSuspended(
  * Log user update
  */
 export async function logUserUpdated(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   targetUserId: string,
@@ -217,6 +228,7 @@ export async function logUserUpdated(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'UPDATE',
@@ -232,6 +244,7 @@ export async function logUserUpdated(
  * Log bulk operation
  */
 export async function logBulkOperation(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   action: 'BULK_DELETE' | 'BULK_UPDATE',
@@ -241,6 +254,7 @@ export async function logBulkOperation(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action,
@@ -259,6 +273,7 @@ export async function logBulkOperation(
  * Log data export
  */
 export async function logDataExport(
+  orgId: string,
   adminUserId: string,
   adminEmail: string,
   resource: AuditResource,
@@ -266,6 +281,7 @@ export async function logDataExport(
   request?: Request
 ): Promise<void> {
   await logAdminAction({
+    orgId,
     userId: adminUserId,
     userEmail: adminEmail,
     action: 'EXPORT',
@@ -317,7 +333,7 @@ export async function getAuditLogs(filters: {
       ...(filters.resource && { resource: filters.resource.toLowerCase() }),
       ...(filters.startDate || filters.endDate
         ? {
-            timestamp: {
+            createdAt: {
               ...(filters.startDate && { gte: filters.startDate }),
               ...(filters.endDate && { lte: filters.endDate }),
             },
@@ -326,15 +342,30 @@ export async function getAuditLogs(filters: {
     };
 
     // Query logs with pagination
-    const [logs, total] = await Promise.all([
+    const [rawLogs, total] = await Promise.all([
       _prisma.auditLog.findMany({
         where,
-        orderBy: { timestamp: 'desc' },
+        orderBy: { createdAt: 'desc' },
         take: filters.limit || 50,
         skip: filters.offset || 0,
       }),
       _prisma.auditLog.count({ where }),
     ]);
+
+    // Map createdAt to timestamp to match return type
+    const logs = rawLogs.map((log) => ({
+      id: log.id,
+      userId: log.userId,
+      userName: log.userName,
+      action: log.action,
+      resource: log.resource,
+      resourceId: log.resourceId,
+      changes: log.changes,
+      metadata: log.metadata,
+      ipAddress: log.ipAddress,
+      userAgent: log.userAgent,
+      timestamp: log.createdAt,
+    }));
 
     return {
       logs,

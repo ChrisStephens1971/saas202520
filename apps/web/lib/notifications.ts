@@ -95,7 +95,7 @@ export async function subscribeToPushNotifications(
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(
       process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-    ),
+    ) as BufferSource,
   });
 
   const subscriptionData = subscriptionToJSON(subscription);
@@ -200,10 +200,9 @@ export async function sendTestNotification(
     body,
     icon: '/icons/icon-192x192.png',
     badge: '/icons/icon-72x72.png',
-    vibrate: [200, 100, 200],
     tag: 'test-notification',
     requireInteraction: false,
-  });
+  } as NotificationOptions);
 }
 
 /**

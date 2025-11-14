@@ -83,6 +83,7 @@ export function getQueryStats() {
       slowQueries: 0,
       avgDuration: 0,
       maxDuration: 0,
+      slowQueryPercentage: 0,
     };
   }
 
@@ -207,7 +208,8 @@ function getOptimizationHint(metric: QueryMetrics): string | null {
  * @param next - Next middleware function
  * @returns Query result
  */
-export const queryOptimizer: Prisma.Middleware = async (params, next) => {
+// NOTE: Prisma middleware deprecated in v6. Type changed to 'any'. Currently not in use.
+export const queryOptimizer: any = async (params: any, next: any) => {
   // Start timer
   const startTime = Date.now();
 

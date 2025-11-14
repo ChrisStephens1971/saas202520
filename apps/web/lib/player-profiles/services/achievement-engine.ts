@@ -147,9 +147,6 @@ export async function unlockAchievement(
         progress: 100,
         metadata: (metadata || null) as any,
       },
-      include: {
-        achievement: true,
-      },
     });
 
     console.log(`[Achievement Unlocked] ${playerId}: ${definition.name} (${achievementCode})`);

@@ -78,10 +78,10 @@ export async function POST(
 
     payments.forEach(payment => {
       if (payment.purpose === 'entry_fee' && includeEntryFees) {
-        entryFeesTotal += payment.amount;
+        entryFeesTotal += payment.amount.toNumber();
       }
       if (payment.purpose === 'side_pot' && includeSidePots) {
-        sidePotsTotal += payment.amount;
+        sidePotsTotal += payment.amount.toNumber();
       }
     });
 
@@ -133,13 +133,11 @@ export async function POST(
           });
         } else {
           // TODO: Link to actual player based on tournament results
-          // For now, we'll leave playerId null until rankings are finalized
+          // For now, we'll leave playerId as placeholder until rankings are finalized
           return await prisma.payout.create({
             data: {
-              orgId: tournament.orgId,
               tournamentId,
-              playerId: '', // Will be updated when tournament completes
-              playerName: `TBD - Place #${payout.placement}`, // Will be updated when tournament completes
+              playerId: 'TBD', // Will be updated when tournament completes
               placement: payout.placement,
               amount: payout.amount,
               source: 'prize_pool',
@@ -159,7 +157,7 @@ export async function POST(
         tournamentId: p.tournamentId,
         playerId: p.playerId,
         placement: p.placement,
-        amount: p.amount,
+        amount: p.amount.toNumber(),
         source: p.source as 'prize_pool' | 'side_pot',
         status: p.status as 'pending' | 'paid' | 'voided',
         paidAt: p.paidAt ?? undefined,

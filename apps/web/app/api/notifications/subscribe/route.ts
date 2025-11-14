@@ -33,17 +33,20 @@ export async function POST(request: NextRequest) {
         endpoint: subscription.endpoint,
       },
       update: {
-        p256dhKey: subscription.keys.p256dh,
-        authKey: subscription.keys.auth,
-        preferences: preferences || {},
-        updatedAt: new Date(),
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+        expirationTime: subscription.expirationTime ? new Date(subscription.expirationTime) : null,
+        userAgent: request.headers.get('user-agent'),
+        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
       },
       create: {
         userId: session.user.id,
         endpoint: subscription.endpoint,
-        p256dhKey: subscription.keys.p256dh,
-        authKey: subscription.keys.auth,
-        preferences: preferences || {},
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+        expirationTime: subscription.expirationTime ? new Date(subscription.expirationTime) : null,
+        userAgent: request.headers.get('user-agent'),
+        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
       },
     });
 

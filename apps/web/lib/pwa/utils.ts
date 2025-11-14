@@ -39,8 +39,9 @@ interface NavigatorConnection extends Navigator {
  * Extended Navigator interface for Web Share API Level 2
  * https://developer.mozilla.org/en-US/docs/Web/API/Navigator/canShare
  */
-interface NavigatorShare extends Navigator {
+interface NavigatorShare {
   canShare?(data?: ShareData): boolean;
+  share?(data: ShareData): Promise<void>;
 }
 
 // =============================================================================
@@ -215,7 +216,7 @@ export async function sendMessageToSW(message: unknown): Promise<unknown> {
       }
     };
 
-    navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+    navigator.serviceWorker.controller?.postMessage(message, [messageChannel.port2]);
   });
 }
 
@@ -363,18 +364,18 @@ export function getNotificationPermission(): NotificationPermission {
 /**
  * Request notification permission
  */
-export async function requestNotificationPermission(): Promise<NotificationPermissionStatus> {
+export async function requestNotificationPermission(): Promise<NotificationPermission> {
   if (!('Notification' in window)) {
-    return 'denied';
+    return 'denied' as unknown as NotificationPermission;
   }
 
   try {
     const permission = await Notification.requestPermission();
     console.log('[PWA] Notification permission:', permission);
-    return permission;
+    return permission as unknown as NotificationPermission;
   } catch (error) {
     console.error('[PWA] Failed to request notification permission:', error);
-    return 'denied';
+    return 'denied' as unknown as NotificationPermission;
   }
 }
 
@@ -399,7 +400,7 @@ export function setupInstallPrompt(): () => void {
     e.preventDefault();
 
     // Store the event so it can be triggered later
-    deferredPrompt = e;
+    deferredPrompt = e as any;
 
     console.log('[PWA] Install prompt ready');
 
@@ -422,7 +423,7 @@ export function getInstallState(): InstallState {
   return {
     canInstall: !!deferredPrompt,
     isInstalled: isStandalone(),
-    promptEvent: deferredPrompt,
+    promptEvent: (deferredPrompt || undefined) as any,
   };
 }
 
@@ -513,7 +514,7 @@ export async function share(data: ShareData): Promise<ShareResult> {
  */
 export async function getAppVersion(): Promise<string | null> {
   try {
-    const response = await sendMessageToSW({ type: 'GET_VERSION' });
+    const response = await sendMessageToSW({ type: 'GET_VERSION' }) as any;
     return response.version || null;
   } catch {
     return null;

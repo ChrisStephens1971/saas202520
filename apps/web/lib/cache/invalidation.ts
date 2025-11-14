@@ -534,8 +534,8 @@ export function InvalidateCache(
       const result = await originalMethod.apply(this, args);
 
       // Extract parameters from method arguments
-      const tenantId = args[0]; // Assuming first arg is tenantId
-      const resourceId = resourceIdParam ? args[1] : undefined;
+      const tenantId = args[0] as string; // Assuming first arg is tenantId
+      const resourceId = resourceIdParam ? (args[1] as string) : undefined;
 
       // Emit cache event
       await emitCacheEvent(event, tenantId, resourceId);

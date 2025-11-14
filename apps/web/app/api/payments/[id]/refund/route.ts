@@ -45,6 +45,13 @@ export async function POST(
       );
     }
 
+    if (!payment.stripeAccount) {
+      return NextResponse.json(
+        { error: 'Stripe account not configured' },
+        { status: 400 }
+      );
+    }
+
     // Verify user has permission (must be owner or TD of the organization)
     const membership = await prisma.organizationMember.findFirst({
       where: {
@@ -69,20 +76,22 @@ export async function POST(
       );
     }
 
-    // Check refund amount
-    const refundAmount = amount || payment.amount;
-    const totalRefunded = payment.refundedAmount + refundAmount;
+    // Check refund amount (convert Decimal to number)
+    const paymentAmountNum = payment.amount.toNumber();
+    const refundAmount = amount || paymentAmountNum;
+    const currentRefunded = payment.refundedAmount?.toNumber() || 0;
+    const totalRefunded = currentRefunded + refundAmount;
 
-    if (totalRefunded > payment.amount) {
+    if (totalRefunded > paymentAmountNum) {
       return NextResponse.json(
-        { error: `Refund amount exceeds payment amount (${payment.amount} cents)` },
+        { error: `Refund amount exceeds payment amount (${paymentAmountNum} cents)` },
         { status: 400 }
       );
     }
 
     // Create refund on Stripe
     const stripeRefund = await createRefund({
-      paymentIntentId: payment.stripePaymentIntent,
+      paymentIntentId: payment.stripePaymentIntent || '',
       amount: refundAmount,
       reason,
       connectedAccountId: payment.stripeAccount.stripeAccountId,
@@ -105,7 +114,7 @@ export async function POST(
         where: { id: paymentId },
         data: {
           refundedAmount: totalRefunded,
-          status: totalRefunded >= payment.amount ? 'refunded' : 'partially_refunded',
+          status: totalRefunded >= paymentAmountNum ? 'refunded' : 'partially_refunded',
         },
       });
 
@@ -117,25 +126,25 @@ export async function POST(
         id: result.refund.id,
         paymentId: result.refund.paymentId,
         stripeRefundId: result.refund.stripeRefundId,
-        amount: result.refund.amount,
+        amount: result.refund.amount.toNumber(),
         reason: result.refund.reason as 'duplicate' | 'fraudulent' | 'requested_by_customer',
         status: result.refund.status as 'pending' | 'succeeded' | 'failed' | 'cancelled',
-        processedBy: result.refund.processedBy,
+        processedBy: result.refund.processedBy || '',
         createdAt: result.refund.createdAt,
         updatedAt: result.refund.updatedAt,
       },
       payment: {
         id: result.updatedPayment.id,
-        tournamentId: result.updatedPayment.tournamentId,
+        tournamentId: result.updatedPayment.tournamentId || '',
         playerId: result.updatedPayment.playerId ?? undefined,
-        stripeAccountId: result.updatedPayment.stripeAccountId,
-        stripePaymentIntent: result.updatedPayment.stripePaymentIntent,
-        amount: result.updatedPayment.amount,
+        stripeAccountId: result.updatedPayment.stripeAccountId || '',
+        stripePaymentIntent: result.updatedPayment.stripePaymentIntent || '',
+        amount: result.updatedPayment.amount.toNumber(),
         currency: result.updatedPayment.currency,
         status: result.updatedPayment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
         purpose: result.updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: result.updatedPayment.description ?? undefined,
-        refundedAmount: result.updatedPayment.refundedAmount,
+        refundedAmount: result.updatedPayment.refundedAmount?.toNumber() || 0,
         receiptUrl: result.updatedPayment.receiptUrl ?? undefined,
         createdAt: result.updatedPayment.createdAt,
         updatedAt: result.updatedPayment.updatedAt,

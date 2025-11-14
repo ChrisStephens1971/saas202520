@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
         id: true,
         name: true,
         status: true,
+        orgId: true,
       },
     });
 
@@ -109,6 +110,7 @@ export async function POST(request: NextRequest) {
 
         // Log audit trail
         await logBulkOperation(
+          tournaments[0].orgId,
           authResult.user.id,
           authResult.user.email,
           'BULK_DELETE',
@@ -138,6 +140,7 @@ export async function POST(request: NextRequest) {
 
         // Log audit trail
         await logBulkOperation(
+          tournaments[0].orgId,
           authResult.user.id,
           authResult.user.email,
           'BULK_UPDATE',
@@ -177,6 +180,7 @@ export async function POST(request: NextRequest) {
 
         // Log audit trail
         await logBulkOperation(
+          tournaments[0].orgId,
           authResult.user.id,
           authResult.user.email,
           'BULK_UPDATE',

@@ -142,9 +142,9 @@ export async function aggregateRevenue(
       .reduce((sum, stat) => sum + stat._count.id, 0);
     const totalRevenue = paymentStats
       .filter((stat) => stat.status === 'succeeded')
-      .reduce((sum, stat) => sum + (stat._sum.amount || 0), 0);
+      .reduce((sum, stat) => sum + (stat._sum.amount ? Number(stat._sum.amount) : 0), 0);
     const refundCount = refundStats._count.id || 0;
-    const refundAmount = refundStats._sum.amount || 0;
+    const refundAmount = refundStats._sum.amount ? Number(refundStats._sum.amount) : 0;
 
     // Calculate net revenue (revenue minus refunds)
     const netRevenue = totalRevenue - refundAmount;
@@ -462,7 +462,7 @@ export async function aggregateTournaments(
       },
       _sum: { amount: true },
     });
-    const revenue = revenueStats._sum.amount || 0;
+    const revenue = revenueStats._sum.amount ? Number(revenueStats._sum.amount) : 0;
 
     // Upsert the aggregate record
     await prisma.tournamentAggregate.upsert({

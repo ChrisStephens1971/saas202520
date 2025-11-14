@@ -111,7 +111,9 @@ export async function example4_TournamentStrategies(
   const tournament = await prisma.tournament.findUnique({
     where: { id: tournamentId, orgId: tenantId },
   });
-  await TournamentCache.setTournament(tenantId, tournamentId, tournament);
+  if (tournament) {
+    await TournamentCache.setTournament(tenantId, tournamentId, tournament as any);
+  }
 
   // Retrieve from cache
   const cached = await TournamentCache.getTournament(tenantId, tournamentId);
@@ -119,10 +121,10 @@ export async function example4_TournamentStrategies(
   // Cache leaderboard
   const leaderboard = await prisma.player.findMany({
     where: { tournamentId, tournament: { orgId: tenantId } },
-    orderBy: { points: 'desc' },
+    orderBy: { createdAt: 'desc' },
     take: 10,
   });
-  await TournamentCache.setLeaderboard(tenantId, tournamentId, leaderboard);
+  await TournamentCache.setLeaderboard(tenantId, tournamentId, leaderboard as any);
 
   // Invalidate when tournament updates
   await TournamentCache.invalidateTournament(tenantId, tournamentId);
@@ -143,7 +145,7 @@ export async function example5_EventBasedInvalidation(
   // Update match
   await prisma.match.update({
     where: { id: matchId },
-    data: { status: 'completed' },
+    data: { state: 'completed' },
   });
 
   // Emit cache event to invalidate related data
@@ -170,7 +172,7 @@ export async function example6_UserSessionCaching(
   sessionData: unknown
 ) {
   // Store session (24 hour TTL)
-  await UserCache.setSession(tenantId, userId, sessionData);
+  await UserCache.setSession(tenantId, userId, sessionData as any);
 
   // Retrieve session
   const session = await UserCache.getSession(tenantId, userId);
@@ -204,7 +206,7 @@ export async function example7_AnalyticsCaching(
   await AnalyticsCache.setTournamentAnalytics(
     tenantId,
     tournamentId,
-    analytics
+    analytics as any
   );
 
   // Retrieve cached analytics
@@ -270,7 +272,7 @@ export async function example9_CacheWarming(tenantId: string) {
       loader: async () => {
         return await prisma.organization.findUnique({
           where: { id: tenantId },
-          select: { settings: true },
+          select: { name: true, slug: true },
         });
       },
       ttl: CacheTTL.STATIC_DATA, // 1 hour
@@ -398,8 +400,8 @@ export async function example14_CacheLock(
       return await prisma.tournament.findUnique({
         where: { id: tournamentId, orgId: tenantId },
         include: {
-          players: { include: { matches: true } },
-          matches: { include: { players: true } },
+          players: true,
+          matches: true,
         },
       });
     },

@@ -176,7 +176,7 @@ export function emitToTournament<K extends keyof ServerToClientEvents>(
     return;
   }
 
-  io.to(`tournament:${tournamentId}`).emit(event, payload);
+  (io.to(`tournament:${tournamentId}`) as any).emit(event, payload);
 }
 
 export function emitToAll<K extends keyof ServerToClientEvents>(
@@ -188,7 +188,7 @@ export function emitToAll<K extends keyof ServerToClientEvents>(
     return;
   }
 
-  io.emit(event, payload);
+  (io as any).emit(event, payload);
 }
 
 export function emitToUser<K extends keyof ServerToClientEvents>(
@@ -204,7 +204,7 @@ export function emitToUser<K extends keyof ServerToClientEvents>(
   // Find socket by user ID
   io.sockets.sockets.forEach((socket) => {
     if (socket.data.userId === userId) {
-      socket.emit(event, payload);
+      (socket as any).emit(event, payload);
     }
   });
 }

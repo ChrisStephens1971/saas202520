@@ -316,14 +316,14 @@ async function sendSMSNotification(
         where: { playerId: input.playerId },
       });
 
-      if (preference?.smsOptedOut) {
+      if (preference && !preference.sms) {
         return {
           success: false,
           error: 'Player has opted out of SMS notifications',
         };
       }
 
-      if (!preference?.smsEnabled) {
+      if (preference && !preference.sms) {
         return {
           success: false,
           error: 'SMS notifications disabled for this player',
@@ -331,7 +331,7 @@ async function sendSMSNotification(
       }
 
       // Check quiet hours
-      if (preference.quietHoursStart && preference.quietHoursEnd) {
+      if (preference && preference.quietHoursStart && preference.quietHoursEnd) {
         const now = new Date();
         const currentHour = now.getHours();
         const quietStart = parseInt(preference.quietHoursStart.split(':')[0]);
@@ -529,14 +529,10 @@ export async function handleSMSOptOut(playerId: string): Promise<void> {
     where: { playerId },
     create: {
       playerId,
-      smsOptedOut: true,
-      smsOptedOutAt: new Date(),
-      smsEnabled: false,
+      sms: false,
     },
     update: {
-      smsOptedOut: true,
-      smsOptedOutAt: new Date(),
-      smsEnabled: false,
+      sms: false,
     },
   });
 }
@@ -549,13 +545,10 @@ export async function handleSMSOptIn(playerId: string): Promise<void> {
     where: { playerId },
     create: {
       playerId,
-      smsOptedOut: false,
-      smsEnabled: true,
+      sms: true,
     },
     update: {
-      smsOptedOut: false,
-      smsOptedOutAt: null,
-      smsEnabled: true,
+      sms: true,
     },
   });
 }

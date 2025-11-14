@@ -82,7 +82,9 @@ export async function processScheduledReportJob(
 
     // Step 2: Determine date range based on schedule (20% progress)
     console.log('[ScheduledReportJob] Calculating date range...');
-    const dateRange = calculateDateRange(report.frequency);
+    const schedule = report.schedule as any;
+    const frequency = schedule?.frequency || report.frequency || 'daily';
+    const dateRange = calculateDateRange(frequency);
 
     await job.updateProgress(20);
 

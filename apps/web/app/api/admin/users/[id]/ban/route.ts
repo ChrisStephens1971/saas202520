@@ -65,6 +65,14 @@ export async function POST(
     // Fetch existing user
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        organizationMembers: {
+          select: {
+            orgId: true,
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!user) {
@@ -78,6 +86,9 @@ export async function POST(
         { status: 404 }
       );
     }
+
+    // Get orgId from first organization membership
+    const orgId = user.organizationMembers[0]?.orgId || 'system';
 
     // Ban user: Update email to mark as banned and prevent login
     await prisma.user.update({
@@ -100,6 +111,7 @@ export async function POST(
 
     // Log audit trail
     await logUserBanned(
+      orgId,
       authResult.user.id,
       authResult.user.email,
       id,

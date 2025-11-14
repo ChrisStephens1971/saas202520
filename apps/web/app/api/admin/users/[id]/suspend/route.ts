@@ -66,6 +66,14 @@ export async function POST(
     // Fetch existing user
     const user = await prisma.user.findUnique({
       where: { id },
+      include: {
+        organizationMembers: {
+          select: {
+            orgId: true,
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!user) {
@@ -79,6 +87,9 @@ export async function POST(
         { status: 404 }
       );
     }
+
+    // Get orgId from organization membership
+    const orgId = user.organizationMembers[0]?.orgId || 'system';
 
     // Calculate suspension end date
     const suspensionEndsAt = new Date();
@@ -95,6 +106,7 @@ export async function POST(
 
     // Log audit trail
     await logUserSuspended(
+      orgId,
       authResult.user.id,
       authResult.user.email,
       id,

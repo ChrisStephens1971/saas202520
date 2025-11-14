@@ -181,7 +181,7 @@ class PushNotificationManager {
       const subscription =
         await this.serviceWorkerRegistration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: convertedKey,
+          applicationServerKey: convertedKey as BufferSource,
         });
 
       this.subscription = subscription;
@@ -430,5 +430,3 @@ export function getPushNotificationManager(): PushNotificationManager {
   }
   return pushNotificationManager;
 }
-
-export type { NotificationPreferences };

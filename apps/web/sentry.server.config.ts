@@ -43,7 +43,7 @@ Sentry.init({
       if (event.request.query_string) {
         const sensitiveParams = ['token', 'password', 'secret', 'api_key'];
         sensitiveParams.forEach(param => {
-          if (event.request?.query_string?.includes(param)) {
+          if (event.request?.query_string && typeof event.request.query_string === 'string' && event.request.query_string.includes(param)) {
             event.request.query_string = '[Filtered]';
           }
         });

@@ -14,11 +14,13 @@ model User {
   emailVerified       DateTime?            @map("email_verified")
   image               String?
   password            String?
+  lastLoginAt         DateTime?            @map("last_login_at")
   createdAt           DateTime             @default(now()) @map("created_at")
   updatedAt           DateTime             @updatedAt @map("updated_at")
   accounts            Account[]
   analyticsEvents     AnalyticsEvent[]
   organizationMembers OrganizationMember[]
+  pushSubscriptions   PushSubscription[]
   sessions            Session[]
 
   @@map("users")
@@ -62,12 +64,91 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+/// *
+///  * API keys for public API access
+///  * Stores hashed API keys for authentication and rate limiting
+model ApiKey {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  userId     String?   @map("user_id")
+  keyPrefix  String    @map("key_prefix") @db.VarChar(20)
+  keyHash    String    @unique @map("key_hash") @db.VarChar(255)
+  name       String?   @db.VarChar(255)
+  tier       String    @default("free") @db.VarChar(50)
+  rateLimit  Int       @default(100) @map("rate_limit")
+  isActive   Boolean   @default(true) @map("is_active")
+  expiresAt  DateTime? @map("expires_at")
+  lastUsedAt DateTime? @map("last_used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([isActive])
+  @@index([keyPrefix])
+  @@map("api_keys")
+}
+
+/// *
+///  * Webhook subscriptions
+///  * Stores webhook endpoint configurations
+model Webhook {
+  id                    String              @id @default(cuid())
+  tenantId              String              @map("tenant_id")
+  apiKeyId              String?             @map("api_key_id")
+  url                   String              @db.VarChar(500)
+  secret                String              @db.VarChar(255)
+  events                String[]
+  isActive              Boolean             @default(true) @map("is_active")
+  deliverySuccessCount  Int                 @default(0) @map("delivery_success_count")
+  deliveryFailureCount  Int                 @default(0) @map("delivery_failure_count")
+  lastDeliveryAt        DateTime?           @map("last_delivery_at")
+  lastError             String?             @map("last_error") @db.Text
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+  deliveries            WebhookDelivery[]
+
+  @@index([tenantId])
+  @@index([apiKeyId])
+  @@index([isActive])
+  @@map("webhooks")
+}
+
+/// *
+///  * Webhook delivery tracking
+///  * Stores webhook delivery attempts and responses
+model WebhookDelivery {
+  id            String    @id @default(cuid())
+  webhookId     String    @map("webhook_id")
+  eventId       String    @map("event_id")
+  eventType     String    @map("event_type") @db.VarChar(100)
+  url           String    @db.VarChar(500)
+  payload       Json
+  signature     String    @db.VarChar(255)
+  attemptNumber Int       @default(0) @map("attempt_number")
+  statusCode    Int?      @map("status_code")
+  responseBody  String?   @map("response_body") @db.Text
+  errorMessage  String?   @map("error_message") @db.Text
+  deliveredAt   DateTime? @map("delivered_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  webhook       Webhook   @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+
+  @@index([webhookId])
+  @@index([eventId])
+  @@index([deliveredAt])
+  @@map("webhook_deliveries")
+}
+
 model Organization {
   id                   String                @id @default(cuid())
   name                 String
   slug                 String                @unique
   createdAt            DateTime              @default(now()) @map("created_at")
   updatedAt            DateTime              @updatedAt @map("updated_at")
+  twilioAccountSid     String?               @map("twilio_account_sid")
+  twilioAuthToken      String?               @map("twilio_auth_token")
+  twilioPhoneNumber    String?               @map("twilio_phone_number")
   analyticsEvents      AnalyticsEvent[]
   members              OrganizationMember[]
   revenueAggregates    RevenueAggregate[]
@@ -97,6 +178,7 @@ model OrganizationMember {
 model Tournament {
   id                 String            @id @default(cuid())
   orgId              String            @map("org_id")
+  venueId            String?           @map("venue_id")
   name               String
   status             String
   format             String
@@ -104,16 +186,21 @@ model Tournament {
   sportConfigVersion String            @map("sport_config_version")
   createdBy          String            @map("created_by")
   createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
   startedAt          DateTime?         @map("started_at")
   completedAt        DateTime?         @map("completed_at")
   description        String?
+  chipConfig         Json?             @map("chip_config")
+  qualificationLocked Boolean?         @default(false) @map("qualification_locked")
   matches            Match[]
   players            Player[]
   tables             Table[]
   events             TournamentEvent[]
   organization       Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  venue              Venue?            @relation(fields: [venueId], references: [id])
 
   @@index([orgId])
+  @@index([venueId])
   @@index([status])
   @@index([createdAt])
   @@map("tournaments")
@@ -144,6 +231,9 @@ model Player {
   rating           Json?
   status           String
   seed             Int?
+  chipCount        Int?       @map("chip_count")
+  chipHistory      Json?      @map("chip_history")
+  matchesPlayed    Int?       @default(0) @map("matches_played")
   checkedInAt      DateTime?  @map("checked_in_at")
   createdAt        DateTime   @default(now()) @map("created_at")
   matchesAsPlayerA Match[]    @relation("PlayerA")
@@ -166,9 +256,11 @@ model Match {
   state        String
   winnerId     String?    @map("winner_id")
   score        Json
+  isBye        Boolean?   @default(false) @map("is_bye")
   tableId      String?    @map("table_id")
   startedAt    DateTime?  @map("started_at")
   completedAt  DateTime?  @map("completed_at")
+  metadata     Json?
   rev          Int        @default(0)
   playerA      Player?    @relation("PlayerA", fields: [playerAId], references: [id])
   playerB      Player?    @relation("PlayerB", fields: [playerBId], references: [id])
@@ -195,6 +287,28 @@ model Table {
   @@index([tournamentId])
   @@index([status])
   @@map("tables")
+}
+
+/// *
+///  * Venues (physical locations for tournaments)
+///  * Stores venue information for tournament management
+model Venue {
+  id          String       @id @default(cuid())
+  orgId       String       @map("org_id")
+  name        String       @db.VarChar(255)
+  address     String?      @db.VarChar(500)
+  city        String?      @db.VarChar(100)
+  state       String?      @db.VarChar(50)
+  zip         String?      @db.VarChar(20)
+  phone       String?      @db.VarChar(50)
+  email       String?      @db.VarChar(255)
+  website     String?      @db.VarChar(500)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  tournaments Tournament[]
+
+  @@index([orgId])
+  @@map("venues")
 }
 
 model SportConfig {
@@ -295,23 +409,53 @@ model TournamentAggregate {
 }
 
 model ScheduledReport {
-  id         String       @id @default(cuid())
-  tenantId   String       @map("tenant_id")
-  name       String       @db.VarChar(255)
-  reportType String       @map("report_type") @db.VarChar(50)
-  frequency  String       @db.VarChar(20)
-  recipients String[]
-  parameters Json?
-  lastRunAt  DateTime?    @map("last_run_at")
-  nextRunAt  DateTime     @map("next_run_at")
-  isActive   Boolean      @default(true) @map("is_active")
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
-  tenant     Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id          String       @id @default(cuid())
+  tenantId    String       @map("tenant_id")
+  name        String       @db.VarChar(255)
+  description String?      @db.VarChar(500)
+  enabled     Boolean      @default(true)
+  schedule    Json
+  recipients  Json
+  format      String       @db.VarChar(20)
+  sections    Json
+  dateRange   Json?        @map("date_range")
+  createdBy   String       @map("created_by")
+  reportType  String?      @map("report_type") @db.VarChar(50)
+  frequency   String?      @db.VarChar(20)
+  parameters  Json?
+  lastRunAt   DateTime?    @map("last_run_at")
+  nextRunAt   DateTime?    @map("next_run_at")
+  isActive    Boolean      @default(true) @map("is_active")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at")
+  deletedAt   DateTime?    @map("deleted_at")
+  tenant      Organization @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
   @@index([nextRunAt], map: "idx_scheduled_reports_next_run")
   @@map("scheduled_reports")
+}
+
+/// *
+///  * Report delivery tracking
+///  * Tracks the delivery status of scheduled reports
+model ReportDelivery {
+  id           String    @id @default(cuid())
+  reportId     String    @map("report_id")
+  tenantId     String    @map("tenant_id")
+  status       String    @db.VarChar(50)
+  format       String    @db.VarChar(20)
+  recipients   String[]
+  deliveredAt  DateTime? @map("delivered_at")
+  errorMessage String?   @map("error_message") @db.Text
+  downloadUrl  String?   @map("download_url") @db.VarChar(500)
+  fileSize     Int?      @map("file_size")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([reportId])
+  @@index([tenantId])
+  @@index([createdAt(sort: Desc)])
+  @@map("report_deliveries")
 }
 
 /// *
@@ -427,6 +571,8 @@ model MatchHistory {
   durationMinutes   Int?     @map("duration_minutes")
   skillRatingBefore Decimal? @map("skill_rating_before") @db.Decimal(10, 2)
   skillRatingAfter  Decimal? @map("skill_rating_after") @db.Decimal(10, 2)
+  format            String?  @db.VarChar(50)
+  metadata          Json?
   playedAt          DateTime @map("played_at")
   createdAt         DateTime @default(now()) @map("created_at")
 
@@ -484,4 +630,221 @@ model PlayerSettings {
   @@unique([tenantId, playerId])
   @@index([tenantId])
   @@map("player_settings")
+}
+
+/// *
+///  * Web Push notification subscriptions
+///  * Stores user subscription information for push notifications
+model PushSubscription {
+  id             String    @id @default(cuid())
+  userId         String    @map("user_id")
+  endpoint       String    @unique @db.VarChar(500)
+  p256dh         String    @db.VarChar(500)
+  auth           String    @db.VarChar(500)
+  expirationTime DateTime? @map("expiration_time")
+  userAgent      String?   @map("user_agent") @db.VarChar(500)
+  ipAddress      String?   @map("ip_address") @db.VarChar(50)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("push_subscriptions")
+}
+
+/// *
+///  * In-app notifications for users
+///  * Stores system-generated notifications for user activities
+model Notification {
+  id           String    @id @default(cuid())
+  orgId        String    @map("org_id")
+  userId       String?   @map("user_id")
+  tournamentId String?   @map("tournament_id")
+  playerId     String?   @map("player_id")
+  type         String    @db.VarChar(50)
+  channel      String?   @db.VarChar(50)
+  recipient    String?   @db.VarChar(255)
+  subject      String?   @db.VarChar(255)
+  title        String?   @db.VarChar(255)
+  message      String
+  status       String    @default("pending") @db.VarChar(20)
+  read         Boolean   @default(false)
+  data         Json?
+  metadata     Json?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  sentAt       DateTime? @map("sent_at")
+  readAt       DateTime? @map("read_at")
+  deliveredAt  DateTime? @map("delivered_at")
+  errorMessage String?   @map("error_message")
+
+  @@index([orgId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, read])
+  @@index([userId, status])
+  @@index([tournamentId])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id              String   @id @default(cuid())
+  playerId        String   @unique @map("player_id")
+  sms             Boolean  @default(true)
+  email           Boolean  @default(true)
+  push            Boolean  @default(true)
+  quietHoursStart String?  @map("quiet_hours_start")
+  quietHoursEnd   String?  @map("quiet_hours_end")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("notification_preferences")
+}
+
+/// *
+///  * Payment transactions
+///  * Tracks all payment intents and transactions
+model Payment {
+  id                  String          @id @default(cuid())
+  orgId               String          @map("org_id")
+  tournamentId        String?         @map("tournament_id")
+  userId              String?         @map("user_id")
+  playerId            String?         @map("player_id")
+  stripeAccountId     String?         @map("stripe_account_id")
+  stripePaymentId     String          @unique @map("stripe_payment_id") @db.VarChar(255)
+  stripePaymentIntent String?         @map("stripe_payment_intent") @db.VarChar(255)
+  amount              Decimal         @db.Decimal(10, 2)
+  currency            String          @default("usd") @db.VarChar(3)
+  status              String          @db.VarChar(50)
+  purpose             String?         @db.VarChar(50)
+  refundedAmount      Decimal?        @map("refunded_amount") @db.Decimal(10, 2)
+  receiptUrl          String?         @map("receipt_url") @db.VarChar(500)
+  description         String?
+  metadata            Json?
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  refunds             Refund[]
+  stripeAccount       StripeAccount?  @relation(fields: [stripeAccountId], references: [id])
+
+  @@index([orgId])
+  @@index([tournamentId])
+  @@index([userId])
+  @@index([playerId])
+  @@index([stripeAccountId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@map("payments")
+}
+
+/// *
+///  * Payment refunds
+///  * Tracks refunds for payments
+model Refund {
+  id             String   @id @default(cuid())
+  paymentId      String   @map("payment_id")
+  stripeRefundId String   @unique @map("stripe_refund_id") @db.VarChar(255)
+  amount         Decimal  @db.Decimal(10, 2)
+  reason         String?
+  status         String   @db.VarChar(50)
+  processedBy    String?  @map("processed_by")
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  payment        Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@index([paymentId])
+  @@index([status])
+  @@map("refunds")
+}
+
+/// *
+///  * Stripe connected accounts
+///  * Stores Stripe account information for organizations
+model StripeAccount {
+  id                  String    @id @default(cuid())
+  orgId               String    @unique @map("org_id")
+  stripeAccountId     String    @unique @map("stripe_account_id") @db.VarChar(255)
+  detailsSubmitted    Boolean   @default(false) @map("details_submitted")
+  chargesEnabled      Boolean   @default(false) @map("charges_enabled")
+  payoutsEnabled      Boolean   @default(false) @map("payouts_enabled")
+  onboardingComplete  Boolean   @default(false) @map("onboarding_complete")
+  country             String?   @db.VarChar(2)
+  currency            String?   @db.VarChar(3)
+  requirements        Json?
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  payments            Payment[]
+
+  @@index([orgId])
+  @@map("stripe_accounts")
+}
+
+/// *
+///  * Score update history (for undo functionality)
+///  * Tracks score changes for match scoring
+model ScoreUpdate {
+  id            String   @id @default(cuid())
+  matchId       String   @map("match_id")
+  tournamentId  String   @map("tournament_id")
+  playerId      String?  @map("player_id")
+  updateType    String   @map("update_type") @db.VarChar(50)
+  action        String   @db.VarChar(50)
+  actor         String
+  device        String
+  oldScore      Json     @map("old_score")
+  newScore      Json     @map("new_score")
+  previousScore Json     @map("previous_score")
+  timestamp     DateTime
+  undone        Boolean  @default(false)
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([matchId, createdAt(sort: Desc)])
+  @@index([matchId, undone])
+  @@map("score_updates")
+}
+
+/// *
+///  * Tournament payouts
+///  * Tracks payout distribution for tournaments
+model Payout {
+  id           String    @id @default(cuid())
+  tournamentId String    @map("tournament_id")
+  playerId     String    @map("player_id")
+  placement    Int
+  amount       Decimal   @db.Decimal(10, 2)
+  source       String    @db.VarChar(20)
+  status       String    @default("pending") @db.VarChar(50)
+  paidAt       DateTime? @map("paid_at")
+  paidBy       String?   @map("paid_by")
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@index([tournamentId])
+  @@index([playerId])
+  @@index([status])
+  @@map("payouts")
+}
+
+/// *
+///  * Audit logs
+///  * Tracks all admin actions for compliance and security monitoring
+model AuditLog {
+  id         String    @id @default(cuid())
+  orgId      String    @map("org_id")
+  userId     String    @map("user_id")
+  userName   String    @map("user_name") @db.VarChar(255)
+  action     String    @db.VarChar(50)
+  resource   String    @db.VarChar(50)
+  resourceId String?   @map("resource_id")
+  changes    Json?
+  metadata   Json?
+  ipAddress  String?   @map("ip_address") @db.VarChar(45)
+  userAgent  String?   @map("user_agent") @db.Text
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([resource, action])
+  @@map("audit_logs")
 }

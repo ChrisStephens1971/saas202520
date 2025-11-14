@@ -402,7 +402,7 @@ export async function analyzeFormatPopularity(
       });
 
       const revenueByTournament = new Map(
-        payments.map((p) => [p.tournamentId, p._sum.amount || 0])
+        payments.map((p) => [p.tournamentId, p._sum.amount ? Number(p._sum.amount) : 0])
       );
 
       // Calculate metrics per format
@@ -727,13 +727,13 @@ export async function calculateTournamentMetrics(
  */
 export async function predictTournamentAttendance(
   tenantId: string,
-  format: string,
+  tournamentFormat: string,
   date: Date
 ): Promise<AttendancePrediction> {
   const cacheKey = CacheManager.getCacheKey(
     'analytics:tournament:prediction',
     tenantId,
-    format,
+    tournamentFormat,
     format(date, 'yyyy-MM-dd')
   );
 
@@ -744,7 +744,7 @@ export async function predictTournamentAttendance(
       const historicalTournaments = await prisma.tournament.findMany({
         where: {
           orgId: tenantId,
-          format,
+          format: tournamentFormat,
           createdAt: {
             gte: subMonths(date, 6), // Look back 6 months
           },
@@ -785,7 +785,7 @@ export async function predictTournamentAttendance(
         subMonths(date, 3),
         date
       );
-      const formatData = formatAnalysis.find((f) => f.format === format);
+      const formatData = formatAnalysis.find((f) => f.format === tournamentFormat);
       const formatPopularity = formatData ? formatData.avgPlayersPerTournament : historicalAverage;
 
       // Calculate seasonal factor (month-based)
@@ -844,7 +844,7 @@ export async function predictTournamentAttendance(
       }
 
       return {
-        format,
+        format: tournamentFormat,
         date,
         dayOfWeek: dayName,
         predictedAttendance: Math.round(predictedAttendance),
@@ -1155,11 +1155,11 @@ export async function getTournamentBenchmarks(
  * Tournament aggregate data structure
  */
 interface TournamentAggregateData {
-  tournamentCount?: number;
-  completedCount?: number;
-  totalPlayers?: number;
-  avgDurationMinutes?: number | { toString: () => string };
-  revenue?: number | { toString: () => string };
+  tournamentCount?: number | null;
+  completedCount?: number | null;
+  totalPlayers?: number | null;
+  avgDurationMinutes?: number | null | { toString: () => string };
+  revenue?: number | null | { toString: () => string };
 }
 
 /**

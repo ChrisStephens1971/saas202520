@@ -246,6 +246,7 @@ export async function PATCH(
 
     // Log audit trail
     await logTournamentUpdated(
+      existingTournament.orgId,
       authResult.user.id,
       authResult.user.email,
       id,
@@ -342,6 +343,7 @@ export async function DELETE(
 
     // Log audit trail
     await logTournamentDeleted(
+      tournament.orgId,
       authResult.user.id,
       authResult.user.email,
       id,

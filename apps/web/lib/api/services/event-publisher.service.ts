@@ -122,8 +122,6 @@ export async function publishWebhookJob(
 ): Promise<void> {
   await webhookQueue.add(jobData, {
     jobId: jobData.deliveryId, // Use delivery ID as job ID for idempotency
-    removeOnComplete: true,
-    removeOnFail: false, // Keep failed jobs for debugging
   });
 
   console.log(

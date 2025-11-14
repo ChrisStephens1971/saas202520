@@ -45,6 +45,13 @@ export async function POST(
       );
     }
 
+    if (!payment.stripeAccount) {
+      return NextResponse.json(
+        { error: 'Stripe account not configured' },
+        { status: 400 }
+      );
+    }
+
     // Verify payment intent matches
     if (payment.stripePaymentIntent !== stripePaymentIntentId) {
       return NextResponse.json(
@@ -100,12 +107,18 @@ export async function POST(
 
     const response: ConfirmPaymentResponse = {
       payment: {
-        ...updatedPayment,
+        id: updatedPayment.id,
+        tournamentId: updatedPayment.tournamentId || '',
+        playerId: updatedPayment.playerId ?? undefined,
+        stripeAccountId: updatedPayment.stripeAccountId || '',
+        stripePaymentIntent: updatedPayment.stripePaymentIntent || '',
+        amount: updatedPayment.amount.toNumber(),
+        currency: updatedPayment.currency,
         status: updatedPayment.status as 'succeeded' | 'failed' | 'pending' | 'refunded' | 'partially_refunded',
         purpose: updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: updatedPayment.description ?? undefined,
+        refundedAmount: updatedPayment.refundedAmount?.toNumber() || 0,
         receiptUrl: updatedPayment.receiptUrl ?? undefined,
-        playerId: updatedPayment.playerId ?? undefined,
         createdAt: updatedPayment.createdAt,
         updatedAt: updatedPayment.updatedAt,
       },

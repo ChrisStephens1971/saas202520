@@ -63,10 +63,10 @@ export async function GET(
     const playerMap = new Map(players.map(p => [p.id, p]));
 
     // Calculate summary
-    const totalCollected = payouts.reduce((sum, p) => sum + p.amount, 0);
+    const totalCollected = payouts.reduce((sum, p) => sum + p.amount.toNumber(), 0);
     const totalPayouts = payouts
       .filter(p => p.status !== 'voided')
-      .reduce((sum, p) => sum + p.amount, 0);
+      .reduce((sum, p) => sum + p.amount.toNumber(), 0);
     const houseTake = totalCollected - totalPayouts;
 
     // Prepare data for PDF
@@ -79,7 +79,7 @@ export async function GET(
       payouts: payouts.map(p => ({
         placement: p.placement,
         playerName: p.playerId ? playerMap.get(p.playerId)?.name || 'Unknown' : 'TBD',
-        amount: p.amount,
+        amount: p.amount.toNumber(),
         status: p.status,
       })),
       summary: {

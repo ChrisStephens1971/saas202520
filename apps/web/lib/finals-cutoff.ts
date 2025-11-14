@@ -381,6 +381,7 @@ export async function generateFinalsBracket(
           winnerId: bracketMatch.winnerId,
           bracket: bracketMatch.bracket,
           isBye: bracketMatch.isBye,
+          score: { playerA: 0, playerB: 0 },
           // Store bracket match IDs in metadata for linking
           metadata: {
             bracketMatchId: bracketMatch.id,

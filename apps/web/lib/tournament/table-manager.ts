@@ -399,7 +399,7 @@ export async function getAvailableTables(
   tournamentId: string,
   orgId: string
 ): Promise<TableAvailability[]> {
-  const tables: TableWithMatches[] = await prisma.table.findMany({
+  const tables = (await prisma.table.findMany({
     where: {
       tournamentId,
       tournament: {
@@ -408,11 +408,6 @@ export async function getAvailableTables(
     },
     include: {
       matches: {
-        where: {
-          id: {
-            not: null,
-          },
-        },
         include: {
           playerA: {
             select: { name: true },
@@ -427,7 +422,7 @@ export async function getAvailableTables(
         },
       },
     },
-  });
+  })) as any;
 
   return tables.map((table) => {
     const isAvailable = checkAvailability(table);

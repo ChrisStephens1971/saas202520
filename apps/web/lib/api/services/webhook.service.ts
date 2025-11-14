@@ -37,7 +37,7 @@ export interface UpdateWebhookInput {
 export interface WebhookWithStats {
   id: string;
   tenantId: string;
-  apiKeyId: string;
+  apiKeyId: string | null;
   url: string;
   secret: string;
   events: string[];
@@ -431,7 +431,7 @@ export async function retryDelivery(
     webhookId: webhook.id,
     deliveryId: delivery.id,
     event: delivery.eventType as WebhookEvent,
-    payload: delivery.payload as Record<string, unknown>,
+    payload: delivery.payload as any,
   });
 
   return true;

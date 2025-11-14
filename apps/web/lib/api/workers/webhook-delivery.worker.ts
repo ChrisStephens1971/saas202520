@@ -5,13 +5,21 @@
  * Sprint 10 Week 3 - Public API & Webhooks
  */
 
-import { Job } from 'bull';
 import { PrismaClient } from '@prisma/client';
 import { webhookQueue } from '../queues/webhook.queue';
 import { WebhookJobData } from '../types/webhook-events.types';
 import { createWebhookHeaders } from '../utils/webhook-signature.utils';
 
 const prisma = new PrismaClient();
+
+/**
+ * Job interface for webhook delivery
+ * Matches the structure created by the database queue
+ */
+interface Job<T> {
+  data: T;
+  attemptsMade: number;
+}
 
 /**
  * Webhook delivery timeout (10 seconds)
@@ -40,7 +48,7 @@ interface DeliveryResult {
  * @param job - Bull job containing webhook delivery data
  * @returns Delivery result
  */
-async function processWebhookDelivery(
+export async function processWebhookDelivery(
   job: Job<WebhookJobData>
 ): Promise<DeliveryResult> {
   const { webhookId, deliveryId, event, payload } = job.data;
@@ -224,19 +232,12 @@ async function processWebhookDelivery(
  * Start the webhook delivery worker
  * Processes jobs from the webhook queue
  */
-export function startWebhookWorker(): void {
+export async function startWebhookWorker(): Promise<void> {
   console.log('[Webhook Worker] Starting webhook delivery worker...');
 
-  // Process webhook delivery jobs
-  webhookQueue.process(async (job: Job<WebhookJobData>) => {
-    try {
-      const result = await processWebhookDelivery(job);
-      return result;
-    } catch (error: any) {
-      console.error('[Webhook Worker] Error processing job:', error);
-      throw error; // Re-throw to trigger retry
-    }
-  });
+  // Start processing jobs from the database queue
+  // The queue internally calls processWebhookDelivery for each job
+  await webhookQueue.startProcessing();
 
   console.log('[Webhook Worker] Worker started and ready to process jobs');
 }
@@ -246,7 +247,7 @@ export function startWebhookWorker(): void {
  */
 export async function stopWebhookWorker(): Promise<void> {
   console.log('[Webhook Worker] Stopping webhook delivery worker...');
-  await webhookQueue.close();
+  await webhookQueue.stopProcessing();
   console.log('[Webhook Worker] Worker stopped');
 }
 

@@ -86,6 +86,7 @@ export async function authMiddleware(
       const decoded = await decode({
         token: token as string,
         secret,
+        salt: '',
       });
 
       if (!decoded || !decoded.sub) {

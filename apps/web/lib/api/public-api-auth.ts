@@ -12,7 +12,7 @@ import bcrypt from 'bcryptjs';
 
 export interface ApiAuthContext {
   tenantId: string;
-  userId: string;
+  userId: string | null;
   apiKeyId: string;
   tier: string;
   rateLimit: number;

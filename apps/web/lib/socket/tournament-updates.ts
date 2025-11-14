@@ -35,14 +35,14 @@ export function notifyTournamentUpdated(
     totalRounds?: number;
   }
 ): void {
-  const payload: TournamentUpdatedPayload = {
+  const payload = {
     tournamentId: tournament.id,
     name: tournament.name,
     status: tournament.status,
     currentRound: tournament.currentRound,
     totalRounds: tournament.totalRounds,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.TOURNAMENT_UPDATED, payload);
   console.log(`[Socket] Tournament updated: ${tournamentId}`);
@@ -64,7 +64,7 @@ export function notifyMatchStarted(
     tableNumber?: number;
   }
 ): void {
-  const payload: MatchStartedPayload = {
+  const payload = {
     tournamentId,
     matchId: match.id,
     round: match.round,
@@ -79,7 +79,7 @@ export function notifyMatchStarted(
     },
     tableNumber: match.tableNumber,
     startedAt: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.MATCH_STARTED, payload);
 
@@ -90,7 +90,7 @@ export function notifyMatchStarted(
     message: `Your match against ${match.player2Name} has started${match.tableNumber ? ` at Table ${match.tableNumber}` : ''}`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   emitToUser(match.player2Id, SocketEvent.NOTIFICATION, {
     type: 'match_started',
@@ -98,7 +98,7 @@ export function notifyMatchStarted(
     message: `Your match against ${match.player1Name} has started${match.tableNumber ? ` at Table ${match.tableNumber}` : ''}`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Match started: ${match.id} in tournament ${tournamentId}`);
 }
@@ -122,7 +122,7 @@ export function notifyMatchCompleted(
     player2IsWinner: boolean;
   }
 ): void {
-  const payload: MatchCompletedPayload = {
+  const payload = {
     tournamentId,
     matchId: match.id,
     round: match.round,
@@ -140,7 +140,7 @@ export function notifyMatchCompleted(
       isWinner: match.player2IsWinner,
     },
     completedAt: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.MATCH_COMPLETED, payload);
 
@@ -156,7 +156,7 @@ export function notifyMatchCompleted(
     message: `You defeated ${loserName}! Congratulations!`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   emitToUser(loserId, SocketEvent.NOTIFICATION, {
     type: 'match_lost',
@@ -164,7 +164,7 @@ export function notifyMatchCompleted(
     message: `Match against ${winnerName} has ended.`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Match completed: ${match.id} in tournament ${tournamentId}`);
 }
@@ -180,7 +180,7 @@ export function notifyChipsAwarded(
   newTotal: number,
   reason: string
 ): void {
-  const payload: ChipsAwardedPayload = {
+  const payload = {
     tournamentId,
     playerId,
     playerName,
@@ -188,7 +188,7 @@ export function notifyChipsAwarded(
     newTotal,
     reason,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.CHIPS_AWARDED, payload);
 
@@ -199,7 +199,7 @@ export function notifyChipsAwarded(
     message: `You earned ${chipsAwarded} chips! ${reason}`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Chips awarded: ${chipsAwarded} to ${playerId} in tournament ${tournamentId}`);
 }
@@ -212,12 +212,12 @@ export function notifyPlayerJoined(
   playerId: string,
   playerName: string
 ): void {
-  const payload: PlayerJoinedPayload = {
+  const payload = {
     tournamentId,
     playerId,
     playerName,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.PLAYER_JOINED, payload);
   console.log(`[Socket] Player joined: ${playerId} in tournament ${tournamentId}`);
@@ -232,13 +232,13 @@ export function notifyPlayerEliminated(
   playerName: string,
   finalRank: number
 ): void {
-  const payload: PlayerEliminatedPayload = {
+  const payload = {
     tournamentId,
     playerId,
     playerName,
     finalRank,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.PLAYER_ELIMINATED, payload);
 
@@ -249,7 +249,7 @@ export function notifyPlayerEliminated(
     message: `You finished in ${getOrdinal(finalRank)} place. Thanks for playing!`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Player eliminated: ${playerId} in tournament ${tournamentId}`);
 }
@@ -262,12 +262,12 @@ export function notifyBracketAdvanced(
   round: number,
   advancingPlayers: Array<{ playerId: string; playerName: string }>
 ): void {
-  const payload: BracketAdvancedPayload = {
+  const payload = {
     tournamentId,
     round,
     advancingPlayers,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.BRACKET_ADVANCED, payload);
 
@@ -279,7 +279,7 @@ export function notifyBracketAdvanced(
       message: `You've advanced to Round ${round + 1}!`,
       tournamentId,
       timestamp: new Date().toISOString(),
-    });
+    } as any);
   });
 
   console.log(`[Socket] Bracket advanced to round ${round + 1} in tournament ${tournamentId}`);
@@ -298,7 +298,7 @@ export function notifyTournamentStarted(
     status: 'in_progress',
     currentRound: 1,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Tournament started: ${tournamentId}`);
 }
@@ -317,7 +317,7 @@ export function notifyTournamentCompleted(
     name: tournamentName,
     status: 'completed',
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   // Notify winner
   emitToUser(winnerId, SocketEvent.NOTIFICATION, {
@@ -326,7 +326,7 @@ export function notifyTournamentCompleted(
     message: `Congratulations! You won ${tournamentName}!`,
     tournamentId,
     timestamp: new Date().toISOString(),
-  });
+  } as any);
 
   console.log(`[Socket] Tournament completed: ${tournamentId}, winner: ${winnerId}`);
 }
@@ -344,10 +344,10 @@ export function sendNotificationToUser(
     actionUrl?: string;
   }
 ): void {
-  const payload: NotificationPayload = {
+  const payload = {
     ...notification,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToUser(userId, SocketEvent.NOTIFICATION, payload);
   console.log(`[Socket] Notification sent to user: ${userId}`);
@@ -365,11 +365,11 @@ export function sendNotificationToTournament(
     actionUrl?: string;
   }
 ): void {
-  const payload: NotificationPayload = {
+  const payload = {
     ...notification,
     tournamentId,
     timestamp: new Date().toISOString(),
-  };
+  } as any;
 
   emitToTournament(tournamentId, SocketEvent.NOTIFICATION, payload);
   console.log(`[Socket] Notification sent to tournament: ${tournamentId}`);

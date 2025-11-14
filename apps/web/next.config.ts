@@ -11,10 +11,10 @@ const nextConfig: NextConfig = {
   ],
 
   // Sentry configuration
-  sentry: {
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-  },
+  // sentry: {
+  //   hideSourceMaps: true,
+  //   widenClientFileUpload: true,
+  // },
 
   // Compression configuration (Sprint 9 Phase 3)
   compress: true, // Enable gzip compression for responses

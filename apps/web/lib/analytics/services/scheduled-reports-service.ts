@@ -9,7 +9,7 @@
  * Reports are stored in the database and processed by background jobs.
  */
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { validateCronExpression } from '../jobs/scheduler';
 
 const prisma = new PrismaClient();
@@ -130,11 +130,11 @@ export async function createScheduledReport(
       name: config.name,
       description: config.description,
       enabled: config.enabled,
-      schedule: JSON.stringify(config.schedule),
-      recipients: JSON.stringify(config.recipients),
+      schedule: config.schedule as unknown as Prisma.InputJsonValue,
+      recipients: config.recipients as unknown as Prisma.InputJsonValue,
       format: config.format,
-      sections: JSON.stringify(config.sections),
-      dateRange: config.dateRange ? JSON.stringify(config.dateRange) : null,
+      sections: config.sections as unknown as Prisma.InputJsonValue,
+      dateRange: config.dateRange ? (config.dateRange as unknown as Prisma.InputJsonValue) : undefined,
       createdBy: config.createdBy,
       nextRunAt,
     },
@@ -186,20 +186,20 @@ export async function updateScheduledReport(
     if (!validateCronExpression(cronExpression)) {
       throw new Error(`Invalid cron expression: ${cronExpression}`);
     }
-    updateData.schedule = JSON.stringify(config.schedule);
+    updateData.schedule = config.schedule as unknown as Prisma.InputJsonValue;
     updateData.nextRunAt = calculateNextRunTime(config.schedule);
   }
 
   if (config.recipients) {
-    updateData.recipients = JSON.stringify(config.recipients);
+    updateData.recipients = config.recipients as unknown as Prisma.InputJsonValue;
   }
 
   if (config.sections) {
-    updateData.sections = JSON.stringify(config.sections);
+    updateData.sections = config.sections as unknown as Prisma.InputJsonValue;
   }
 
   if (config.dateRange) {
-    updateData.dateRange = JSON.stringify(config.dateRange);
+    updateData.dateRange = config.dateRange as unknown as Prisma.InputJsonValue;
   }
 
   // Update in database
@@ -297,7 +297,7 @@ export async function getReportHistory(
   reportId: string,
   limit: number = 10
 ): Promise<ReportDelivery[]> {
-  const deliveries = await (prisma as any).reportDelivery.findMany({
+  const deliveries = await prisma.reportDelivery.findMany({
     where: { reportId },
     orderBy: { createdAt: 'desc' },
     take: limit,
@@ -309,7 +309,7 @@ export async function getReportHistory(
     tenantId: d.tenantId,
     status: d.status as 'pending' | 'processing' | 'sent' | 'failed',
     format: d.format as ReportFormat,
-    recipients: JSON.parse(d.recipients || '[]'),
+    recipients: d.recipients,
     deliveredAt: d.deliveredAt || undefined,
     errorMessage: d.errorMessage || undefined,
     downloadUrl: d.downloadUrl || undefined,
@@ -327,13 +327,13 @@ export async function getReportHistory(
 export async function recordReportDelivery(
   delivery: Omit<ReportDelivery, 'id' | 'createdAt'>
 ): Promise<ReportDelivery> {
-  const record = await (prisma as any).reportDelivery.create({
+  const record = await prisma.reportDelivery.create({
     data: {
       reportId: delivery.reportId,
       tenantId: delivery.tenantId,
       status: delivery.status,
       format: delivery.format,
-      recipients: JSON.stringify(delivery.recipients),
+      recipients: delivery.recipients,
       deliveredAt: delivery.deliveredAt,
       errorMessage: delivery.errorMessage,
       downloadUrl: delivery.downloadUrl,
@@ -347,7 +347,7 @@ export async function recordReportDelivery(
     tenantId: record.tenantId,
     status: record.status as 'pending' | 'processing' | 'sent' | 'failed',
     format: record.format as ReportFormat,
-    recipients: JSON.parse(record.recipients || '[]'),
+    recipients: record.recipients,
     deliveredAt: record.deliveredAt || undefined,
     errorMessage: record.errorMessage || undefined,
     downloadUrl: record.downloadUrl || undefined,
@@ -460,11 +460,11 @@ function parseReportRecord(record: {
   name: string;
   description: string | null;
   enabled: boolean;
-  schedule: string;
-  recipients: string;
+  schedule: any;
+  recipients: any;
   format: string;
-  sections: string;
-  dateRange: string | null;
+  sections: any;
+  dateRange: any;
   createdBy: string;
   createdAt: Date;
   updatedAt: Date;
@@ -477,11 +477,11 @@ function parseReportRecord(record: {
     name: record.name,
     description: record.description || undefined,
     enabled: record.enabled,
-    schedule: JSON.parse(record.schedule),
-    recipients: JSON.parse(record.recipients),
-    format: record.format,
-    sections: JSON.parse(record.sections),
-    dateRange: record.dateRange ? JSON.parse(record.dateRange) : undefined,
+    schedule: record.schedule as ReportSchedule,
+    recipients: record.recipients as ReportRecipients,
+    format: record.format as ReportFormat,
+    sections: record.sections as ReportSections,
+    dateRange: record.dateRange || undefined,
     createdBy: record.createdBy,
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
@@ -528,7 +528,7 @@ export async function updateReportLastRun(reportId: string): Promise<void> {
     throw new Error(`Report ${reportId} not found`);
   }
 
-  const schedule = JSON.parse((report as any).schedule) as ReportSchedule;
+  const schedule = report.schedule as unknown as ReportSchedule;
   const nextRunAt = calculateNextRunTime(schedule);
 
   await prisma.scheduledReport.update({

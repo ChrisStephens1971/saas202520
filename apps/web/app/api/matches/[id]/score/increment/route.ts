@@ -145,9 +145,12 @@ export async function POST(
           tournamentId: match.tournamentId,
           actor: session.user.id,
           device,
+          updateType: 'increment',
           action: player === 'A' ? 'increment_a' : 'increment_b',
+          oldScore: JSON.parse(JSON.stringify(currentScore)),
           previousScore: JSON.parse(JSON.stringify(currentScore)), // Ensure proper JSON serialization
           newScore: JSON.parse(JSON.stringify(newScore)), // Ensure proper JSON serialization
+          timestamp: new Date(),
         },
       });
 

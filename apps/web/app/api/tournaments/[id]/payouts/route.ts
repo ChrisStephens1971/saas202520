@@ -61,13 +61,13 @@ export async function GET(
     const summary = {
       totalPending: payouts
         .filter(p => p.status === 'pending')
-        .reduce((sum, p) => sum + p.amount, 0),
+        .reduce((sum, p) => sum + p.amount.toNumber(), 0),
       totalPaid: payouts
         .filter(p => p.status === 'paid')
-        .reduce((sum, p) => sum + p.amount, 0),
+        .reduce((sum, p) => sum + p.amount.toNumber(), 0),
       totalVoided: payouts
         .filter(p => p.status === 'voided')
-        .reduce((sum, p) => sum + p.amount, 0),
+        .reduce((sum, p) => sum + p.amount.toNumber(), 0),
     };
 
     const response: GetPayoutsResponse = {
@@ -76,7 +76,7 @@ export async function GET(
         tournamentId: p.tournamentId,
         playerId: p.playerId,
         placement: p.placement,
-        amount: p.amount,
+        amount: p.amount.toNumber(),
         source: p.source as 'prize_pool' | 'side_pot',
         status: p.status as 'pending' | 'paid' | 'voided',
         paidAt: p.paidAt ?? undefined,
@@ -181,7 +181,7 @@ export async function PUT(
         tournamentId: updatedPayout.tournamentId,
         playerId: updatedPayout.playerId,
         placement: updatedPayout.placement,
-        amount: updatedPayout.amount,
+        amount: updatedPayout.amount.toNumber(),
         source: updatedPayout.source as 'prize_pool' | 'side_pot',
         status: updatedPayout.status as 'pending' | 'paid' | 'voided',
         paidAt: updatedPayout.paidAt ?? undefined,

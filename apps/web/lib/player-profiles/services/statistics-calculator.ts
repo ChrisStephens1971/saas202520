@@ -369,14 +369,14 @@ export async function updateHeadToHeadRecord(
           player1Wins: 0,
           player2Wins: 0,
           draws: 0,
-          lastPlayed: new Date(),
+          lastPlayedAt: new Date(),
         },
       });
     }
 
     // Update counts
     const updateData: any = {
-      lastPlayed: new Date(),
+      lastPlayedAt: new Date(),
       updatedAt: new Date(),
     };
 

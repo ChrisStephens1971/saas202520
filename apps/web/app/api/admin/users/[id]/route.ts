@@ -260,8 +260,12 @@ export async function PATCH(
       }
     }
 
+    // Get orgId from organization membership
+    const orgId = existingUser.organizationMembers[0]?.orgId || 'system';
+
     // Log audit trail
     await logUserUpdated(
+      orgId,
       authResult.user.id,
       authResult.user.email,
       id,

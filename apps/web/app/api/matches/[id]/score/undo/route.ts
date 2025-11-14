@@ -114,9 +114,12 @@ export async function POST(
           tournamentId: match.tournamentId,
           actor: session.user.id,
           device,
+          updateType: 'undo',
           action: 'undo',
+          oldScore: JSON.parse(JSON.stringify(updateToUndo.newScore)),
           previousScore: JSON.parse(JSON.stringify(updateToUndo.newScore)),
           newScore: JSON.parse(JSON.stringify(previousScore)),
+          timestamp: new Date(),
         },
       });
 

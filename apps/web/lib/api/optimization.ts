@@ -252,7 +252,7 @@ export function selectFields<T extends Record<string, unknown>>(
         setNestedValue(result, path, value);
       }
     }
-    return result;
+    return result as Partial<T>;
   }
 
   // Exclude blacklist
@@ -262,10 +262,10 @@ export function selectFields<T extends Record<string, unknown>>(
       const path = field.split(separator);
       deleteNestedValue(result, path);
     }
-    return result;
+    return result as Partial<T>;
   }
 
-  return result;
+  return result as Partial<T>;
 }
 
 /**
@@ -524,8 +524,8 @@ export function sortArray<T extends Record<string, unknown>>(
   const { field, direction } = params;
 
   return [...items].sort((a, b) => {
-    const aVal = a[field];
-    const bVal = b[field];
+    const aVal = a[field] as any;
+    const bVal = b[field] as any;
 
     if (aVal === bVal) return 0;
 

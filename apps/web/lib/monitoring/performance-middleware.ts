@@ -329,7 +329,7 @@ function alertSlowRequest(metrics: PerformanceMetrics): void {
       path: metrics.path,
       requestId: metrics.requestId,
     },
-    extra: metrics,
+    extra: metrics as any,
   });
 }
 
@@ -408,7 +408,7 @@ function alertServerError(metrics: PerformanceMetrics): void {
       statusCode: metrics.statusCode?.toString(),
       requestId: metrics.requestId,
     },
-    extra: metrics,
+    extra: metrics as any,
   });
 }
 

@@ -4,7 +4,7 @@
  * Provides common mocking, test data factories, and utilities
  */
 
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
 import type { Session } from 'next-auth';
 
 /**

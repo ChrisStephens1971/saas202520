@@ -5,7 +5,7 @@
  * Shared utilities, mocks, and fixtures for analytics tests.
  */
 
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
 import type { PrismaClient } from '@prisma/client';
 import type Redis from 'ioredis';
 
@@ -29,7 +29,7 @@ export function createMockPrismaClient(): Partial<PrismaClient> {
     tournament: mockTournamentModel as any,
     analyticsEvent: mockAnalyticsEventModel as any,
     $disconnect: vi.fn(),
-  };
+  } as any;
 }
 
 /**

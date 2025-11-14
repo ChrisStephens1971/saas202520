@@ -269,10 +269,10 @@ export async function getDeliveryStats(
 export async function isPlayerOptedOut(playerId: string): Promise<boolean> {
   const preference = await prisma.notificationPreference.findUnique({
     where: { playerId },
-    select: { smsOptedOut: true },
+    select: { sms: true },
   });
 
-  return preference?.smsOptedOut ?? false;
+  return !(preference?.sms ?? true);
 }
 
 /**
@@ -281,12 +281,7 @@ export async function isPlayerOptedOut(playerId: string): Promise<boolean> {
 export async function isWithinQuietHours(playerId: string): Promise<boolean> {
   const preference = await prisma.notificationPreference.findUnique({
     where: { playerId },
-    select: {
-      quietHoursStart: true,
-      quietHoursEnd: true,
-      timezone: true,
-    },
-  });
+  }) as any;
 
   if (!preference?.quietHoursStart || !preference?.quietHoursEnd) {
     return false; // No quiet hours set

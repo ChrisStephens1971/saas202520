@@ -37,6 +37,13 @@ export async function GET(
       );
     }
 
+    if (!payment.stripeAccount) {
+      return NextResponse.json(
+        { error: 'Stripe account not configured' },
+        { status: 400 }
+      );
+    }
+
     // Verify user has permission (must be owner or TD of the organization)
     const membership = await prisma.organizationMember.findFirst({
       where: {
@@ -54,7 +61,7 @@ export async function GET(
     }
 
     // Get tournament events related to this payment
-    const tournamentEvents = await prisma.tournamentEvent.findMany({
+    const tournamentEvents = payment.tournamentId ? await prisma.tournamentEvent.findMany({
       where: {
         tournamentId: payment.tournamentId,
         OR: [
@@ -66,7 +73,7 @@ export async function GET(
         ],
       },
       orderBy: { timestamp: 'asc' },
-    });
+    }) : [];
 
     // Build audit trail
     const auditTrail: {
@@ -90,11 +97,11 @@ export async function GET(
     payment.refunds.forEach(refund => {
       auditTrail.push({
         timestamp: refund.createdAt,
-        actor: refund.processedBy,
+        actor: refund.processedBy || 'system',
         action: 'refund.created',
         details: {
           refundId: refund.id,
-          amount: refund.amount,
+          amount: refund.amount.toNumber(),
           reason: refund.reason,
           status: refund.status,
         },
@@ -104,22 +111,42 @@ export async function GET(
     // Sort audit trail by timestamp
     auditTrail.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-    // Generate summary text
-    const summary = generateDisputeSummary(payment, payment.refunds, auditTrail);
+    // Generate summary text (convert types for helper function)
+    const summary = generateDisputeSummary(
+      {
+        id: payment.id,
+        stripePaymentIntent: payment.stripePaymentIntent || '',
+        amount: payment.amount.toNumber(),
+        currency: payment.currency,
+        status: payment.status,
+        purpose: payment.purpose || '',
+        description: payment.description,
+        createdAt: payment.createdAt,
+      },
+      payment.refunds.map(r => ({
+        id: r.id,
+        amount: r.amount.toNumber(),
+        reason: r.reason || 'requested_by_customer',
+        status: r.status,
+        stripeRefundId: r.stripeRefundId,
+        createdAt: r.createdAt,
+      })),
+      auditTrail
+    );
 
     const response: GetDisputeEvidenceResponse = {
       payment: {
         id: payment.id,
-        tournamentId: payment.tournamentId,
+        tournamentId: payment.tournamentId || '',
         playerId: payment.playerId ?? undefined,
-        stripeAccountId: payment.stripeAccountId,
-        stripePaymentIntent: payment.stripePaymentIntent,
-        amount: payment.amount,
+        stripeAccountId: payment.stripeAccountId || '',
+        stripePaymentIntent: payment.stripePaymentIntent || '',
+        amount: payment.amount.toNumber(),
         currency: payment.currency,
         status: payment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
         purpose: payment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: payment.description ?? undefined,
-        refundedAmount: payment.refundedAmount,
+        refundedAmount: payment.refundedAmount?.toNumber() || 0,
         receiptUrl: payment.receiptUrl ?? undefined,
         createdAt: payment.createdAt,
         updatedAt: payment.updatedAt,
@@ -128,10 +155,10 @@ export async function GET(
         id: r.id,
         paymentId: r.paymentId,
         stripeRefundId: r.stripeRefundId,
-        amount: r.amount,
+        amount: r.amount.toNumber(),
         reason: r.reason as 'duplicate' | 'fraudulent' | 'requested_by_customer',
         status: r.status as 'pending' | 'succeeded' | 'failed' | 'cancelled',
-        processedBy: r.processedBy,
+        processedBy: r.processedBy || '',
         createdAt: r.createdAt,
         updatedAt: r.updatedAt,
       })),

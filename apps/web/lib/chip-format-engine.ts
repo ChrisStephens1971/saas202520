@@ -97,8 +97,8 @@ export async function getAvailableQueue(tournamentId: string): Promise<QueuedPla
       return {
         id: player.id,
         name: player.name,
-        chipCount: player.chipCount,
-        matchesPlayed: player.matchesPlayed,
+        chipCount: player.chipCount ?? 0,
+        matchesPlayed: player.matchesPlayed ?? 0,
         rating: player.rating as { system: string; value: number | string } | undefined,
         matchHistory: opponentIds,
       };

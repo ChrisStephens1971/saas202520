@@ -85,16 +85,16 @@ export async function awardChips(
     prisma.player.update({
       where: { id: winnerId },
       data: {
-        chipCount: winner.chipCount + chipConfig.winnerChips,
-        matchesPlayed: winner.matchesPlayed + 1,
+        chipCount: (winner.chipCount ?? 0) + chipConfig.winnerChips,
+        matchesPlayed: (winner.matchesPlayed ?? 0) + 1,
         chipHistory: JSON.parse(JSON.stringify(winnerHistory)),
       },
     }),
     prisma.player.update({
       where: { id: loserId },
       data: {
-        chipCount: loser.chipCount + chipConfig.loserChips,
-        matchesPlayed: loser.matchesPlayed + 1,
+        chipCount: (loser.chipCount ?? 0) + chipConfig.loserChips,
+        matchesPlayed: (loser.matchesPlayed ?? 0) + 1,
         chipHistory: JSON.parse(JSON.stringify(loserHistory)),
       },
     }),
@@ -129,7 +129,7 @@ export async function adjustChips(
   return prisma.player.update({
     where: { id: playerId },
     data: {
-      chipCount: player.chipCount + chipAdjustment,
+      chipCount: (player.chipCount ?? 0) + chipAdjustment,
       chipHistory: JSON.parse(JSON.stringify(history)),
     },
   });
@@ -158,8 +158,8 @@ export async function getChipStandings(
   return players.map((player, index) => ({
     playerId: player.id,
     name: player.name,
-    chipCount: player.chipCount,
-    matchesPlayed: player.matchesPlayed,
+    chipCount: player.chipCount ?? 0,
+    matchesPlayed: player.matchesPlayed ?? 0,
     rank: index + 1,
     rating: player.rating as { system: string; value: number | string } | undefined,
   }));
@@ -224,9 +224,9 @@ export async function getChipStats(tournamentId: string) {
     };
   }
 
-  const chipCounts = players.map((p) => p.chipCount).sort((a, b) => a - b);
+  const chipCounts = players.map((p) => p.chipCount ?? 0).sort((a, b) => a - b);
   const totalChips = chipCounts.reduce((sum, chips) => sum + chips, 0);
-  const totalMatches = players.reduce((sum, p) => sum + p.matchesPlayed, 0);
+  const totalMatches = players.reduce((sum, p) => sum + (p.matchesPlayed ?? 0), 0);
 
   return {
     totalPlayers: players.length,
