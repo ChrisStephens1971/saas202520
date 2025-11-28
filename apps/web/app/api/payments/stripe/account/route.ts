@@ -20,10 +20,7 @@ export async function GET(request: NextRequest) {
     const orgId = searchParams.get('orgId');
 
     if (!orgId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: orgId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: orgId' }, { status: 400 });
     }
 
     // Verify user has access to this organization
@@ -91,9 +88,6 @@ export async function GET(request: NextRequest) {
   } catch (error: unknown) {
     console.error('Error fetching Stripe account status:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

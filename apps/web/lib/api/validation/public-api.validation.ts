@@ -106,9 +106,7 @@ export function validateQuery<T extends z.ZodTypeAny>(
   schema: T,
   params: URLSearchParams | Record<string, any>
 ): z.infer<T> {
-  const data = params instanceof URLSearchParams
-    ? Object.fromEntries(params.entries())
-    : params;
+  const data = params instanceof URLSearchParams ? Object.fromEntries(params.entries()) : params;
 
   return schema.parse(data);
 }
@@ -124,9 +122,7 @@ export function safeValidateQuery<T extends z.ZodTypeAny>(
   schema: T,
   params: URLSearchParams | Record<string, any>
 ): z.SafeParseReturnType<unknown, z.infer<T>> {
-  const data = params instanceof URLSearchParams
-    ? Object.fromEntries(params.entries())
-    : params;
+  const data = params instanceof URLSearchParams ? Object.fromEntries(params.entries()) : params;
 
   return schema.safeParse(data);
 }

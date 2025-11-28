@@ -61,12 +61,14 @@ npx prisma migrate deploy
 ```
 
 **Verification:**
+
 - [ ] All 7 tables created
 - [ ] All indexes created (check count)
 - [ ] No errors in migration output
 - [ ] Tables visible in database
 
 **Verify Tables:**
+
 ```sql
 SELECT tablename FROM pg_tables
 WHERE schemaname = 'public'
@@ -75,6 +77,7 @@ ORDER BY tablename;
 ```
 
 **Expected Output:**
+
 ```
 head_to_head_records
 match_history
@@ -87,6 +90,7 @@ player_statistics
 Plus: `achievement_definitions`
 
 **Verify Indexes:**
+
 ```sql
 SELECT
   tablename,
@@ -147,6 +151,7 @@ npx ts-node prisma/seeds/achievement-definitions.ts
 ```
 
 **Expected Output:**
+
 ```
 🌱 Seeding achievement definitions...
    Deleted 0 existing achievement definitions
@@ -171,6 +176,7 @@ npx ts-node prisma/seeds/achievement-definitions.ts
 ```
 
 **Verification:**
+
 ```sql
 -- Verify all achievements seeded
 SELECT
@@ -189,6 +195,7 @@ ORDER BY category, tier;
 - [ ] All codes unique
 
 **Test Achievement Lookup:**
+
 ```sql
 SELECT code, name, tier, points, requirements
 FROM achievement_definitions
@@ -234,17 +241,14 @@ async function backfillPlayerStatistics() {
   const players = await prisma.player.findMany({
     include: {
       matchesAsPlayerA: { where: { state: 'completed' } },
-      matchesAsPlayerB: { where: { state: 'completed' } }
-    }
+      matchesAsPlayerB: { where: { state: 'completed' } },
+    },
   });
 
   for (const player of players) {
-    const allMatches = [
-      ...player.matchesAsPlayerA,
-      ...player.matchesAsPlayerB
-    ];
+    const allMatches = [...player.matchesAsPlayerA, ...player.matchesAsPlayerB];
 
-    const wins = allMatches.filter(m => m.winnerId === player.id).length;
+    const wins = allMatches.filter((m) => m.winnerId === player.id).length;
     const losses = allMatches.length - wins;
     const winRate = allMatches.length > 0 ? (wins / allMatches.length) * 100 : 0;
 
@@ -259,8 +263,8 @@ async function backfillPlayerStatistics() {
         winRate: winRate,
         currentStreak: 0, // Calculate from recent matches
         longestStreak: 0, // Calculate from match history
-        lastPlayedAt: new Date()
-      }
+        lastPlayedAt: new Date(),
+      },
     });
 
     console.log(`  ✓ Created stats for ${player.name}`);
@@ -276,8 +280,8 @@ async function backfillMatchHistory() {
   const matches = await prisma.match.findMany({
     where: { state: 'completed' },
     include: {
-      tournament: true
-    }
+      tournament: true,
+    },
   });
 
   for (const match of matches) {
@@ -295,8 +299,8 @@ async function backfillMatchHistory() {
         tenantId: match.tournament.orgId,
         matchNumber: match.position,
         roundNumber: match.round,
-        playedAt: match.completedAt || new Date()
-      }
+        playedAt: match.completedAt || new Date(),
+      },
     });
 
     // Create history record for player B
@@ -311,8 +315,8 @@ async function backfillMatchHistory() {
         tenantId: match.tournament.orgId,
         matchNumber: match.position,
         roundNumber: match.round,
-        playedAt: match.completedAt || new Date()
-      }
+        playedAt: match.completedAt || new Date(),
+      },
     });
   }
 
@@ -324,7 +328,7 @@ async function calculateHeadToHead() {
 
   // Group matches by player pairs
   const matchHistory = await prisma.matchHistory.findMany({
-    orderBy: { playedAt: 'asc' }
+    orderBy: { playedAt: 'asc' },
   });
 
   const h2hMap = new Map<string, any>();
@@ -342,7 +346,7 @@ async function calculateHeadToHead() {
         player2Wins: 0,
         draws: 0,
         totalMatches: 0,
-        lastPlayedAt: match.playedAt
+        lastPlayedAt: match.playedAt,
       });
     }
 
@@ -366,7 +370,7 @@ async function calculateHeadToHead() {
     record.favorsPlayer1 = record.player1Wins > record.player2Wins;
 
     await prisma.headToHeadRecord.create({
-      data: record
+      data: record,
     });
   }
 
@@ -382,8 +386,8 @@ async function checkAchievements() {
   // Get all players with stats
   const players = await prisma.player.findMany({
     include: {
-      statistics: true
-    }
+      statistics: true,
+    },
   });
 
   for (const player of players) {
@@ -415,8 +419,8 @@ async function checkAchievements() {
               playerId: player.id,
               tenantId: player.tournamentId,
               achievementId: achievement.id,
-              metadata: { backfilled: true }
-            }
+              metadata: { backfilled: true },
+            },
           });
           console.log(`  ✓ Unlocked ${achievement.code} for ${player.name}`);
         } catch (error) {
@@ -449,6 +453,7 @@ npx ts-node scripts/backfill-player-data.ts
 ```
 
 **Verification:**
+
 ```sql
 -- Check player_statistics populated
 SELECT COUNT(*) FROM player_statistics;
@@ -498,21 +503,25 @@ npx prisma generate
 Create the following API routes:
 
 **1. Player Profile Endpoints**
+
 - [ ] `GET /api/players/:id` - Get player profile
 - [ ] `GET /api/players/:id/statistics` - Get player statistics
 - [ ] `PATCH /api/players/:id/profile` - Update profile
 - [ ] `PATCH /api/players/:id/settings` - Update settings
 
 **2. Achievement Endpoints**
+
 - [ ] `GET /api/players/:id/achievements` - Get player achievements
 - [ ] `GET /api/achievements` - List all achievements
 - [ ] `GET /api/achievements/:code` - Get achievement details
 
 **3. Match History Endpoints**
+
 - [ ] `GET /api/players/:id/history` - Get match history (paginated)
 - [ ] `GET /api/players/:id/head-to-head/:opponentId` - Get H2H record
 
 **4. Leaderboard Endpoints**
+
 - [ ] `GET /api/leaderboards/win-rate` - Win rate leaderboard
 - [ ] `GET /api/leaderboards/participation` - Participation leaderboard
 - [ ] `GET /api/leaderboards/earnings` - Earnings leaderboard
@@ -546,12 +555,14 @@ export async function checkPlayerDataAccess(
 #### Task 10: Add Redis Caching (2 hours)
 
 Implement caching for:
+
 - [ ] Player profiles (5-minute TTL)
 - [ ] Leaderboards (5-minute TTL)
 - [ ] H2H records (10-minute TTL)
 - [ ] Achievement definitions (1-hour TTL)
 
 Cache invalidation on:
+
 - [ ] Match completion
 - [ ] Profile update
 - [ ] Settings update
@@ -562,6 +573,7 @@ Cache invalidation on:
 #### Task 11: Write API Tests (2 hours)
 
 Create tests:
+
 - [ ] Player profile CRUD tests
 - [ ] Leaderboard query tests
 - [ ] Match history pagination tests
@@ -653,6 +665,7 @@ Create tests:
 ### If Critical Issues Arise
 
 **1. Immediate Actions**
+
 ```bash
 # Disable new features via feature flag
 export PLAYER_PROFILES_ENABLED=false
@@ -661,6 +674,7 @@ export PLAYER_PROFILES_ENABLED=false
 ```
 
 **2. Database Rollback**
+
 ```bash
 # Restore from backup
 pg_restore -U postgres -d tournament_platform backups/pre_sprint10_week2_YYYYMMDD.backup
@@ -670,6 +684,7 @@ psql -U postgres -d tournament_platform < rollback.sql
 ```
 
 **3. Code Rollback**
+
 ```bash
 # Revert to previous commit
 git revert <commit-hash>
@@ -714,18 +729,22 @@ npm run deploy
 ## Contact Information
 
 **Database Issues:**
+
 - DBA: [Contact Info]
 - Slack: #dev-database
 
 **API Issues:**
+
 - Backend Lead: [Contact Info]
 - Slack: #dev-backend
 
 **Frontend Issues:**
+
 - Frontend Lead: [Contact Info]
 - Slack: #dev-frontend
 
 **Emergency:**
+
 - On-Call Engineer: [Contact Info]
 - PagerDuty: [Link]
 
@@ -734,17 +753,20 @@ npm run deploy
 ## Resources
 
 **Documentation:**
+
 - Schema: `docs/database/PLAYER-PROFILES-SCHEMA.md`
 - Index Strategy: `docs/database/PLAYER-PROFILES-INDEX-STRATEGY.md`
 - Quick Reference: `docs/database/PLAYER-PROFILES-QUICK-REFERENCE.md`
 - Summary: `docs/database/SPRINT-10-WEEK-2-DATABASE-SUMMARY.md`
 
 **Implementation Files:**
+
 - Prisma Schema: `prisma/schema-additions/player-profiles.prisma`
 - Migration: `prisma/migrations/20251106_add_player_profiles/migration.sql`
 - Seeds: `prisma/seeds/achievement-definitions.ts`
 
 **Monitoring:**
+
 - Query Performance: [Dashboard Link]
 - Error Tracking: [Sentry Link]
 - Uptime: [Status Page]

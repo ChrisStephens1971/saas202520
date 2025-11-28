@@ -20,9 +20,9 @@ Returns current chip standings for a chip format tournament, ranked by chip coun
 
 #### Query Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `includeStats` | boolean | No | Include tournament statistics |
+| Parameter      | Type    | Required | Description                   |
+| -------------- | ------- | -------- | ----------------------------- |
+| `includeStats` | boolean | No       | Include tournament statistics |
 
 #### Response
 
@@ -34,27 +34,29 @@ Returns current chip standings for a chip format tournament, ranked by chip coun
 ```
 
 **ChipStanding:**
+
 ```typescript
 {
-  rank: number;              // Current rank (1-based)
-  playerId: string;          // Player ID
-  playerName: string;        // Player name
-  chipCount: number;         // Current chips
-  matchesPlayed: number;     // Matches completed
-  wins: number;              // Match wins
-  losses: number;            // Match losses
+  rank: number; // Current rank (1-based)
+  playerId: string; // Player ID
+  playerName: string; // Player name
+  chipCount: number; // Current chips
+  matchesPlayed: number; // Matches completed
+  wins: number; // Match wins
+  losses: number; // Match losses
 }
 ```
 
 **ChipStats:**
+
 ```typescript
 {
-  totalPlayers: number;      // Active players
-  averageChips: number;      // Mean chip count
-  medianChips: number;       // Median chip count
-  maxChips: number;          // Highest chip count
-  minChips: number;          // Lowest chip count
-  averageMatches: number;    // Mean matches played
+  totalPlayers: number; // Active players
+  averageChips: number; // Mean chip count
+  medianChips: number; // Median chip count
+  maxChips: number; // Highest chip count
+  minChips: number; // Lowest chip count
+  averageMatches: number; // Mean matches played
 }
 ```
 
@@ -123,12 +125,13 @@ Assigns the next match from the queue using the configured pairing strategy.
 ```
 
 **ChipConfig:**
+
 ```typescript
 {
-  winnerChips: number;           // Chips for winner (default: 3)
-  loserChips: number;            // Chips for loser (default: 1)
-  qualificationRounds: number;   // Rounds before finals (default: 5)
-  finalsCount: number;           // Players in finals (default: 8)
+  winnerChips: number; // Chips for winner (default: 3)
+  loserChips: number; // Chips for loser (default: 1)
+  qualificationRounds: number; // Rounds before finals (default: 5)
+  finalsCount: number; // Players in finals (default: 8)
   pairingStrategy: 'random' | 'rating' | 'chip_diff'; // Pairing method
   allowDuplicatePairings: boolean; // Allow rematches
   tiebreaker: 'head_to_head' | 'rating' | 'random'; // Tiebreaker method
@@ -232,11 +235,11 @@ Returns statistics about the current match queue.
 
 ```typescript
 {
-  playersInQueue: number;      // Players available for pairing
-  activeMatches: number;       // Matches currently in progress
-  completedMatches: number;    // Matches finished
-  pendingMatches: number;      // Matches assigned but not started
-  totalPlayers: number;        // All tournament players
+  playersInQueue: number; // Players available for pairing
+  activeMatches: number; // Matches currently in progress
+  completedMatches: number; // Matches finished
+  pendingMatches: number; // Matches assigned but not started
+  totalPlayers: number; // All tournament players
   availableForPairing: number; // Players not in active matches
 }
 ```
@@ -278,8 +281,8 @@ Manually adjust a player's chip count (TD corrections, penalties, bonuses).
 
 ```typescript
 {
-  adjustment: number;   // Chip change (positive or negative)
-  reason: string;       // Required reason for adjustment
+  adjustment: number; // Chip change (positive or negative)
+  reason: string; // Required reason for adjustment
 }
 ```
 
@@ -291,11 +294,11 @@ Manually adjust a player's chip count (TD corrections, penalties, bonuses).
   player: {
     id: string;
     name: string;
-    chipCount: number;      // Updated chip count
+    chipCount: number; // Updated chip count
     matchesPlayed: number;
-  };
-  adjustment: number;       // Change applied
-  reason: string;          // Reason provided
+  }
+  adjustment: number; // Change applied
+  reason: string; // Reason provided
 }
 ```
 
@@ -360,10 +363,11 @@ None required (uses tournament's chipConfig)
 ```
 
 **TiebreakerResult:**
+
 ```typescript
 {
   playerId: string;
-  reason: string;  // Explanation of tiebreaker result
+  reason: string; // Explanation of tiebreaker result
 }
 ```
 
@@ -427,6 +431,7 @@ POST /api/tournaments/abc123/apply-finals-cutoff
    - Players check in and join queue
 
 2. **Qualification Rounds**
+
    ```
    GET /queue-stats              → Check queue status
    POST /matches/assign-next     → Assign matches
@@ -436,6 +441,7 @@ POST /api/tournaments/abc123/apply-finals-cutoff
    ```
 
 3. **Optional Adjustments**
+
    ```
    PATCH /players/[id]/chips     → Manual corrections
    ```
@@ -451,12 +457,15 @@ POST /api/tournaments/abc123/apply-finals-cutoff
 ## Pairing Strategies
 
 ### Random
+
 Randomly pairs available players. Simple and fair.
 
 ### Rating-Based
+
 Pairs players with similar ratings. Creates competitive matches.
 
 ### Chip Difference
+
 Pairs players with similar chip counts. Keeps standings competitive.
 
 ---
@@ -464,12 +473,15 @@ Pairs players with similar chip counts. Keeps standings competitive.
 ## Tiebreaker Methods
 
 ### Head-to-Head
+
 Uses previous match results between tied players.
 
 ### Rating
+
 Uses player skill ratings to break ties.
 
 ### Random
+
 Random selection (used as last resort).
 
 ---
@@ -503,6 +515,7 @@ All endpoints require authentication with appropriate permissions:
 - **Player** - Can view standings and stats only
 
 Headers:
+
 ```
 Authorization: Bearer <token>
 ```
@@ -565,6 +578,7 @@ Exceeding limits returns `429 Too Many Requests`.
 ## Support
 
 For issues or questions:
+
 - GitHub: https://github.com/ChrisStephens1971/saas202520
 - Documentation: `/docs/chip-format`
 - Sprint 4 Implementation: CHIP-001, CHIP-002, CHIP-003

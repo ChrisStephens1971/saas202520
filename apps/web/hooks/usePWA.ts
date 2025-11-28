@@ -21,13 +21,7 @@ import {
   setupInstallPrompt,
 } from '@/lib/pwa';
 
-import type {
-  SyncStatus,
-  QueueStats,
-  NetworkState,
-  PWAFeatures,
-  InstallState,
-} from '@/lib/pwa';
+import type { SyncStatus, QueueStats, NetworkState, PWAFeatures, InstallState } from '@/lib/pwa';
 
 // =============================================================================
 // TYPES

@@ -105,9 +105,7 @@ export function PresenceIndicator({
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
           <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
         </span>
-        <span className="text-gray-700 dark:text-gray-300">
-          {onlineCount} online
-        </span>
+        <span className="text-gray-700 dark:text-gray-300">{onlineCount} online</span>
       </div>
     );
   }
@@ -133,9 +131,7 @@ export function PresenceIndicator({
             </div>
           )}
         </div>
-        <span className="text-sm text-gray-600 dark:text-gray-400">
-          {onlineCount} online
-        </span>
+        <span className="text-sm text-gray-600 dark:text-gray-400">{onlineCount} online</span>
       </div>
     );
   }
@@ -156,9 +152,7 @@ export function PresenceIndicator({
         {/* Count */}
         <div className="text-left">
           <div className="text-sm font-bold">{onlineCount} Online</div>
-          <div className="text-xs text-gray-600 dark:text-gray-400">
-            in this tournament
-          </div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">in this tournament</div>
         </div>
 
         {/* Avatar Stack */}
@@ -176,19 +170,12 @@ export function PresenceIndicator({
 
         {/* Dropdown Arrow */}
         <svg
-          className={`w-4 h-4 transition-transform ml-auto ${
-            showDropdown ? 'rotate-180' : ''
-          }`}
+          className={`w-4 h-4 transition-transform ml-auto ${showDropdown ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
@@ -208,9 +195,7 @@ export function PresenceIndicator({
             {onlineCount === 0 ? (
               <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                 <p>No players online</p>
-                <p className="text-sm mt-1">
-                  Be the first to join the tournament!
-                </p>
+                <p className="text-sm mt-1">Be the first to join the tournament!</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-200 dark:divide-gray-700">

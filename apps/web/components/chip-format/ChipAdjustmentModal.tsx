@@ -22,12 +22,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function ChipAdjustmentModal({
-  tournamentId,
-  players,
-  isOpen,
-  onClose,
-}: Props) {
+export default function ChipAdjustmentModal({ tournamentId, players, isOpen, onClose }: Props) {
   const [selectedPlayerId, setSelectedPlayerId] = useState('');
   const [adjustment, setAdjustment] = useState<number>(0);
   const [reason, setReason] = useState('');
@@ -105,9 +100,7 @@ export default function ChipAdjustmentModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Player Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Player *
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Select Player *</label>
             <select
               value={selectedPlayerId}
               onChange={(e) => setSelectedPlayerId(e.target.value)}
@@ -154,9 +147,7 @@ export default function ChipAdjustmentModal({
           {selectedPlayer && adjustment !== 0 && (
             <div
               className={`border-l-4 p-3 ${
-                newChipCount >= 0
-                  ? 'bg-green-50 border-green-400'
-                  : 'bg-red-50 border-red-400'
+                newChipCount >= 0 ? 'bg-green-50 border-green-400' : 'bg-red-50 border-red-400'
               }`}
             >
               <div

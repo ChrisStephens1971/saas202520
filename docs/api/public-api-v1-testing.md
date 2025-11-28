@@ -9,6 +9,7 @@ This guide provides example curl commands for testing all public API v1 endpoint
 **Base URL:** `http://localhost:3000/api/v1` (development)
 
 **Authentication:** All endpoints require an API key (to be implemented by Agent 1)
+
 ```bash
 -H "Authorization: Bearer YOUR_API_KEY_HERE"
 ```
@@ -16,6 +17,7 @@ This guide provides example curl commands for testing all public API v1 endpoint
 ## Tournaments Endpoints
 
 ### 1. List Tournaments
+
 ```bash
 # Get all tournaments (paginated)
 curl -X GET "http://localhost:3000/api/v1/tournaments?page=1&limit=20&orgId=YOUR_ORG_ID" \
@@ -35,6 +37,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments?page=1&limit=10&status=com
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -60,6 +63,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments?page=1&limit=10&status=com
 ```
 
 ### 2. Get Tournament Details
+
 ```bash
 # Get single tournament
 curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID?orgId=YOUR_ORG_ID" \
@@ -67,6 +71,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID?orgId=YOUR_O
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -86,6 +91,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID?orgId=YOUR_O
 ```
 
 ### 3. Get Tournament Matches
+
 ```bash
 # Get all matches in tournament
 curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/matches?orgId=YOUR_ORG_ID" \
@@ -101,6 +107,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/matches?stat
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -135,6 +142,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/matches?stat
 ```
 
 ### 4. Get Tournament Players
+
 ```bash
 # Get all players in tournament
 curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/players?orgId=YOUR_ORG_ID" \
@@ -146,6 +154,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/players?stat
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -165,6 +174,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/players?stat
 ```
 
 ### 5. Get Tournament Bracket
+
 ```bash
 # Get complete bracket structure
 curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/bracket?orgId=YOUR_ORG_ID" \
@@ -172,6 +182,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/bracket?orgI
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -223,6 +234,7 @@ curl -X GET "http://localhost:3000/api/v1/tournaments/TOURNAMENT_ID/bracket?orgI
 ## Players Endpoints
 
 ### 6. List Players
+
 ```bash
 # Get all players (paginated)
 curl -X GET "http://localhost:3000/api/v1/players?page=1&limit=20&orgId=YOUR_ORG_ID" \
@@ -242,6 +254,7 @@ curl -X GET "http://localhost:3000/api/v1/players?search=smith&skillLevel=EXPERT
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -266,6 +279,7 @@ curl -X GET "http://localhost:3000/api/v1/players?search=smith&skillLevel=EXPERT
 ```
 
 ### 7. Get Player Profile
+
 ```bash
 # Get player profile
 curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID?orgId=YOUR_ORG_ID" \
@@ -273,6 +287,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID?orgId=YOUR_ORG_ID" \
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -292,7 +307,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID?orgId=YOUR_ORG_ID" \
       "totalWins": 107,
       "totalLosses": 49,
       "winRate": 68.59,
-      "totalPrizeWon": 5400.00
+      "totalPrizeWon": 5400.0
     },
     "joinedAt": "2023-01-15T10:00:00.000Z",
     "lastActive": "2024-06-15T19:30:00.000Z"
@@ -301,6 +316,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID?orgId=YOUR_ORG_ID" \
 ```
 
 **Error (Private Profile):**
+
 ```json
 {
   "error": {
@@ -312,6 +328,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 8. Get Player History
+
 ```bash
 # Get player tournament history
 curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/history?page=1&limit=20&orgId=YOUR_ORG_ID" \
@@ -323,6 +340,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/history?status=compl
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -350,6 +368,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/history?status=compl
 ```
 
 ### 9. Get Player Stats
+
 ```bash
 # Get detailed player statistics
 curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/stats?orgId=YOUR_ORG_ID" \
@@ -357,6 +376,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/stats?orgId=YOUR_ORG
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -386,7 +406,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/stats?orgId=YOUR_ORG
         "tournaments": 9,
         "wins": 39,
         "losses": 24,
-        "winRate": 61.90
+        "winRate": 61.9
       }
     ],
     "rankings": {
@@ -412,6 +432,7 @@ curl -X GET "http://localhost:3000/api/v1/players/PLAYER_ID/stats?orgId=YOUR_ORG
 ## Matches Endpoints
 
 ### 10. List Matches
+
 ```bash
 # Get all matches (paginated)
 curl -X GET "http://localhost:3000/api/v1/matches?page=1&limit=20&orgId=YOUR_ORG_ID" \
@@ -431,6 +452,7 @@ curl -X GET "http://localhost:3000/api/v1/matches?tournamentId=TOURNAMENT_ID&sta
 ```
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -473,6 +495,7 @@ curl -X GET "http://localhost:3000/api/v1/matches?tournamentId=TOURNAMENT_ID&sta
 ```
 
 ### 11. Get Match Details
+
 ```bash
 # Get single match details
 curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
@@ -480,6 +503,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -541,6 +565,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ## Error Responses
 
 ### 400 - Validation Error
+
 ```json
 {
   "error": {
@@ -560,6 +585,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 401 - Unauthorized
+
 ```json
 {
   "error": {
@@ -571,6 +597,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 403 - Forbidden
+
 ```json
 {
   "error": {
@@ -582,6 +609,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 404 - Not Found
+
 ```json
 {
   "error": {
@@ -593,6 +621,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 429 - Rate Limit Exceeded
+
 ```json
 {
   "error": {
@@ -607,6 +636,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ```
 
 ### 500 - Internal Server Error
+
 ```json
 {
   "error": {
@@ -620,6 +650,7 @@ curl -X GET "http://localhost:3000/api/v1/matches/MATCH_ID?orgId=YOUR_ORG_ID" \
 ## Rate Limit Headers
 
 All responses include rate limit headers:
+
 ```
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -629,6 +660,7 @@ X-RateLimit-Reset: 1718486400
 ## Testing Workflow
 
 1. **Start development server:**
+
    ```bash
    cd /c/devop/saas202520
    npm run dev

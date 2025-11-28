@@ -1,4 +1,5 @@
 # Due Diligence Checklist
+
 ## What Investors Will Ask For
 
 **Project:** saas202509
@@ -13,6 +14,7 @@
 **Due diligence** is the process where investors verify your claims and assess risks before investing.
 
 **Typical timeline:**
+
 - Friends & Family: Minimal due diligence (1-2 days)
 - Angels: Light due diligence (1-2 weeks)
 - VCs: Thorough due diligence (2-8 weeks)
@@ -35,6 +37,7 @@
 - [ ] **Founder Vesting Agreements** (if applicable)
 
 **Status:**
+
 - [ ] All documents complete and filed
 - [ ] Stored in Google Drive folder
 - [ ] Ready to share with investors
@@ -53,6 +56,7 @@
 **Key Question:** "Does the company own all IP, or did a founder create it before incorporating?"
 
 **Status:**
+
 - [ ] All IP assigned to company
 - [ ] No third-party IP claims
 - [ ] Trademark search complete (no conflicts)
@@ -71,11 +75,13 @@
 - [ ] **Prior funding** (any SAFEs, convertible notes, or equity rounds)
 
 **For Pre-Revenue:**
+
 - Focus on projections and burn rate
 - Explain path to first revenue
 - Show customer pipeline (LOIs, pilots)
 
 **Status:**
+
 - [ ] Financial model ready (see 03-FINANCIAL-PROJECTIONS.md)
 - [ ] Burn rate documented
 - [ ] Realistic revenue assumptions
@@ -93,11 +99,13 @@
 - [ ] **Scalability plan** (how product handles growth)
 
 **For MVP Stage:**
+
 - Screenshots or mockups
 - Technical architecture document
 - Explanation of multi-tenant strategy
 
 **Status:**
+
 - [ ] Demo available (working prototype or video)
 - [ ] Architecture documented
 - [ ] Tech stack defensible (not excessive complexity)
@@ -117,12 +125,14 @@
 **Key Investor Question:** "How do you know customers will pay for this?"
 
 **Evidence:**
+
 - 50+ customer discovery interviews
 - LOIs from 3-5 HOAs
 - Pilot program agreements
 - Market research showing $70K current cost
 
 **Status:**
+
 - [ ] Market size calculations documented
 - [ ] Competitive landscape analyzed
 - [ ] Customer validation evidence ready
@@ -140,12 +150,14 @@
 - [ ] **Non-compete agreements** (if applicable - rare for startups)
 
 **Investor Focus:**
+
 - Can this team execute?
 - Domain expertise?
 - Prior startup experience?
 - Gaps in team? (e.g., need CTO)
 
 **Status:**
+
 - [ ] Founder background documented
 - [ ] Team hiring plan clear
 - [ ] Advisor relationships formalized (if any)
@@ -164,6 +176,7 @@
 **Transparency is key:** Show all prior funding, even small amounts
 
 **Status:**
+
 - [ ] All prior investments documented on cap table
 - [ ] Use of funds clearly allocated ($400K budget)
 - [ ] Milestones tied to funding (MVP in 6 months, $200K ARR in 12 months)
@@ -181,11 +194,13 @@
 - [ ] **Terms of service** (if product is live)
 
 **For Pre-Revenue:**
+
 - Most of these won't apply yet
 - Focus on incorporation docs and IP
 - Show awareness of compliance (e.g., "We'll pursue SOC 2 after MVP")
 
 **Status:**
+
 - [ ] No outstanding legal issues
 - [ ] Compliance plan documented
 - [ ] Insurance obtained (or plan to obtain)
@@ -204,12 +219,14 @@
 **Investor Question:** "How will you get to $1M ARR?"
 
 **Answer:**
+
 - Pilot program (Months 1-6): 3-5 customers
 - Direct sales (Months 6-18): 10-50 customers
 - Partnerships (Months 18+): Scale via property managers
 - Self-serve (Year 3+): DIY onboarding
 
 **Status:**
+
 - [ ] GTM strategy documented
 - [ ] Sales process mapped out
 - [ ] Realistic customer acquisition plan
@@ -226,6 +243,7 @@
 **Why it matters:** Investors call references to de-risk investment
 
 **Status:**
+
 - [ ] 3-5 customer references ready
 - [ ] 2-3 professional references ready
 - [ ] References briefed on your fundraise
@@ -237,6 +255,7 @@
 ### Option 1: Google Drive Folder
 
 **Structure:**
+
 ```
 /Due Diligence - [Company Name]
   /01-Company Formation
@@ -274,11 +293,13 @@
 **Use for:** Series A+ rounds
 
 **Platforms:**
+
 - DocSend: https://www.docsend.com ($10-$50/month)
 - Dropbox: Business tier with permissions
 - Carta: Includes data room feature
 
 **Benefits:**
+
 - Track who viewed what
 - Revoke access easily
 - Professional impression
@@ -292,6 +313,7 @@
 **Timeline:** 1-3 days
 
 **Investor asks for:**
+
 - Pitch deck
 - Financial projections
 - Cap table
@@ -305,6 +327,7 @@
 **Timeline:** 1-2 weeks
 
 **Investor asks for:**
+
 - All of the above
 - Product demo
 - Customer validation
@@ -319,6 +342,7 @@
 **Timeline:** 2-8 weeks
 
 **Investor asks for:**
+
 - Comprehensive due diligence (all 10 sections above)
 - Reference calls with customers
 - Code review (if technical investor)
@@ -331,27 +355,32 @@
 ## Red Flags Investors Look For
 
 ### Legal Red Flags
+
 - ❌ Founders don't own all IP
 - ❌ No 83(b) elections filed
 - ❌ Outstanding legal disputes
 - ❌ Cap table discrepancies
 
 ### Financial Red Flags
+
 - ❌ Unrealistic projections (10x revenue growth every year)
 - ❌ Burn rate too high relative to progress
 - ❌ Unclear use of funds
 
 ### Product Red Flags
+
 - ❌ No working prototype or demo
 - ❌ Over-engineered for stage (building for 1M users when you have 0)
 - ❌ Tech stack doesn't match problem
 
 ### Market Red Flags
+
 - ❌ No customer validation (zero interviews)
 - ❌ Underestimating competition
 - ❌ Tiny market (<$100M TAM)
 
 ### Team Red Flags
+
 - ❌ Solo founder with no plan to build team
 - ❌ Founder has full-time job elsewhere
 - ❌ Team lacks domain expertise
@@ -362,6 +391,7 @@
 ## Preparing for Due Diligence (Action Plan)
 
 ### Week 1: Legal & Formation
+
 - [ ] Ensure Delaware C-Corp incorporated
 - [ ] Confirm all founder stock issued
 - [ ] File 83(b) elections (if not already)
@@ -369,6 +399,7 @@
 - [ ] Create cap table
 
 ### Week 2: Financial
+
 - [ ] Build 5-year financial model
 - [ ] Document current burn rate
 - [ ] Calculate unit economics (CAC, LTV)
@@ -376,6 +407,7 @@
 - [ ] Prepare use of funds breakdown
 
 ### Week 3: Product & Market
+
 - [ ] Create product demo (video or live)
 - [ ] Document technical architecture
 - [ ] Summarize customer discovery findings
@@ -383,6 +415,7 @@
 - [ ] Analyze competitive landscape
 
 ### Week 4: Organize & Share
+
 - [ ] Create Google Drive folder
 - [ ] Upload all documents
 - [ ] Create index/README
@@ -400,6 +433,7 @@
 **A:** Be honest. Say "We haven't done that yet, but here's our plan..."
 
 **Example:**
+
 - Investor: "Do you have a trademark?"
 - You: "Not yet. We'll file after we close this round and finalize our name. Preliminary search shows no conflicts."
 
@@ -412,14 +446,17 @@
 **A:** Depends on the investor:
 
 **Before term sheet:**
+
 - Share pitch deck
 - Share financials (high-level)
 - Product demo
 
 **After term sheet (signed):**
+
 - Share everything (full due diligence)
 
 **Never share before NDA (if sensitive):**
+
 - Customer lists
 - Detailed financials
 - Proprietary technology details
@@ -436,6 +473,7 @@
 4. Don't hide or minimize
 
 **Example:**
+
 - Issue: Founder doesn't have 83(b) filed
 - Response: "You're right, I missed that. I'll file immediately (still within 30 days). My lawyer will handle it this week."
 
@@ -444,6 +482,7 @@
 ### Q: Can due diligence kill a deal?
 
 **A:** Yes, if there are major red flags:
+
 - Founder lied about something material
 - Cap table is a mess (conflicting claims)
 - Outstanding lawsuit
@@ -472,16 +511,19 @@
 ## Resources
 
 **Due Diligence Tools:**
+
 - DocSend: https://www.docsend.com
 - Carta: https://carta.com (includes data room)
 - Google Drive: Free, good for early stage
 
 **Legal:**
+
 - Clerky: https://www.clerky.com (incorporation, SAFEs)
 - Gust Launch: https://gust.com/launch (incorporation + legal)
 - Local startup lawyer (find via referrals)
 
 **Templates:**
+
 - YC Document Library: https://www.ycombinator.com/documents
 - Cooley GO: https://www.cooleygo.com/documents/
 

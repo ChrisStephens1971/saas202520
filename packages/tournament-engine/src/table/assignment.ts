@@ -128,11 +128,7 @@ export function isTableAvailable(table: Table): boolean {
  * @param expectedRev - Expected match revision
  * @throws TableAssignmentError if assignment is invalid
  */
-export function validateTableAssignment(
-  match: Match,
-  table: Table,
-  expectedRev: number
-): void {
+export function validateTableAssignment(match: Match, table: Table, expectedRev: number): void {
   // Check match and table belong to same tournament
   if (match.tournamentId !== table.tournamentId) {
     throw new TableAssignmentError(
@@ -163,7 +159,9 @@ export function validateTableAssignment(
 
   // Check match doesn't already have a table
   if (match.tableId !== null) {
-    throw new TableAssignmentError(`Match ${match.id} is already assigned to table ${match.tableId}`);
+    throw new TableAssignmentError(
+      `Match ${match.id} is already assigned to table ${match.tableId}`
+    );
   }
 }
 

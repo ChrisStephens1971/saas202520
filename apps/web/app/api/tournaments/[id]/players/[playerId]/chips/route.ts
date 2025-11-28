@@ -20,10 +20,7 @@ export async function PATCH(
     const { adjustment, reason } = body;
 
     if (typeof adjustment !== 'number') {
-      return NextResponse.json(
-        { error: 'Chip adjustment must be a number' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Chip adjustment must be a number' }, { status: 400 });
     }
 
     if (!reason || typeof reason !== 'string') {

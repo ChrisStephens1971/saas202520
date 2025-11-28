@@ -284,15 +284,15 @@ export async function analyzeTournamentPerformance(
           periodType === 'day'
             ? startOfDay(subDays(periodStart, 1))
             : periodType === 'week'
-            ? startOfWeek(subWeeks(periodStart, 1))
-            : startOfMonth(subMonths(periodStart, 1));
+              ? startOfWeek(subWeeks(periodStart, 1))
+              : startOfMonth(subMonths(periodStart, 1));
 
         const previousPeriodEnd =
           periodType === 'day'
             ? endOfDay(subDays(periodStart, 1))
             : periodType === 'week'
-            ? endOfWeek(subWeeks(periodStart, 1))
-            : endOfMonth(subMonths(periodStart, 1));
+              ? endOfWeek(subWeeks(periodStart, 1))
+              : endOfMonth(subMonths(periodStart, 1));
 
         const previousAggregates = await prisma.tournamentAggregate.findMany({
           where: {
@@ -411,18 +411,11 @@ export async function analyzeFormatPopularity(
 
       for (const [format, formatTournaments] of formatGroups) {
         const tournamentCount = formatTournaments.length;
-        const totalPlayers = formatTournaments.reduce(
-          (sum, t) => sum + t.players.length,
-          0
-        );
-        const avgPlayersPerTournament =
-          tournamentCount > 0 ? totalPlayers / tournamentCount : 0;
+        const totalPlayers = formatTournaments.reduce((sum, t) => sum + t.players.length, 0);
+        const avgPlayersPerTournament = tournamentCount > 0 ? totalPlayers / tournamentCount : 0;
 
-        const completedTournaments = formatTournaments.filter(
-          (t) => t.status === 'completed'
-        );
-        const completionRate =
-          (completedTournaments.length / tournamentCount) * 100;
+        const completedTournaments = formatTournaments.filter((t) => t.status === 'completed');
+        const completionRate = (completedTournaments.length / tournamentCount) * 100;
 
         // Calculate average duration
         const tournamentsWithDuration = completedTournaments.filter(
@@ -434,9 +427,7 @@ export async function analyzeFormatPopularity(
           return sum + duration;
         }, 0);
         const avgDurationMinutes =
-          tournamentsWithDuration.length > 0
-            ? totalDuration / tournamentsWithDuration.length
-            : 0;
+          tournamentsWithDuration.length > 0 ? totalDuration / tournamentsWithDuration.length : 0;
 
         // Calculate revenue
         const totalRevenue = formatTournaments.reduce((sum, t) => {
@@ -503,15 +494,15 @@ export async function analyzeTournamentTrends(
           periodType === 'day'
             ? subDays(now, i)
             : periodType === 'week'
-            ? subWeeks(now, i)
-            : subMonths(now, i);
+              ? subWeeks(now, i)
+              : subMonths(now, i);
 
         const periodStart =
           periodType === 'day'
             ? startOfDay(periodDate)
             : periodType === 'week'
-            ? startOfWeek(periodDate)
-            : startOfMonth(periodDate);
+              ? startOfWeek(periodDate)
+              : startOfMonth(periodDate);
 
         // Get aggregates for this period
         const aggregates = await prisma.tournamentAggregate.findMany({
@@ -538,10 +529,7 @@ export async function analyzeTournamentTrends(
               metrics.avgPlayersPerTournament,
               previousMetrics.avgPlayers
             ),
-            revenue: calculateGrowthRate(
-              metrics.totalRevenue,
-              previousMetrics.totalRevenue
-            ),
+            revenue: calculateGrowthRate(metrics.totalRevenue, previousMetrics.totalRevenue),
           };
         }
 
@@ -627,8 +615,7 @@ export async function calculateTournamentMetrics(
           sum + t.players.filter((p) => p.status === 'active' || p.status === 'eliminated').length
         );
       }, 0);
-      const participationRate =
-        totalRegistered > 0 ? (totalPlayed / totalRegistered) * 100 : 0;
+      const participationRate = totalRegistered > 0 ? (totalPlayed / totalRegistered) * 100 : 0;
 
       // Calculate completion rate
       const completedCount = tournaments.filter((t) => t.status === 'completed').length;
@@ -780,11 +767,7 @@ export async function predictTournamentAttendance(
         historicalAverage > 0 ? (dayOfWeekAverage / historicalAverage) * 100 : 100;
 
       // Get format popularity
-      const formatAnalysis = await analyzeFormatPopularity(
-        tenantId,
-        subMonths(date, 3),
-        date
-      );
+      const formatAnalysis = await analyzeFormatPopularity(tenantId, subMonths(date, 3), date);
       const formatData = formatAnalysis.find((f) => f.format === tournamentFormat);
       const formatPopularity = formatData ? formatData.avgPlayersPerTournament : historicalAverage;
 
@@ -798,7 +781,8 @@ export async function predictTournamentAttendance(
           ? sameMonthTournaments.reduce((sum, t) => sum + t.players.length, 0) /
             sameMonthTournaments.length
           : historicalAverage;
-      const seasonalFactor = historicalAverage > 0 ? (monthlyAverage / historicalAverage) * 100 : 100;
+      const seasonalFactor =
+        historicalAverage > 0 ? (monthlyAverage / historicalAverage) * 100 : 100;
 
       // Calculate weighted prediction
       const weights = {
@@ -946,8 +930,7 @@ export async function analyzePlayerEngagement(
         (sum, count) => sum + count,
         0
       );
-      const avgTournamentsPerPlayer =
-        uniquePlayers > 0 ? totalParticipations / uniquePlayers : 0;
+      const avgTournamentsPerPlayer = uniquePlayers > 0 ? totalParticipations / uniquePlayers : 0;
 
       // Calculate repeat participation rate
       const repeatPlayers = Array.from(playerParticipations.values()).filter(
@@ -1025,9 +1008,7 @@ export async function analyzePlayerEngagement(
  * @param tenantId - Organization ID
  * @returns Tournament benchmarks and recommendations
  */
-export async function getTournamentBenchmarks(
-  tenantId: string
-): Promise<TournamentBenchmarks> {
+export async function getTournamentBenchmarks(tenantId: string): Promise<TournamentBenchmarks> {
   const cacheKey = CacheManager.getCacheKey('analytics:tournament:benchmarks', tenantId);
 
   return CacheManager.getOrSet(
@@ -1059,7 +1040,10 @@ export async function getTournamentBenchmarks(
           target: industryBenchmarks.completionRate,
           current: metrics.completionRate,
           status: getStatus(metrics.completionRate, industryBenchmarks.completionRate),
-          percentile: calculatePercentile(metrics.completionRate, industryBenchmarks.completionRate),
+          percentile: calculatePercentile(
+            metrics.completionRate,
+            industryBenchmarks.completionRate
+          ),
         },
         avgPlayers: {
           target: industryBenchmarks.avgPlayers,
@@ -1074,13 +1058,19 @@ export async function getTournamentBenchmarks(
           target: industryBenchmarks.avgDuration,
           current: metrics.avgDurationMinutes,
           status: getStatus(metrics.avgDurationMinutes, industryBenchmarks.avgDuration),
-          percentile: calculatePercentile(metrics.avgDurationMinutes, industryBenchmarks.avgDuration),
+          percentile: calculatePercentile(
+            metrics.avgDurationMinutes,
+            industryBenchmarks.avgDuration
+          ),
         },
         playerRetention: {
           target: industryBenchmarks.playerRetention,
           current: metrics.playerReturnRate,
           status: getStatus(metrics.playerReturnRate, industryBenchmarks.playerRetention),
-          percentile: calculatePercentile(metrics.playerReturnRate, industryBenchmarks.playerRetention),
+          percentile: calculatePercentile(
+            metrics.playerReturnRate,
+            industryBenchmarks.playerRetention
+          ),
         },
       };
 
@@ -1179,25 +1169,16 @@ function calculateAggregateMetrics(aggregates: TournamentAggregateData[]) {
     };
   }
 
-  const tournamentCount = aggregates.reduce(
-    (sum, agg) => sum + (agg.tournamentCount || 0),
-    0
-  );
-  const completedCount = aggregates.reduce(
-    (sum, agg) => sum + (agg.completedCount || 0),
-    0
-  );
-  const completionRate =
-    tournamentCount > 0 ? (completedCount / tournamentCount) * 100 : 0;
+  const tournamentCount = aggregates.reduce((sum, agg) => sum + (agg.tournamentCount || 0), 0);
+  const completedCount = aggregates.reduce((sum, agg) => sum + (agg.completedCount || 0), 0);
+  const completionRate = tournamentCount > 0 ? (completedCount / tournamentCount) * 100 : 0;
 
   const totalPlayers = aggregates.reduce((sum, agg) => sum + (agg.totalPlayers || 0), 0);
   const avgPlayersPerTournament = tournamentCount > 0 ? totalPlayers / tournamentCount : 0;
 
   // Weighted average duration
   const totalDuration = aggregates.reduce((sum, agg) => {
-    const duration = agg.avgDurationMinutes
-      ? parseFloat(agg.avgDurationMinutes.toString())
-      : 0;
+    const duration = agg.avgDurationMinutes ? parseFloat(agg.avgDurationMinutes.toString()) : 0;
     const count = agg.tournamentCount || 0;
     return sum + duration * count;
   }, 0);

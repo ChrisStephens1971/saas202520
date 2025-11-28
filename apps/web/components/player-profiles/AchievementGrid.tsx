@@ -60,7 +60,9 @@ export function AchievementGrid({ achievements, className }: AchievementGridProp
         {Object.entries(achievementsByCategory).map(([category, items]) => (
           <div key={category} className="text-center p-4 bg-secondary rounded-lg">
             <div className="text-2xl font-bold">{items.length}</div>
-            <div className="text-sm text-muted-foreground">{categoryLabels[category as keyof typeof categoryLabels]}</div>
+            <div className="text-sm text-muted-foreground">
+              {categoryLabels[category as keyof typeof categoryLabels]}
+            </div>
           </div>
         ))}
       </div>
@@ -71,7 +73,8 @@ export function AchievementGrid({ achievements, className }: AchievementGridProp
           <TabsTrigger value="all">All ({achievements.length})</TabsTrigger>
           {categories.slice(0, 3).map((category) => (
             <TabsTrigger key={category} value={category}>
-              {categoryLabels[category as keyof typeof categoryLabels]} ({achievementsByCategory[category].length})
+              {categoryLabels[category as keyof typeof categoryLabels]} (
+              {achievementsByCategory[category].length})
             </TabsTrigger>
           ))}
         </TabsList>
@@ -84,7 +87,9 @@ export function AchievementGrid({ achievements, className }: AchievementGridProp
               .map((achievement) => (
                 <div key={achievement.id} className="flex flex-col items-center">
                   <AchievementBadge achievement={achievement} size="md" />
-                  <p className="text-sm font-medium text-center mt-2">{achievement.achievement.name}</p>
+                  <p className="text-sm font-medium text-center mt-2">
+                    {achievement.achievement.name}
+                  </p>
                 </div>
               ))}
           </div>
@@ -99,7 +104,9 @@ export function AchievementGrid({ achievements, className }: AchievementGridProp
                 .map((achievement) => (
                   <div key={achievement.id} className="flex flex-col items-center">
                     <AchievementBadge achievement={achievement} size="md" />
-                    <p className="text-sm font-medium text-center mt-2">{achievement.achievement.name}</p>
+                    <p className="text-sm font-medium text-center mt-2">
+                      {achievement.achievement.name}
+                    </p>
                   </div>
                 ))}
             </div>

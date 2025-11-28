@@ -298,7 +298,7 @@ describe('Tournament Description Migration', () => {
         name: 'Test Tournament',
         description: null, // Should work
         // ... other fields
-      }
+      },
     });
     expect(tournament.description).toBeNull();
   });
@@ -310,7 +310,7 @@ describe('Tournament Description Migration', () => {
         name: 'Test Tournament',
         description: 'A fun tournament',
         // ... other fields
-      }
+      },
     });
     expect(tournament.description).toBe('A fun tournament');
   });
@@ -332,6 +332,7 @@ describe('Tournament Description Migration', () => {
 For tables with >1M rows:
 
 1. **Add index concurrently** (doesn't lock table)
+
    ```sql
    CREATE INDEX CONCURRENTLY "idx_name" ON "table"("column");
    ```
@@ -371,10 +372,10 @@ pnpm db:generate
 
 ## Migration History
 
-| Date | Migration | Description | Status |
-|------|-----------|-------------|--------|
-| 2025-11-03 | `20251103163038_init` | Initial schema | ✅ Deployed |
-| 2025-11-03 | `20251103163100_init` | Schema refinements | ✅ Deployed |
+| Date       | Migration                             | Description           | Status         |
+| ---------- | ------------------------------------- | --------------------- | -------------- |
+| 2025-11-03 | `20251103163038_init`                 | Initial schema        | ✅ Deployed    |
+| 2025-11-03 | `20251103163100_init`                 | Schema refinements    | ✅ Deployed    |
 | 2025-11-04 | `20251104_add_tournament_description` | Add description field | ✅ Week 1 test |
 
 ## References

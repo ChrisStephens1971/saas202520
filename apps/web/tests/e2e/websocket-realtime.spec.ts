@@ -70,7 +70,7 @@ test.describe('WebSocket Real-time Updates', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId,
@@ -136,7 +136,10 @@ test.describe('WebSocket Real-time Updates', () => {
         const recordButton = matchSection.getByRole('button', { name: /record.*result/i });
         await recordButton.click();
 
-        await page1.getByLabel(/winner/i).first().check();
+        await page1
+          .getByLabel(/winner/i)
+          .first()
+          .check();
         await page1.getByRole('button', { name: /submit/i }).click();
       });
 
@@ -300,7 +303,10 @@ test.describe('WebSocket Real-time Updates', () => {
       const recordButton = matchSection.getByRole('button', { name: /record.*result/i });
       await recordButton.click();
 
-      await page1.getByLabel(/winner/i).first().check();
+      await page1
+        .getByLabel(/winner/i)
+        .first()
+        .check();
       await page1.getByRole('button', { name: /submit/i }).click();
 
       // Page 2: Should see:

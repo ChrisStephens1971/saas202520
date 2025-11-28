@@ -23,10 +23,7 @@ export async function GET(request: NextRequest) {
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -82,10 +79,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-async function getWinRateLeaderboard(
-  tenantId: string,
-  limit: number
-): Promise<LeaderboardEntry[]> {
+async function getWinRateLeaderboard(tenantId: string, limit: number): Promise<LeaderboardEntry[]> {
   // Get all players with match statistics
   const players = await prisma.$queryRaw<
     Array<{

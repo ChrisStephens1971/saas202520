@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import {
   isPushNotificationSupported,
   getNotificationPermissionStatus,
@@ -49,7 +50,7 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       setPermission(permissionStatus);
 
       // Load subscription status
-      getPushSubscriptionStatus().then(status => {
+      getPushSubscriptionStatus().then((status) => {
         setIsSubscribed(status.isSubscribed);
         setIsLoading(false);
       });
@@ -76,7 +77,7 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       }
     } catch (error) {
       console.error('Error enabling notifications:', error);
-      alert('Failed to enable notifications. Please try again.');
+      toast.error('Failed to enable notifications. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +90,7 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       setIsSubscribed(false);
     } catch (error) {
       console.error('Error disabling notifications:', error);
-      alert('Failed to disable notifications. Please try again.');
+      toast.error('Failed to disable notifications. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +104,7 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       );
     } catch (error) {
       console.error('Error sending test notification:', error);
-      alert('Failed to send test notification. Make sure notifications are enabled.');
+      toast.error('Failed to send test notification. Make sure notifications are enabled.');
     }
   };
 
@@ -134,7 +135,8 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
           Notifications Not Supported
         </h3>
         <p className="text-yellow-700 dark:text-yellow-300">
-          Your browser does not support push notifications. Please use a modern browser like Chrome, Firefox, or Edge.
+          Your browser does not support push notifications. Please use a modern browser like Chrome,
+          Firefox, or Edge.
         </p>
       </div>
     );
@@ -156,21 +158,29 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-medium text-slate-900 dark:text-slate-100">
-              Notification Status
-            </p>
+            <p className="font-medium text-slate-900 dark:text-slate-100">Notification Status</p>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              {permission.granted && isSubscribed ? 'Enabled' : permission.denied ? 'Blocked' : 'Disabled'}
+              {permission.granted && isSubscribed
+                ? 'Enabled'
+                : permission.denied
+                  ? 'Blocked'
+                  : 'Disabled'}
             </p>
           </div>
-          <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-            permission.granted && isSubscribed
-              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+          <div
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              permission.granted && isSubscribed
+                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                : permission.denied
+                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+            }`}
+          >
+            {permission.granted && isSubscribed
+              ? '✓ Active'
               : permission.denied
-              ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
-              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-          }`}>
-            {permission.granted && isSubscribed ? '✓ Active' : permission.denied ? '✕ Blocked' : '○ Inactive'}
+                ? '✕ Blocked'
+                : '○ Inactive'}
           </div>
         </div>
       </div>
@@ -179,7 +189,8 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
       {permission.denied ? (
         <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
           <p className="text-sm text-red-700 dark:text-red-300">
-            Notifications are blocked. Please enable them in your browser settings to receive updates.
+            Notifications are blocked. Please enable them in your browser settings to receive
+            updates.
           </p>
         </div>
       ) : !isSubscribed ? (
@@ -194,9 +205,7 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
         <div className="space-y-4">
           {/* Notification Preferences */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-slate-900 dark:text-slate-100">
-              Notification Types
-            </h4>
+            <h4 className="font-semibold text-slate-900 dark:text-slate-100">Notification Types</h4>
 
             <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
               <div>
@@ -227,7 +236,9 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
             <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
               <div>
                 <p className="font-medium text-slate-900 dark:text-slate-100">Tournament Updates</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Status changes and announcements</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  Status changes and announcements
+                </p>
               </div>
               <input
                 type="checkbox"
@@ -253,7 +264,9 @@ export function NotificationPreferences({ tournamentId }: NotificationPreference
             <label className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
               <div>
                 <p className="font-medium text-slate-900 dark:text-slate-100">System Alerts</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Important system messages</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  Important system messages
+                </p>
               </div>
               <input
                 type="checkbox"

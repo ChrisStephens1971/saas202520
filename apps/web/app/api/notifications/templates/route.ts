@@ -6,10 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import {
-  getDefaultTemplate,
-  type NotificationTemplateType,
-} from '@/lib/notification-templates';
+import { getDefaultTemplate, type NotificationTemplateType } from '@/lib/notification-templates';
 
 const AVAILABLE_TEMPLATES: NotificationTemplateType[] = [
   'match_completed',
@@ -34,10 +31,7 @@ export async function GET(request: NextRequest) {
     // If specific type requested, return just that template
     if (type) {
       if (!AVAILABLE_TEMPLATES.includes(type)) {
-        return NextResponse.json(
-          { error: `Invalid template type: ${type}` },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: `Invalid template type: ${type}` }, { status: 400 });
       }
 
       const template = getDefaultTemplate(type);
@@ -67,10 +61,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error('Error fetching templates:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

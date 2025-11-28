@@ -10,11 +10,7 @@ import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { formatDistanceToNow } from 'date-fns';
-import {
-  UserDetailResponse,
-  UserRole,
-  UserStatus,
-} from '@tournament/shared/types/user';
+import { UserDetailResponse, UserRole, UserStatus } from '@tournament/shared/types/user';
 import UserRoleBadge from '@/components/admin/UserRoleBadge';
 import UserStatusBadge from '@/components/admin/UserStatusBadge';
 
@@ -32,14 +28,15 @@ export default function UserDetailPage({ params }: Props) {
   >('overview');
 
   // Fetch user details
-  const { data, error, isLoading, mutate: _mutate } = useSWR<UserDetailResponse>(
-    `/api/admin/users/${resolvedParams.id}`,
-    fetcher,
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: true,
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: _mutate,
+  } = useSWR<UserDetailResponse>(`/api/admin/users/${resolvedParams.id}`, fetcher, {
+    refreshInterval: 0,
+    revalidateOnFocus: true,
+  });
 
   if (isLoading) {
     return (
@@ -82,12 +79,7 @@ export default function UserDetailPage({ params }: Props) {
             onClick={() => router.push('/admin/users')}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -114,9 +106,7 @@ export default function UserDetailPage({ params }: Props) {
                 )}
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  {user.name || 'Unnamed User'}
-                </h1>
+                <h1 className="text-3xl font-bold text-gray-900">{user.name || 'Unnamed User'}</h1>
                 <p className="text-gray-600 mt-1">{user.email}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <UserRoleBadge role={user.role as UserRole} />
@@ -191,15 +181,11 @@ export default function UserDetailPage({ params }: Props) {
             <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-sm font-medium text-gray-600">Tournaments</div>
-                <div className="text-3xl font-bold text-blue-600 mt-2">
-                  {user.totalTournaments}
-                </div>
+                <div className="text-3xl font-bold text-blue-600 mt-2">{user.totalTournaments}</div>
               </div>
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-sm font-medium text-gray-600">Matches</div>
-                <div className="text-3xl font-bold text-green-600 mt-2">
-                  {user.totalMatches}
-                </div>
+                <div className="text-3xl font-bold text-green-600 mt-2">{user.totalMatches}</div>
               </div>
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-sm font-medium text-gray-600">Win Rate</div>
@@ -220,9 +206,7 @@ export default function UserDetailPage({ params }: Props) {
 
             {/* User Information */}
             <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                User Information
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">User Information</h2>
               <dl className="grid grid-cols-1 gap-4">
                 <div>
                   <dt className="text-sm font-medium text-gray-600">Email</dt>
@@ -279,9 +263,7 @@ export default function UserDetailPage({ params }: Props) {
                 {user.status === UserStatus.SUSPENDED && (
                   <>
                     <div>
-                      <dt className="text-sm font-medium text-gray-600">
-                        Suspended Until
-                      </dt>
+                      <dt className="text-sm font-medium text-gray-600">Suspended Until</dt>
                       <dd className="text-sm text-gray-900 mt-1">
                         {user.suspendedUntil
                           ? formatDistanceToNow(new Date(user.suspendedUntil), {
@@ -291,9 +273,7 @@ export default function UserDetailPage({ params }: Props) {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-gray-600">
-                        Suspension Reason
-                      </dt>
+                      <dt className="text-sm font-medium text-gray-600">Suspension Reason</dt>
                       <dd className="text-sm text-gray-900 mt-1">
                         {user.suspensionReason || 'No reason provided'}
                       </dd>
@@ -305,9 +285,7 @@ export default function UserDetailPage({ params }: Props) {
 
             {/* Organizations */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Organizations
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Organizations</h2>
               <div className="space-y-3">
                 {organizations.map((org) => (
                   <div
@@ -344,9 +322,7 @@ export default function UserDetailPage({ params }: Props) {
                 <div key={activity.id} className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.action}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{activity.action}</p>
                       <p className="text-sm text-gray-600 mt-1">
                         {activity.resource}
                         {activity.resourceId && ` (ID: ${activity.resourceId})`}
@@ -358,9 +334,7 @@ export default function UserDetailPage({ params }: Props) {
                       </p>
                     </div>
                     {activity.ipAddress && (
-                      <span className="text-xs text-gray-500">
-                        {activity.ipAddress}
-                      </span>
+                      <span className="text-xs text-gray-500">{activity.ipAddress}</span>
                     )}
                   </div>
                 </div>
@@ -377,21 +351,16 @@ export default function UserDetailPage({ params }: Props) {
         {activeTab === 'tournaments' && (
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Tournament History
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">Tournament History</h2>
             </div>
             <div className="divide-y divide-gray-200">
               {tournaments.map((tournament) => (
                 <div key={tournament.id} className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {tournament.name}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{tournament.name}</p>
                       <p className="text-sm text-gray-600 mt-1">
-                        Status:{' '}
-                        <span className="font-medium">{tournament.status}</span>
+                        Status: <span className="font-medium">{tournament.status}</span>
                       </p>
                       <p className="text-xs text-gray-500 mt-2">
                         Created{' '}
@@ -401,9 +370,7 @@ export default function UserDetailPage({ params }: Props) {
                       </p>
                     </div>
                     {tournament.completedAt && (
-                      <span className="text-xs text-green-600 font-medium">
-                        Completed
-                      </span>
+                      <span className="text-xs text-green-600 font-medium">Completed</span>
                     )}
                   </div>
                 </div>
@@ -420,9 +387,7 @@ export default function UserDetailPage({ params }: Props) {
         {activeTab === 'moderation' && (
           <div className="bg-white rounded-lg shadow">
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Moderation History
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">Moderation History</h2>
             </div>
             <div className="divide-y divide-gray-200">
               {moderationHistory.map((action) => (

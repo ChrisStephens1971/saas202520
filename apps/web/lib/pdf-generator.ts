@@ -60,15 +60,26 @@ export function generatePayoutSheet(data: PayoutSheetData): Promise<Buffer> {
       doc.fontSize(10).font('Helvetica-Bold');
       doc.text('Placement', tableLeft, tableTop, { width: colWidths.placement });
       doc.text('Player', tableLeft + colWidths.placement, tableTop, { width: colWidths.name });
-      doc.text('Amount', tableLeft + colWidths.placement + colWidths.name, tableTop, { width: colWidths.amount });
-      doc.text('Status', tableLeft + colWidths.placement + colWidths.name + colWidths.amount, tableTop, { width: colWidths.status });
+      doc.text('Amount', tableLeft + colWidths.placement + colWidths.name, tableTop, {
+        width: colWidths.amount,
+      });
+      doc.text(
+        'Status',
+        tableLeft + colWidths.placement + colWidths.name + colWidths.amount,
+        tableTop,
+        { width: colWidths.status }
+      );
 
       doc.moveDown();
 
       // Draw line under header
-      doc.moveTo(tableLeft, doc.y)
-         .lineTo(tableLeft + colWidths.placement + colWidths.name + colWidths.amount + colWidths.status, doc.y)
-         .stroke();
+      doc
+        .moveTo(tableLeft, doc.y)
+        .lineTo(
+          tableLeft + colWidths.placement + colWidths.name + colWidths.amount + colWidths.status,
+          doc.y
+        )
+        .stroke();
 
       doc.moveDown(0.5);
 
@@ -79,26 +90,41 @@ export function generatePayoutSheet(data: PayoutSheetData): Promise<Buffer> {
 
         // Placement
         const placementSuffix = getPlacementSuffix(payout.placement);
-        doc.text(`${payout.placement}${placementSuffix}`, tableLeft, rowTop, { width: colWidths.placement });
+        doc.text(`${payout.placement}${placementSuffix}`, tableLeft, rowTop, {
+          width: colWidths.placement,
+        });
 
         // Player
-        doc.text(payout.playerName || 'TBD', tableLeft + colWidths.placement, rowTop, { width: colWidths.name });
+        doc.text(payout.playerName || 'TBD', tableLeft + colWidths.placement, rowTop, {
+          width: colWidths.name,
+        });
 
         // Amount
         const amountText = `$${(payout.amount / 100).toFixed(2)}`;
-        doc.text(amountText, tableLeft + colWidths.placement + colWidths.name, rowTop, { width: colWidths.amount });
+        doc.text(amountText, tableLeft + colWidths.placement + colWidths.name, rowTop, {
+          width: colWidths.amount,
+        });
 
         // Status
-        doc.text(payout.status.toUpperCase(), tableLeft + colWidths.placement + colWidths.name + colWidths.amount, rowTop, { width: colWidths.status });
+        doc.text(
+          payout.status.toUpperCase(),
+          tableLeft + colWidths.placement + colWidths.name + colWidths.amount,
+          rowTop,
+          { width: colWidths.status }
+        );
 
         doc.moveDown(0.8);
       });
 
       // Draw line before summary
       doc.moveDown(0.5);
-      doc.moveTo(tableLeft, doc.y)
-         .lineTo(tableLeft + colWidths.placement + colWidths.name + colWidths.amount + colWidths.status, doc.y)
-         .stroke();
+      doc
+        .moveTo(tableLeft, doc.y)
+        .lineTo(
+          tableLeft + colWidths.placement + colWidths.name + colWidths.amount + colWidths.status,
+          doc.y
+        )
+        .stroke();
       doc.moveDown();
 
       // Summary
@@ -112,10 +138,12 @@ export function generatePayoutSheet(data: PayoutSheetData): Promise<Buffer> {
 
       // Footer
       doc.moveDown(3);
-      doc.fontSize(8).fillColor('#666666').text(
-        'This document is for recordkeeping purposes only. All amounts are in USD.',
-        { align: 'center' }
-      );
+      doc
+        .fontSize(8)
+        .fillColor('#666666')
+        .text('This document is for recordkeeping purposes only. All amounts are in USD.', {
+          align: 'center',
+        });
 
       // Finalize PDF
       doc.end();

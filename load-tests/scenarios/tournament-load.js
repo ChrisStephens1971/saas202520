@@ -53,9 +53,9 @@ export const options = {
       preAllocatedVUs: 50,
       maxVUs: 150,
       stages: [
-        { duration: '1m', target: 10 },  // Ramp up to 10 req/s
-        { duration: '5m', target: 10 },  // Sustain 10 req/s
-        { duration: '1m', target: 0 },   // Ramp down
+        { duration: '1m', target: 10 }, // Ramp up to 10 req/s
+        { duration: '5m', target: 10 }, // Sustain 10 req/s
+        { duration: '1m', target: 0 }, // Ramp down
       ],
       tags: { scenario: 'normal' },
       exec: 'normalLoad',
@@ -67,10 +67,10 @@ export const options = {
       preAllocatedVUs: 200,
       maxVUs: 600,
       stages: [
-        { duration: '2m', target: 20 },  // Ramp up to 20 req/s
-        { duration: '3m', target: 50 },  // Ramp to 50 req/s
+        { duration: '2m', target: 20 }, // Ramp up to 20 req/s
+        { duration: '3m', target: 50 }, // Ramp to 50 req/s
         { duration: '10m', target: 50 }, // Sustain 50 req/s
-        { duration: '2m', target: 0 },   // Ramp down
+        { duration: '2m', target: 0 }, // Ramp down
       ],
       startTime: '8m', // Start after normal load finishes
       tags: { scenario: 'peak' },
@@ -80,15 +80,15 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
-        { duration: '2m', target: 100 },   // Normal load
+        { duration: '2m', target: 100 }, // Normal load
         { duration: '5m', target: 100 },
-        { duration: '2m', target: 300 },   // Increased load
+        { duration: '2m', target: 300 }, // Increased load
         { duration: '5m', target: 300 },
-        { duration: '2m', target: 500 },   // High load
+        { duration: '2m', target: 500 }, // High load
         { duration: '5m', target: 500 },
-        { duration: '2m', target: 1000 },  // Stress load
+        { duration: '2m', target: 1000 }, // Stress load
         { duration: '5m', target: 1000 },
-        { duration: '5m', target: 0 },     // Recovery
+        { duration: '5m', target: 0 }, // Recovery
       ],
       startTime: '25m', // Start after peak load finishes
       tags: { scenario: 'stress' },
@@ -99,13 +99,13 @@ export const options = {
   // Performance thresholds
   thresholds: {
     ...responseTimeThresholds(500, 1000),
-    'tournament_creation_time': ['p(95)<1000', 'p(99)<2000'],
-    'tournament_list_time': ['p(95)<300', 'p(99)<500'],
-    'tournament_details_time': ['p(95)<300', 'p(99)<500'],
-    'tournament_update_time': ['p(95)<500', 'p(99)<1000'],
-    'player_registration_time': ['p(95)<500', 'p(99)<1000'],
-    'bracket_view_time': ['p(95)<400', 'p(99)<800'],
-    'errors': ['rate<0.01'], // Less than 1% error rate
+    tournament_creation_time: ['p(95)<1000', 'p(99)<2000'],
+    tournament_list_time: ['p(95)<300', 'p(99)<500'],
+    tournament_details_time: ['p(95)<300', 'p(99)<500'],
+    tournament_update_time: ['p(95)<500', 'p(99)<1000'],
+    player_registration_time: ['p(95)<500', 'p(99)<1000'],
+    bracket_view_time: ['p(95)<400', 'p(99)<800'],
+    errors: ['rate<0.01'], // Less than 1% error rate
   },
 };
 
@@ -257,10 +257,7 @@ function viewRandomTournament(token) {
   const tournamentId = tournament.id;
 
   // View its details
-  const response = http.get(
-    `${BASE_URL}/api/tournaments/${tournamentId}`,
-    getAuthHeaders(token)
-  );
+  const response = http.get(`${BASE_URL}/api/tournaments/${tournamentId}`, getAuthHeaders(token));
 
   tournamentDetailsTime.add(response.timings.duration);
 
@@ -389,12 +386,18 @@ export function handleSummary(data) {
   console.log('Tournament Operations:');
   console.log(`  Tournaments Created: ${data.metrics.tournament_creations.values.count}`);
   console.log(`  Players Registered: ${data.metrics.player_registrations.values.count}`);
-  console.log(`  List Time (P95): ${data.metrics.tournament_list_time.values['p(95)'].toFixed(2)}ms`);
-  console.log(`  Details Time (P95): ${data.metrics.tournament_details_time.values['p(95)'].toFixed(2)}ms`);
-  console.log(`  Creation Time (P95): ${data.metrics.tournament_creation_time.values['p(95)'].toFixed(2)}ms`);
+  console.log(
+    `  List Time (P95): ${data.metrics.tournament_list_time.values['p(95)'].toFixed(2)}ms`
+  );
+  console.log(
+    `  Details Time (P95): ${data.metrics.tournament_details_time.values['p(95)'].toFixed(2)}ms`
+  );
+  console.log(
+    `  Creation Time (P95): ${data.metrics.tournament_creation_time.values['p(95)'].toFixed(2)}ms`
+  );
 
   return {
-    'stdout': '', // Suppress default output
+    stdout: '', // Suppress default output
     'summary.json': JSON.stringify(data, null, 2),
   };
 }

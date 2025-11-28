@@ -128,10 +128,7 @@ export class SecureRoom {
           Array.from(metadata.awarenessIds),
           new Map()
         );
-        this.broadcast(
-          new Uint8Array([MESSAGE_AWARENESS, ...awarenessUpdate]),
-          ws
-        );
+        this.broadcast(new Uint8Array([MESSAGE_AWARENESS, ...awarenessUpdate]), ws);
       }
 
       this.connections.delete(ws);
@@ -159,9 +156,7 @@ export class SecureRoom {
     // Simple rate limit: max 100 messages per second per connection
     const timeSinceLastReset = Date.now() - (metadata.lastMessageTime || 0);
     if (timeSinceLastReset < 1000 && metadata.messageCount > 100) {
-      console.warn(
-        `[SecureRoom ${this.name}] Rate limit exceeded for user ${metadata.userId}`
-      );
+      console.warn(`[SecureRoom ${this.name}] Rate limit exceeded for user ${metadata.userId}`);
       ws.close(1008, 'Rate limit exceeded');
       return;
     }
@@ -390,11 +385,7 @@ export class SecureRoomManager {
   /**
    * Get or create a room - WITH QUOTA ENFORCEMENT
    */
-  getOrCreateRoom(
-    roomName: string,
-    tournamentId: string,
-    orgId: string
-  ): SecureRoom | null {
+  getOrCreateRoom(roomName: string, tournamentId: string, orgId: string): SecureRoom | null {
     // Check if room already exists
     if (this.rooms.has(roomName)) {
       return this.rooms.get(roomName)!;
@@ -437,9 +428,7 @@ export class SecureRoomManager {
     roomsToRemove.forEach((name) => {
       const room = this.rooms.get(name);
       if (room) {
-        console.log(
-          `[SecureRoomManager] Removing inactive room: ${name} (org: ${room.orgId})`
-        );
+        console.log(`[SecureRoomManager] Removing inactive room: ${name} (org: ${room.orgId})`);
 
         // Update org quota
         const orgCount = this.orgRoomCounts.get(room.orgId) || 0;

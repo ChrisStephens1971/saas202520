@@ -81,11 +81,7 @@ export default async function ChipFormatDashboard({ params }: PageProps) {
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Match Management</h2>
         <div className="flex gap-4">
-          <MatchAssignmentButton
-            tournamentId={id}
-            chipConfig={chipConfig}
-            count={1}
-          />
+          <MatchAssignmentButton tournamentId={id} chipConfig={chipConfig} count={1} />
           <MatchAssignmentButton
             tournamentId={id}
             chipConfig={chipConfig}
@@ -109,10 +105,7 @@ export default async function ChipFormatDashboard({ params }: PageProps) {
           </p>
         </div>
         <Suspense fallback={<div className="h-96 bg-gray-100 animate-pulse" />}>
-          <ChipStandingsTable
-            tournamentId={id}
-            finalsCount={chipConfig.finalsCount}
-          />
+          <ChipStandingsTable tournamentId={id} finalsCount={chipConfig.finalsCount} />
         </Suspense>
       </div>
 

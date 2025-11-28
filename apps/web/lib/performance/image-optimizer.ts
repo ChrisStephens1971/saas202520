@@ -99,16 +99,8 @@ export function isWebPSupported(): boolean {
 /**
  * Get optimized image URL with Next.js Image Optimization
  */
-export function getOptimizedImageUrl(
-  src: string,
-  options: ImageOptimizationOptions = {}
-): string {
-  const {
-    width,
-    height,
-    quality = 75,
-    format: _format = 'webp',
-  } = options;
+export function getOptimizedImageUrl(src: string, options: ImageOptimizationOptions = {}): string {
+  const { width, height, quality = 75, format: _format = 'webp' } = options;
 
   const params = new URLSearchParams({
     url: src,
@@ -200,6 +192,8 @@ export function preloadImage(src: string, options: ImageOptimizationOptions = {}
 /**
  * Batch preload multiple images
  */
-export function preloadImages(images: Array<{ src: string; options?: ImageOptimizationOptions }>): void {
+export function preloadImages(
+  images: Array<{ src: string; options?: ImageOptimizationOptions }>
+): void {
   images.forEach(({ src, options }) => preloadImage(src, options));
 }

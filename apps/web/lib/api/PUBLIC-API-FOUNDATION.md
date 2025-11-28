@@ -15,6 +15,7 @@ This document describes the foundation layer implemented for the Public API & We
 Three new tables were added to support API keys and webhooks:
 
 #### ApiKey Table
+
 - **Purpose:** Store API keys for authentication
 - **Fields:**
   - `id` - Unique identifier
@@ -30,6 +31,7 @@ Three new tables were added to support API keys and webhooks:
   - `expiresAt` - Optional expiration date
 
 #### Webhook Table
+
 - **Purpose:** Store webhook subscriptions for event notifications
 - **Fields:**
   - `id` - Unique identifier
@@ -45,11 +47,12 @@ Three new tables were added to support API keys and webhooks:
   - `lastError` - Last error message
 
 #### WebhookDelivery Table
+
 - **Purpose:** Track webhook delivery attempts for debugging
 - **Fields:**
   - `id` - Unique identifier
   - `webhookId` - Associated webhook
-  - `eventId` - Event ID (evt_...)
+  - `eventId` - Event ID (evt\_...)
   - `eventType` - Event type (tournament.started, etc.)
   - `url` - Snapshot of URL at delivery time
   - `payload` - Full event payload (JSON)
@@ -67,6 +70,7 @@ Three new tables were added to support API keys and webhooks:
 **File:** `apps/web/lib/api/types/api.ts`
 
 Comprehensive type definitions for:
+
 - API key types (ApiKey, ApiTier, ApiKeyStatus, GeneratedApiKey)
 - Rate limiting types (RateLimitResult, RateLimitError)
 - Webhook types (Webhook, WebhookEvent, WebhookPayload, WebhookDelivery)
@@ -75,11 +79,12 @@ Comprehensive type definitions for:
 - API context types (ApiContext, ApiHeaders)
 
 **Key Constants:**
+
 ```typescript
 export const RATE_LIMITS: Record<ApiTier, number> = {
-  free: 100,       // 100 requests per hour
-  pro: 1000,       // 1000 requests per hour
-  enterprise: 10000 // 10000 requests per hour
+  free: 100, // 100 requests per hour
+  pro: 1000, // 1000 requests per hour
+  enterprise: 10000, // 10000 requests per hour
 };
 ```
 
@@ -88,9 +93,10 @@ export const RATE_LIMITS: Record<ApiTier, number> = {
 **File:** `apps/web/lib/api/services/api-key.service.ts`
 
 **Functions Implemented:**
+
 1. **generateApiKey()** - Create new API key with bcrypt hashing
    - Generates random 32-byte key
-   - Creates prefix (sk_live_...)
+   - Creates prefix (sk*live*...)
    - Hashes key with bcrypt (10 rounds)
    - Stores in database
    - Returns plaintext key (shown only once)
@@ -118,6 +124,7 @@ export const RATE_LIMITS: Record<ApiTier, number> = {
    - Non-blocking update
 
 **Additional Helper Functions:**
+
 - `getTierRateLimit()` - Get rate limit for tier
 - `validateApiKeyFormat()` - Validate key format (regex)
 - `getApiKeysByTenant()` - List all keys for organization
@@ -130,6 +137,7 @@ export const RATE_LIMITS: Record<ApiTier, number> = {
 **Implementation:** Redis sliding window algorithm
 
 **Functions Implemented:**
+
 1. **checkRateLimit()** - Check if request is within rate limit
    - Uses Redis sorted set for sliding window
    - Returns allowed status, remaining requests, reset time
@@ -148,13 +156,16 @@ export const RATE_LIMITS: Record<ApiTier, number> = {
    - Used for testing or admin overrides
 
 **Redis Key Pattern:**
+
 ```
 ratelimit:{apiKeyId}:{hour}
 ```
+
 - Key expires after 2 hours
 - Hour is Unix timestamp divided by 3600
 
 **Rate Limits:**
+
 - Free: 100 requests/hour
 - Pro: 1000 requests/hour
 - Enterprise: 10000 requests/hour
@@ -166,8 +177,9 @@ ratelimit:{apiKeyId}:{hour}
 **Main Function:** `withApiAuth(handler)`
 
 **Behavior:**
+
 1. Extract API key from `Authorization: Bearer <key>` header
-2. Validate key format (sk_live_ or sk_test_ prefix + 43 chars)
+2. Validate key format (sk*live* or sk*test* prefix + 43 chars)
 3. Validate key in database (bcrypt compare)
 4. Check key status (active, not expired)
 5. Check rate limit using rate limiter service
@@ -181,11 +193,13 @@ ratelimit:{apiKeyId}:{hour}
 9. Update lastUsedAt timestamp (async)
 
 **Error Responses:**
+
 - **401 Unauthorized:** Missing, invalid, or expired API key
 - **429 Too Many Requests:** Rate limit exceeded (includes Retry-After header)
 - **500 Internal Server Error:** Authentication error
 
 **Usage Example:**
+
 ```typescript
 import { withApiAuth } from '@/lib/api';
 
@@ -205,6 +219,7 @@ export const GET = withApiAuth(async (request, context) => {
 **Functions Implemented:**
 
 1. **apiSuccess()** - Standard success response
+
    ```typescript
    {
      success: true,
@@ -217,6 +232,7 @@ export const GET = withApiAuth(async (request, context) => {
    ```
 
 2. **apiError()** - Standard error response
+
    ```typescript
    {
      success: false,
@@ -243,6 +259,7 @@ export const GET = withApiAuth(async (request, context) => {
    ```
 
 **Helper Functions:**
+
 - `apiUnauthorized()` - 401 response
 - `apiForbidden()` - 403 response
 - `apiNotFound()` - 404 response
@@ -278,12 +295,7 @@ apps/web/lib/api/
 ```typescript
 import { generateApiKey } from '@/lib/api';
 
-const result = await generateApiKey(
-  tenantId,
-  userId,
-  'Production Mobile App',
-  'pro'
-);
+const result = await generateApiKey(tenantId, userId, 'Production Mobile App', 'pro');
 
 // result.key = "sk_live_abc123..." (show to user once)
 // result.keyPrefix = "sk_live_abc123..." (store for display)
@@ -318,6 +330,7 @@ curl -H "Authorization: Bearer sk_live_abc123..." \
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -330,6 +343,7 @@ curl -H "Authorization: Bearer sk_live_abc123..." \
 ```
 
 **Response Headers:**
+
 ```
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -340,13 +354,15 @@ X-API-Version: 1.0
 ## Security Features
 
 ### 1. API Key Security
+
 - Keys never stored in plaintext (bcrypt hashed)
 - Keys shown only once at creation
 - Keys can be revoked (marked inactive)
 - Optional expiration dates
-- Format validation (sk_live_ or sk_test_ prefix)
+- Format validation (sk*live* or sk*test* prefix)
 
 ### 2. Rate Limiting
+
 - Redis-based sliding window algorithm
 - Per-key rate limits (not global)
 - Three tiers (free, pro, enterprise)
@@ -354,12 +370,14 @@ X-API-Version: 1.0
 - Fail-open on Redis errors (for availability)
 
 ### 3. Multi-Tenant Isolation
+
 - All queries filtered by tenantId
 - API keys scoped to organization
 - Cannot access other tenants' data
 - Database-level foreign key constraints
 
 ### 4. Authentication
+
 - Bearer token in Authorization header (not query params)
 - bcrypt hash comparison for validation
 - Active status check
@@ -369,18 +387,22 @@ X-API-Version: 1.0
 ## Performance Considerations
 
 ### Redis Rate Limiting
+
 - **Average latency:** <5ms per check
 - **Throughput:** 10,000+ checks per second
 - **Memory per key:** ~100 bytes
 - **Cleanup:** Automatic with 2-hour expiry
 
 ### API Key Validation
+
 - **Average latency:** <20ms (bcrypt compare)
 - **Optimization:** Consider caching active keys in Redis
 - **Security:** Bcrypt 10 rounds balances security and performance
 
 ### Database Indexes
+
 All tables have proper indexes for fast queries:
+
 - `api_keys`: tenantId, keyHash, isActive, userId
 - `webhooks`: tenantId, apiKeyId, isActive
 - `webhook_deliveries`: webhookId, eventId, createdAt, statusCode
@@ -398,6 +420,7 @@ All tables have proper indexes for fast queries:
 ## Next Steps
 
 ### Required for Public API Launch:
+
 1. **API Endpoints** - Implement 15+ read-only endpoints:
    - Tournaments (5 endpoints)
    - Players (4 endpoints)
@@ -433,12 +456,14 @@ All tables have proper indexes for fast queries:
 ## Dependencies
 
 ### Existing:
+
 - Prisma (database ORM)
 - Redis (rate limiting)
 - bcryptjs (API key hashing)
 - Next.js 14+ (API routes)
 
 ### New (Required):
+
 - None - all using existing dependencies
 
 ## References

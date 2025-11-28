@@ -7,12 +7,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { stripe, getReceiptUrl } from '@/lib/stripe';
-import type { ConfirmPaymentRequest, ConfirmPaymentResponse } from '@tournament/shared/types/payment';
+import type {
+  ConfirmPaymentRequest,
+  ConfirmPaymentResponse,
+} from '@tournament/shared/types/payment';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -39,25 +39,16 @@ export async function POST(
     });
 
     if (!payment) {
-      return NextResponse.json(
-        { error: 'Payment not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
     }
 
     if (!payment.stripeAccount) {
-      return NextResponse.json(
-        { error: 'Stripe account not configured' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Stripe account not configured' }, { status: 400 });
     }
 
     // Verify payment intent matches
     if (payment.stripePaymentIntent !== stripePaymentIntentId) {
-      return NextResponse.json(
-        { error: 'Payment intent mismatch' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Payment intent mismatch' }, { status: 400 });
     }
 
     // Retrieve payment intent from Stripe (expand charges to get receipt URL)
@@ -87,11 +78,12 @@ export async function POST(
     let receiptUrl: string | undefined;
     if (paymentIntent.status === 'succeeded' && paymentIntent.latest_charge) {
       // latest_charge is expanded, so it's a full Charge object
-      const charge = typeof paymentIntent.latest_charge === 'string'
-        ? await stripe.charges.retrieve(paymentIntent.latest_charge, {
-            stripeAccount: payment.stripeAccount.stripeAccountId,
-          })
-        : paymentIntent.latest_charge;
+      const charge =
+        typeof paymentIntent.latest_charge === 'string'
+          ? await stripe.charges.retrieve(paymentIntent.latest_charge, {
+              stripeAccount: payment.stripeAccount.stripeAccountId,
+            })
+          : paymentIntent.latest_charge;
 
       receiptUrl = charge.receipt_url || getReceiptUrl(charge.id);
     }
@@ -114,7 +106,12 @@ export async function POST(
         stripePaymentIntent: updatedPayment.stripePaymentIntent || '',
         amount: updatedPayment.amount.toNumber(),
         currency: updatedPayment.currency,
-        status: updatedPayment.status as 'succeeded' | 'failed' | 'pending' | 'refunded' | 'partially_refunded',
+        status: updatedPayment.status as
+          | 'succeeded'
+          | 'failed'
+          | 'pending'
+          | 'refunded'
+          | 'partially_refunded',
         purpose: updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: updatedPayment.description ?? undefined,
         refundedAmount: updatedPayment.refundedAmount?.toNumber() || 0,
@@ -129,9 +126,6 @@ export async function POST(
   } catch (error: unknown) {
     console.error('Error confirming payment:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

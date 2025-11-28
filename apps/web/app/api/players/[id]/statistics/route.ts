@@ -21,10 +21,7 @@ import { prisma } from '@/lib/prisma';
  * Get player statistics
  * Returns comprehensive statistics including win rate, streaks, and rankings
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Extract tenant context (authentication + org validation)
     const tenantResult = await extractTenantContext();

@@ -103,10 +103,10 @@ Based on these findings, we recommend:
 
 ### Participant Demographics
 
-| ID | Segment | Experience Level | Date |
-|----|---------|------------------|------|
-| P1 | [Segment] | [Beginner/Advanced] | [Date] |
-| P2 | [Segment] | [Beginner/Advanced] | [Date] |
+| ID  | Segment   | Experience Level    | Date   |
+| --- | --------- | ------------------- | ------ |
+| P1  | [Segment] | [Beginner/Advanced] | [Date] |
+| P2  | [Segment] | [Beginner/Advanced] | [Date] |
 
 ### Research Materials
 

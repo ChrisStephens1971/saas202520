@@ -17,6 +17,7 @@ The Multi-AI Swarm system (v2.1.2) requires integration with project management 
 We need to decide whether to maintain these as separate scripts or consolidate functionality into unified board adapter modules.
 
 Key considerations:
+
 - **Code maintainability**: Separate scripts vs. unified modules
 - **Data flow**: Ticket fetching → transformation → agent creation pipeline
 - **Board-specific logic**: Each board (GitHub, Jira, Linear) has unique APIs and data models
@@ -40,6 +41,7 @@ Each board adapter (`board-adapter-github.js`, `board-adapter-jira.js`, etc.) wi
 7. **Status updates** - Update board when work starts/completes
 
 **Current implementation:**
+
 - `board-adapter-github.js` (443 lines, 14KB) contains:
   - `getReadyTickets()` - Fetches from GitHub Projects
   - `transformTicket()` - Converts to internal format
@@ -69,11 +71,11 @@ Each board adapter (`board-adapter-github.js`, `board-adapter-jira.js`, etc.) wi
 ### Negative Consequences
 
 - **Code duplication**: Common logic (lane routing, priority detection) duplicated across adapters
-  - *Mitigation:* Extract to shared utility module (`board-utils.js`) when 2nd adapter is added
+  - _Mitigation:_ Extract to shared utility module (`board-utils.js`) when 2nd adapter is added
 - **Larger files**: Each adapter is 300-500 lines vs. smaller focused scripts
-  - *Mitigation:* Acceptable for self-contained modules; internal organization keeps it manageable
+  - _Mitigation:_ Acceptable for self-contained modules; internal organization keeps it manageable
 - **Breaks v2.1.2 spec**: Reference architecture shows separate `process-tickets.js`
-  - *Mitigation:* Architectural deviation documented in ADR; functionality is identical
+  - _Mitigation:_ Architectural deviation documented in ADR; functionality is identical
 
 ### Neutral Consequences
 
@@ -89,16 +91,19 @@ Each board adapter (`board-adapter-github.js`, `board-adapter-jira.js`, etc.) wi
 **Description:** Maintain `board-adapters/` for polling and separate `process-tickets.js` for transformation/agent creation.
 
 **Data flow:**
+
 ```
 board-adapter-github.js → tickets.json → process-tickets.js → agent-status/*.json
 ```
 
 **Pros:**
+
 - Matches v2.1.2 reference spec exactly
 - Clearer separation of concerns (adapter only adapts)
 - Shared processing logic across all board types
 
 **Cons:**
+
 - **Extra file I/O**: Write tickets.json intermediate file, then read it
 - **Coordination overhead**: Adapter must signal completion, processor must wait
 - **Harder error handling**: Failures in either stage complicate recovery
@@ -114,11 +119,13 @@ board-adapter-github.js → tickets.json → process-tickets.js → agent-status
 **Description:** Create abstract `BoardAdapter` base class with shared methods, concrete adapters inherit and override board-specific methods.
 
 **Pros:**
+
 - Eliminates code duplication via inheritance
 - Enforces consistent interface across adapters
 - Shared utilities in base class
 
 **Cons:**
+
 - **Premature abstraction**: Only 1 adapter currently (GitHub)
 - **Inheritance complexity**: JavaScript/TypeScript class hierarchies harder to reason about
 - **Overengineering**: YAGNI - don't need abstraction until 2nd adapter
@@ -133,11 +140,13 @@ board-adapter-github.js → tickets.json → process-tickets.js → agent-status
 **Description:** Separate service per board type, communicate via message queue (Redis, RabbitMQ).
 
 **Pros:**
+
 - Maximum isolation and scalability
 - Language-agnostic (could write Jira adapter in Python)
 - Independent deployment per adapter
 
 **Cons:**
+
 - **Massive overkill**: 2-person team, single swarm instance
 - **Infrastructure burden**: Redis/RabbitMQ adds operational complexity
 - **Network latency**: IPC overhead for every ticket
@@ -204,8 +213,8 @@ Each adapter imports and uses these, overriding only board-specific behavior.
 
 ## Revision History
 
-| Date | Change | Author |
-|------|--------|--------|
+| Date       | Change              | Author                |
+| ---------- | ------------------- | --------------------- |
 | 2025-11-04 | Initial ADR created | Claude (AI Assistant) |
 
 ---

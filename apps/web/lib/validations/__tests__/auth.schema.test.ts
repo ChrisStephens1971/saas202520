@@ -83,9 +83,7 @@ describe('loginSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors[0].message).toBe(
-          'Password must be at least 8 characters'
-        );
+        expect(result.error.errors[0].message).toBe('Password must be at least 8 characters');
       }
     });
   });
@@ -237,9 +235,7 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors[0].message).toBe(
-          'Name must be at least 2 characters'
-        );
+        expect(result.error.errors[0].message).toBe('Name must be at least 2 characters');
       }
     });
 
@@ -250,9 +246,7 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors[0].message).toBe(
-          'Name must be less than 50 characters'
-        );
+        expect(result.error.errors[0].message).toBe('Name must be less than 50 characters');
       }
     });
 

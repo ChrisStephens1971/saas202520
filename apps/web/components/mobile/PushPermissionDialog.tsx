@@ -17,11 +17,7 @@ interface PushPermissionDialogProps {
   onSuccess?: () => void;
 }
 
-export function PushPermissionDialog({
-  isOpen,
-  onClose,
-  onSuccess,
-}: PushPermissionDialogProps) {
+export function PushPermissionDialog({ isOpen, onClose, onSuccess }: PushPermissionDialogProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -128,9 +124,7 @@ export function PushPermissionDialog({
                   <h3 className="text-sm font-medium text-gray-900 dark:text-white">
                     {type.title}
                   </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    {type.description}
-                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{type.description}</p>
                 </div>
               </div>
             ))}
@@ -139,8 +133,8 @@ export function PushPermissionDialog({
           {/* Privacy Note */}
           <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-900">
             <p className="text-xs text-gray-600 dark:text-gray-400">
-              <strong>Privacy:</strong> You can customize notification
-              preferences at any time in Settings. We'll never spam you.
+              <strong>Privacy:</strong> You can customize notification preferences at any time in
+              Settings. We'll never spam you.
             </p>
           </div>
         </div>

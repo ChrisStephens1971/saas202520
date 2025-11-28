@@ -8,9 +8,7 @@ import type Stripe from 'stripe';
 /**
  * Create a mock Stripe Account (Connect account)
  */
-export function createMockStripeAccount(
-  overrides?: Partial<Stripe.Account>
-): Stripe.Account {
+export function createMockStripeAccount(overrides?: Partial<Stripe.Account>): Stripe.Account {
   return {
     id: overrides?.id || `acct_${generateRandomId()}`,
     object: 'account',
@@ -129,7 +127,8 @@ export function createMockPaymentIntent(
     canceled_at: null,
     cancellation_reason: null,
     capture_method: 'automatic',
-    client_secret: overrides?.client_secret || `pi_${generateRandomId()}_secret_${generateRandomId()}`,
+    client_secret:
+      overrides?.client_secret || `pi_${generateRandomId()}_secret_${generateRandomId()}`,
     confirmation_method: 'automatic',
     created: Math.floor(Date.now() / 1000),
     currency,
@@ -137,7 +136,9 @@ export function createMockPaymentIntent(
     description: overrides?.description || null,
     invoice: null,
     last_payment_error: null,
-    latest_charge: overrides?.latest_charge || (overrides?.status === 'succeeded' ? `ch_${generateRandomId()}` : null),
+    latest_charge:
+      overrides?.latest_charge ||
+      (overrides?.status === 'succeeded' ? `ch_${generateRandomId()}` : null),
     livemode: false,
     metadata: overrides?.metadata || {},
     next_action: null,
@@ -163,9 +164,7 @@ export function createMockPaymentIntent(
 /**
  * Create a mock Stripe Charge (for receipt URLs)
  */
-export function createMockCharge(
-  overrides?: Partial<Stripe.Charge>
-): Stripe.Charge {
+export function createMockCharge(overrides?: Partial<Stripe.Charge>): Stripe.Charge {
   return {
     id: overrides?.id || `ch_${generateRandomId()}`,
     object: 'charge',
@@ -267,9 +266,7 @@ export function createMockCharge(
 /**
  * Create a mock Stripe Refund
  */
-export function createMockRefund(
-  overrides?: Partial<Stripe.Refund>
-): Stripe.Refund {
+export function createMockRefund(overrides?: Partial<Stripe.Refund>): Stripe.Refund {
   return {
     id: overrides?.id || `re_${generateRandomId()}`,
     object: 'refund',
@@ -294,8 +291,7 @@ export function createMockRefund(
  * Generate a random Stripe-like ID
  */
 function generateRandomId(): string {
-  return Math.random().toString(36).substring(2, 15) +
-         Math.random().toString(36).substring(2, 15);
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
 /**
@@ -308,12 +304,7 @@ export class MockStripeError extends Error {
   charge?: string;
   decline_code?: string;
 
-  constructor(
-    message: string,
-    type: string = 'StripeError',
-    code?: string,
-    statusCode?: number
-  ) {
+  constructor(message: string, type: string = 'StripeError', code?: string, statusCode?: number) {
     super(message);
     this.name = 'StripeError';
     this.type = type;
@@ -326,46 +317,43 @@ export class MockStripeError extends Error {
  * Create common Stripe error scenarios
  */
 export const stripeErrors = {
-  cardDeclined: () => new MockStripeError(
-    'Your card was declined.',
-    'StripeCardError',
-    'card_declined',
-    402
-  ),
-  insufficientFunds: () => new MockStripeError(
-    'Your card has insufficient funds.',
-    'StripeCardError',
-    'insufficient_funds',
-    402
-  ),
-  accountNotOnboarded: () => new MockStripeError(
-    'The account has not completed onboarding.',
-    'StripeInvalidRequestError',
-    'account_invalid',
-    400
-  ),
-  chargesNotEnabled: () => new MockStripeError(
-    'Charges are not enabled on this account.',
-    'StripeInvalidRequestError',
-    'account_charges_not_enabled',
-    400
-  ),
-  refundExceedsAmount: () => new MockStripeError(
-    'Refund amount exceeds charge amount.',
-    'StripeInvalidRequestError',
-    'refund_exceeds_charge',
-    400
-  ),
-  paymentIntentNotFound: () => new MockStripeError(
-    'No such payment_intent.',
-    'StripeInvalidRequestError',
-    'resource_missing',
-    404
-  ),
-  apiError: () => new MockStripeError(
-    'An error occurred with our API.',
-    'StripeAPIError',
-    'api_error',
-    500
-  ),
+  cardDeclined: () =>
+    new MockStripeError('Your card was declined.', 'StripeCardError', 'card_declined', 402),
+  insufficientFunds: () =>
+    new MockStripeError(
+      'Your card has insufficient funds.',
+      'StripeCardError',
+      'insufficient_funds',
+      402
+    ),
+  accountNotOnboarded: () =>
+    new MockStripeError(
+      'The account has not completed onboarding.',
+      'StripeInvalidRequestError',
+      'account_invalid',
+      400
+    ),
+  chargesNotEnabled: () =>
+    new MockStripeError(
+      'Charges are not enabled on this account.',
+      'StripeInvalidRequestError',
+      'account_charges_not_enabled',
+      400
+    ),
+  refundExceedsAmount: () =>
+    new MockStripeError(
+      'Refund amount exceeds charge amount.',
+      'StripeInvalidRequestError',
+      'refund_exceeds_charge',
+      400
+    ),
+  paymentIntentNotFound: () =>
+    new MockStripeError(
+      'No such payment_intent.',
+      'StripeInvalidRequestError',
+      'resource_missing',
+      404
+    ),
+  apiError: () =>
+    new MockStripeError('An error occurred with our API.', 'StripeAPIError', 'api_error', 500),
 };

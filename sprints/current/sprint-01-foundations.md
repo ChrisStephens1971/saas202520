@@ -9,6 +9,7 @@
 ## Sprint Goal
 
 Lay the foundational architecture for the offline-first tournament platform. By the end of this sprint, we will have:
+
 - Monorepo set up with Turborepo, Next.js web app, and Fastify sync service
 - Multi-tenant authentication with Postgres RLS policies
 - Event-sourced audit log (append-only `tournament_events` table)
@@ -33,46 +34,47 @@ This sprint is 100% infrastructure—no user-facing features yet. Success means 
 
 ### High Priority (Must Complete)
 
-| Story | Description | Estimate | Assignee | Status | Notes |
-|-------|-------------|----------|----------|--------|-------|
-| **INFRA-001** | Set up monorepo with Turborepo | M | TBD | 📋 Todo | See ADR-001 |
-| **INFRA-002** | Create Next.js app in `apps/web` | S | TBD | 📋 Todo | App Router, TypeScript, Tailwind |
-| **INFRA-003** | Create Fastify sync service in `apps/sync-service` | S | TBD | 📋 Todo | WebSocket support |
-| **INFRA-004** | Set up shared packages (`shared`, `crdt`, `events`) | M | TBD | 📋 Todo | TypeScript path aliases |
-| **AUTH-001** | Implement multi-tenant authentication | L | TBD | 📋 Todo | Next-auth or Auth.js |
-| **AUTH-002** | Add organization (tenant) model and setup | M | TBD | 📋 Todo | `orgs` table with RLS |
-| **DB-001** | Set up Postgres with Prisma ORM | M | TBD | 📋 Todo | See ADR-002 |
-| **DB-002** | Create initial schema (orgs, users, tournaments, tournament_events) | M | TBD | 📋 Todo | Prisma migrations |
-| **DB-003** | Implement RLS policies for tenant isolation | L | TBD | 📋 Todo | Test cross-tenant access prevention |
-| **EVENT-001** | Design event-sourced architecture | M | TBD | 📋 Todo | Event schemas, projections |
-| **EVENT-002** | Implement `tournament_events` append-only table | M | TBD | 📋 Todo | Actor, device, timestamp, payload JSON |
-| **SYNC-001** | Evaluate Y.js for offline-first sync | L | TBD | 📋 Todo | Days 1-3, prototype |
-| **SYNC-002** | Evaluate Automerge for offline-first sync | M | TBD | 📋 Todo | Days 4-6, prototype (if needed) |
-| **SYNC-003** | Make CRDT library decision | S | TBD | 📋 Todo | Update ADR-003, days 7-8 |
-| **SYNC-004** | Implement IndexedDB storage layer | M | TBD | 📋 Todo | Local tournament state |
-| **SYNC-005** | Build WebSocket sync service (basic) | L | TBD | 📋 Todo | CRDT sync over WS |
-| **SYNC-006** | Test offline → online sync (2 clients) | M | TBD | 📋 Todo | Validate conflict-free merge |
+| Story         | Description                                                         | Estimate | Assignee | Status  | Notes                                  |
+| ------------- | ------------------------------------------------------------------- | -------- | -------- | ------- | -------------------------------------- |
+| **INFRA-001** | Set up monorepo with Turborepo                                      | M        | TBD      | 📋 Todo | See ADR-001                            |
+| **INFRA-002** | Create Next.js app in `apps/web`                                    | S        | TBD      | 📋 Todo | App Router, TypeScript, Tailwind       |
+| **INFRA-003** | Create Fastify sync service in `apps/sync-service`                  | S        | TBD      | 📋 Todo | WebSocket support                      |
+| **INFRA-004** | Set up shared packages (`shared`, `crdt`, `events`)                 | M        | TBD      | 📋 Todo | TypeScript path aliases                |
+| **AUTH-001**  | Implement multi-tenant authentication                               | L        | TBD      | 📋 Todo | Next-auth or Auth.js                   |
+| **AUTH-002**  | Add organization (tenant) model and setup                           | M        | TBD      | 📋 Todo | `orgs` table with RLS                  |
+| **DB-001**    | Set up Postgres with Prisma ORM                                     | M        | TBD      | 📋 Todo | See ADR-002                            |
+| **DB-002**    | Create initial schema (orgs, users, tournaments, tournament_events) | M        | TBD      | 📋 Todo | Prisma migrations                      |
+| **DB-003**    | Implement RLS policies for tenant isolation                         | L        | TBD      | 📋 Todo | Test cross-tenant access prevention    |
+| **EVENT-001** | Design event-sourced architecture                                   | M        | TBD      | 📋 Todo | Event schemas, projections             |
+| **EVENT-002** | Implement `tournament_events` append-only table                     | M        | TBD      | 📋 Todo | Actor, device, timestamp, payload JSON |
+| **SYNC-001**  | Evaluate Y.js for offline-first sync                                | L        | TBD      | 📋 Todo | Days 1-3, prototype                    |
+| **SYNC-002**  | Evaluate Automerge for offline-first sync                           | M        | TBD      | 📋 Todo | Days 4-6, prototype (if needed)        |
+| **SYNC-003**  | Make CRDT library decision                                          | S        | TBD      | 📋 Todo | Update ADR-003, days 7-8               |
+| **SYNC-004**  | Implement IndexedDB storage layer                                   | M        | TBD      | 📋 Todo | Local tournament state                 |
+| **SYNC-005**  | Build WebSocket sync service (basic)                                | L        | TBD      | 📋 Todo | CRDT sync over WS                      |
+| **SYNC-006**  | Test offline → online sync (2 clients)                              | M        | TBD      | 📋 Todo | Validate conflict-free merge           |
 
 ### Medium Priority (Should Complete)
 
-| Story | Description | Estimate | Assignee | Status | Notes |
-|-------|-------------|----------|----------|--------|-------|
-| **INFRA-005** | Set up ESLint, Prettier, TypeScript configs | S | TBD | 📋 Todo | Shared in `packages/config` |
-| **INFRA-006** | Configure Turborepo caching | S | TBD | 📋 Todo | Optimize build times |
-| **CI-001** | Create GitHub Actions CI pipeline | M | TBD | 📋 Todo | Lint, test, build |
-| **CI-002** | Set up Docker compose for local dev | S | TBD | 📋 Todo | Postgres, Redis |
-| **TEST-001** | Set up testing framework (Vitest/Jest) | S | TBD | 📋 Todo | Unit + integration tests |
-| **OBS-001** | Add basic observability (Sentry, logging) | S | TBD | 📋 Todo | Error tracking setup |
+| Story         | Description                                 | Estimate | Assignee | Status  | Notes                       |
+| ------------- | ------------------------------------------- | -------- | -------- | ------- | --------------------------- |
+| **INFRA-005** | Set up ESLint, Prettier, TypeScript configs | S        | TBD      | 📋 Todo | Shared in `packages/config` |
+| **INFRA-006** | Configure Turborepo caching                 | S        | TBD      | 📋 Todo | Optimize build times        |
+| **CI-001**    | Create GitHub Actions CI pipeline           | M        | TBD      | 📋 Todo | Lint, test, build           |
+| **CI-002**    | Set up Docker compose for local dev         | S        | TBD      | 📋 Todo | Postgres, Redis             |
+| **TEST-001**  | Set up testing framework (Vitest/Jest)      | S        | TBD      | 📋 Todo | Unit + integration tests    |
+| **OBS-001**   | Add basic observability (Sentry, logging)   | S        | TBD      | 📋 Todo | Error tracking setup        |
 
 ### Low Priority (Nice to Have)
 
-| Story | Description | Estimate | Assignee | Status | Notes |
-|-------|-------------|----------|----------|--------|-------|
-| **DOC-001** | Write architecture documentation | M | TBD | 📋 Todo | System diagrams, data flow |
-| **DEV-001** | Create seed scripts for development data | S | TBD | 📋 Todo | Sample orgs, users, tournaments |
-| **UI-001** | Set up shadcn/ui component library | S | TBD | 📋 Todo | Button, Card, Form components |
+| Story       | Description                              | Estimate | Assignee | Status  | Notes                           |
+| ----------- | ---------------------------------------- | -------- | -------- | ------- | ------------------------------- |
+| **DOC-001** | Write architecture documentation         | M        | TBD      | 📋 Todo | System diagrams, data flow      |
+| **DEV-001** | Create seed scripts for development data | S        | TBD      | 📋 Todo | Sample orgs, users, tournaments |
+| **UI-001**  | Set up shadcn/ui component library       | S        | TBD      | 📋 Todo | Button, Card, Form components   |
 
 **Story Status Legend:**
+
 - 📋 Todo
 - 🏗️ In Progress
 - 👀 In Review
@@ -95,7 +97,9 @@ Items that need attention but aren't new features:
 ## Daily Progress
 
 ### Week 1, Day 1 (Monday - Nov 4, 2025)
+
 **What I worked on:**
+
 - ✅ Monorepo initialization with Turborepo + pnpm workspaces
 - ✅ Next.js 16 app created (TypeScript, Tailwind, App Router, ESLint)
 - ✅ Fastify sync service with WebSocket support
@@ -107,9 +111,11 @@ Items that need attention but aren't new features:
 - ✅ Environment variables configured
 
 **Blockers:**
+
 - None
 
 **Plan for tomorrow:**
+
 - Test monorepo dev workflow (`pnpm dev` runs all services)
 - Start Y.js CRDT evaluation (prototype)
 - Set up authentication scaffolding
@@ -117,7 +123,9 @@ Items that need attention but aren't new features:
 ---
 
 ### Week 1, Day 2-3 (Tuesday-Wednesday - Nov 5-6, 2025)
+
 **What I worked on:**
+
 - ✅ Y.js CRDT implementation complete
   - TournamentDoc class with full CRUD operations (tournaments, players, matches, tables)
   - WebSocket provider for sync
@@ -143,9 +151,11 @@ Items that need attention but aren't new features:
   - Migration: 20251103163100_init (complete schema + auth)
 
 **Blockers:**
+
 - Migration state issues resolved (baseline approach)
 
 **Plan for tomorrow:**
+
 - Test Y.js sync between 2 clients (manual validation)
 - Implement basic authentication flow with NextAuth.js
 - Create simple TD console UI
@@ -153,7 +163,9 @@ Items that need attention but aren't new features:
 ---
 
 ### Week 1, Day 3-4 (Wednesday-Thursday - Nov 6-7, 2025)
+
 **What I worked on:**
+
 - ✅ Y.js sync testing infrastructure
   - Created test-client.html for manual sync validation
   - Test scenarios documented (basic sync, score updates, real-time, offline recovery, conflicts, room isolation)
@@ -191,9 +203,11 @@ Items that need attention but aren't new features:
   - Unauthenticated users → /login
 
 **Blockers:**
+
 - None
 
 **Plan for tomorrow:**
+
 - Complete remaining Sprint 1 infrastructure tasks
 - Test complete auth flow
 - Finalize offline sync testing
@@ -201,7 +215,9 @@ Items that need attention but aren't new features:
 ---
 
 ### Week 1, Days 5-10 (Accelerated Sprint Completion - Nov 3, 2025)
+
 **What I worked on:**
+
 - ✅ IndexedDB Persistence Layer
   - Created indexeddb-persistence.ts for offline state storage
   - Auto-save with 1-second debounce
@@ -254,14 +270,17 @@ Items that need attention but aren't new features:
   - Coverage reporting ready
 
 **Blockers:**
+
 - None
 
 **Sprint 1 Status:**
+
 - ✅ ALL HIGH PRIORITY TASKS COMPLETED
 - ✅ ALL MEDIUM PRIORITY TASKS COMPLETED
 - ✅ Sprint completed ahead of schedule (4 days vs 10 planned)
 
 **Plan for next sprint:**
+
 - Sprint 2: Tournament Engine (bracket generation, match management, scoring)
 - Begin building tournament CRUD operations
 - Implement bracket algorithms
@@ -273,25 +292,28 @@ Items that need attention but aren't new features:
 Document any stories added or removed during the sprint:
 
 | Date | Change | Reason |
-|------|--------|--------|
-| - | - | - |
+| ---- | ------ | ------ |
+| -    | -      | -      |
 
 ---
 
 ## Sprint Metrics
 
 ### Planned vs Actual
+
 - **Planned:** 16 High Priority + 6 Medium Priority = 22 stories
 - **Completed:** 16 High Priority + 6 Medium Priority = 22 stories
 - **Completion Rate:** 100%
 
 ### Velocity
+
 - **Previous Sprint:** N/A (first sprint)
 - **This Sprint:** 22 stories (all planned tasks completed)
 - **Actual Duration:** 4 days (vs 10 planned)
 - **Trend:** Baseline established - exceeded expectations
 
 **Sizing Guide:**
+
 - XS = 2-4 hours
 - S = 4-8 hours (half day)
 - M = 8-16 hours (1-2 days)
@@ -305,21 +327,25 @@ Document any stories added or removed during the sprint:
 ### Sprint 1 Success Metrics
 
 **Infrastructure:**
+
 - ✅ Monorepo builds successfully (`pnpm build`)
 - ✅ Web app runs locally (`pnpm dev`)
 - ✅ Sync service runs locally
 - ✅ All tests pass (`pnpm test`)
 
 **Multi-Tenancy:**
+
 - ✅ RLS policies enforce tenant isolation (automated test proves cross-tenant access fails)
 - ✅ Authentication flow works (login → org context set → queries scoped to org)
 
 **Event Sourcing:**
+
 - ✅ `tournament_events` table receives events
 - ✅ Events include actor, device, timestamp, payload
 - ✅ Basic projection rebuilds state from events
 
 **Offline Sync:**
+
 - ✅ CRDT library selected (ADR-003 updated to "Accepted")
 - ✅ IndexedDB stores tournament state locally
 - ✅ 2 clients can update offline → merge when online with no data loss
@@ -329,18 +355,19 @@ Document any stories added or removed during the sprint:
 
 ## Risks & Mitigation
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| **CRDT evaluation takes too long** | High - blocks sync implementation | Time-box Y.js to days 1-3, Automerge to days 4-6. If both fail, fallback to last-write-wins + manual conflict resolution (document in ADR) |
-| **RLS policies complex** | Medium - security critical | Dedicate 1 full developer to RLS testing, use automated test suite |
-| **Authentication setup takes >1 day** | Medium - delays other work | Use Next-auth quickstart, defer custom flows to later sprint |
-| **Two developers stepping on each other** | Medium - merge conflicts, wasted time | Define clear ownership: Dev 1 = frontend + CRDT, Dev 2 = backend + DB + RLS. Communicate daily. |
+| Risk                                      | Impact                                | Mitigation                                                                                                                                 |
+| ----------------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **CRDT evaluation takes too long**        | High - blocks sync implementation     | Time-box Y.js to days 1-3, Automerge to days 4-6. If both fail, fallback to last-write-wins + manual conflict resolution (document in ADR) |
+| **RLS policies complex**                  | Medium - security critical            | Dedicate 1 full developer to RLS testing, use automated test suite                                                                         |
+| **Authentication setup takes >1 day**     | Medium - delays other work            | Use Next-auth quickstart, defer custom flows to later sprint                                                                               |
+| **Two developers stepping on each other** | Medium - merge conflicts, wasted time | Define clear ownership: Dev 1 = frontend + CRDT, Dev 2 = backend + DB + RLS. Communicate daily.                                            |
 
 ---
 
 ## Wins & Learnings
 
 ### What Went Well
+
 - ✅ All high and medium priority tasks completed (100% completion)
 - ✅ Sprint completed in 4 days vs 10 planned (2.5x faster than estimated)
 - ✅ Clean database migration baseline established
@@ -351,12 +378,14 @@ Document any stories added or removed during the sprint:
 - ✅ Strong foundation for Sprint 2 tournament engine work
 
 ### What Could Be Improved
+
 - Could have parallelized some tasks more aggressively
 - Testing framework configured but no tests written yet (defer to Sprint 2)
 - Docker builds in CI not yet optimized (can add layer caching)
 - Observability logger created but not yet integrated into services
 
 ### Action Items for Next Sprint
+
 - [ ] Write unit tests for CRDT operations
 - [ ] Integrate logger into sync-service and web app
 - [ ] Add integration tests for auth flow
@@ -367,14 +396,17 @@ Document any stories added or removed during the sprint:
 ## Sprint Review Notes
 
 **What We Shipped:**
+
 - TBD (infrastructure, not user-facing features)
 
 **Demo Notes:**
+
 - Demo: 2 browsers updating tournament state offline, merge when reconnected
 - Demo: Cross-tenant access blocked by RLS policies
 - Demo: Event log replay rebuilds state correctly
 
 **Feedback Received:**
+
 - TBD (internal team feedback)
 
 ---
@@ -393,6 +425,7 @@ Document any stories added or removed during the sprint:
 ## Definition of Done (Sprint 1)
 
 A story is "Done" when:
+
 - [ ] Code is written and passes TypeScript checks
 - [ ] Unit tests written and passing (where applicable)
 - [ ] Code reviewed by other developer (pair programming or PR review)
@@ -401,6 +434,7 @@ A story is "Done" when:
 - [ ] Documentation updated (if public API changes)
 
 Infrastructure is "Done" when:
+
 - [ ] README has setup instructions
 - [ ] All developers can run locally without issues
 - [ ] CI pipeline is green
@@ -416,17 +450,20 @@ Infrastructure is "Done" when:
 **Key decision point:** End of Week 1, decide on CRDT library. Cannot proceed to Week 2 sync implementation without this decision.
 
 **Daily standup format (suggested):**
+
 - What I did yesterday
 - What I'm doing today
 - Any blockers?
 - (Keep it under 10 minutes, async in Slack/Discord is fine)
 
 **Pairing opportunities:**
+
 - RLS policy testing (complex, benefits from two sets of eyes)
 - CRDT evaluation (both devs should understand the choice)
 - Sync service architecture (foundational, should be collaborative)
 
 **Communication:**
+
 - Update this sprint doc daily with progress
 - Mark stories in progress/done in real-time
 - Flag blockers immediately (don't wait for standup)

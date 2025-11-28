@@ -73,6 +73,7 @@ See `azure-naming-standard.md` for complete naming conventions.
 **Pattern:** `{type}-{org}-{proj}-{env}-{region}-{slice}-{seq}`
 
 **Examples:**
+
 ```
 # Resource Groups
 rg-vrd-tmt-prd-eus2-app
@@ -133,6 +134,7 @@ Root (tenant)
 ### Subscriptions (per product, per env)
 
 Format: `{product}-{env}`
+
 - `tmt-dev`, `tmt-test`, `tmt-prod`
 - `hoa-dev`, `hoa-test`, `hoa-prod`
 
@@ -141,9 +143,11 @@ Format: `{product}-{env}`
 See [Appendix C](#appendix-c-tagging--metadata) for complete tagging standard.
 
 **Core tags:**
+
 - `Org`, `Project`, `Environment`, `Region`, `Owner`, `CostCenter`
 
 **Security tags:**
+
 - `DataSensitivity`, `Compliance`, `DRTier`, `BackupRetention`
 
 ---
@@ -152,26 +156,27 @@ See [Appendix C](#appendix-c-tagging--metadata) for complete tagging standard.
 
 ### Estimated Monthly Costs (per environment)
 
-| Component | SKU | Dev/Test | Production | Notes |
-|-----------|-----|----------|------------|-------|
-| **Hub VNet - Firewall** | Premium | $595 (Standard) | $1,250 | TLS inspection, IDPS |
-| **Hub VNet - DDoS** | Standard | $0 (not needed) | $2,944 | Only for prod |
-| **Spoke VNets** | Standard (x3) | $0 | $0 | Data charges only |
-| **Application Gateway** | WAF_v2 | $125 | $250 | Autoscale based on traffic |
-| **Bastion** | Standard | $0 (not deployed) | $146 | Only when needed |
-| **Defender for Cloud** | Per resource | $100 | $500 | Varies by resource count |
-| **Log Analytics** | Per GB ingested | $50 | $300 | ~10-30 GB/day |
-| **Azure Sentinel** | Per GB ingested | $100 | $500 | ~10-30 GB/day |
-| **Key Vaults** | Standard (x3) | $9 | $9 | $3/vault |
-| **Private Endpoints** | ~10-20 endpoints | $80 | $160 | $8/endpoint/month |
-| **Azure Backup** | GRS, 100GB | $10 | $20 | Varies by data volume |
-| **ExpressRoute** | Optional | - | $55-1,650 | If hybrid connectivity |
-| | | | | |
-| **Total Baseline** | | **~$1,000-1,500** | **~$5,000-6,000** | Without workload costs |
+| Component               | SKU              | Dev/Test          | Production        | Notes                      |
+| ----------------------- | ---------------- | ----------------- | ----------------- | -------------------------- |
+| **Hub VNet - Firewall** | Premium          | $595 (Standard)   | $1,250            | TLS inspection, IDPS       |
+| **Hub VNet - DDoS**     | Standard         | $0 (not needed)   | $2,944            | Only for prod              |
+| **Spoke VNets**         | Standard (x3)    | $0                | $0                | Data charges only          |
+| **Application Gateway** | WAF_v2           | $125              | $250              | Autoscale based on traffic |
+| **Bastion**             | Standard         | $0 (not deployed) | $146              | Only when needed           |
+| **Defender for Cloud**  | Per resource     | $100              | $500              | Varies by resource count   |
+| **Log Analytics**       | Per GB ingested  | $50               | $300              | ~10-30 GB/day              |
+| **Azure Sentinel**      | Per GB ingested  | $100              | $500              | ~10-30 GB/day              |
+| **Key Vaults**          | Standard (x3)    | $9                | $9                | $3/vault                   |
+| **Private Endpoints**   | ~10-20 endpoints | $80               | $160              | $8/endpoint/month          |
+| **Azure Backup**        | GRS, 100GB       | $10               | $20               | Varies by data volume      |
+| **ExpressRoute**        | Optional         | -                 | $55-1,650         | If hybrid connectivity     |
+|                         |                  |                   |                   |                            |
+| **Total Baseline**      |                  | **~$1,000-1,500** | **~$5,000-6,000** | Without workload costs     |
 
 ### Cost Optimization Strategies
 
 **Non-Production Environments:**
+
 - Use Azure Firewall Standard instead of Premium ($595 vs $1,250)
 - Skip DDoS Protection Standard ($2,944 savings)
 - Use Application Gateway Standard_v2 instead of WAF_v2
@@ -180,6 +185,7 @@ See [Appendix C](#appendix-c-tagging--metadata) for complete tagging standard.
 - Shorter log retention (30 days vs 90-365 days)
 
 **Log Cost Optimization:**
+
 ```bash
 # Table-level retention (not workspace-level)
 az monitor log-analytics workspace table update \
@@ -196,12 +202,14 @@ az monitor log-analytics workspace table update \
 ```
 
 **Sentinel Cost Reduction:**
+
 - Use data ingestion limits and sampling
 - Filter verbose/low-value logs before ingestion
 - Use basic logs for high-volume sources
 - Commitment tiers for predictable usage (10% discount at 100GB/day)
 
 **Network Cost Optimization:**
+
 - Use Private Link instead of VNet peering where possible
 - Consolidate egress through single Firewall (avoid per-resource public IPs)
 - Use Azure Front Door Standard tier for global apps (vs Premium)
@@ -244,6 +252,7 @@ az role assignment create \
 ```
 
 **Critical:**
+
 - Store passwords in physical safe + password manager
 - Exclude from all Conditional Access policies
 - Test sign-in immediately
@@ -323,6 +332,7 @@ az rest --method patch \
 ### 8. Identity Hardening (NEW)
 
 **Password Policies:**
+
 ```bash
 # Banned password list
 # Portal: Entra ID → Security → Authentication methods → Password protection
@@ -334,6 +344,7 @@ az rest --method patch \
 ```
 
 **Identity Protection:**
+
 ```bash
 # User risk policy: Block at High, require password change at Medium
 # Sign-in risk policy: Block at High, require MFA at Medium
@@ -342,6 +353,7 @@ az rest --method patch \
 ```
 
 **Guest User Controls:**
+
 ```bash
 # Limit guest invitations to specific roles
 az rest --method patch \
@@ -502,6 +514,7 @@ az deployment group create \
 ```
 
 **Hub components:**
+
 - Azure Firewall Premium (TLS inspection, IDPS)
 - DDoS Protection Standard
 - Azure Bastion (for admin access)
@@ -590,6 +603,7 @@ az network vnet subnet update \
 ```
 
 **Firewall application rules (allow-list):**
+
 ```bash
 # Allow package managers, APIs, etc.
 az network firewall application-rule create \
@@ -888,6 +902,7 @@ az monitor diagnostic-settings create \
 ```
 
 **Automate with Policy (see Day 3):**
+
 - Policy automatically enables diagnostic settings on creation
 
 ### 3. Azure Sentinel (Microsoft Sentinel)
@@ -917,6 +932,7 @@ az sentinel onboard \
 Enable these built-in rules:
 
 **Identity & Access:**
+
 - Impossible travel activity
 - Mass password reset by single user
 - Suspicious consent grant to OAuth app
@@ -925,18 +941,21 @@ Enable these built-in rules:
 - Privileged role assigned outside PIM
 
 **Data & Secrets:**
+
 - Mass Key Vault secret access
 - Unusual Key Vault operations
 - Storage account public access enabled
 - Mass file download from Storage
 
 **Compute & Network:**
+
 - Crypto-mining activity
 - Suspicious egress traffic spikes
 - Unusual VM extension deployment
 - Port scanning activity
 
 **Compliance:**
+
 - Audit log retention changed
 - Security policy modified
 - Diagnostic settings disabled
@@ -1000,6 +1019,7 @@ az role assignment create \
 ```
 
 **Managed HSM for regulated workloads:**
+
 ```bash
 # For payment data, healthcare, financial services
 az keyvault create-hsm \
@@ -1042,6 +1062,7 @@ az storage container immutability-policy create \
 ### 3. Database Security
 
 **Azure SQL:**
+
 ```bash
 # Create SQL Server with Entra-only auth
 az sql server create \
@@ -1079,6 +1100,7 @@ az sql server audit-policy update \
 ```
 
 **Cosmos DB:**
+
 ```bash
 # Create with private access only
 az cosmosdb create \
@@ -1193,6 +1215,7 @@ az aks update \
 ```
 
 **Pod Security Standards (via Azure Policy):**
+
 - No privileged containers
 - readOnlyRootFilesystem required
 - runAsNonRoot required
@@ -1200,6 +1223,7 @@ az aks update \
 - Drop all capabilities
 
 **Egress control:**
+
 - All egress through Azure Firewall (see Day 2)
 - Allow-list: container registries, package repos, APIs
 
@@ -1251,6 +1275,7 @@ az vm encryption enable \
 ### Source Control Security
 
 **Branch Protection:**
+
 ```yaml
 # .github/branch-protection.yml
 protection:
@@ -1269,6 +1294,7 @@ protection:
 ```
 
 **CODEOWNERS:**
+
 ```
 # CODEOWNERS
 *                    @team-developers
@@ -1281,6 +1307,7 @@ protection:
 ### CI/CD with OIDC (No Secrets)
 
 **GitHub Actions:**
+
 ```yaml
 # .github/workflows/deploy.yml
 name: Deploy to Azure
@@ -1313,6 +1340,7 @@ jobs:
 ```
 
 **Azure OIDC Federation Setup:**
+
 ```bash
 # Create service principal
 az ad sp create-for-rbac \
@@ -1334,6 +1362,7 @@ az ad app federated-credential create \
 ### Security Scanning
 
 **SAST (Static Analysis):**
+
 ```yaml
 # .github/workflows/security-scan.yml
 - name: Run Semgrep
@@ -1345,6 +1374,7 @@ az ad app federated-credential create \
 ```
 
 **Dependency Scanning:**
+
 ```yaml
 - name: Dependency Audit
   run: npm audit --audit-level=moderate
@@ -1356,6 +1386,7 @@ az ad app federated-credential create \
 ```
 
 **IaC Scanning:**
+
 ```yaml
 - name: Checkov IaC Scan
   uses: bridgecrewio/checkov-action@master
@@ -1366,6 +1397,7 @@ az ad app federated-credential create \
 ```
 
 **Container Scanning:**
+
 ```yaml
 - name: Build Container
   run: docker build -t myapp:${{ github.sha }} .
@@ -1421,6 +1453,7 @@ az acr config retention update \
 ### Automated Security Testing
 
 **Infrastructure Validation:**
+
 ```bash
 # Test policy compliance
 az policy state summarize --management-group products
@@ -1433,6 +1466,7 @@ az keyvault list --query "[].{name:name, publicNetworkAccess:properties.publicNe
 ```
 
 **Penetration Testing:**
+
 - Use Azure-approved penetration testing
 - Test from external attacker perspective
 - Validate WAF effectiveness
@@ -1440,6 +1474,7 @@ az keyvault list --query "[].{name:name, publicNetworkAccess:properties.publicNe
 - Check privilege escalation paths
 
 **Chaos Engineering:**
+
 ```bash
 # Simulate zone failure
 # Test failover to secondary region
@@ -1464,6 +1499,7 @@ See [Day 9](#day-9-compliance-framework-mappings) for framework-specific checks.
 ### SOC 2 Type II
 
 **Control Mappings:**
+
 - CC6.1 (Logical Access) → Conditional Access + PIM
 - CC6.6 (Encryption) → TLS 1.2+, CMK, Private Link
 - CC6.7 (System Operations) → Azure Monitor, Sentinel
@@ -1471,6 +1507,7 @@ See [Day 9](#day-9-compliance-framework-mappings) for framework-specific checks.
 - CC7.3 (Data Backup) → Azure Backup, immutability
 
 **Evidence Collection:**
+
 ```bash
 # Export audit logs for audit period
 az monitor activity-log list \
@@ -1483,6 +1520,7 @@ az monitor activity-log list \
 ### ISO 27001
 
 **Control Mappings:**
+
 - A.9 (Access Control) → Entra ID + PIM + CA
 - A.10 (Cryptography) → Key Vault, TDE, CMK
 - A.12 (Operations Security) → Defender, Sentinel, Policies
@@ -1492,12 +1530,14 @@ az monitor activity-log list \
 ### HIPAA (Healthcare)
 
 **Technical Safeguards:**
+
 - Access Control (164.312(a)) → MFA, PIM, JIT
 - Audit Controls (164.312(b)) → Sentinel, Log Analytics
 - Integrity (164.312(c)) → Immutability, versioning
 - Transmission Security (164.312(e)) → Private Link, TLS 1.2+
 
 **Encryption Requirements:**
+
 - At-rest: Azure Storage encryption + CMK
 - In-transit: TLS 1.2+, Private Link
 - Key management: Key Vault with Managed HSM for PHI
@@ -1505,6 +1545,7 @@ az monitor activity-log list \
 ### PCI-DSS (Payment Cards)
 
 **Requirements:**
+
 - Req 1 (Firewall) → Azure Firewall, NSGs
 - Req 2 (No defaults) → Policy enforcement, configuration baselines
 - Req 3 (Protect data) → Encryption, tokenization, CMK
@@ -1524,6 +1565,7 @@ az monitor activity-log list \
 ### Backup & Disaster Recovery
 
 **Azure Backup:**
+
 ```bash
 # Create Recovery Services Vault
 az backup vault create \
@@ -1548,6 +1590,7 @@ az backup protection enable-for-vm \
 ```
 
 **SQL Geo-Replication:**
+
 ```bash
 # Create failover group
 az sql failover-group create \
@@ -1560,6 +1603,7 @@ az sql failover-group create \
 ```
 
 **DR Drills (Quarterly):**
+
 - Failover to secondary region
 - Restore from backup
 - Test break-glass access
@@ -1570,6 +1614,7 @@ az sql failover-group create \
 See [Appendix D](#appendix-d-incident-response-runbooks) for detailed runbooks.
 
 **Playbooks:**
+
 1. Credential leak response
 2. Exposed storage response
 3. Suspicious consent grant response
@@ -1577,6 +1622,7 @@ See [Appendix D](#appendix-d-incident-response-runbooks) for detailed runbooks.
 5. Privilege escalation response
 
 **Sentinel Automation:**
+
 ```bash
 # Create playbook (Logic App) to auto-revoke tokens
 # Portal: Sentinel → Automation → Create → Playbook
@@ -1587,6 +1633,7 @@ See [Appendix D](#appendix-d-incident-response-runbooks) for detailed runbooks.
 ### Monthly Audits
 
 **Checklist:**
+
 - [ ] Review Owner/UAA role assignments
 - [ ] Test break-glass accounts
 - [ ] Run backup restore test
@@ -1595,6 +1642,7 @@ See [Appendix D](#appendix-d-incident-response-runbooks) for detailed runbooks.
 - [ ] Rotate service principal credentials
 
 **Quarterly Audits:**
+
 - [ ] CA policy review
 - [ ] PIM role audit
 - [ ] Failover drill
@@ -1653,18 +1701,21 @@ PolicyResources
 See `infrastructure/monitoring/` for Azure Workbook templates.
 
 **Security Posture Dashboard:**
+
 - Policy compliance percentage
 - Defender for Cloud secure score
 - Public endpoint count
 - Certificate expiration warnings
 
 **Identity Risk Dashboard:**
+
 - Failed sign-in attempts
 - MFA bypass attempts
 - Risky sign-ins
 - Privileged role activations
 
 **Network Exposure Dashboard:**
+
 - Firewall threat intelligence hits
 - WAF blocked requests
 - NSG flow logs (suspicious traffic)
@@ -1677,6 +1728,7 @@ See `infrastructure/monitoring/` for Azure Workbook templates.
 Complete IaC modules available at: `C:\devop\.template-system\templates\saas-project-azure\infrastructure\`
 
 **Bicep Modules:**
+
 - `modules/security-baseline/management-groups.bicep`
 - `modules/security-baseline/hub-network.bicep`
 - `modules/security-baseline/policies.bicep`
@@ -1684,6 +1736,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 - `modules/security-baseline/logging.bicep`
 
 **Terraform Modules:**
+
 - `modules/security-baseline/management-groups/`
 - `modules/security-baseline/hub-network/`
 - `modules/security-baseline/policies/`
@@ -1693,6 +1746,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 ## Appendix B: Conditional Access Baseline
 
 **Policy 1: Require MFA for all users**
+
 ```json
 {
   "displayName": "CA001: Require MFA for all users",
@@ -1720,6 +1774,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 ```
 
 **Policy 2: Admins require compliant device + MFA**
+
 ```json
 {
   "displayName": "CA002: Admins require compliant device + MFA",
@@ -1727,9 +1782,9 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
   "conditions": {
     "users": {
       "includeRoles": [
-        "62e90394-69f5-4237-9190-012177145e10",  // Global Admin
-        "e8611ab8-c189-46e8-94e1-60213ab1f814",  // Privileged Role Admin
-        "194ae4cb-b126-40b2-bd5b-6091b380977d"   // Security Admin
+        "62e90394-69f5-4237-9190-012177145e10", // Global Admin
+        "e8611ab8-c189-46e8-94e1-60213ab1f814", // Privileged Role Admin
+        "194ae4cb-b126-40b2-bd5b-6091b380977d" // Security Admin
       ]
     },
     "applications": {
@@ -1744,6 +1799,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 ```
 
 **Policy 3: Block risky sign-ins**
+
 ```json
 {
   "displayName": "CA003: Block risky sign-ins",
@@ -1762,6 +1818,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 ```
 
 **Policy 4: Block from restricted geo-locations**
+
 ```json
 {
   "displayName": "CA004: Block from restricted countries",
@@ -1790,6 +1847,7 @@ Complete IaC modules available at: `C:\devop\.template-system\templates\saas-pro
 See `azure-naming-standard.md` for complete tagging specifications.
 
 **Required Tags (deny on create if missing):**
+
 ```json
 {
   "Org": "vrd",
@@ -1806,6 +1864,7 @@ See `azure-naming-standard.md` for complete tagging specifications.
 ```
 
 **Generate tags automatically:**
+
 ```bash
 python C:/devop/.template-system/scripts/azure-tag-generator.py \
   --org vrd --proj tmt --env prd --region eus2 \
@@ -1826,6 +1885,7 @@ Detailed runbooks available in separate files:
 5. **Privilege Escalation Response** → `runbooks/privilege-escalation-response.md`
 
 Each runbook includes:
+
 - Detection indicators
 - Initial response steps
 - Containment actions
@@ -1841,6 +1901,7 @@ Complete IaC modules available at:
 `C:\devop\.template-system\templates\saas-project-azure\infrastructure\`
 
 **Bicep Modules:**
+
 - Management Groups (`modules/security-baseline/management-groups.bicep`)
 - Hub Network (`modules/security-baseline/hub-network.bicep`)
 - Spoke Network (`modules/security-baseline/spoke-network.bicep`)
@@ -1850,11 +1911,13 @@ Complete IaC modules available at:
 - AKS Secure Cluster (`modules/security-baseline/aks-secure-cluster.bicep`)
 
 **Terraform Modules:**
+
 - Management Groups (`modules/security-baseline/management-groups/`)
 - Network Baseline (`modules/security-baseline/network-baseline/`)
 - Policy Baseline (`modules/security-baseline/policy-baseline/`)
 
 **Usage:**
+
 ```bash
 # Deploy complete security baseline
 cd infrastructure/bicep

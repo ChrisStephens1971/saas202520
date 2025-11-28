@@ -23,10 +23,7 @@ import { prisma } from '@/lib/prisma';
 // Get current ETAs for all pending matches
 // ============================================================================
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
     const { searchParams } = new URL(request.url);
@@ -65,22 +62,15 @@ export async function GET(
     // Calculate queue metrics
     const now = new Date();
     const waitTimes = etaUpdate.etas.map((eta) =>
-      Math.max(
-        0,
-        (eta.estimatedStartTime.getTime() - now.getTime()) / (1000 * 60)
-      )
+      Math.max(0, (eta.estimatedStartTime.getTime() - now.getTime()) / (1000 * 60))
     );
 
     const averageWaitTime =
-      waitTimes.length > 0
-        ? waitTimes.reduce((sum, w) => sum + w, 0) / waitTimes.length
-        : 0;
+      waitTimes.length > 0 ? waitTimes.reduce((sum, w) => sum + w, 0) / waitTimes.length : 0;
 
     // Estimate completion time (last match end time)
     const lastMatchETA = etaUpdate.etas[etaUpdate.etas.length - 1];
-    const estimatedCompletionTime = lastMatchETA
-      ? lastMatchETA.estimatedEndTime
-      : now;
+    const estimatedCompletionTime = lastMatchETA ? lastMatchETA.estimatedEndTime : now;
 
     // Calculate table utilization
     const totalTables = await prisma.table.count({
@@ -88,9 +78,7 @@ export async function GET(
     });
 
     const tableUtilization =
-      totalTables > 0
-        ? ((totalTables - queueStatus.availableTables) / totalTables) * 100
-        : 0;
+      totalTables > 0 ? ((totalTables - queueStatus.availableTables) / totalTables) * 100 : 0;
 
     return NextResponse.json({
       success: true,
@@ -108,9 +96,8 @@ export async function GET(
         metrics: {
           averageWaitTimeMinutes: Math.round(averageWaitTime),
           tableUtilizationPercent: Math.round(tableUtilization),
-          playersWaiting: queueStatus.readyMatches.filter(
-            (m) => m.playerAId && m.playerBId
-          ).length * 2,
+          playersWaiting:
+            queueStatus.readyMatches.filter((m) => m.playerAId && m.playerBId).length * 2,
           estimatedCompletionTime: estimatedCompletionTime.toISOString(),
         },
         updatedAt: etaUpdate.updatedAt.toISOString(),
@@ -133,10 +120,7 @@ export async function GET(
 // Force recalculation of ETAs (after match completion or state change)
 // ============================================================================
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Extract tenant context (authentication + org validation)
     const tenantResult = await extractTenantContext();
@@ -190,8 +174,7 @@ export async function POST(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to recalculate ETAs',
+        error: error instanceof Error ? error.message : 'Failed to recalculate ETAs',
       },
       { status: 500 }
     );

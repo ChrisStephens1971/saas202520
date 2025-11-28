@@ -13,6 +13,7 @@
 [Brief description of the incident]
 
 **Impact:**
+
 - Users affected:
 - Services affected:
 - Duration:
@@ -24,25 +25,27 @@
 
 ## Timeline
 
-| Time (UTC) | Event | Action Taken |
-|------------|-------|--------------|
-| HH:MM | Incident detected | |
-| HH:MM | Team notified | |
-| HH:MM | Investigation started | |
-| HH:MM | Root cause identified | |
-| HH:MM | Fix deployed | |
-| HH:MM | Incident resolved | |
+| Time (UTC) | Event                 | Action Taken |
+| ---------- | --------------------- | ------------ |
+| HH:MM      | Incident detected     |              |
+| HH:MM      | Team notified         |              |
+| HH:MM      | Investigation started |              |
+| HH:MM      | Root cause identified |              |
+| HH:MM      | Fix deployed          |              |
+| HH:MM      | Incident resolved     |              |
 
 ---
 
 ## Response Actions
 
 ### Immediate Actions Taken
+
 1.
 2.
 3.
 
 ### Communication
+
 - **Internal:**
 - **Customer:**
 - **Stakeholders:**
@@ -62,16 +65,19 @@
 ## Prevention & Follow-up
 
 ### Action Items
+
 - [ ] [Action item 1] - Owner: [Name] - Due: [Date]
 - [ ] [Action item 2] - Owner: [Name] - Due: [Date]
 - [ ] [Action item 3] - Owner: [Name] - Due: [Date]
 
 ### Process Improvements
+
 1.
 2.
 3.
 
 ### Monitoring Improvements
+
 1.
 2.
 

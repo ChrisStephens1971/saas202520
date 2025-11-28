@@ -139,9 +139,7 @@ export async function adjustChips(
  * Get chip standings for a tournament
  * Returns players ranked by chip count
  */
-export async function getChipStandings(
-  tournamentId: string
-): Promise<ChipStanding[]> {
+export async function getChipStandings(tournamentId: string): Promise<ChipStanding[]> {
   const players = await prisma.player.findMany({
     where: {
       tournamentId,

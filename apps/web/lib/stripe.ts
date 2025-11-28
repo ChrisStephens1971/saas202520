@@ -73,9 +73,7 @@ export async function createAccountLink(
 /**
  * Retrieve Connect account details
  */
-export async function getConnectAccount(
-  accountId: string
-): Promise<Stripe.Account> {
+export async function getConnectAccount(accountId: string): Promise<Stripe.Account> {
   return await stripe.accounts.retrieve(accountId);
 }
 
@@ -89,14 +87,17 @@ export async function createPaymentIntent(params: {
   applicationFeeAmount?: number; // Platform fee in cents
   metadata?: Record<string, string>;
 }): Promise<Stripe.PaymentIntent> {
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: params.amount,
-    currency: params.currency || 'usd',
-    application_fee_amount: params.applicationFeeAmount,
-    metadata: params.metadata || {},
-  }, {
-    stripeAccount: params.connectedAccountId, // Create payment on connected account
-  });
+  const paymentIntent = await stripe.paymentIntents.create(
+    {
+      amount: params.amount,
+      currency: params.currency || 'usd',
+      application_fee_amount: params.applicationFeeAmount,
+      metadata: params.metadata || {},
+    },
+    {
+      stripeAccount: params.connectedAccountId, // Create payment on connected account
+    }
+  );
 
   return paymentIntent;
 }
@@ -110,13 +111,16 @@ export async function createRefund(params: {
   reason?: 'duplicate' | 'fraudulent' | 'requested_by_customer';
   connectedAccountId: string;
 }): Promise<Stripe.Refund> {
-  const refund = await stripe.refunds.create({
-    payment_intent: params.paymentIntentId,
-    amount: params.amount,
-    reason: params.reason,
-  }, {
-    stripeAccount: params.connectedAccountId,
-  });
+  const refund = await stripe.refunds.create(
+    {
+      payment_intent: params.paymentIntentId,
+      amount: params.amount,
+      reason: params.reason,
+    },
+    {
+      stripeAccount: params.connectedAccountId,
+    }
+  );
 
   return refund;
 }

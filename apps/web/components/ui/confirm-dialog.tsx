@@ -34,19 +34,22 @@ const variantConfig = {
     icon: XCircle,
     iconColor: 'text-red-600 dark:text-red-400',
     iconBg: 'bg-red-100 dark:bg-red-900/30',
-    confirmButton: 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 focus:ring-red-500',
+    confirmButton:
+      'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 focus:ring-red-500',
   },
   warning: {
     icon: AlertTriangle,
     iconColor: 'text-yellow-600 dark:text-yellow-400',
     iconBg: 'bg-yellow-100 dark:bg-yellow-900/30',
-    confirmButton: 'bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 focus:ring-yellow-500',
+    confirmButton:
+      'bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 focus:ring-yellow-500',
   },
   info: {
     icon: Info,
     iconColor: 'text-blue-600 dark:text-blue-400',
     iconBg: 'bg-blue-100 dark:bg-blue-900/30',
-    confirmButton: 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:ring-blue-500',
+    confirmButton:
+      'bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:ring-blue-500',
   },
 };
 
@@ -120,7 +123,12 @@ export function ConfirmDialog({
             >
               <div className="p-6">
                 {/* Icon */}
-                <div className={cn('mx-auto flex h-12 w-12 items-center justify-center rounded-full', config.iconBg)}>
+                <div
+                  className={cn(
+                    'mx-auto flex h-12 w-12 items-center justify-center rounded-full',
+                    config.iconBg
+                  )}
+                >
                   <IconComponent className={cn('h-6 w-6', config.iconColor)} aria-hidden="true" />
                 </div>
 

@@ -58,7 +58,7 @@ export default function BottomNav() {
 
   useEffect(() => {
     // Determine active tab based on pathname
-    const currentTab = navTabs.find(tab => pathname.startsWith(tab.path));
+    const currentTab = navTabs.find((tab) => pathname.startsWith(tab.path));
     if (currentTab) {
       setActiveTab(currentTab.id);
     }
@@ -91,9 +91,7 @@ export default function BottomNav() {
               key={tab.id}
               onClick={() => handleTabClick(tab)}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ${
-                isActive
-                  ? 'text-blue-600 dark:text-blue-400'
-                  : 'text-gray-500 dark:text-gray-400'
+                isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
               }`}
               aria-label={tab.label}
               aria-current={isActive ? 'page' : undefined}
@@ -104,11 +102,7 @@ export default function BottomNav() {
                 }`}
                 aria-hidden="true"
               />
-              <span
-                className={`text-xs font-medium ${
-                  isActive ? 'font-semibold' : ''
-                }`}
-              >
+              <span className={`text-xs font-medium ${isActive ? 'font-semibold' : ''}`}>
                 {tab.label}
               </span>
               {isActive && (

@@ -16,6 +16,7 @@ Brief description of what this API does and its purpose.
 **Type:** [Bearer Token | API Key | OAuth 2.0 | None]
 
 **Headers:**
+
 ```
 Authorization: Bearer <token>
 ```
@@ -55,12 +56,14 @@ Authorization: Bearer <token>
 | `order` | string | No | desc | Sort order (asc/desc) |
 
 **Request Headers:**
+
 ```
 Content-Type: application/json
 Authorization: Bearer <token>
 ```
 
 **Request Body:**
+
 ```json
 {
   "field1": "string",
@@ -84,6 +87,7 @@ Authorization: Bearer <token>
 #### Response
 
 **Success Response (200 OK):**
+
 ```json
 {
   "id": "uuid-here",
@@ -107,6 +111,7 @@ Authorization: Bearer <token>
 **Error Responses:**
 
 **400 Bad Request:**
+
 ```json
 {
   "error": "validation_error",
@@ -121,6 +126,7 @@ Authorization: Bearer <token>
 ```
 
 **401 Unauthorized:**
+
 ```json
 {
   "error": "unauthorized",
@@ -129,6 +135,7 @@ Authorization: Bearer <token>
 ```
 
 **403 Forbidden:**
+
 ```json
 {
   "error": "forbidden",
@@ -137,6 +144,7 @@ Authorization: Bearer <token>
 ```
 
 **404 Not Found:**
+
 ```json
 {
   "error": "not_found",
@@ -145,6 +153,7 @@ Authorization: Bearer <token>
 ```
 
 **429 Too Many Requests:**
+
 ```json
 {
   "error": "rate_limit_exceeded",
@@ -154,6 +163,7 @@ Authorization: Bearer <token>
 ```
 
 **500 Internal Server Error:**
+
 ```json
 {
   "error": "internal_error",
@@ -167,6 +177,7 @@ Authorization: Bearer <token>
 #### Example Request
 
 **cURL:**
+
 ```bash
 curl -X POST https://api.example.com/v1/resource \
   -H "Content-Type: application/json" \
@@ -178,23 +189,25 @@ curl -X POST https://api.example.com/v1/resource \
 ```
 
 **JavaScript (fetch):**
+
 ```javascript
 const response = await fetch('https://api.example.com/v1/resource', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer YOUR_TOKEN'
+    Authorization: 'Bearer YOUR_TOKEN',
   },
   body: JSON.stringify({
     field1: 'example',
-    field2: 42
-  })
+    field2: 42,
+  }),
 });
 
 const data = await response.json();
 ```
 
 **Python (requests):**
+
 ```python
 import requests
 
@@ -220,14 +233,14 @@ data = response.json()
 
 ```typescript
 interface ResourceModel {
-  id: string;              // UUID
-  field1: string;          // Max 255 characters
-  field2: number;          // Integer, 1-1000
+  id: string; // UUID
+  field1: string; // Max 255 characters
+  field2: number; // Integer, 1-1000
   nested: {
     field3: boolean;
   };
-  created_at: string;      // ISO 8601 timestamp
-  updated_at: string;      // ISO 8601 timestamp
+  created_at: string; // ISO 8601 timestamp
+  updated_at: string; // ISO 8601 timestamp
 }
 ```
 
@@ -235,20 +248,20 @@ interface ResourceModel {
 
 ## Status Codes
 
-| Code | Meaning | When Used |
-|------|---------|-----------|
-| 200 | OK | Successful GET, PUT, PATCH, DELETE |
-| 201 | Created | Successful POST that creates a resource |
-| 204 | No Content | Successful DELETE with no response body |
-| 400 | Bad Request | Invalid request data |
-| 401 | Unauthorized | Missing or invalid authentication |
-| 403 | Forbidden | Authenticated but not authorized |
-| 404 | Not Found | Resource doesn't exist |
-| 409 | Conflict | Resource already exists or conflict |
-| 422 | Unprocessable Entity | Validation failed |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Server error |
-| 503 | Service Unavailable | Temporary downtime |
+| Code | Meaning               | When Used                               |
+| ---- | --------------------- | --------------------------------------- |
+| 200  | OK                    | Successful GET, PUT, PATCH, DELETE      |
+| 201  | Created               | Successful POST that creates a resource |
+| 204  | No Content            | Successful DELETE with no response body |
+| 400  | Bad Request           | Invalid request data                    |
+| 401  | Unauthorized          | Missing or invalid authentication       |
+| 403  | Forbidden             | Authenticated but not authorized        |
+| 404  | Not Found             | Resource doesn't exist                  |
+| 409  | Conflict              | Resource already exists or conflict     |
+| 422  | Unprocessable Entity  | Validation failed                       |
+| 429  | Too Many Requests     | Rate limit exceeded                     |
+| 500  | Internal Server Error | Server error                            |
+| 503  | Service Unavailable   | Temporary downtime                      |
 
 ---
 
@@ -257,11 +270,13 @@ interface ResourceModel {
 List endpoints support cursor-based pagination:
 
 **Request:**
+
 ```
 GET /api/resources?limit=20&offset=40
 ```
 
 **Response:**
+
 ```json
 {
   "data": [...],
@@ -298,6 +313,7 @@ GET /api/resources?limit=20&offset=40
 API versioning is done via the URL path: `/v1/`, `/v2/`, etc.
 
 **Deprecation Policy:**
+
 - 6 months notice before deprecating an API version
 - Old versions continue to work until sunset date
 
@@ -305,9 +321,9 @@ API versioning is done via the URL path: `/v1/`, `/v2/`, etc.
 
 ## Changelog
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2025-01-15 | v1.0.0 | Initial API release |
+| Date       | Version | Changes             |
+| ---------- | ------- | ------------------- |
+| 2025-01-15 | v1.0.0  | Initial API release |
 
 ---
 

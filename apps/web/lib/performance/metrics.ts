@@ -255,7 +255,9 @@ export function measureTTI(callback: (metric: PerformanceMetric) => void): void 
   try {
     // Simple TTI approximation using load event
     addEventListener('load', () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const navigation = performance.getEntriesByType(
+        'navigation'
+      )[0] as PerformanceNavigationTiming;
 
       if (navigation) {
         const value = navigation.domInteractive - navigation.fetchStart;
@@ -329,9 +331,7 @@ export function getPerformanceSummary(): PerformanceSummary {
  */
 export function logPerformanceMetrics(): void {
   measureCoreWebVitals((metric) => {
-    console.log(
-      `[Performance] ${metric.name}: ${metric.value.toFixed(2)}ms (${metric.rating})`
-    );
+    console.log(`[Performance] ${metric.name}: ${metric.value.toFixed(2)}ms (${metric.rating})`);
   });
 }
 

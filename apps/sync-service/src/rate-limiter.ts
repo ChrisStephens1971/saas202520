@@ -131,11 +131,7 @@ export async function checkMessageRateLimit(
 /**
  * Get current rate limit status for diagnostics
  */
-export async function getRateLimitStatus(
-  connectionId: string,
-  userId: string,
-  orgId: string
-) {
+export async function getRateLimitStatus(connectionId: string, userId: string, orgId: string) {
   try {
     const [connRes, userRes, orgRes] = await Promise.all([
       connectionLimiter.get(connectionId),
@@ -145,19 +141,31 @@ export async function getRateLimitStatus(
 
     return {
       connection: {
-        remaining: connRes ? RATE_LIMITS.perConnection.points - connRes.consumedPoints : RATE_LIMITS.perConnection.points,
+        remaining: connRes
+          ? RATE_LIMITS.perConnection.points - connRes.consumedPoints
+          : RATE_LIMITS.perConnection.points,
         limit: RATE_LIMITS.perConnection.points,
-        resetAt: connRes?.msBeforeNext ? new Date(Date.now() + connRes.msBeforeNext).toISOString() : null,
+        resetAt: connRes?.msBeforeNext
+          ? new Date(Date.now() + connRes.msBeforeNext).toISOString()
+          : null,
       },
       user: {
-        remaining: userRes ? RATE_LIMITS.perUser.points - userRes.consumedPoints : RATE_LIMITS.perUser.points,
+        remaining: userRes
+          ? RATE_LIMITS.perUser.points - userRes.consumedPoints
+          : RATE_LIMITS.perUser.points,
         limit: RATE_LIMITS.perUser.points,
-        resetAt: userRes?.msBeforeNext ? new Date(Date.now() + userRes.msBeforeNext).toISOString() : null,
+        resetAt: userRes?.msBeforeNext
+          ? new Date(Date.now() + userRes.msBeforeNext).toISOString()
+          : null,
       },
       org: {
-        remaining: orgRes ? RATE_LIMITS.perOrg.points - orgRes.consumedPoints : RATE_LIMITS.perOrg.points,
+        remaining: orgRes
+          ? RATE_LIMITS.perOrg.points - orgRes.consumedPoints
+          : RATE_LIMITS.perOrg.points,
         limit: RATE_LIMITS.perOrg.points,
-        resetAt: orgRes?.msBeforeNext ? new Date(Date.now() + orgRes.msBeforeNext).toISOString() : null,
+        resetAt: orgRes?.msBeforeNext
+          ? new Date(Date.now() + orgRes.msBeforeNext).toISOString()
+          : null,
       },
     };
   } catch (error) {

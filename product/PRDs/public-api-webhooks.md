@@ -34,6 +34,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Why is this important now?
 
 **Strategic Importance:**
+
 - **Ecosystem Growth:** Enable developer ecosystem to build on our platform
 - **Market Expansion:** Reach users through third-party applications
 - **Competitive Advantage:** Competitors lack comprehensive API offerings
@@ -42,6 +43,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - **Network Effects:** More integrations = more valuable platform = more users
 
 **Market Opportunity:**
+
 - Growing demand for sports/esports data APIs
 - Tournament streaming services need automated data feeds
 - Mobile app developers want to build tournament companion apps
@@ -59,16 +61,16 @@ Currently, tournament data is locked within our platform with no programmatic ac
 
 ### Key Metrics
 
-| Metric | Baseline | Target | Timeline |
-|--------|----------|--------|----------|
-| Developer Signups | 0 | 50 active developers | 3 months post-launch |
-| API Calls/Month | 0 | 100,000 calls/month | 3 months post-launch |
-| Webhook Subscriptions | 0 | 25 active webhooks | 3 months post-launch |
-| Active Integrations | 0 | 5 production integrations | 6 months post-launch |
-| API Uptime | N/A | >99.9% | Ongoing |
-| API Response Time (p95) | N/A | <100ms | Ongoing |
-| Webhook Delivery Rate | N/A | >99% successful delivery | Ongoing |
-| Paid API Subscriptions | 0 | 10 Pro/Enterprise plans | 6 months post-launch |
+| Metric                  | Baseline | Target                    | Timeline             |
+| ----------------------- | -------- | ------------------------- | -------------------- |
+| Developer Signups       | 0        | 50 active developers      | 3 months post-launch |
+| API Calls/Month         | 0        | 100,000 calls/month       | 3 months post-launch |
+| Webhook Subscriptions   | 0        | 25 active webhooks        | 3 months post-launch |
+| Active Integrations     | 0        | 5 production integrations | 6 months post-launch |
+| API Uptime              | N/A      | >99.9%                    | Ongoing              |
+| API Response Time (p95) | N/A      | <100ms                    | Ongoing              |
+| Webhook Delivery Rate   | N/A      | >99% successful delivery  | Ongoing              |
+| Paid API Subscriptions  | 0        | 10 Pro/Enterprise plans   | 6 months post-launch |
 
 ### Success Indicators
 
@@ -87,6 +89,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can build a companion app showing real-time tournament progress
 
 **Acceptance Criteria:**
+
 - [ ] Can create API key from developer portal
 - [ ] Can fetch tournament list with filtering options
 - [ ] Can retrieve tournament bracket structure
@@ -102,6 +105,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can automatically update my stream overlays without polling
 
 **Acceptance Criteria:**
+
 - [ ] Can configure webhook URL in developer portal
 - [ ] Receive notifications within 5 seconds of event occurrence
 - [ ] Webhook payload includes complete match data
@@ -116,6 +120,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can provide tournament performance analytics to my users
 
 **Acceptance Criteria:**
+
 - [ ] Can access paginated list of historical tournaments
 - [ ] Can retrieve detailed player statistics across tournaments
 - [ ] Can fetch match history for any player
@@ -130,6 +135,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can build my integration confidently before going to production
 
 **Acceptance Criteria:**
+
 - [ ] Interactive API documentation (Swagger UI) available
 - [ ] Can test all endpoints directly from documentation
 - [ ] Code examples provided in 3 languages (JavaScript, Python, curl)
@@ -144,6 +150,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can optimize my integration and avoid hitting limits
 
 **Acceptance Criteria:**
+
 - [ ] Dashboard shows daily/weekly/monthly API call volume
 - [ ] Can see current rate limit tier and remaining quota
 - [ ] Rate limit headers included in all API responses
@@ -158,6 +165,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can ensure my integration receives all events reliably
 
 **Acceptance Criteria:**
+
 - [ ] Can create multiple webhook endpoints
 - [ ] Can select specific events to subscribe to
 - [ ] Can test webhook with sample payload
@@ -172,6 +180,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** players can see tournament progress without visiting the main platform
 
 **Acceptance Criteria:**
+
 - [ ] API provides tournament data in embeddable format
 - [ ] CORS configured to allow embedding from custom domains
 - [ ] Real-time updates via webhooks or polling
@@ -185,6 +194,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 **So that** I can protect my integration if keys are compromised
 
 **Acceptance Criteria:**
+
 - [ ] Can generate multiple API keys per account
 - [ ] Can name/label keys for different environments
 - [ ] Can revoke individual keys without affecting others
@@ -197,6 +207,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Must Have (P0)
 
 **API Foundation:**
+
 - RESTful API v1 with 15+ read-only endpoints
 - API key authentication (Bearer token)
 - Rate limiting system (Redis-based) with 3 tiers (Free: 100/hr, Pro: 1000/hr, Enterprise: 10000/hr)
@@ -208,40 +219,47 @@ Currently, tournament data is locked within our platform with no programmatic ac
 
 **API Endpoints (Read-Only v1):**
 
-*Tournaments:*
+_Tournaments:_
+
 - GET /api/v1/tournaments (list with pagination, filtering)
 - GET /api/v1/tournaments/:id (tournament details)
 - GET /api/v1/tournaments/:id/matches (all matches in tournament)
 - GET /api/v1/tournaments/:id/players (all players in tournament)
 - GET /api/v1/tournaments/:id/bracket (bracket structure with match tree)
 
-*Players:*
+_Players:_
+
 - GET /api/v1/players (list with pagination, search)
 - GET /api/v1/players/:id (player profile)
 - GET /api/v1/players/:id/history (tournament participation history)
 - GET /api/v1/players/:id/stats (aggregated player statistics)
 
-*Matches:*
+_Matches:_
+
 - GET /api/v1/matches (list with filtering by tournament, player, date)
 - GET /api/v1/matches/:id (detailed match information)
 
-*Leaderboards:*
+_Leaderboards:_
+
 - GET /api/v1/leaderboards (global player rankings)
 - GET /api/v1/leaderboards/venue/:id (venue-specific rankings)
 - GET /api/v1/leaderboards/format/:id (format-specific rankings)
 
-*Venues:*
+_Venues:_
+
 - GET /api/v1/venues (list all venues)
 - GET /api/v1/venues/:id (venue details)
 - GET /api/v1/venues/:id/tournaments (tournaments at venue)
 
 **Developer Portal:**
+
 - API key management (create, view, revoke)
 - Usage dashboard (calls per day, success rate)
 - API documentation page (embedded Swagger UI)
 - Account management (tier, billing)
 
 **Documentation:**
+
 - OpenAPI 3.0 specification
 - Interactive Swagger UI
 - Getting Started guide
@@ -253,6 +271,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Should Have (P1)
 
 **Webhook System:**
+
 - Webhook endpoint registration (URL, events, secret)
 - Event types: tournament.created, tournament.started, tournament.completed, match.started, match.completed, player.registered, player.checked_in, player.eliminated
 - Webhook delivery via Redis queue
@@ -263,6 +282,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Webhook management UI (add, edit, delete, disable)
 
 **Enhanced Developer Portal:**
+
 - Webhook configuration and testing
 - Delivery logs viewer with filtering
 - Detailed usage analytics (endpoints, response times, errors)
@@ -271,6 +291,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Download usage reports (CSV)
 
 **Additional Documentation:**
+
 - Webhook setup guide
 - Best practices guide
 - Troubleshooting guide
@@ -278,6 +299,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Migration guides (future versions)
 
 **Code Examples:**
+
 - Complete integration examples in 3 languages
 - Sample webhook handlers
 - Error handling examples
@@ -286,6 +308,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Nice to Have (P2)
 
 **Advanced API Features:**
+
 - Write endpoints (POST, PUT, DELETE) for tournament creation/management
 - GraphQL API alternative
 - WebSocket support for real-time data streaming
@@ -294,6 +317,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Embedded resource expansion (?expand=players,venue)
 
 **Developer Experience Enhancements:**
+
 - Official SDKs (JavaScript, Python, PHP)
 - Postman collection
 - Sandbox environment with test data
@@ -303,6 +327,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Blog with integration tutorials
 
 **Advanced Webhook Features:**
+
 - Batch webhook delivery (multiple events in one request)
 - Webhook filtering (conditional delivery)
 - Webhook transformation (custom payload formats)
@@ -310,6 +335,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - Webhook monitoring dashboard
 
 **Analytics & Monitoring:**
+
 - Public API status page
 - Real-time API performance metrics
 - Developer analytics (popular endpoints, error rates)
@@ -419,6 +445,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Mockups/Wireframes
 
 **Developer Portal Dashboard:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ Developer Portal                    [Docs] [Support]    │
@@ -451,6 +478,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ```
 
 **API Documentation (Swagger UI):**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ Tournament Platform API v1              [Authorize]     │
@@ -484,6 +512,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 ### Architecture Overview
 
 **API Layer (Next.js API Routes):**
+
 - `/pages/api/v1/` - API route handlers
 - Middleware: Authentication, rate limiting, error handling, logging
 - Controllers: Business logic for each endpoint
@@ -491,12 +520,14 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - OpenAPI spec generation via middleware
 
 **Authentication:**
+
 - API keys stored in database (hashed with bcrypt)
 - Bearer token authentication in Authorization header
 - API key scoped to organization (tenant_id)
 - Key metadata: name, created_at, last_used_at, rate_limit_tier
 
 **Rate Limiting (Redis):**
+
 - Redis key pattern: `ratelimit:{api_key}:{hour}`
 - Sliding window counter algorithm
 - Tiered limits: Free (100/hr), Pro (1000/hr), Enterprise (10000/hr)
@@ -504,6 +535,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - 429 response when limit exceeded
 
 **Webhook System:**
+
 - Webhook subscriptions stored in PostgreSQL
 - Events published to Redis queue (Bull/BullMQ)
 - Background worker processes queue
@@ -512,6 +544,7 @@ Currently, tournament data is locked within our platform with no programmatic ac
 - HMAC SHA-256 signature in X-Webhook-Signature header
 
 **Data Flow:**
+
 ```
 Client Request
   ↓
@@ -533,6 +566,7 @@ Client Response (with rate limit headers)
 ```
 
 **Webhook Flow:**
+
 ```
 Event Occurs (tournament.started)
   ↓
@@ -554,6 +588,7 @@ For Each Subscription:
 ### Dependencies
 
 **Core Dependencies:**
+
 - **Next.js 13+:** API Routes for endpoint implementation
 - **Redis:** Rate limiting counters and webhook queue
 - **PostgreSQL:** API keys, webhook subscriptions, delivery logs
@@ -562,6 +597,7 @@ For Each Subscription:
 - **Swagger UI:** Interactive API documentation
 
 **Libraries:**
+
 - **jose** or **jsonwebtoken:** API key generation and verification
 - **bcrypt:** API key hashing
 - **rate-limiter-flexible:** Redis-based rate limiting
@@ -572,16 +608,19 @@ For Each Subscription:
 ### API/Integration Requirements
 
 **Authentication:**
+
 ```http
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```
 
 **Example API Key Format:**
+
 - `sk_live_xxxxxxxxxxxxxxxxxxxxx` (production - example only)
 - `sk_test_xxxxxxxxxxxxxxxxxxxxx` (test/sandbox - example only)
 
 **Rate Limit Response Headers:**
+
 ```http
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
@@ -590,6 +629,7 @@ Retry-After: 3600 (if 429 response)
 ```
 
 **Standard Error Response:**
+
 ```json
 {
   "error": {
@@ -604,14 +644,12 @@ Retry-After: 3600 (if 429 response)
 ```
 
 **Webhook Signature Verification:**
+
 ```javascript
 // Header: X-Webhook-Signature: sha256=abc123...
 const signature = req.headers['x-webhook-signature'];
 const payload = JSON.stringify(req.body);
-const expected = crypto
-  .createHmac('sha256', webhookSecret)
-  .update(payload)
-  .digest('hex');
+const expected = crypto.createHmac('sha256', webhookSecret).update(payload).digest('hex');
 
 if (`sha256=${expected}` !== signature) {
   throw new Error('Invalid signature');
@@ -623,6 +661,7 @@ if (`sha256=${expected}` !== signature) {
 **Database Tables:**
 
 **api_keys:**
+
 ```sql
 CREATE TABLE api_keys (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -640,6 +679,7 @@ CREATE TABLE api_keys (
 ```
 
 **webhook_subscriptions:**
+
 ```sql
 CREATE TABLE webhook_subscriptions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -656,6 +696,7 @@ CREATE TABLE webhook_subscriptions (
 ```
 
 **webhook_delivery_logs:**
+
 ```sql
 CREATE TABLE webhook_delivery_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -674,11 +715,13 @@ CREATE TABLE webhook_delivery_logs (
 ```
 
 **Redis Keys:**
+
 - `ratelimit:{api_key_prefix}:{hour}` - Counter (expires in 1 hour)
 - `webhook:queue` - Bull queue for webhook deliveries
 - `webhook:retry:{delivery_id}` - Delayed jobs for retries
 
 **Privacy Considerations:**
+
 - API only exposes public tournament data (no personal player info beyond public profiles)
 - Email addresses and phone numbers NOT included in API responses
 - Payment information never exposed
@@ -686,6 +729,7 @@ CREATE TABLE webhook_delivery_logs (
 - Tenant isolation enforced (users can only access their organization's data)
 
 **Data Retention:**
+
 - API keys: Retained until revoked
 - Webhook delivery logs: 30 days retention, then archived or deleted
 - API usage logs: 90 days for analytics
@@ -693,11 +737,13 @@ CREATE TABLE webhook_delivery_logs (
 ### Performance Requirements
 
 **API Response Times:**
+
 - **p50:** <50ms
 - **p95:** <100ms
 - **p99:** <200ms
 
 **Optimizations:**
+
 - Database indexes on frequently queried fields (tournament status, player ID, dates)
 - Response caching for read-heavy endpoints (tournaments list, leaderboards)
 - Pagination to limit response size
@@ -705,12 +751,14 @@ CREATE TABLE webhook_delivery_logs (
 - Redis cluster for rate limiting at scale
 
 **Webhook Delivery:**
+
 - **Target:** >99% successful delivery rate
 - **Retry:** 3 attempts with exponential backoff
 - **Timeout:** 10 seconds per delivery attempt
 - **Queue Processing:** Background workers (horizontal scaling)
 
 **Scalability:**
+
 - Support 100,000+ API calls/day
 - Handle 1,000+ webhook subscriptions
 - Process 10,000+ webhook deliveries/day
@@ -722,6 +770,7 @@ CREATE TABLE webhook_delivery_logs (
 **Critical:** All API endpoints MUST enforce tenant isolation.
 
 **Implementation:**
+
 - API key includes tenant_id in database
 - All database queries filtered by tenant_id
 - Prevent cross-tenant data access
@@ -729,17 +778,20 @@ CREATE TABLE webhook_delivery_logs (
 - Rate limits per tenant (not global)
 
 **Tenant-Specific Features:**
+
 - Custom webhook events per tenant (future)
 - Tenant-specific rate limit overrides
 - White-label API documentation (future)
 - Tenant branding in developer portal (future)
 
 **Cross-Tenant Access:**
+
 - Public tournaments (if enabled) accessible across tenants
 - Leaderboards may aggregate across tenants (configurable)
 - Venue data may be shared across tenants
 
 **Testing:**
+
 - Integration tests verify tenant isolation
 - Cannot access another tenant's tournaments via API
 - Webhook subscriptions only receive events from own tenant
@@ -749,6 +801,7 @@ CREATE TABLE webhook_delivery_logs (
 ### Rollout Strategy
 
 **Phase 1: Private Beta (Week 1-2)**
+
 - [ ] Invite 10 selected developers (existing platform users interested in integrations)
 - [ ] Provide early access to API and developer portal
 - [ ] Collect feedback on documentation, ease of use, missing features
@@ -756,6 +809,7 @@ CREATE TABLE webhook_delivery_logs (
 - [ ] Monitor API performance and error rates
 
 **Phase 2: Public Beta (Week 3-4)**
+
 - [ ] Open API access to all platform users
 - [ ] Announce via email to all tournament organizers
 - [ ] Publish blog post: "Introducing the Tournament Platform API"
@@ -764,6 +818,7 @@ CREATE TABLE webhook_delivery_logs (
 - [ ] Monitor adoption metrics and gather feedback
 
 **Phase 3: General Availability (Week 5+)**
+
 - [ ] Remove "beta" label
 - [ ] Implement tiered pricing (Free, Pro, Enterprise)
 - [ ] Announce v1.0 with stability guarantee
@@ -772,6 +827,7 @@ CREATE TABLE webhook_delivery_logs (
 - [ ] Begin outreach to integration partners
 
 **Phase 4: Growth (Month 2-3)**
+
 - [ ] Onboard 5 featured integration partners
 - [ ] Publish integration tutorials and examples
 - [ ] Host webinar: "Building on the Tournament Platform API"
@@ -781,6 +837,7 @@ CREATE TABLE webhook_delivery_logs (
 ### Success Criteria for Launch
 
 **Phase 1 (Private Beta):**
+
 - 8/10 beta developers actively using API
 - <5 critical bugs reported
 - Documentation rated 4+ stars by beta users
@@ -788,6 +845,7 @@ CREATE TABLE webhook_delivery_logs (
 - Average response time <100ms (p95)
 
 **Phase 2 (Public Beta):**
+
 - 25+ developer signups
 - 10,000+ API calls/week
 - 5+ webhook subscriptions active
@@ -795,6 +853,7 @@ CREATE TABLE webhook_delivery_logs (
 - <10% support ticket rate
 
 **Phase 3 (General Availability):**
+
 - 50+ active developer accounts
 - 50,000+ API calls/week
 - 2+ featured integrations launched
@@ -802,6 +861,7 @@ CREATE TABLE webhook_delivery_logs (
 - API uptime >99.9%
 
 **Phase 4 (Growth):**
+
 - 100+ developer accounts
 - 100,000+ API calls/month
 - 5+ production integrations
@@ -811,16 +871,19 @@ CREATE TABLE webhook_delivery_logs (
 ### Marketing/Communication Plan
 
 **Pre-Launch (Week before Private Beta):**
+
 - Email to select developers: "You're invited to API private beta"
 - Prepare documentation site and developer portal
 - Create demo video (3 minutes): "Build Your First Integration"
 
 **Private Beta Launch:**
+
 - Personal emails to beta participants
 - Slack/Discord channel for beta feedback
 - Weekly check-ins with beta developers
 
 **Public Beta Launch:**
+
 - **Email Campaign:** "Build on the Tournament Platform - API Now Available"
   - Sent to all tournament organizers
   - Highlight use cases: mobile apps, streaming overlays, analytics
@@ -833,12 +896,14 @@ CREATE TABLE webhook_delivery_logs (
 - **Product Hunt:** Submit API launch
 
 **General Availability:**
+
 - **Press Release:** "Tournament Platform Opens Developer Ecosystem"
 - **Case Studies:** Publish 2-3 integration success stories
 - **Webinar:** "Getting Started with the Tournament Platform API" (recorded)
 - **Developer Newsletter:** Monthly updates (new features, tips, showcases)
 
 **Ongoing:**
+
 - Monthly blog posts featuring integrations
 - Developer spotlight series (Q&A with integration builders)
 - API changelog updates
@@ -846,78 +911,83 @@ CREATE TABLE webhook_delivery_logs (
 
 ## 9. Risks and Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **API Abuse/DDoS** | High - Service outage, cost spike | Medium | - Implement robust rate limiting (Redis)<br>- Monitor for unusual patterns<br>- API key revocation capability<br>- WAF/CDN protection (Cloudflare)<br>- Alerting for spike in traffic |
-| **Breaking Changes in API** | High - Breaks developer integrations | Low | - API versioning (/v1/, /v2/)<br>- Deprecation policy (6-month notice)<br>- Never remove fields, only add<br>- Maintain backward compatibility<br>- Communicate changes in advance |
-| **Webhook Delivery Failures** | Medium - Missed events, frustrated developers | Medium | - Retry logic (3 attempts, exponential backoff)<br>- Delivery logs for debugging<br>- Manual retry capability<br>- Webhook health monitoring<br>- Email alerts for persistent failures |
-| **Security Vulnerabilities** | High - Data breach, unauthorized access | Low | - HTTPS only (no HTTP)<br>- API key hashing (bcrypt)<br>- Webhook signature verification (HMAC)<br>- Regular security audits<br>- Tenant isolation enforcement<br>- Rate limiting prevents brute force |
-| **Low Developer Adoption** | High - Feature doesn't achieve goals | Medium | - Excellent documentation (interactive, examples)<br>- Simple onboarding (one-click API key)<br>- Active developer support (fast responses)<br>- Showcase integrations to inspire<br>- Free tier to reduce barriers<br>- Promote in communities |
-| **Performance Degradation** | Medium - Slow API responses, poor UX | Medium | - Database query optimization (indexes)<br>- Response caching (Redis)<br>- Horizontal scaling of API servers<br>- Load testing before launch<br>- Monitoring and alerting (response times)<br>- Performance budget (p95 <100ms) |
-| **Incomplete Documentation** | Medium - Developer frustration, support load | High | - Comprehensive docs before launch<br>- Code examples in 3 languages<br>- Interactive Swagger UI for testing<br>- Beta feedback on docs clarity<br>- FAQ section for common issues<br>- Video tutorials |
-| **Webhook Queue Overload** | Medium - Delayed event delivery | Low | - Bull queue with Redis<br>- Horizontal scaling of workers<br>- Monitoring queue depth<br>- Alerting for queue backlog<br>- Exponential backoff prevents thundering herd<br>- Dead letter queue for failures |
-| **API Key Compromise** | Medium - Unauthorized access, data leak | Low | - API key revocation capability<br>- Last used timestamp monitoring<br>- Unusual activity alerts<br>- Key rotation recommendation<br>- Webhook signature prevents tampering<br>- Tenant isolation limits damage |
-| **Cost Overruns** | Low - Higher infrastructure costs | Low | - Rate limiting controls usage<br>- Tiered pricing covers costs<br>- Monitor cloud spend (AWS/Vercel)<br>- Optimize expensive queries<br>- Caching reduces database load |
+| Risk                          | Impact                                        | Probability | Mitigation                                                                                                                                                                                                                                      |
+| ----------------------------- | --------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **API Abuse/DDoS**            | High - Service outage, cost spike             | Medium      | - Implement robust rate limiting (Redis)<br>- Monitor for unusual patterns<br>- API key revocation capability<br>- WAF/CDN protection (Cloudflare)<br>- Alerting for spike in traffic                                                           |
+| **Breaking Changes in API**   | High - Breaks developer integrations          | Low         | - API versioning (/v1/, /v2/)<br>- Deprecation policy (6-month notice)<br>- Never remove fields, only add<br>- Maintain backward compatibility<br>- Communicate changes in advance                                                              |
+| **Webhook Delivery Failures** | Medium - Missed events, frustrated developers | Medium      | - Retry logic (3 attempts, exponential backoff)<br>- Delivery logs for debugging<br>- Manual retry capability<br>- Webhook health monitoring<br>- Email alerts for persistent failures                                                          |
+| **Security Vulnerabilities**  | High - Data breach, unauthorized access       | Low         | - HTTPS only (no HTTP)<br>- API key hashing (bcrypt)<br>- Webhook signature verification (HMAC)<br>- Regular security audits<br>- Tenant isolation enforcement<br>- Rate limiting prevents brute force                                          |
+| **Low Developer Adoption**    | High - Feature doesn't achieve goals          | Medium      | - Excellent documentation (interactive, examples)<br>- Simple onboarding (one-click API key)<br>- Active developer support (fast responses)<br>- Showcase integrations to inspire<br>- Free tier to reduce barriers<br>- Promote in communities |
+| **Performance Degradation**   | Medium - Slow API responses, poor UX          | Medium      | - Database query optimization (indexes)<br>- Response caching (Redis)<br>- Horizontal scaling of API servers<br>- Load testing before launch<br>- Monitoring and alerting (response times)<br>- Performance budget (p95 <100ms)                 |
+| **Incomplete Documentation**  | Medium - Developer frustration, support load  | High        | - Comprehensive docs before launch<br>- Code examples in 3 languages<br>- Interactive Swagger UI for testing<br>- Beta feedback on docs clarity<br>- FAQ section for common issues<br>- Video tutorials                                         |
+| **Webhook Queue Overload**    | Medium - Delayed event delivery               | Low         | - Bull queue with Redis<br>- Horizontal scaling of workers<br>- Monitoring queue depth<br>- Alerting for queue backlog<br>- Exponential backoff prevents thundering herd<br>- Dead letter queue for failures                                    |
+| **API Key Compromise**        | Medium - Unauthorized access, data leak       | Low         | - API key revocation capability<br>- Last used timestamp monitoring<br>- Unusual activity alerts<br>- Key rotation recommendation<br>- Webhook signature prevents tampering<br>- Tenant isolation limits damage                                 |
+| **Cost Overruns**             | Low - Higher infrastructure costs             | Low         | - Rate limiting controls usage<br>- Tiered pricing covers costs<br>- Monitor cloud spend (AWS/Vercel)<br>- Optimize expensive queries<br>- Caching reduces database load                                                                        |
 
 ## 10. Timeline and Milestones
 
 **Sprint 10 - Week 3 (5 days)**
 
-| Milestone | Target Date | Status | Owner |
-|-----------|-------------|--------|-------|
-| PRD Approved | Day 1 (Nov 6) | ⏳ | Product Team |
-| API Design Complete | Day 1 | ⏳ | Engineering |
-| OpenAPI Spec Created | Day 1-2 | ⏳ | Engineering |
-| Database Schema (API keys, webhooks) | Day 2 | ⏳ | Engineering |
-| API Endpoints Implemented (15+) | Day 2-3 | ⏳ | Engineering |
-| Authentication Middleware | Day 2 | ⏳ | Engineering |
-| Rate Limiting System (Redis) | Day 3 | ⏳ | Engineering |
-| Webhook System (Bull queue) | Day 3-4 | ⏳ | Engineering |
-| Developer Portal UI | Day 3-4 | ⏳ | Engineering |
-| API Documentation (Swagger) | Day 4 | ⏳ | Engineering |
-| Code Examples (3 languages) | Day 4 | ⏳ | Engineering |
-| Testing (Unit, Integration, Load) | Day 4-5 | ⏳ | QA/Engineering |
-| Security Review | Day 5 | ⏳ | Security Team |
-| Private Beta Launch | Day 5 | ⏳ | Product Team |
+| Milestone                            | Target Date   | Status | Owner          |
+| ------------------------------------ | ------------- | ------ | -------------- |
+| PRD Approved                         | Day 1 (Nov 6) | ⏳     | Product Team   |
+| API Design Complete                  | Day 1         | ⏳     | Engineering    |
+| OpenAPI Spec Created                 | Day 1-2       | ⏳     | Engineering    |
+| Database Schema (API keys, webhooks) | Day 2         | ⏳     | Engineering    |
+| API Endpoints Implemented (15+)      | Day 2-3       | ⏳     | Engineering    |
+| Authentication Middleware            | Day 2         | ⏳     | Engineering    |
+| Rate Limiting System (Redis)         | Day 3         | ⏳     | Engineering    |
+| Webhook System (Bull queue)          | Day 3-4       | ⏳     | Engineering    |
+| Developer Portal UI                  | Day 3-4       | ⏳     | Engineering    |
+| API Documentation (Swagger)          | Day 4         | ⏳     | Engineering    |
+| Code Examples (3 languages)          | Day 4         | ⏳     | Engineering    |
+| Testing (Unit, Integration, Load)    | Day 4-5       | ⏳     | QA/Engineering |
+| Security Review                      | Day 5         | ⏳     | Security Team  |
+| Private Beta Launch                  | Day 5         | ⏳     | Product Team   |
 
 **Post-Sprint 10:**
 
-| Milestone | Target Date | Status |
-|-----------|-------------|--------|
-| Beta Feedback Collection | Week 4 | ⏳ |
-| Bug Fixes & Improvements | Week 4-5 | ⏳ |
-| Public Beta Launch | Week 5 | ⏳ |
-| General Availability | Week 6-7 | ⏳ |
-| First Integration Featured | Month 2 | ⏳ |
-| 50 Developer Milestone | Month 3 | ⏳ |
-| API v1.1 (Enhancements) | Month 4-6 | ⏳ |
+| Milestone                  | Target Date | Status |
+| -------------------------- | ----------- | ------ |
+| Beta Feedback Collection   | Week 4      | ⏳     |
+| Bug Fixes & Improvements   | Week 4-5    | ⏳     |
+| Public Beta Launch         | Week 5      | ⏳     |
+| General Availability       | Week 6-7    | ⏳     |
+| First Integration Featured | Month 2     | ⏳     |
+| 50 Developer Milestone     | Month 3     | ⏳     |
+| API v1.1 (Enhancements)    | Month 4-6   | ⏳     |
 
 **Development Breakdown (Week 3, 5 days):**
 
 **Day 1: Design & Foundation**
+
 - PRD review and approval (1 hour)
 - API design session (2 hours)
 - Create OpenAPI specification (3 hours)
 - Database schema design (2 hours)
 
 **Day 2: Core API Implementation**
+
 - Database migrations (1 hour)
 - Authentication middleware (2 hours)
 - Tournament endpoints (3 hours)
 - Player endpoints (2 hours)
 
 **Day 3: API Completion & Rate Limiting**
+
 - Match endpoints (2 hours)
 - Leaderboard endpoints (2 hours)
 - Venue endpoints (1 hour)
 - Rate limiting system (Redis) (3 hours)
 
 **Day 4: Webhooks & Developer Portal**
+
 - Webhook system (Bull queue, delivery) (4 hours)
 - Developer portal UI (key management) (3 hours)
 - Webhook management UI (1 hour)
 
 **Day 5: Documentation, Testing & Launch**
+
 - Swagger UI integration (2 hours)
 - Documentation and examples (2 hours)
 - Testing (unit, integration, load) (3 hours)
@@ -966,27 +1036,28 @@ CREATE TABLE webhook_delivery_logs (
    - Excellent documentation with interactive examples
    - Clear versioning and deprecation policy
    - Webhook system with retry logic
-   - *Takeaway:* Set the standard for developer experience
+   - _Takeaway:_ Set the standard for developer experience
 
 2. **GitHub API:**
    - RESTful with GraphQL alternative
    - Comprehensive SDKs in multiple languages
    - Rate limiting with clear headers
-   - *Takeaway:* Dual API approach (REST + GraphQL)
+   - _Takeaway:_ Dual API approach (REST + GraphQL)
 
 3. **Twilio API:**
    - Simple authentication (API key + secret)
    - Great code examples in many languages
    - Developer portal with usage analytics
-   - *Takeaway:* Focus on simplicity and examples
+   - _Takeaway:_ Focus on simplicity and examples
 
 4. **SendGrid API:**
    - Webhook event notifications
    - Detailed delivery logs
    - API playground for testing
-   - *Takeaway:* Webhook management is crucial
+   - _Takeaway:_ Webhook management is crucial
 
 **API Design Best Practices:**
+
 - RESTful conventions (GET, POST, PUT, DELETE)
 - Versioning in URL (/v1/)
 - Consistent response structure (data, meta, errors)
@@ -996,12 +1067,14 @@ CREATE TABLE webhook_delivery_logs (
 - HATEOAS links (optional, for discoverability)
 
 **OpenAPI Specification:**
+
 - Industry standard for API documentation
 - Generates interactive Swagger UI
 - Can generate client SDKs automatically
 - Validates requests/responses
 
 **Webhook Best Practices:**
+
 - HTTPS only
 - Signature verification (HMAC)
 - Retry with exponential backoff
@@ -1021,6 +1094,7 @@ CREATE TABLE webhook_delivery_logs (
 ### Code Examples
 
 **Example 1: Fetch Tournaments (JavaScript)**
+
 ```javascript
 const API_KEY = 'sk_live_your_api_key_here';
 const BASE_URL = 'https://api.tournamentplatform.com/api/v1';
@@ -1028,9 +1102,9 @@ const BASE_URL = 'https://api.tournamentplatform.com/api/v1';
 async function fetchTournaments() {
   const response = await fetch(`${BASE_URL}/tournaments?status=active&limit=10`, {
     headers: {
-      'Authorization': `Bearer ${API_KEY}`,
-      'Content-Type': 'application/json'
-    }
+      Authorization: `Bearer ${API_KEY}`,
+      'Content-Type': 'application/json',
+    },
   });
 
   if (!response.ok) {
@@ -1043,16 +1117,17 @@ async function fetchTournaments() {
 
 // Usage
 fetchTournaments()
-  .then(data => {
+  .then((data) => {
     console.log(`Found ${data.meta.total} tournaments`);
-    data.data.forEach(tournament => {
+    data.data.forEach((tournament) => {
       console.log(`- ${tournament.name} (${tournament.format})`);
     });
   })
-  .catch(error => console.error('Error:', error));
+  .catch((error) => console.error('Error:', error));
 ```
 
 **Example 2: Webhook Handler (Node.js/Express)**
+
 ```javascript
 const express = require('express');
 const crypto = require('crypto');
@@ -1109,6 +1184,7 @@ app.listen(3000, () => console.log('Webhook server running on port 3000'));
 ```
 
 **Example 3: Fetch Player Stats (Python)**
+
 ```python
 import requests
 
@@ -1142,6 +1218,7 @@ except Exception as e:
 ```
 
 **Example 4: Rate Limit Handling (JavaScript)**
+
 ```javascript
 async function fetchWithRateLimit(url, options) {
   const response = await fetch(url, options);
@@ -1156,7 +1233,7 @@ async function fetchWithRateLimit(url, options) {
     console.log(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
 
     // Wait and retry
-    await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+    await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
     return fetchWithRateLimit(url, options);
   }
 
@@ -1174,7 +1251,6 @@ async function fetchWithRateLimit(url, options) {
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                     | Changes                                                 |
+| ---------- | -------------------------- | ------------------------------------------------------- |
 | 2025-11-06 | Claude (Product Assistant) | Initial comprehensive draft with all sections completed |
-

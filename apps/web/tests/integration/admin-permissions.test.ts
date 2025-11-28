@@ -1,4 +1,3 @@
- 
 /**
  * Admin Permission Tests
  * Sprint 9 Phase 2 - Admin Dashboard
@@ -421,8 +420,7 @@ describe('Admin Permission Tests', () => {
         },
       });
 
-      const canEdit =
-        member?.role === 'admin' || member?.role === 'owner' || member?.role === 'td';
+      const canEdit = member?.role === 'admin' || member?.role === 'owner' || member?.role === 'td';
       expect(canEdit).toBe(false);
     });
 
@@ -525,7 +523,9 @@ describe('Admin Permission Tests', () => {
         where: { userId: adminUserId, orgId: testOrgId },
       });
       const adminCanCreate =
-        adminMember?.role === 'admin' || adminMember?.role === 'owner' || adminMember?.role === 'td';
+        adminMember?.role === 'admin' ||
+        adminMember?.role === 'owner' ||
+        adminMember?.role === 'td';
       expect(adminCanCreate).toBe(true);
 
       // Organizer can create
@@ -543,7 +543,9 @@ describe('Admin Permission Tests', () => {
         where: { userId: playerUserId, orgId: testOrgId },
       });
       const playerCanCreate =
-        playerMember?.role === 'admin' || playerMember?.role === 'owner' || playerMember?.role === 'td';
+        playerMember?.role === 'admin' ||
+        playerMember?.role === 'owner' ||
+        playerMember?.role === 'td';
       expect(playerCanCreate).toBe(false);
     });
 
@@ -559,7 +561,8 @@ describe('Admin Permission Tests', () => {
       const organizerMember = await prisma.organizationMember.findFirst({
         where: { userId: organizerUserId, orgId: testOrgId },
       });
-      const organizerCanDelete = organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
+      const organizerCanDelete =
+        organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
       expect(organizerCanDelete).toBe(false);
 
       // Player cannot delete
@@ -582,7 +585,8 @@ describe('Admin Permission Tests', () => {
       const organizerMember = await prisma.organizationMember.findFirst({
         where: { userId: organizerUserId, orgId: testOrgId },
       });
-      const organizerCanManage = organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
+      const organizerCanManage =
+        organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
       expect(organizerCanManage).toBe(false);
 
       // Player cannot manage
@@ -605,7 +609,8 @@ describe('Admin Permission Tests', () => {
       const organizerMember = await prisma.organizationMember.findFirst({
         where: { userId: organizerUserId, orgId: testOrgId },
       });
-      const organizerCanView = organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
+      const organizerCanView =
+        organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
       expect(organizerCanView).toBe(false);
 
       // Player cannot view
@@ -628,7 +633,8 @@ describe('Admin Permission Tests', () => {
       const organizerMember = await prisma.organizationMember.findFirst({
         where: { userId: organizerUserId, orgId: testOrgId },
       });
-      const organizerCanManage = organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
+      const organizerCanManage =
+        organizerMember?.role === 'admin' || organizerMember?.role === 'owner';
       expect(organizerCanManage).toBe(false);
 
       // Player cannot manage

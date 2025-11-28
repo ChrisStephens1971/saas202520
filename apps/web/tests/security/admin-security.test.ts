@@ -1,4 +1,3 @@
- 
 /**
  * Admin Security Tests
  * Sprint 9 Phase 2 - Admin Dashboard
@@ -121,7 +120,8 @@ describe('Admin Security Tests', () => {
         body: { name: 'Updated Tournament' },
       };
 
-      const hasCSRFToken = mockUpdateRequest.headers['x-csrf-token' as keyof typeof mockUpdateRequest.headers];
+      const hasCSRFToken =
+        mockUpdateRequest.headers['x-csrf-token' as keyof typeof mockUpdateRequest.headers];
       expect(hasCSRFToken).toBeUndefined();
     });
 
@@ -134,7 +134,8 @@ describe('Admin Security Tests', () => {
         },
       };
 
-      const hasCSRFToken = mockDeleteRequest.headers['x-csrf-token' as keyof typeof mockDeleteRequest.headers];
+      const hasCSRFToken =
+        mockDeleteRequest.headers['x-csrf-token' as keyof typeof mockDeleteRequest.headers];
       expect(hasCSRFToken).toBeUndefined();
     });
 

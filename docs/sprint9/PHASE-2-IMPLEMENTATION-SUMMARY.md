@@ -17,6 +17,7 @@ This document summarizes the implementation of admin-only API routes with role-b
 ### 1. Authentication & Security
 
 #### Admin Middleware
+
 **File:** `C:\devop\saas202520\apps\web\lib\auth\admin-middleware.ts`
 
 - Role-based authentication (admin/owner roles)
@@ -26,12 +27,14 @@ This document summarizes the implementation of admin-only API routes with role-b
 - Returns 403 for non-admin users
 
 **Key Functions:**
+
 - `verifyAdmin()` - Verify user has admin role
 - `requireAdmin()` - Middleware for protecting routes
 - `isSystemAdmin()` - Check if user is system owner
 - `getAdminPermissions()` - Get permission flags by role
 
 #### Rate Limiting
+
 **File:** `C:\devop\saas202520\apps\web\lib\auth\admin-rate-limiter.ts`
 
 - Standard operations: 100 req/min per admin
@@ -56,11 +59,13 @@ Complete audit trail for all admin actions:
 - Metadata for additional context
 
 **Convenience Methods:**
+
 - `logTournamentCreated()`, `logTournamentUpdated()`, `logTournamentDeleted()`
 - `logUserBanned()`, `logUserSuspended()`, `logUserUpdated()`
 - `logBulkOperation()`, `logDataExport()`
 
 **Current Implementation:**
+
 - Logs to console for monitoring systems
 - Stores violations in Redis (24-hour TTL)
 - Ready for database integration (see schema changes)
@@ -70,6 +75,7 @@ Complete audit trail for all admin actions:
 ### 3. Tournament Management APIs
 
 #### List Tournaments
+
 **GET** `/api/admin/tournaments`
 
 - Pagination (default: 20, max: 100 per page)
@@ -80,6 +86,7 @@ Complete audit trail for all admin actions:
 - Returns tournament list with organization details
 
 #### Get Tournament Details
+
 **GET** `/api/admin/tournaments/:id`
 
 - Full tournament details
@@ -89,6 +96,7 @@ Complete audit trail for all admin actions:
 - Recent matches (latest 5 completed)
 
 #### Create Tournament
+
 **POST** `/api/admin/tournaments`
 
 - Admin creation of tournaments
@@ -97,6 +105,7 @@ Complete audit trail for all admin actions:
 - Logs creation to audit trail
 
 #### Update Tournament
+
 **PATCH** `/api/admin/tournaments/:id`
 
 - Update name, description, status, format
@@ -104,12 +113,14 @@ Complete audit trail for all admin actions:
 - Logs changes to audit trail
 
 #### Delete Tournament
+
 **DELETE** `/api/admin/tournaments/:id`
 
 - Soft delete (sets status to 'cancelled')
 - Logs deletion to audit trail
 
 #### Bulk Operations
+
 **POST** `/api/admin/tournaments/bulk`
 
 - Delete multiple tournaments
@@ -119,6 +130,7 @@ Complete audit trail for all admin actions:
 - Logs bulk actions to audit trail
 
 **Files:**
+
 - `C:\devop\saas202520\apps\web\app\api\admin\tournaments\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\tournaments\[id]\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\tournaments\bulk\route.ts`
@@ -128,6 +140,7 @@ Complete audit trail for all admin actions:
 ### 4. User Management APIs
 
 #### List Users
+
 **GET** `/api/admin/users`
 
 - Pagination (default: 20, max: 100 per page)
@@ -138,6 +151,7 @@ Complete audit trail for all admin actions:
 - Excludes password field
 
 #### Get User Details
+
 **GET** `/api/admin/users/:id`
 
 - Full user profile
@@ -147,6 +161,7 @@ Complete audit trail for all admin actions:
 - Activity statistics (tournaments created)
 
 #### Create User
+
 **POST** `/api/admin/users`
 
 - Admin creation of users
@@ -156,6 +171,7 @@ Complete audit trail for all admin actions:
 - Logs creation to audit trail
 
 #### Update User
+
 **PATCH** `/api/admin/users/:id`
 
 - Update name, email
@@ -164,6 +180,7 @@ Complete audit trail for all admin actions:
 - Logs changes to audit trail
 
 #### Delete User
+
 **DELETE** `/api/admin/users/:id`
 
 - Soft delete (anonymize data)
@@ -172,6 +189,7 @@ Complete audit trail for all admin actions:
 - Logs deletion to audit trail
 
 #### Ban User
+
 **POST** `/api/admin/users/:id/ban`
 
 - Permanent ban with reason
@@ -182,6 +200,7 @@ Complete audit trail for all admin actions:
 - Logs ban to audit trail
 
 #### Suspend User
+
 **POST** `/api/admin/users/:id/suspend`
 
 - Temporary suspension with duration
@@ -191,6 +210,7 @@ Complete audit trail for all admin actions:
 - Note: Requires schema update for enforcement
 
 **Files:**
+
 - `C:\devop\saas202520\apps\web\app\api\admin\users\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\users\[id]\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\users\[id]\ban\route.ts`
@@ -201,9 +221,11 @@ Complete audit trail for all admin actions:
 ### 5. Analytics APIs
 
 #### Overview Analytics
+
 **GET** `/api/admin/analytics/overview`
 
 System-wide metrics:
+
 - Users (total, new last 30/7 days, growth rate)
 - Organizations (total)
 - Tournaments (total, active, completed, growth rate)
@@ -212,9 +234,11 @@ System-wide metrics:
 - Revenue (total, by status, average payment)
 
 #### User Analytics
+
 **GET** `/api/admin/analytics/users`
 
 User metrics:
+
 - Growth over time (day/week/month granularity)
 - Role distribution (owner, admin, td, etc.)
 - Activity rate (active users last 7 days)
@@ -223,9 +247,11 @@ User metrics:
 Supports date range and granularity filters.
 
 #### Tournament Analytics
+
 **GET** `/api/admin/analytics/tournaments`
 
 Tournament metrics:
+
 - Creation over time (day/week/month granularity)
 - Status distribution
 - Format distribution
@@ -236,6 +262,7 @@ Tournament metrics:
 Supports date range and granularity filters.
 
 **Files:**
+
 - `C:\devop\saas202520\apps\web\app\api\admin\analytics\overview\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\analytics\users\route.ts`
 - `C:\devop\saas202520\apps\web\app\api\admin\analytics\tournaments\route.ts`
@@ -245,6 +272,7 @@ Supports date range and granularity filters.
 ### 6. Audit Logs API
 
 #### Get Audit Logs
+
 **GET** `/api/admin/audit-logs`
 
 - Pagination (default: 50, max: 100 per page)
@@ -261,34 +289,40 @@ Supports date range and granularity filters.
 ## Security Features
 
 ### 1. Role-Based Authentication
+
 - Only users with `admin` or `owner` role can access admin endpoints
 - Verified via `requireAdmin()` middleware
 - Returns 401 for unauthenticated users
 - Returns 403 for non-admin users
 
 ### 2. Rate Limiting
+
 - Standard operations: 100 req/min
 - Sensitive operations: 10 req/min
 - Data exports: 5 req/hour
 - Violations logged to Redis and console
 
 ### 3. Input Validation
+
 - All endpoints use Zod schemas
 - Validates request bodies and query parameters
 - Type-safe validation with detailed error messages
 
 ### 4. SQL Injection Prevention
+
 - All database queries use Prisma ORM
 - Parameterized queries
 - No raw SQL injection vulnerabilities
 
 ### 5. Audit Logging
+
 - All mutations logged (CREATE, UPDATE, DELETE)
 - Includes user ID, email, timestamp
 - Tracks IP address and user agent
 - Stores before/after changes
 
 ### 6. Soft Deletes
+
 - Tournaments set to 'cancelled' instead of hard delete
 - Users anonymized instead of hard delete
 - Maintains referential integrity
@@ -298,6 +332,7 @@ Supports date range and granularity filters.
 ## API Endpoints Summary
 
 ### Tournament Management (6 endpoints)
+
 - `GET /api/admin/tournaments` - List tournaments
 - `POST /api/admin/tournaments` - Create tournament
 - `GET /api/admin/tournaments/:id` - Get details
@@ -306,6 +341,7 @@ Supports date range and granularity filters.
 - `POST /api/admin/tournaments/bulk` - Bulk operations
 
 ### User Management (6 endpoints)
+
 - `GET /api/admin/users` - List users
 - `POST /api/admin/users` - Create user
 - `GET /api/admin/users/:id` - Get details
@@ -315,11 +351,13 @@ Supports date range and granularity filters.
 - `POST /api/admin/users/:id/suspend` - Suspend user
 
 ### Analytics (3 endpoints)
+
 - `GET /api/admin/analytics/overview` - System overview
 - `GET /api/admin/analytics/users` - User analytics
 - `GET /api/admin/analytics/tournaments` - Tournament analytics
 
 ### Audit Logs (1 endpoint)
+
 - `GET /api/admin/audit-logs` - Fetch audit logs
 
 **Total:** 16 API endpoints
@@ -378,6 +416,7 @@ To fully enable all features, the following database changes are required:
 ### 1. User Status Fields
 
 Add to `User` model:
+
 ```prisma
 suspendedUntil  DateTime? @map("suspended_until")
 isBanned        Boolean   @default(false) @map("is_banned")
@@ -389,6 +428,7 @@ banReason       String?   @map("ban_reason")
 ### 2. AuditLog Table
 
 New table:
+
 ```prisma
 model AuditLog {
   id          String   @id @default(cuid())
@@ -426,6 +466,7 @@ No schema change needed. The `role` field already supports `admin` as a string v
 ### Unit Tests
 
 Test each endpoint for:
+
 1. Authentication (unauthorized, non-admin, admin)
 2. Validation (invalid inputs, edge cases)
 3. Business logic (status transitions, permissions)
@@ -433,6 +474,7 @@ Test each endpoint for:
 ### Integration Tests
 
 Test workflows:
+
 1. Create → Update → Delete tournament
 2. Create → Update → Ban → Delete user
 3. Fetch analytics with various filters
@@ -441,6 +483,7 @@ Test workflows:
 ### Security Tests
 
 Test security:
+
 1. Non-admin cannot access endpoints
 2. SQL injection attempts fail
 3. XSS attempts are sanitized
@@ -488,6 +531,7 @@ describe('Admin Tournament APIs', () => {
 ### Existing Rate Limiter Integration
 
 Uses existing `checkAPIRateLimit()` from:
+
 - `apps/web/lib/rate-limiter.ts`
 
 No conflicts with existing rate limiting.
@@ -516,6 +560,7 @@ npx prisma generate
 ### 2. Update Audit Logger (Required)
 
 Replace console logging with database inserts:
+
 - Edit `apps/web/lib/audit/logger.ts`
 - Use `prisma.auditLog.create()` instead of `console.log()`
 - Update `getAuditLogs()` to query database
@@ -523,6 +568,7 @@ Replace console logging with database inserts:
 ### 3. Build Frontend Dashboard (Phase 3)
 
 Create admin dashboard UI:
+
 - Dashboard home page
 - Tournament management interface
 - User management interface
@@ -532,6 +578,7 @@ Create admin dashboard UI:
 ### 4. Write Tests (Phase 3)
 
 Implement comprehensive tests:
+
 - Unit tests for all endpoints
 - Integration tests for workflows
 - Security tests for permissions
@@ -558,6 +605,7 @@ Implement comprehensive tests:
 ### Caching Opportunities
 
 Consider caching:
+
 - Analytics overview (5-minute cache)
 - User lists (1-minute cache)
 - Tournament lists (1-minute cache)
@@ -565,6 +613,7 @@ Consider caching:
 ### Database Indexes
 
 Recommended indexes (see schema changes doc):
+
 - `users.suspended_until` (for active suspensions)
 - `users.is_banned` (for banned users)
 - `audit_logs.user_id`, `action`, `resource`, `timestamp`
@@ -614,6 +663,7 @@ All endpoints return consistent error format:
 ```
 
 **Common Error Codes:**
+
 - `UNAUTHORIZED` (401) - Not authenticated
 - `FORBIDDEN` (403) - Not admin
 - `NOT_FOUND` (404) - Resource not found
@@ -628,6 +678,7 @@ All endpoints return consistent error format:
 ### Logging
 
 All admin actions are logged:
+
 - Console logs for monitoring systems
 - Redis storage for violations (24h TTL)
 - Future: Database storage for audit trail

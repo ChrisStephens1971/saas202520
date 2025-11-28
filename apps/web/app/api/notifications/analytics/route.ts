@@ -6,10 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import {
-  getDeliveryStats,
-  getRateLimitStats,
-} from '@/lib/rate-limiter';
+import { getDeliveryStats, getRateLimitStats } from '@/lib/rate-limiter';
 
 export async function GET(request: NextRequest) {
   try {
@@ -73,9 +70,6 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error('Error fetching notification analytics:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

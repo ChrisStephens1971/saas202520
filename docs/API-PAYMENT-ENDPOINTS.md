@@ -1,6 +1,7 @@
 # Payment API Endpoints - Quick Reference
 
 ## Overview
+
 Complete payment processing system for tournament platforms with Stripe Connect integration, refunds, payouts, and comprehensive audit trails.
 
 ---
@@ -8,6 +9,7 @@ Complete payment processing system for tournament platforms with Stripe Connect 
 ## Endpoints
 
 ### 1. PAY-001: Stripe Connect Onboarding
+
 ```
 POST /api/payments/stripe/onboarding
 Authorization: Required (owner/td)
@@ -26,6 +28,7 @@ Response: 200
 ```
 
 ### 2. PAY-002: Create Payment Intent
+
 ```
 POST /api/payments/create-intent
 Authorization: Required
@@ -48,6 +51,7 @@ Response: 200
 ```
 
 ### 3. PAY-003: Confirm Payment
+
 ```
 POST /api/payments/[id]/confirm
 Authorization: Required
@@ -65,6 +69,7 @@ Response: 200
 ```
 
 ### 4. PAY-004: Process Refund
+
 ```
 POST /api/payments/[id]/refund
 Authorization: Required (owner/td)
@@ -83,6 +88,7 @@ Response: 200
 ```
 
 ### 5. PAY-005: Calculate Payouts
+
 ```
 POST /api/tournaments/[id]/payouts/calculate
 Authorization: Required (owner/td)
@@ -113,6 +119,7 @@ Response: 200
 ```
 
 ### 6. PAY-006: Get Payouts
+
 ```
 GET /api/tournaments/[id]/payouts
 Authorization: Required
@@ -129,6 +136,7 @@ Response: 200
 ```
 
 ### 6b. Mark Payout as Paid
+
 ```
 PUT /api/tournaments/[id]/payouts
 Authorization: Required (owner/td)
@@ -146,6 +154,7 @@ Response: 200
 ```
 
 ### 7. PAY-007: Generate Payout Sheet (PDF)
+
 ```
 GET /api/tournaments/[id]/payouts/sheet
 Authorization: Required
@@ -162,6 +171,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 ```
 
 ### 8. PAY-008: Get Dispute Evidence
+
 ```
 GET /api/payments/[id]/dispute-evidence
 Authorization: Required (owner/td)
@@ -181,6 +191,7 @@ Response: 200
 ```
 
 ### Bonus: Get Stripe Account Status
+
 ```
 GET /api/payments/stripe/account?orgId={id}
 Authorization: Required
@@ -197,6 +208,7 @@ Response: 200
 ## Data Models
 
 ### Payment
+
 ```typescript
 {
   id: string
@@ -217,21 +229,23 @@ Response: 200
 ```
 
 ### Refund
+
 ```typescript
 {
-  id: string
-  paymentId: string
-  stripeRefundId: string
-  amount: number // cents
-  reason: "duplicate" | "fraudulent" | "requested_by_customer"
-  status: "pending" | "succeeded" | "failed" | "cancelled"
-  processedBy: string // user ID
-  createdAt: Date
-  updatedAt: Date
+  id: string;
+  paymentId: string;
+  stripeRefundId: string;
+  amount: number; // cents
+  reason: 'duplicate' | 'fraudulent' | 'requested_by_customer';
+  status: 'pending' | 'succeeded' | 'failed' | 'cancelled';
+  processedBy: string; // user ID
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
 ### Payout
+
 ```typescript
 {
   id: string
@@ -250,6 +264,7 @@ Response: 200
 ```
 
 ### StripeAccount
+
 ```typescript
 {
   id: string
@@ -271,6 +286,7 @@ Response: 200
 ## Error Responses
 
 ### 400 Bad Request
+
 ```json
 {
   "error": "Missing required fields: tournamentId, amount, purpose"
@@ -278,6 +294,7 @@ Response: 200
 ```
 
 ### 401 Unauthorized
+
 ```json
 {
   "error": "Unauthorized"
@@ -285,6 +302,7 @@ Response: 200
 ```
 
 ### 403 Forbidden
+
 ```json
 {
   "error": "Unauthorized: You must be an owner or TD to set up payments"
@@ -292,6 +310,7 @@ Response: 200
 ```
 
 ### 404 Not Found
+
 ```json
 {
   "error": "Payment not found"
@@ -299,6 +318,7 @@ Response: 200
 ```
 
 ### 500 Internal Server Error
+
 ```json
 {
   "error": "Internal server error"
@@ -310,11 +330,13 @@ Response: 200
 ## Authentication
 
 All endpoints require:
+
 - Valid NextAuth session
 - `Authorization` header (automatic with NextAuth client)
 - Specific role requirements noted above
 
 Example:
+
 ```typescript
 const session = await getServerSession(authOptions);
 if (!session?.user?.id) {
@@ -327,15 +349,18 @@ if (!session?.user?.id) {
 ## Permissions
 
 ### Public Routes
+
 None - all payment routes require authentication
 
 ### Owner/TD Only
+
 - Create/manage Stripe account onboarding
 - Process refunds
 - Calculate/manage payouts
 - Access dispute evidence
 
 ### Any Authenticated User (with tournament access)
+
 - Create payment intents
 - Confirm payments
 - View payouts for their tournaments
@@ -347,15 +372,18 @@ None - all payment routes require authentication
 Use Stripe test mode credentials:
 
 **Test Card Numbers:**
+
 - Success: `4242 4242 4242 4242`
 - Decline: `4000 0000 0000 0002`
 - Requires Auth: `4000 0025 0000 3155`
 
 **Test Refunds:**
+
 - All test payments can be refunded via API
 - Refunds process immediately in test mode
 
 **Test Connect Account:**
+
 - Use test Stripe Connect account ID (acct_1XXXX)
 - Requires onboarding completion for charges
 
@@ -364,22 +392,26 @@ Use Stripe test mode credentials:
 ## Implementation Details
 
 ### Stripe Connect Integration
+
 - Standard accounts used (independent platforms)
 - Connected account IDs stored per organization
 - Capabilities automatically requested (card_payments, transfers)
 - Charges routed through connected account
 
 ### Concurrent Safety
+
 - Optimistic locking on Match model (rev field)
 - Transaction safety for refund + payment updates
 - Idempotent payment intent creation
 
 ### Audit Trail
+
 - All payment events logged to TournamentEvent table
 - Refund creation includes actor (user ID) and timestamp
 - Dispute evidence reconstructs complete timeline
 
 ### PDF Generation
+
 - Uses PDFKit for professional rendering
 - Streams directly to HTTP response
 - Proper headers for browser download

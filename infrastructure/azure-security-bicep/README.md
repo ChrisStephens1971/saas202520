@@ -16,15 +16,15 @@ This directory contains production-ready Bicep modules for deploying the Azure s
 
 ### Core Modules
 
-| Module | Purpose | Scope |
-|--------|---------|-------|
-| **main.bicep** | Orchestrates complete security baseline deployment | Subscription |
-| **management-groups.bicep** | Creates management group hierarchy | Tenant |
-| **hub-network.bicep** | Deploys hub network with Firewall + DDoS + Bastion | Resource Group |
-| **spoke-network.bicep** | Deploys spoke network with NSGs and routing | Resource Group |
-| **policies.bicep** | Applies Azure Policy guardrails | Management Group |
-| **defender.bicep** | Enables Microsoft Defender for Cloud (all plans) | Subscription |
-| **logging.bicep** | Deploys Log Analytics + Sentinel + App Insights | Resource Group |
+| Module                      | Purpose                                            | Scope            |
+| --------------------------- | -------------------------------------------------- | ---------------- |
+| **main.bicep**              | Orchestrates complete security baseline deployment | Subscription     |
+| **management-groups.bicep** | Creates management group hierarchy                 | Tenant           |
+| **hub-network.bicep**       | Deploys hub network with Firewall + DDoS + Bastion | Resource Group   |
+| **spoke-network.bicep**     | Deploys spoke network with NSGs and routing        | Resource Group   |
+| **policies.bicep**          | Applies Azure Policy guardrails                    | Management Group |
+| **defender.bicep**          | Enables Microsoft Defender for Cloud (all plans)   | Subscription     |
+| **logging.bicep**           | Deploys Log Analytics + Sentinel + App Insights    | Resource Group   |
 
 ---
 
@@ -33,12 +33,14 @@ This directory contains production-ready Bicep modules for deploying the Azure s
 ### Prerequisites
 
 1. **Azure CLI** installed and authenticated
+
    ```bash
    az login
    az account set --subscription <subscription-id>
    ```
 
 2. **Bicep CLI** installed
+
    ```bash
    az bicep install
    az bicep version
@@ -77,6 +79,7 @@ az deployment sub create \
 ```
 
 **What this deploys:**
+
 - ✅ 4 resource groups (platform, ops, network, project)
 - ✅ Log Analytics workspace + Azure Sentinel
 - ✅ Application Insights
@@ -127,6 +130,7 @@ az deployment mg create \
 **Scope:** Tenant
 
 **Creates:**
+
 ```
 Root (tenant)
 ├─ mg-{org}-platform     # Shared infrastructure
@@ -139,10 +143,12 @@ Root (tenant)
 ```
 
 **Parameters:**
+
 - `orgCode` - Organization code (2-4 chars)
 - `products` - Array of product names
 
 **Example:**
+
 ```bash
 az deployment tenant create \
   --location eastus2 \
@@ -157,6 +163,7 @@ az deployment tenant create \
 **Scope:** Resource Group
 
 **Creates:**
+
 - Hub VNet (10.0.0.0/16)
 - Azure Firewall (Standard or Premium)
 - Azure Firewall Policy with application/network rules
@@ -166,15 +173,18 @@ az deployment tenant create \
 - Public IPs for Firewall and Bastion
 
 **Parameters:**
+
 - `org`, `env`, `region` - Naming components
 - `firewallSku` - `Standard` or `Premium`
 - `enableDDoS` - `true` for production
 
 **Cost Estimate:**
+
 - Dev/Test: ~$600/month (Firewall Standard, no DDoS)
 - Production: ~$4,200/month (Firewall Premium + DDoS)
 
 **Example:**
+
 ```bash
 az group create --name rg-vrd-platform-prd-eus2-net --location eastus2
 
@@ -196,6 +206,7 @@ az deployment group create \
 **Scope:** Resource Group
 
 **Creates:**
+
 - Spoke VNet (10.1.0.0/16)
 - 3 subnets: app, data, private-endpoints
 - NSGs for each subnet
@@ -203,11 +214,13 @@ az deployment group create \
 - VNet peering to hub
 
 **Parameters:**
+
 - `org`, `proj`, `env`, `region` - Naming components
 - `hubVNetId` - Hub VNet resource ID
 - `hubFirewallPrivateIp` - Firewall private IP
 
 **Example:**
+
 ```bash
 az group create --name rg-vrd-tmt-prd-eus2 --location eastus2
 
@@ -230,6 +243,7 @@ az deployment group create \
 **Scope:** Management Group
 
 **Creates 12 policy assignments:**
+
 1. Deny public network access for Storage
 2. Enforce HTTPS-only for Storage
 3. Enforce TLS 1.2+
@@ -244,11 +258,13 @@ az deployment group create \
 12. Restrict VM SKUs
 
 **Parameters:**
+
 - `managementGroupId` - Target management group
 - `logAnalyticsWorkspaceId` - For diagnostic settings policy
 - `location` - For policy-assigned identities
 
 **Example:**
+
 ```bash
 az deployment mg create \
   --location eastus2 \
@@ -267,6 +283,7 @@ az deployment mg create \
 **Scope:** Subscription
 
 **Enables:**
+
 - Defender for Virtual Machines (Plan 2)
 - Defender for App Services
 - Defender for SQL Servers
@@ -282,6 +299,7 @@ az deployment mg create \
 **Cost Estimate:** ~$500-1,000/month depending on resource count
 
 **Example:**
+
 ```bash
 az deployment sub create \
   --location eastus2 \
@@ -300,6 +318,7 @@ az deployment sub create \
 **Scope:** Resource Group
 
 **Creates:**
+
 - Log Analytics workspace
 - Azure Sentinel (SecurityInsights solution)
 - Application Insights
@@ -307,6 +326,7 @@ az deployment sub create \
 - Table-level retention settings
 
 **Parameters:**
+
 - `org`, `env`, `region` - Naming components
 - `retentionInDays` - Log retention (30-730 days)
 - `dailyQuotaGb` - Daily ingestion cap (-1 for unlimited)
@@ -314,10 +334,12 @@ az deployment sub create \
 - `enableAppInsights` - Deploy App Insights
 
 **Cost Estimate:**
+
 - Dev/Test: ~$50-150/month (low ingestion)
 - Production: ~$300-800/month (10-30 GB/day)
 
 **Example:**
+
 ```bash
 az group create --name rg-vrd-platform-prd-eus2-ops --location eastus2
 
@@ -431,23 +453,27 @@ nslookup kv-vrd-tmt-prd-eus2-01.vault.azure.net
 ### Common Issues
 
 **1. Deployment fails with "Insufficient permissions"**
+
 ```
 Solution: Ensure you have Owner or User Access Administrator role
 ```
 
 **2. VNet peering fails**
+
 ```
 Solution: Ensure hub VNet exists before deploying spoke
 az network vnet show --name vnet-vrd-hub-prd-eus2 --resource-group rg-vrd-platform-prd-eus2-net
 ```
 
 **3. Policy assignment identity creation fails**
+
 ```
 Solution: Ensure location parameter is provided and valid
 --parameters location=eastus2
 ```
 
 **4. Firewall deployment times out**
+
 ```
 Solution: Increase timeout (--no-wait flag, then check status)
 az deployment group create --no-wait ...
@@ -497,6 +523,7 @@ After deploying security baseline:
 ## Integration with Azure Security Playbook
 
 These modules implement security controls from:
+
 - **Day 0:** Identity hardening (manual Entra ID configuration)
 - **Day 1:** Management groups, subscriptions, Defender
 - **Day 2:** Hub-spoke network, Firewall, Bastion, Private DNS

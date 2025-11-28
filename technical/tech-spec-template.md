@@ -10,17 +10,21 @@
 ## Overview
 
 ### Problem
+
 What technical problem are we solving?
 
 ### Solution Summary
+
 High-level description of the technical approach.
 
 ### Goals
+
 - Goal 1
 - Goal 2
 - Goal 3
 
 ### Non-Goals
+
 What is explicitly out of scope for this spec?
 
 ---
@@ -28,14 +32,17 @@ What is explicitly out of scope for this spec?
 ## Background & Context
 
 ### Current State
+
 How does the system work today?
 
 ### Constraints
+
 - Technical constraints
 - Business constraints
 - Timeline constraints
 
 ### Assumptions
+
 - Assumption 1
 - Assumption 2
 
@@ -56,11 +63,13 @@ How does the system work today?
 ### Components
 
 #### Component 1: [Name]
+
 **Purpose:** [What it does]
 **Technology:** [Language/framework]
 **Interfaces:** [APIs it exposes or consumes]
 
 #### Component 2: [Name]
+
 **Purpose:** [What it does]
 **Technology:** [Language/framework]
 **Interfaces:** [APIs it exposes or consumes]
@@ -72,6 +81,7 @@ How does the system work today?
 ### New/Modified Tables
 
 #### Table: `table_name`
+
 ```sql
 CREATE TABLE table_name (
   id UUID PRIMARY KEY,
@@ -82,9 +92,11 @@ CREATE TABLE table_name (
 ```
 
 **Indexes:**
+
 - `idx_table_field1` on `field1`
 
 **Relationships:**
+
 - Foreign key to `other_table(id)`
 
 ---
@@ -96,6 +108,7 @@ CREATE TABLE table_name (
 **Purpose:** [What this endpoint does]
 
 **Request:**
+
 ```json
 {
   "field1": "value",
@@ -104,6 +117,7 @@ CREATE TABLE table_name (
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "id": "uuid",
@@ -112,6 +126,7 @@ CREATE TABLE table_name (
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid input
 - `401 Unauthorized`: Not authenticated
 - `404 Not Found`: Resource doesn't exist
@@ -121,8 +136,10 @@ CREATE TABLE table_name (
 ## Implementation Plan
 
 ### Phase 1: [Name]
+
 **Goal:** [What we're building]
 **Tasks:**
+
 - [ ] Task 1
 - [ ] Task 2
 - [ ] Task 3
@@ -130,8 +147,10 @@ CREATE TABLE table_name (
 **Estimated Effort:** [X days/weeks]
 
 ### Phase 2: [Name]
+
 **Goal:** [What we're building]
 **Tasks:**
+
 - [ ] Task 1
 - [ ] Task 2
 
@@ -142,18 +161,22 @@ CREATE TABLE table_name (
 ## Testing Strategy
 
 ### Unit Tests
+
 - Test case 1: [Description]
 - Test case 2: [Description]
 
 ### Integration Tests
+
 - Test scenario 1: [Description]
 - Test scenario 2: [Description]
 
 ### Performance Tests
+
 - Load test: [X concurrent users]
 - Response time: [< Y ms for Z percentile]
 
 ### Security Considerations
+
 - Authentication: [How handled]
 - Authorization: [Who can access what]
 - Data validation: [Input sanitization]
@@ -164,20 +187,25 @@ CREATE TABLE table_name (
 ## Deployment & Operations
 
 ### Deployment Strategy
+
 - [ ] Deploy to dev
 - [ ] Deploy to staging
 - [ ] Gradual rollout to production (10% → 50% → 100%)
 
 ### Monitoring & Alerts
+
 **Metrics to track:**
+
 - Metric 1: [What and why]
 - Metric 2: [What and why]
 
 **Alerts:**
+
 - Alert if [condition] for [duration]
 - Page on-call if [critical condition]
 
 ### Rollback Plan
+
 How do we rollback if things go wrong?
 
 ---
@@ -185,10 +213,12 @@ How do we rollback if things go wrong?
 ## Dependencies
 
 ### External Dependencies
+
 - Service 1: [What we need from it]
 - Library 2: [Version and why]
 
 ### Internal Dependencies
+
 - Feature X must be completed first
 - Database migration Y must run
 
@@ -197,37 +227,43 @@ How do we rollback if things go wrong?
 ## Performance & Scale
 
 ### Expected Load
+
 - [X requests per second]
 - [Y concurrent users]
 - [Z GB of data]
 
 ### Performance Targets
+
 - API response time: [< N ms at P95]
 - Database query time: [< M ms]
 - Page load time: [< K seconds]
 
 ### Scalability Considerations
+
 How will this scale as we grow?
 
 ---
 
 ## Risks & Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| Risk 1 | High | Medium | Strategy |
-| Risk 2 | Medium | Low | Strategy |
+| Risk   | Impact | Probability | Mitigation |
+| ------ | ------ | ----------- | ---------- |
+| Risk 1 | High   | Medium      | Strategy   |
+| Risk 2 | Medium | Low         | Strategy   |
 
 ---
 
 ## Alternatives Considered
 
 ### Alternative 1: [Approach name]
+
 **Pros:**
+
 - Pro 1
 - Pro 2
 
 **Cons:**
+
 - Con 1
 - Con 2
 
@@ -252,6 +288,6 @@ How will this scale as we grow?
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date   | Author | Changes       |
+| ------ | ------ | ------------- |
 | [Date] | [Name] | Initial draft |

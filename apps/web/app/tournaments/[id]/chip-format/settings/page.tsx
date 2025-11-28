@@ -88,10 +88,7 @@ export default function SettingsPage() {
           Tournaments
         </Link>
         <span>/</span>
-        <Link
-          href={`/tournaments/${id}/chip-format`}
-          className="hover:text-gray-900"
-        >
+        <Link href={`/tournaments/${id}/chip-format`} className="hover:text-gray-900">
           {tournament.name}
         </Link>
         <span>/</span>
@@ -118,9 +115,7 @@ export default function SettingsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Winner Chips
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Winner Chips</label>
               <div className="text-2xl font-bold text-green-600">
                 {tournament.chipConfig.winnerChips}
               </div>
@@ -128,9 +123,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Loser Chips
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Loser Chips</label>
               <div className="text-2xl font-bold text-blue-600">
                 {tournament.chipConfig.loserChips}
               </div>
@@ -150,9 +143,7 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Finals Count
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Finals Count</label>
               <div className="text-2xl font-bold text-orange-600">
                 {tournament.chipConfig.finalsCount}
               </div>
@@ -163,16 +154,15 @@ export default function SettingsPage() {
 
         <div className="mt-6 pt-6 border-t grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Pairing Strategy
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pairing Strategy</label>
             <div className="text-lg font-semibold capitalize">
               {tournament.chipConfig.pairingStrategy.replace('_', ' ')}
             </div>
             <p className="text-xs text-gray-600 mt-1">
               {tournament.chipConfig.pairingStrategy === 'random' && 'Random pairing from queue'}
               {tournament.chipConfig.pairingStrategy === 'rating' && 'Pair by similar ratings'}
-              {tournament.chipConfig.pairingStrategy === 'chip_diff' && 'Pair by similar chip counts'}
+              {tournament.chipConfig.pairingStrategy === 'chip_diff' &&
+                'Pair by similar chip counts'}
             </p>
           </div>
 
@@ -197,9 +187,7 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl font-semibold">Manual Chip Adjustments</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              Correct errors or apply penalties/bonuses
-            </p>
+            <p className="text-sm text-gray-600 mt-1">Correct errors or apply penalties/bonuses</p>
           </div>
           <button
             onClick={() => setShowAdjustmentModal(true)}
@@ -212,11 +200,7 @@ export default function SettingsPage() {
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-yellow-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"

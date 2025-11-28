@@ -27,9 +27,7 @@ import { format } from 'date-fns';
  * @param job - BullMQ job instance
  * @returns Job result with delivery information
  */
-export async function processScheduledReportJob(
-  job: Job<ScheduledReportJobData>
-): Promise<{
+export async function processScheduledReportJob(job: Job<ScheduledReportJobData>): Promise<{
   success: boolean;
   reportId: string;
   recipients: string[];
@@ -212,7 +210,9 @@ export async function processScheduledReportJob(
     // } catch (dbError) {
     //   console.error('[ScheduledReportJob] Failed to create error record:', dbError);
     // }
-    console.log('[ScheduledReportJob] Failed execution record creation skipped (model not yet in schema)');
+    console.log(
+      '[ScheduledReportJob] Failed execution record creation skipped (model not yet in schema)'
+    );
 
     // Re-throw to mark job as failed in BullMQ
     throw error;
@@ -539,9 +539,7 @@ async function sendReportEmail(params: {
 /**
  * Job processor with timing wrapper
  */
-export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(
-  processor: T
-): T {
+export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(processor: T): T {
   return (async (...args: unknown[]) => {
     const startTime = Date.now();
     try {

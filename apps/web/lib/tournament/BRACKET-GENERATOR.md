@@ -8,12 +8,12 @@ Comprehensive bracket generation for all tournament formats with deterministic s
 
 ## 📋 Quick Reference
 
-| Format | Function | Players | Rounds Formula |
-|--------|----------|---------|----------------|
-| Single Elimination | `generateSingleElimination()` | Any | log₂(next power of 2) |
-| Double Elimination | `generateDoubleElimination()` | Any | Winners + Losers + Finals |
-| Round Robin | `generateRoundRobin()` | ≥2 | n-1 (even) or n (odd) |
-| Modified Single | `generateModifiedSingleElimination()` | Any | Single + Consolation |
+| Format             | Function                              | Players | Rounds Formula            |
+| ------------------ | ------------------------------------- | ------- | ------------------------- |
+| Single Elimination | `generateSingleElimination()`         | Any     | log₂(next power of 2)     |
+| Double Elimination | `generateDoubleElimination()`         | Any     | Winners + Losers + Finals |
+| Round Robin        | `generateRoundRobin()`                | ≥2      | n-1 (even) or n (odd)     |
+| Modified Single    | `generateModifiedSingleElimination()` | Any     | Single + Consolation      |
 
 ---
 
@@ -34,11 +34,13 @@ const bracket = generateSingleElimination(players, {
 ```
 
 **Features**:
+
 - ✅ Automatic bye placement for non-power-of-2 counts
 - ✅ Even bye distribution (top/bottom of bracket)
 - ✅ Match dependencies via `nextMatchId`
 
 **Bye Placement Example** (7 players):
+
 ```
 Round 1:
 Player 1 (BYE) ─── Auto-advances
@@ -73,12 +75,14 @@ const bracket = generateDoubleElimination(players, {
 ```
 
 **Features**:
+
 - ✅ Winners bracket progression
 - ✅ Losers bracket with crossovers
 - ✅ Proper loser routing via `loserNextMatchId`
 - ✅ Grand finals
 
 **Match Flow**:
+
 ```
 Winners Round 1 → Winners Round 2 → Winners Finals
      ↓                  ↓                    ↓
@@ -101,11 +105,13 @@ const bracket = generateRoundRobin(players);
 ```
 
 **Features**:
+
 - ✅ Circle scheduling algorithm (balanced rounds)
 - ✅ Handles odd player counts automatically
 - ✅ All unique pairings guaranteed
 
 **Scheduling Example** (4 players):
+
 ```
 Round 1: 1vs2, 3vs4
 Round 2: 1vs3, 2vs4
@@ -129,6 +135,7 @@ const bracket = generateModifiedSingleElimination(players, undefined, {
 ```
 
 **Features**:
+
 - ✅ Consolation bracket option
 - ✅ Semi-final loser routing
 - ✅ Extensible for custom variations
@@ -155,6 +162,7 @@ const bracket = generateSingleElimination(players, {
 ```
 
 **Use Cases**:
+
 - Casual tournaments
 - Testing (use fixed seed)
 - Fair randomization
@@ -180,6 +188,7 @@ const bracket = generateSingleElimination(players, {
 ```
 
 **Supported Rating Systems**:
+
 - **Fargo**: 400-800 (numeric)
 - **APA**: 2-9 (string)
 - **BCA**: Numeric
@@ -287,6 +296,7 @@ console.log(`${ready.length} matches ready to start`);
 Generate single elimination bracket.
 
 **Parameters**:
+
 - `players: PlayerWithRating[]`
 - `seedingOptions?: SeedingOptions`
 
@@ -312,6 +322,7 @@ interface BracketStructure {
 Generate double elimination bracket.
 
 **Parameters**:
+
 - `players: PlayerWithRating[]`
 - `seedingOptions?: SeedingOptions`
 
@@ -324,6 +335,7 @@ Generate double elimination bracket.
 Generate round robin bracket.
 
 **Parameters**:
+
 - `players: PlayerWithRating[]`
 - `seedingOptions?: SeedingOptions`
 
@@ -338,6 +350,7 @@ Generate round robin bracket.
 Generate modified single elimination bracket.
 
 **Parameters**:
+
 - `players: PlayerWithRating[]`
 - `seedingOptions?: SeedingOptions`
 - `options?: { includeConsolation?: boolean }`
@@ -351,6 +364,7 @@ Generate modified single elimination bracket.
 Apply seeding algorithm to players.
 
 **Parameters**:
+
 - `players: PlayerWithRating[]`
 - `options?: SeedingOptions`
 
@@ -371,9 +385,11 @@ interface SeedingOptions {
 Validate bracket structure and match dependencies.
 
 **Parameters**:
+
 - `bracket: BracketStructure`
 
 **Returns**:
+
 ```typescript
 {
   valid: boolean;
@@ -382,6 +398,7 @@ Validate bracket structure and match dependencies.
 ```
 
 **Checks**:
+
 - ✅ All matches have valid rounds
 - ✅ Match dependencies exist (`nextMatchId`, `loserNextMatchId`)
 - ✅ No orphaned matches
@@ -393,12 +410,14 @@ Validate bracket structure and match dependencies.
 Calculate total rounds for a tournament.
 
 **Parameters**:
+
 - `playerCount: number`
 - `format: 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single'`
 
 **Returns**: `number`
 
 **Examples**:
+
 ```typescript
 calculateTotalRounds(8, 'single_elimination'); // 3
 calculateTotalRounds(8, 'double_elimination'); // 7
@@ -418,26 +437,31 @@ npm test -- apps/web/lib/tournament/__tests__/bracket-generator.test.ts
 ### Coverage
 
 **Seeding**:
+
 - ✅ Random (with/without seed)
 - ✅ Skill-based (numeric, string, no rating)
 - ✅ Manual (full, partial order)
 
 **Single Elimination**:
+
 - ✅ 8, 16, 32 players
 - ✅ Odd counts with byes
 - ✅ Match dependencies
 
 **Double Elimination**:
+
 - ✅ Winners/Losers brackets
 - ✅ Crossover routing
 - ✅ Grand finals
 
 **Round Robin**:
+
 - ✅ Even/odd player counts
 - ✅ Unique pairings
 - ✅ Balanced rounds
 
 **Property Tests**:
+
 - ✅ No duplicate pairings
 - ✅ Bracket integrity (4-64 players)
 
@@ -446,13 +470,14 @@ npm test -- apps/web/lib/tournament/__tests__/bracket-generator.test.ts
 ## ⚡ Performance
 
 | Players | Matches | Generation Time |
-|---------|---------|-----------------|
-| 8 | 7 | <1ms |
-| 16 | 15 | <2ms |
-| 32 | 31 | <5ms |
-| 64 | 63 | <10ms |
+| ------- | ------- | --------------- |
+| 8       | 7       | <1ms            |
+| 16      | 15      | <2ms            |
+| 32      | 31      | <5ms            |
+| 64      | 63      | <10ms           |
 
 **Database Insertion** (with transaction):
+
 - 8 players: ~50ms
 - 32 players: ~200ms
 
@@ -574,12 +599,14 @@ await prisma.tournament.update({
 ## 🔗 Integration
 
 **Works With**:
+
 - Match State Machine (`match-state-machine.ts`)
 - Tournament CRDT Sync (Sprint 1)
 - Table Assignment (Sprint 2)
 - ETA Calculation (Sprint 2)
 
 **APIs**:
+
 - `POST /api/tournaments/[id]/generate-bracket`
 - `GET /api/tournaments/[id]/bracket`
 - `POST /api/tournaments/[id]/reseed`

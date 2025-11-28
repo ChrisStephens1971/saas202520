@@ -114,9 +114,7 @@ export default function FloatingActionButton({ className = '' }: FABProps) {
       onClick={handleClick}
       aria-label={action.ariaLabel}
       className={`fixed z-40 transition-all duration-300 ease-in-out ${
-        isVisible
-          ? 'bottom-20 opacity-100 translate-y-0'
-          : 'bottom-16 opacity-0 translate-y-4'
+        isVisible ? 'bottom-20 opacity-100 translate-y-0' : 'bottom-16 opacity-0 translate-y-4'
       } right-4 w-14 h-14 bg-blue-600 dark:bg-blue-500 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 flex items-center justify-center md:hidden ${className}`}
       style={{
         marginBottom: 'env(safe-area-inset-bottom)',

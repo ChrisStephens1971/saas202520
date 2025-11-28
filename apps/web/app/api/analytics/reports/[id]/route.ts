@@ -15,10 +15,7 @@ import * as ScheduledReportsService from '@/lib/analytics/services/scheduled-rep
  * GET /api/analytics/reports/[id]
  * Get a specific scheduled report
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -55,10 +52,7 @@ export async function GET(
  * PATCH /api/analytics/reports/[id]
  * Update a scheduled report
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -73,8 +67,7 @@ export async function PATCH(
     }
 
     // Parse request body
-    const updates: Partial<ScheduledReportsService.ReportConfig> =
-      await request.json();
+    const updates: Partial<ScheduledReportsService.ReportConfig> = await request.json();
 
     // Update report
     const report = await ScheduledReportsService.updateScheduledReport(id, updates);

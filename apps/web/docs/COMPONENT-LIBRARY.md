@@ -27,7 +27,7 @@ import { loginSchema } from '@/lib/validations/auth.schema';
 const result = loginSchema.safeParse({
   email: 'user@example.com',
   password: 'Password123',
-  rememberMe: true
+  rememberMe: true,
 });
 
 if (result.success) {
@@ -35,13 +35,14 @@ if (result.success) {
   const { email, password } = result.data;
 } else {
   // Handle validation errors
-  result.error.errors.forEach(error => {
+  result.error.errors.forEach((error) => {
     console.log(error.path, error.message);
   });
 }
 ```
 
 **Validation Rules:**
+
 - Email: Required, valid email format, trimmed, lowercase
 - Password: Required, minimum 8 characters
 - RememberMe: Optional boolean
@@ -55,11 +56,12 @@ const result = signupSchema.safeParse({
   email: 'user@example.com',
   password: 'Password123',
   confirmPassword: 'Password123',
-  name: 'John Doe'
+  name: 'John Doe',
 });
 ```
 
 **Validation Rules:**
+
 - Email: Required, valid format, trimmed, lowercase
 - Password:
   - Minimum 8 characters
@@ -116,40 +118,46 @@ function MyComponent() {
 
 ```typescript
 interface ConfirmDialogProps {
-  open: boolean;               // Controls dialog visibility
-  onClose: () => void;          // Called when dialog should close
-  onConfirm: () => void | Promise<void>;  // Called when user confirms
-  title: string;                // Dialog title
-  description: string;          // Dialog description
-  confirmText?: string;         // Confirm button text (default: "Confirm")
-  cancelText?: string;          // Cancel button text (default: "Cancel")
-  variant?: 'danger' | 'warning' | 'info';  // Visual variant (default: "danger")
-  isLoading?: boolean;          // Loading state (default: false)
+  open: boolean; // Controls dialog visibility
+  onClose: () => void; // Called when dialog should close
+  onConfirm: () => void | Promise<void>; // Called when user confirms
+  title: string; // Dialog title
+  description: string; // Dialog description
+  confirmText?: string; // Confirm button text (default: "Confirm")
+  cancelText?: string; // Cancel button text (default: "Cancel")
+  variant?: 'danger' | 'warning' | 'info'; // Visual variant (default: "danger")
+  isLoading?: boolean; // Loading state (default: false)
 }
 ```
 
 #### Variants
 
 **Danger** (default) - For destructive actions
+
 ```typescript
 <ConfirmDialog variant="danger" />
 ```
+
 - Red color scheme
 - XCircle icon
 - Use for: Delete, Ban, Remove operations
 
 **Warning** - For potentially problematic actions
+
 ```typescript
 <ConfirmDialog variant="warning" />
 ```
+
 - Yellow color scheme
 - AlertTriangle icon
 - Use for: Warn, Suspend, Disable operations
 
 **Info** - For informational confirmations
+
 ```typescript
 <ConfirmDialog variant="info" />
 ```
+
 - Blue color scheme
 - Info icon
 - Use for: General confirmations, non-destructive actions
@@ -197,8 +205,8 @@ function UserList({ users }) {
 
 ```typescript
 interface Props {
-  role: UserRole;  // 'ADMIN' | 'ORGANIZER' | 'PLAYER'
-  size?: 'sm' | 'md' | 'lg';  // Default: 'md'
+  role: UserRole; // 'ADMIN' | 'ORGANIZER' | 'PLAYER'
+  size?: 'sm' | 'md' | 'lg'; // Default: 'md'
 }
 ```
 
@@ -236,23 +244,23 @@ import { TournamentStatusBadge } from '@/components/admin/TournamentStatusBadge'
 
 ```typescript
 interface TournamentStatusBadgeProps {
-  status: TournamentStatus;  // Tournament status enum
-  size?: 'sm' | 'md' | 'lg';  // Default: 'md'
-  showIcon?: boolean;  // Default: true
-  className?: string;  // Additional CSS classes
+  status: TournamentStatus; // Tournament status enum
+  size?: 'sm' | 'md' | 'lg'; // Default: 'md'
+  showIcon?: boolean; // Default: true
+  className?: string; // Additional CSS classes
 }
 ```
 
 #### Status Types
 
-| Status | Icon | Color | Description |
-|--------|------|-------|-------------|
-| draft | FileEdit | Gray | Tournament being set up |
-| registration | ClipboardList | Blue | Open for player registration |
-| active | Target | Green | Tournament in progress |
-| paused | Pause | Yellow | Temporarily stopped |
-| completed | Trophy | Purple | Tournament finished |
-| cancelled | XCircle | Red | Tournament cancelled |
+| Status       | Icon          | Color  | Description                  |
+| ------------ | ------------- | ------ | ---------------------------- |
+| draft        | FileEdit      | Gray   | Tournament being set up      |
+| registration | ClipboardList | Blue   | Open for player registration |
+| active       | Target        | Green  | Tournament in progress       |
+| paused       | Pause         | Yellow | Temporarily stopped          |
+| completed    | Trophy        | Purple | Tournament finished          |
+| cancelled    | XCircle       | Red    | Tournament cancelled         |
 
 #### Performance
 
@@ -287,6 +295,7 @@ import UserActionMenu from '@/components/admin/UserActionMenu';
 #### Built-in Confirmation Dialogs
 
 The component includes automatic confirmation dialogs for destructive actions:
+
 - **Warn User** - Warning variant
 - **Suspend User** - Danger variant
 - **Ban User** - Danger variant
@@ -508,6 +517,7 @@ See `apps/web/app/login/login-form.tsx` for complete example.
 ## Support
 
 For questions or issues:
+
 - Check component source code for inline documentation
 - Review test files for usage examples
 - See `apps/web/docs/` for additional guides

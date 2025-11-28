@@ -16,6 +16,7 @@
 ## Dev Environment
 
 ### Setup
+
 ```bash
 # Install dependencies
 pnpm install
@@ -28,11 +29,13 @@ pnpm dev
 ```
 
 ### Prerequisites
+
 - Node.js 18+ (or specify your version)
 - Package manager: pnpm (or npm/yarn)
 - Additional tools: [PostgreSQL, Docker, Redis, etc.]
 
 ### Environment Variables
+
 - Copy `.env.example` to `.env.local` (gitignored)
 - Required variables: See `.env.example` for documentation
 - Never commit `.env.local` or any files containing secrets
@@ -52,6 +55,7 @@ pnpm dev
 ```
 
 **Key Directories**:
+
 - Frontend code: `/apps/web`
 - Backend code: `/apps/api`
 - Shared packages: `/packages/*`
@@ -76,6 +80,7 @@ pnpm clean
 ```
 
 **Build Output**:
+
 - Frontend: `/apps/web/.next`
 - Backend: `/apps/api/dist`
 - Packages: `/packages/*/dist`
@@ -85,6 +90,7 @@ pnpm clean
 ## Testing Instructions
 
 ### Run Tests
+
 ```bash
 # All tests
 pnpm test
@@ -100,11 +106,13 @@ pnpm test:coverage
 ```
 
 ### Test Types
+
 - **Unit tests**: `*.test.ts` files
 - **Integration tests**: `*.integration.test.ts`
 - **E2E tests**: `pnpm test:e2e` (Playwright/Cypress)
 
 ### CI/CD
+
 - **CI Location**: `.github/workflows/ci.yml`
 - **Required Checks**: lint, test, typecheck (must all pass)
 - **Coverage Threshold**: 80% (enforced in CI)
@@ -114,11 +122,13 @@ pnpm test:coverage
 ## Code Style Guidelines
 
 ### TypeScript
+
 - **Strict mode**: Enabled (`tsconfig.json`)
 - **Type safety**: No `any` types (use `unknown` if needed)
 - **Exports**: No default exports in `/packages/*` (named exports only)
 
 ### Formatting & Linting
+
 ```bash
 # Check linting
 pnpm lint
@@ -134,6 +144,7 @@ pnpm typecheck
 ```
 
 ### Naming Conventions
+
 - **Files**: kebab-case (e.g., `user-service.ts`)
 - **Components**: PascalCase (e.g., `UserProfile.tsx`)
 - **Functions/variables**: camelCase
@@ -141,6 +152,7 @@ pnpm typecheck
 - **Types/Interfaces**: PascalCase
 
 ### Code Organization
+
 - One component/function per file (except small utilities)
 - Co-locate tests with source files
 - Group related functionality in directories
@@ -150,9 +162,11 @@ pnpm typecheck
 ## Commit & PR Guidelines
 
 ### Commit Format
+
 **Use Conventional Commits**: `<type>(<scope>): <description>`
 
 **Types**:
+
 - `feat:` New feature
 - `fix:` Bug fix
 - `docs:` Documentation changes
@@ -161,6 +175,7 @@ pnpm typecheck
 - `chore:` Build process, tooling, dependencies
 
 **Examples**:
+
 ```
 feat(auth): add OAuth2 login flow
 fix(api): resolve race condition in user creation
@@ -172,11 +187,13 @@ docs(readme): update installation instructions
 **Title Format**: `[scope] Concise summary`
 
 **Description Must Include**:
+
 1. **Why**: What problem does this solve? What's the context?
 2. **What changed**: Summary of technical changes made
 3. **Risks**: Potential impacts, breaking changes, considerations
 
 **Required Checks Before Merge**:
+
 - ✅ `pnpm lint` passes
 - ✅ `pnpm test` passes
 - ✅ `pnpm typecheck` passes
@@ -184,6 +201,7 @@ docs(readme): update installation instructions
 - ✅ All CI checks green
 
 **Review Checklist**:
+
 - [ ] Code follows style guidelines
 - [ ] Tests added/updated for new functionality
 - [ ] Documentation updated if needed
@@ -195,11 +213,13 @@ docs(readme): update installation instructions
 ## Security Considerations
 
 ### Secrets Management
+
 - **Never commit secrets**: Use `.env.local` (gitignored)
 - **API keys**: Store in environment variables only
 - **Credentials**: Use secrets management (Azure Key Vault, AWS Secrets Manager)
 
 ### Security Checks
+
 ```bash
 # Audit dependencies
 pnpm audit
@@ -212,11 +232,13 @@ pnpm audit --json > audit-report.json
 ```
 
 ### Security Tools
+
 - **Dependency scanning**: Snyk integration in CI
 - **Static analysis**: ESLint security plugins enabled
 - **Secret detection**: GitGuardian or TruffleHog in pre-commit
 
 ### Security Gotchas
+
 - Validate all user input (use Zod or similar)
 - Sanitize data before rendering (prevent XSS)
 - Use parameterized queries (prevent SQL injection)
@@ -229,16 +251,19 @@ pnpm audit --json > audit-report.json
 ### Environments
 
 **Staging**:
+
 - **Trigger**: Auto-deploy on merge to `develop` branch
 - **URL**: `https://staging.example.com`
 - **Database**: Staging DB (safe to reset)
 
 **Production**:
+
 - **Trigger**: Tag-based deploy (`git tag v1.x.x`)
 - **URL**: `https://example.com`
 - **Database**: Production DB (never reset)
 
 ### Deployment Commands
+
 ```bash
 # Deploy to staging
 git push origin develop
@@ -249,11 +274,13 @@ git push origin v1.0.0
 ```
 
 ### Platform
+
 - **Frontend**: Vercel / Netlify
 - **Backend**: Railway / Render / AWS
 - **Database**: [Specify provider]
 
 ### Health Checks
+
 - **Endpoint**: `/api/health`
 - **Expected Response**: `{ "status": "ok", "version": "1.0.0" }`
 
@@ -262,6 +289,7 @@ git push origin v1.0.0
 ## Database
 
 ### Setup
+
 ```bash
 # Run migrations
 pnpm db:migrate
@@ -274,16 +302,19 @@ pnpm db:reset
 ```
 
 ### Database Provider
+
 - **Type**: PostgreSQL 14+
 - **ORM**: Prisma / TypeORM / Drizzle
 - **Connection**: Environment variable `DATABASE_URL`
 
 ### Migrations
+
 - **Location**: `/prisma/migrations` or `/db/migrations`
 - **Create migration**: `pnpm db:migrate:create <name>`
 - **Run migrations**: `pnpm db:migrate` (automatic in CI/CD)
 
 ### Schema Changes
+
 1. Update schema file (`schema.prisma` or similar)
 2. Create migration: `pnpm db:migrate:create`
 3. Review generated migration SQL
@@ -460,17 +491,20 @@ Shared packages are built before apps that depend on them.
 ### Keeping AGENTS.md Up-to-Date
 
 **When to Update**:
+
 - ✅ Workflow changes (new build commands, deployment process)
 - ✅ New technologies added (new database, framework, tool)
 - ✅ Security practices change (new secrets management)
 - ✅ Repository structure changes (new directories, moved files)
 
 **Who Updates**:
+
 - PR authors update AGENTS.md when introducing workflow changes
 - Reviewers check AGENTS.md is current during PR review
 - Treat AGENTS.md like code - keep it accurate and concise
 
 **Best Practices**:
+
 - Link to existing docs instead of duplicating content
 - Be explicit and concise
 - Include commands that agents can run programmatically

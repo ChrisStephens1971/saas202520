@@ -30,10 +30,7 @@ const BanUserSchema = z.object({
  * Ban user permanently
  * Removes all organization memberships and invalidates all sessions
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {
@@ -110,14 +107,7 @@ export async function POST(
     });
 
     // Log audit trail
-    await logUserBanned(
-      orgId,
-      authResult.user.id,
-      authResult.user.email,
-      id,
-      reason,
-      request
-    );
+    await logUserBanned(orgId, authResult.user.id, authResult.user.email, id, reason, request);
 
     return NextResponse.json(
       {

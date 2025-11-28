@@ -18,12 +18,15 @@ interface Props {
   size?: 'sm' | 'md' | 'lg';
 }
 
-const roleConfig: Record<UserRole, {
-  label: string;
-  bgColor: string;
-  textColor: string;
-  icon: LucideIcon;
-}> = {
+const roleConfig: Record<
+  UserRole,
+  {
+    label: string;
+    bgColor: string;
+    textColor: string;
+    icon: LucideIcon;
+  }
+> = {
   [UserRole.ADMIN]: {
     label: 'Admin',
     bgColor: 'bg-purple-100 dark:bg-purple-900/30',

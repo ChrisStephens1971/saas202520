@@ -19,7 +19,9 @@ This directory contains documented processes, workflows, runbooks, and standard 
 ## How to Use
 
 ### Why Document Workflows?
+
 As a solo founder, documenting processes helps you:
+
 - Work more efficiently with repeatable processes
 - Onboard contractors or future team members faster
 - Reduce cognitive load ("What did I do last time?")
@@ -27,13 +29,16 @@ As a solo founder, documenting processes helps you:
 - Maintain consistency and quality
 
 ### When to Create a Workflow Document
+
 Create a workflow when you:
+
 - Do something for the second or third time
 - Want to delegate or automate a task
 - Need to ensure consistency (e.g., release process)
 - Have a critical process that can't be forgotten
 
 ### Process Improvement
+
 - Review workflows quarterly
 - Update when processes change
 - Note what works and what doesn't

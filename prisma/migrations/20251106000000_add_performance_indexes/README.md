@@ -18,6 +18,7 @@ This migration adds strategic database indexes to improve query performance acro
 ### 1. Database Indexes (migration.sql)
 
 Adds indexes for:
+
 - **Tournaments**: Status, start date, org+status composite
 - **Matches**: Tournament+status, completed time, table+state composite
 - **Players**: Tournament+user composite, tournament+status, chip count
@@ -63,14 +64,14 @@ Removes all indexes if needed (use only in emergency).
 
 ## Expected Performance Improvements
 
-| Query Type | Before | After | Improvement |
-|------------|--------|-------|-------------|
-| Tournament list (filtered) | 300ms | 25ms | **12x faster** |
-| Match list for tournament | 250ms | 20ms | **12.5x faster** |
-| Registration check | 150ms | 10ms | **15x faster** |
-| User authentication | 100ms | 8ms | **12.5x faster** |
-| Audit log queries | 800ms | 80ms | **10x faster** |
-| Payment history | 350ms | 35ms | **10x faster** |
+| Query Type                 | Before | After | Improvement      |
+| -------------------------- | ------ | ----- | ---------------- |
+| Tournament list (filtered) | 300ms  | 25ms  | **12x faster**   |
+| Match list for tournament  | 250ms  | 20ms  | **12.5x faster** |
+| Registration check         | 150ms  | 10ms  | **15x faster**   |
+| User authentication        | 100ms  | 8ms   | **12.5x faster** |
+| Audit log queries          | 800ms  | 80ms  | **10x faster**   |
+| Payment history            | 350ms  | 35ms  | **10x faster**   |
 
 ---
 
@@ -222,6 +223,7 @@ Before deploying to production, verify:
 ### Week 2-4: Optimization Phase
 
 1. **Analyze slow query patterns**:
+
    ```typescript
    import { getSlowQueryAnalysis } from '@/lib/db/performance-monitor';
    const analysis = await getSlowQueryAnalysis();
@@ -229,6 +231,7 @@ Before deploying to production, verify:
    ```
 
 2. **Review index usage**:
+
    ```sql
    SELECT
        tablename,
@@ -274,6 +277,7 @@ Before deploying to production, verify:
 **Error:** "relation already exists"
 
 **Solution:**
+
 ```sql
 -- Indexes use "IF NOT EXISTS", so this shouldn't happen
 -- If it does, check for naming conflicts:
@@ -283,18 +287,21 @@ SELECT indexname FROM pg_indexes WHERE indexname LIKE 'idx_%';
 ### Issue: Query Still Slow
 
 **Diagnosis:**
+
 ```sql
 -- Check if index is being used
 EXPLAIN ANALYZE SELECT * FROM tournaments WHERE status = 'active';
 ```
 
 **Possible Causes:**
+
 1. Index not being used (check EXPLAIN output)
 2. Wrong column order in composite index
 3. Type mismatch in WHERE clause
 4. Function calls on indexed column
 
 **Solutions:**
+
 - Ensure WHERE clause matches index column order
 - Avoid functions on indexed columns
 - Consider additional indexes for specific query patterns
@@ -302,6 +309,7 @@ EXPLAIN ANALYZE SELECT * FROM tournaments WHERE status = 'active';
 ### Issue: High Disk Usage
 
 **Diagnosis:**
+
 ```sql
 -- Check index sizes
 SELECT
@@ -315,6 +323,7 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 ```
 
 **Solutions:**
+
 - This is expected (indexes add 10-20% disk usage)
 - If critical, remove least-used indexes
 - Consider table partitioning for very large tables
@@ -322,10 +331,12 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 ### Issue: Slow INSERT/UPDATE
 
 **Diagnosis:**
+
 - Indexes slow down write operations slightly (5-10%)
 - This is expected and acceptable for read-heavy applications
 
 **Solutions:**
+
 - If write performance is critical, consider:
   - Batch INSERT operations
   - Use COPY for bulk imports

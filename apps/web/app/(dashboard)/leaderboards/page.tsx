@@ -24,12 +24,13 @@ export default async function LeaderboardsPage() {
   const tenantId = session.user.orgId;
 
   // Fetch all leaderboards
-  const [winRateLeaderboard, tournamentsLeaderboard, prizesLeaderboard, achievementsLeaderboard] = await Promise.all([
-    getPlayerLeaderboard(tenantId, 'winRate', 50),
-    getPlayerLeaderboard(tenantId, 'tournaments', 50),
-    getPlayerLeaderboard(tenantId, 'prizes', 50),
-    getPlayerLeaderboard(tenantId, 'achievements', 50),
-  ]);
+  const [winRateLeaderboard, tournamentsLeaderboard, prizesLeaderboard, achievementsLeaderboard] =
+    await Promise.all([
+      getPlayerLeaderboard(tenantId, 'winRate', 50),
+      getPlayerLeaderboard(tenantId, 'tournaments', 50),
+      getPlayerLeaderboard(tenantId, 'prizes', 50),
+      getPlayerLeaderboard(tenantId, 'achievements', 50),
+    ]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -66,10 +67,15 @@ export default async function LeaderboardsPage() {
                 <TrendingUp className="h-5 w-5 text-green-500" />
                 Top Win Rate
               </CardTitle>
-              <CardDescription>Players with the highest win percentages (min. 10 matches)</CardDescription>
+              <CardDescription>
+                Players with the highest win percentages (min. 10 matches)
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <LeaderboardTable entries={winRateLeaderboard.entries} currentUserId={session.user.id} />
+              <LeaderboardTable
+                entries={winRateLeaderboard.entries}
+                currentUserId={session.user.id}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -85,7 +91,10 @@ export default async function LeaderboardsPage() {
               <CardDescription>Players with the most tournament participation</CardDescription>
             </CardHeader>
             <CardContent>
-              <LeaderboardTable entries={tournamentsLeaderboard.entries} currentUserId={session.user.id} />
+              <LeaderboardTable
+                entries={tournamentsLeaderboard.entries}
+                currentUserId={session.user.id}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -101,7 +110,10 @@ export default async function LeaderboardsPage() {
               <CardDescription>Players with the most prize money won</CardDescription>
             </CardHeader>
             <CardContent>
-              <LeaderboardTable entries={prizesLeaderboard.entries} currentUserId={session.user.id} />
+              <LeaderboardTable
+                entries={prizesLeaderboard.entries}
+                currentUserId={session.user.id}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -117,7 +129,10 @@ export default async function LeaderboardsPage() {
               <CardDescription>Players with the most unlocked achievements</CardDescription>
             </CardHeader>
             <CardContent>
-              <LeaderboardTable entries={achievementsLeaderboard.entries} currentUserId={session.user.id} />
+              <LeaderboardTable
+                entries={achievementsLeaderboard.entries}
+                currentUserId={session.user.id}
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -162,7 +177,9 @@ function LeaderboardTable({ entries, currentUserId }: LeaderboardTableProps) {
             key={entry.playerId}
             className={cn(
               'flex items-center gap-4 p-4 rounded-lg transition-all hover:shadow-md',
-              isCurrentUser ? 'bg-primary/10 border-2 border-primary' : 'bg-secondary hover:bg-secondary/80',
+              isCurrentUser
+                ? 'bg-primary/10 border-2 border-primary'
+                : 'bg-secondary hover:bg-secondary/80',
               isTopThree && !isCurrentUser && 'border-2 border-yellow-500/30'
             )}
           >
@@ -203,7 +220,10 @@ function LeaderboardTable({ entries, currentUserId }: LeaderboardTableProps) {
               <div className="text-2xl font-bold">{entry.formattedValue}</div>
               {entry.change !== undefined && entry.change !== 0 && (
                 <div
-                  className={cn('text-sm flex items-center gap-1', entry.change > 0 ? 'text-green-600' : 'text-red-600')}
+                  className={cn(
+                    'text-sm flex items-center gap-1',
+                    entry.change > 0 ? 'text-green-600' : 'text-red-600'
+                  )}
                 >
                   {entry.change > 0 ? '↑' : '↓'} {Math.abs(entry.change)}
                 </div>

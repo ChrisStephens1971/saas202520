@@ -60,7 +60,10 @@ export function TournamentOverviewComponent({
     return (
       <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${className}`}>
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="backdrop-blur-lg bg-white/10 rounded-xl p-4 border border-white/20 animate-pulse">
+          <div
+            key={i}
+            className="backdrop-blur-lg bg-white/10 rounded-xl p-4 border border-white/20 animate-pulse"
+          >
             <div className="h-4 bg-white/20 rounded w-1/2 mb-2"></div>
             <div className="h-8 bg-white/20 rounded w-3/4"></div>
           </div>
@@ -131,7 +134,12 @@ export function TournamentOverviewComponent({
             {data.estimatedCompletionTime && (
               <span className="flex items-center gap-1">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 ETA: {formattedETA}
               </span>
@@ -151,8 +159,8 @@ export function TournamentOverviewComponent({
                 tableUtilization > 75
                   ? 'bg-gradient-to-r from-green-500 to-emerald-500'
                   : tableUtilization > 50
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500'
-                  : 'bg-gradient-to-r from-red-500 to-rose-500'
+                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500'
+                    : 'bg-gradient-to-r from-red-500 to-rose-500'
               }`}
               style={{ width: `${tableUtilization}%` }}
             />
@@ -189,7 +197,9 @@ function StatCard({ title, value, subtitle, icon, variant = 'default' }: StatCar
   };
 
   return (
-    <div className={`backdrop-blur-lg rounded-xl p-4 border ${variantStyles[variant]} hover:bg-white/20 transition-colors`}>
+    <div
+      className={`backdrop-blur-lg rounded-xl p-4 border ${variantStyles[variant]} hover:bg-white/20 transition-colors`}
+    >
       <div className="flex items-start justify-between mb-2">
         <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">{title}</span>
         <span className="text-2xl">{icon}</span>

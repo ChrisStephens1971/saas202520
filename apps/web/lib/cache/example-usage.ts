@@ -49,10 +49,7 @@ export async function example1_BasicOperations() {
  * 2. If miss, fetch from database
  * 3. Store in cache for next time
  */
-export async function example2_CacheAsidePattern(
-  tenantId: string,
-  tournamentId: string
-) {
+export async function example2_CacheAsidePattern(tenantId: string, tournamentId: string) {
   const tournament = await cacheAside(
     tenantId,
     `tournament:${tournamentId}`,
@@ -103,10 +100,7 @@ export async function example3_WriteThroughPattern(
 /**
  * Example 4: Using tournament cache strategies
  */
-export async function example4_TournamentStrategies(
-  tenantId: string,
-  tournamentId: string
-) {
+export async function example4_TournamentStrategies(tenantId: string, tournamentId: string) {
   // Cache tournament data
   const tournament = await prisma.tournament.findUnique({
     where: { id: tournamentId, orgId: tenantId },
@@ -186,10 +180,7 @@ export async function example6_UserSessionCaching(
 /**
  * Example 7: Analytics caching
  */
-export async function example7_AnalyticsCaching(
-  tenantId: string,
-  tournamentId: string
-) {
+export async function example7_AnalyticsCaching(tenantId: string, tournamentId: string) {
   // Calculate expensive analytics
   const analytics = {
     totalPlayers: await prisma.player.count({
@@ -203,17 +194,10 @@ export async function example7_AnalyticsCaching(
   };
 
   // Cache for 15 minutes
-  await AnalyticsCache.setTournamentAnalytics(
-    tenantId,
-    tournamentId,
-    analytics as any
-  );
+  await AnalyticsCache.setTournamentAnalytics(tenantId, tournamentId, analytics as any);
 
   // Retrieve cached analytics
-  const cached = await AnalyticsCache.getTournamentAnalytics(
-    tenantId,
-    tournamentId
-  );
+  const cached = await AnalyticsCache.getTournamentAnalytics(tenantId, tournamentId);
 
   return cached || analytics;
 }
@@ -221,10 +205,7 @@ export async function example7_AnalyticsCaching(
 /**
  * Example 8: Batch operations for efficiency
  */
-export async function example8_BatchOperations(
-  tenantId: string,
-  tournamentIds: string[]
-) {
+export async function example8_BatchOperations(tenantId: string, tournamentIds: string[]) {
   // Prepare cache keys
   const keys = tournamentIds.map((id) => `tournament:${id}`);
 
@@ -384,10 +365,7 @@ export async function example13_APIEndpointCaching() {
 /**
  * Example 14: Preventing cache stampede with locks
  */
-export async function example14_CacheLock(
-  tenantId: string,
-  tournamentId: string
-) {
+export async function example14_CacheLock(tenantId: string, tournamentId: string) {
   const { withCacheLock } = await import('@/lib/cache');
 
   // Multiple concurrent requests won't regenerate the same cache entry

@@ -19,12 +19,9 @@ export async function POST(request: NextRequest) {
     const body = (formData.get('Body') as string)?.toUpperCase().trim();
 
     if (!from || !body) {
-      return new NextResponse(
-        '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
-        {
-          headers: { 'Content-Type': 'text/xml' },
-        }
-      );
+      return new NextResponse('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
+        headers: { 'Content-Type': 'text/xml' },
+      });
     }
 
     // Find player by phone number
@@ -34,12 +31,9 @@ export async function POST(request: NextRequest) {
 
     if (!player) {
       console.warn(`No player found with phone number: ${from}`);
-      return new NextResponse(
-        '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
-        {
-          headers: { 'Content-Type': 'text/xml' },
-        }
-      );
+      return new NextResponse('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
+        headers: { 'Content-Type': 'text/xml' },
+      });
     }
 
     // Handle STOP command (opt-out)
@@ -95,19 +89,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Unrecognized command - no response
-    return new NextResponse(
-      '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
-      {
-        headers: { 'Content-Type': 'text/xml' },
-      }
-    );
+    return new NextResponse('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
+      headers: { 'Content-Type': 'text/xml' },
+    });
   } catch (error) {
     console.error('Error handling SMS webhook:', error);
-    return new NextResponse(
-      '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
-      {
-        headers: { 'Content-Type': 'text/xml' },
-      }
-    );
+    return new NextResponse('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
+      headers: { 'Content-Type': 'text/xml' },
+    });
   }
 }

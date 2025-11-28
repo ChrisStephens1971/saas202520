@@ -30,18 +30,13 @@ describe('RevenueCalculator', () => {
 
   describe('calculateMRR', () => {
     it('should calculate MRR correctly for current period', async () => {
-      mockRevenueMetricsModel.findFirst.mockResolvedValue(
-        fixtures.revenueMetrics.current
-      );
+      mockRevenueMetricsModel.findFirst.mockResolvedValue(fixtures.revenueMetrics.current);
       mockRevenueMetricsModel.aggregate.mockResolvedValue({
         _sum: { mrr: 15000 },
         _count: { id: 1 },
       });
 
-      const result = await RevenueCalculator.calculateMRR(
-        'tenant-001',
-        new Date('2024-11-01')
-      );
+      const result = await RevenueCalculator.calculateMRR('tenant-001', new Date('2024-11-01'));
 
       expect(result).toBeDefined();
       expect(result.mrr).toBe(15000);
@@ -54,10 +49,7 @@ describe('RevenueCalculator', () => {
         .mockResolvedValueOnce(fixtures.revenueMetrics.current)
         .mockResolvedValueOnce(fixtures.revenueMetrics.previous);
 
-      const result = await RevenueCalculator.calculateMRR(
-        'tenant-001',
-        new Date('2024-11-01')
-      );
+      const result = await RevenueCalculator.calculateMRR('tenant-001', new Date('2024-11-01'));
 
       expect(result.previousPeriod).toBeDefined();
       expect(result.previousPeriod?.mrr).toBe(14000);
@@ -71,10 +63,7 @@ describe('RevenueCalculator', () => {
         _count: { id: 0 },
       });
 
-      const result = await RevenueCalculator.calculateMRR(
-        'invalid-tenant',
-        new Date()
-      );
+      const result = await RevenueCalculator.calculateMRR('invalid-tenant', new Date());
 
       expect(result.mrr).toBe(0);
       expect(result.arr).toBe(0);
@@ -86,10 +75,7 @@ describe('RevenueCalculator', () => {
         .mockResolvedValueOnce(fixtures.revenueMetrics.current) // current: 15000
         .mockResolvedValueOnce(fixtures.revenueMetrics.previous); // previous: 14000
 
-      const result = await RevenueCalculator.calculateMRR(
-        'tenant-001',
-        new Date('2024-11-01')
-      );
+      const result = await RevenueCalculator.calculateMRR('tenant-001', new Date('2024-11-01'));
 
       const expectedGrowth = ((15000 - 14000) / 14000) * 100;
       expect(result.growthRate).toBeCloseTo(expectedGrowth, 2);
@@ -98,14 +84,9 @@ describe('RevenueCalculator', () => {
 
   describe('calculateARR', () => {
     it('should calculate ARR as MRR * 12', async () => {
-      mockRevenueMetricsModel.findFirst.mockResolvedValue(
-        fixtures.revenueMetrics.current
-      );
+      mockRevenueMetricsModel.findFirst.mockResolvedValue(fixtures.revenueMetrics.current);
 
-      const result = await RevenueCalculator.calculateARR(
-        'tenant-001',
-        new Date('2024-11-01')
-      );
+      const result = await RevenueCalculator.calculateARR('tenant-001', new Date('2024-11-01'));
 
       expect(result.arr).toBe(180000);
       expect(result.mrr).toBe(15000);
@@ -129,9 +110,7 @@ describe('RevenueCalculator', () => {
     });
 
     it('should handle zero churn', async () => {
-      mockSubscriptionModel.count
-        .mockResolvedValueOnce(50)
-        .mockResolvedValueOnce(0);
+      mockSubscriptionModel.count.mockResolvedValueOnce(50).mockResolvedValueOnce(0);
 
       const result = await RevenueCalculator.calculateChurnRate(
         'tenant-001',
@@ -207,31 +186,19 @@ describe('RevenueCalculator', () => {
         fixtures.revenueMetrics.current,
       ]);
 
-      const result = await RevenueCalculator.calculateRevenueProjection(
-        'tenant-001',
-        6
-      );
+      const result = await RevenueCalculator.calculateRevenueProjection('tenant-001', 6);
 
       result.projections.forEach((projection) => {
         expect(projection.confidenceInterval).toBeDefined();
-        expect(projection.confidenceInterval.lower).toBeLessThan(
-          projection.mrr
-        );
-        expect(projection.confidenceInterval.upper).toBeGreaterThan(
-          projection.mrr
-        );
+        expect(projection.confidenceInterval.lower).toBeLessThan(projection.mrr);
+        expect(projection.confidenceInterval.upper).toBeGreaterThan(projection.mrr);
       });
     });
 
     it('should handle insufficient historical data', async () => {
-      mockRevenueMetricsModel.findMany.mockResolvedValue([
-        fixtures.revenueMetrics.current,
-      ]);
+      mockRevenueMetricsModel.findMany.mockResolvedValue([fixtures.revenueMetrics.current]);
 
-      const result = await RevenueCalculator.calculateRevenueProjection(
-        'tenant-001',
-        3
-      );
+      const result = await RevenueCalculator.calculateRevenueProjection('tenant-001', 3);
 
       expect(result.confidence).toBe('low');
       expect(result.message).toContain('insufficient');
@@ -240,9 +207,7 @@ describe('RevenueCalculator', () => {
 
   describe('getRevenueBreakdown', () => {
     it('should breakdown revenue by category', async () => {
-      mockRevenueMetricsModel.findFirst.mockResolvedValue(
-        fixtures.revenueMetrics.current
-      );
+      mockRevenueMetricsModel.findFirst.mockResolvedValue(fixtures.revenueMetrics.current);
 
       const result = await RevenueCalculator.getRevenueBreakdown(
         'tenant-001',
@@ -257,9 +222,7 @@ describe('RevenueCalculator', () => {
     });
 
     it('should calculate net revenue correctly', async () => {
-      mockRevenueMetricsModel.findFirst.mockResolvedValue(
-        fixtures.revenueMetrics.current
-      );
+      mockRevenueMetricsModel.findFirst.mockResolvedValue(fixtures.revenueMetrics.current);
 
       const result = await RevenueCalculator.getRevenueBreakdown(
         'tenant-001',
@@ -286,9 +249,7 @@ describe('RevenueCalculator', () => {
         _avg: { churnedRevenue: 300 },
       });
 
-      const result = await RevenueCalculator.calculateLifetimeValue(
-        'tenant-001'
-      );
+      const result = await RevenueCalculator.calculateLifetimeValue('tenant-001');
 
       expect(result.ltv).toBeGreaterThan(0);
       expect(result.averageRevenuePerUser).toBe(150);
@@ -303,9 +264,7 @@ describe('RevenueCalculator', () => {
         _avg: { churnedRevenue: 0 },
       });
 
-      const result = await RevenueCalculator.calculateLifetimeValue(
-        'tenant-001'
-      );
+      const result = await RevenueCalculator.calculateLifetimeValue('tenant-001');
 
       expect(result.ltv).toBeGreaterThan(0);
     });
@@ -313,19 +272,15 @@ describe('RevenueCalculator', () => {
 
   describe('error handling', () => {
     it('should handle database errors gracefully', async () => {
-      mockRevenueMetricsModel.findFirst.mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      mockRevenueMetricsModel.findFirst.mockRejectedValue(new Error('Database connection failed'));
 
-      await expect(
-        RevenueCalculator.calculateMRR('tenant-001', new Date())
-      ).rejects.toThrow('Database connection failed');
+      await expect(RevenueCalculator.calculateMRR('tenant-001', new Date())).rejects.toThrow(
+        'Database connection failed'
+      );
     });
 
     it('should validate tenant ID', async () => {
-      await expect(
-        RevenueCalculator.calculateMRR('', new Date())
-      ).rejects.toThrow();
+      await expect(RevenueCalculator.calculateMRR('', new Date())).rejects.toThrow();
     });
 
     it('should validate date parameters', async () => {

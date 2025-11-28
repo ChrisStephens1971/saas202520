@@ -354,12 +354,16 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    const totalTournaments = Array.from(formatCounts.values()).reduce((sum, count) => sum + count, 0);
+    const totalTournaments = Array.from(formatCounts.values()).reduce(
+      (sum, count) => sum + count,
+      0
+    );
     const topFormats = Array.from(formatCounts.entries())
       .map(([format, count]) => ({
         format,
         count,
-        percentage: totalTournaments > 0 ? parseFloat(((count / totalTournaments) * 100).toFixed(2)) : 0,
+        percentage:
+          totalTournaments > 0 ? parseFloat(((count / totalTournaments) * 100).toFixed(2)) : 0,
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);

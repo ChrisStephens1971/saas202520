@@ -10,10 +10,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSocketContext } from '@/contexts/SocketContext';
 import { SocketEvent } from '@/lib/socket/events';
-import type {
-  ServerToClientEvents,
-  ClientToServerEvents,
-} from '@/lib/socket/events';
+import type { ServerToClientEvents, ClientToServerEvents } from '@/lib/socket/events';
 
 /**
  * Main Socket.io hook with convenience methods
@@ -40,10 +37,7 @@ export function useSocket() {
    * Automatically removes listener on unmount
    */
   const on = useCallback(
-    <K extends keyof ServerToClientEvents>(
-      event: K,
-      handler: ServerToClientEvents[K]
-    ) => {
+    <K extends keyof ServerToClientEvents>(event: K, handler: ServerToClientEvents[K]) => {
       if (!socket) {
         console.warn('[useSocket] Cannot listen to event - socket not connected');
         return () => {};
@@ -243,26 +237,20 @@ export function usePresence(tournamentId: string) {
 
   useSocketEvent(
     SocketEvent.USER_ONLINE,
-    useCallback(
-      (payload) => {
-        if (payload.userId) {
-          setOnlineUsers((prev) => [...new Set([...prev, payload.userId!])]);
-        }
-      },
-      []
-    )
+    useCallback((payload) => {
+      if (payload.userId) {
+        setOnlineUsers((prev) => [...new Set([...prev, payload.userId!])]);
+      }
+    }, [])
   );
 
   useSocketEvent(
     SocketEvent.USER_OFFLINE,
-    useCallback(
-      (payload) => {
-        if (payload.userId) {
-          setOnlineUsers((prev) => prev.filter((id) => id !== payload.userId));
-        }
-      },
-      []
-    )
+    useCallback((payload) => {
+      if (payload.userId) {
+        setOnlineUsers((prev) => prev.filter((id) => id !== payload.userId));
+      }
+    }, [])
   );
 
   // Request current users when joining

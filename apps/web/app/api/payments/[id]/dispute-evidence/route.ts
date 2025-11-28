@@ -9,10 +9,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import type { GetDisputeEvidenceResponse } from '@tournament/shared/types/payment';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -31,17 +28,11 @@ export async function GET(
     });
 
     if (!payment) {
-      return NextResponse.json(
-        { error: 'Payment not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
     }
 
     if (!payment.stripeAccount) {
-      return NextResponse.json(
-        { error: 'Stripe account not configured' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Stripe account not configured' }, { status: 400 });
     }
 
     // Verify user has permission (must be owner or TD of the organization)
@@ -61,19 +52,21 @@ export async function GET(
     }
 
     // Get tournament events related to this payment
-    const tournamentEvents = payment.tournamentId ? await prisma.tournamentEvent.findMany({
-      where: {
-        tournamentId: payment.tournamentId,
-        OR: [
-          { kind: 'payment.created' },
-          { kind: 'payment.succeeded' },
-          { kind: 'payment.failed' },
-          { kind: 'payment.refunded' },
-          { kind: 'payment.disputed' },
-        ],
-      },
-      orderBy: { timestamp: 'asc' },
-    }) : [];
+    const tournamentEvents = payment.tournamentId
+      ? await prisma.tournamentEvent.findMany({
+          where: {
+            tournamentId: payment.tournamentId,
+            OR: [
+              { kind: 'payment.created' },
+              { kind: 'payment.succeeded' },
+              { kind: 'payment.failed' },
+              { kind: 'payment.refunded' },
+              { kind: 'payment.disputed' },
+            ],
+          },
+          orderBy: { timestamp: 'asc' },
+        })
+      : [];
 
     // Build audit trail
     const auditTrail: {
@@ -84,7 +77,7 @@ export async function GET(
     }[] = [];
 
     // Add tournament events
-    tournamentEvents.forEach(event => {
+    tournamentEvents.forEach((event) => {
       auditTrail.push({
         timestamp: event.timestamp,
         actor: event.actor,
@@ -94,7 +87,7 @@ export async function GET(
     });
 
     // Add refund events
-    payment.refunds.forEach(refund => {
+    payment.refunds.forEach((refund) => {
       auditTrail.push({
         timestamp: refund.createdAt,
         actor: refund.processedBy || 'system',
@@ -123,7 +116,7 @@ export async function GET(
         description: payment.description,
         createdAt: payment.createdAt,
       },
-      payment.refunds.map(r => ({
+      payment.refunds.map((r) => ({
         id: r.id,
         amount: r.amount.toNumber(),
         reason: r.reason || 'requested_by_customer',
@@ -143,7 +136,12 @@ export async function GET(
         stripePaymentIntent: payment.stripePaymentIntent || '',
         amount: payment.amount.toNumber(),
         currency: payment.currency,
-        status: payment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        status: payment.status as
+          | 'pending'
+          | 'succeeded'
+          | 'failed'
+          | 'refunded'
+          | 'partially_refunded',
         purpose: payment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: payment.description ?? undefined,
         refundedAmount: payment.refundedAmount?.toNumber() || 0,
@@ -170,17 +168,35 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Error fetching dispute evidence:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
 function generateDisputeSummary(
-  payment: { id: string; stripePaymentIntent: string; amount: number; currency: string; status: string; purpose: string; description?: string | null; createdAt: Date },
-  refunds: Array<{ id: string; amount: number; reason: string; status: string; stripeRefundId: string; createdAt: Date }>,
-  auditTrail: Array<{ timestamp: Date; actor: string; action: string; details: Record<string, unknown> }>
+  payment: {
+    id: string;
+    stripePaymentIntent: string;
+    amount: number;
+    currency: string;
+    status: string;
+    purpose: string;
+    description?: string | null;
+    createdAt: Date;
+  },
+  refunds: Array<{
+    id: string;
+    amount: number;
+    reason: string;
+    status: string;
+    stripeRefundId: string;
+    createdAt: Date;
+  }>,
+  auditTrail: Array<{
+    timestamp: Date;
+    actor: string;
+    action: string;
+    details: Record<string, unknown>;
+  }>
 ): string {
   const lines: string[] = [];
 
@@ -212,7 +228,7 @@ function generateDisputeSummary(
   }
 
   lines.push('=== AUDIT TRAIL ===');
-  auditTrail.forEach(event => {
+  auditTrail.forEach((event) => {
     lines.push(`[${event.timestamp.toLocaleString()}] ${event.action}`);
     lines.push(`  Actor: ${event.actor}`);
     if (Object.keys(event.details).length > 0) {

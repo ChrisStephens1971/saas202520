@@ -145,11 +145,7 @@ export function endRequestTracking(
 /**
  * Track database query
  */
-export function trackDatabaseQuery(
-  requestId: string,
-  query: string,
-  duration: number
-): void {
+export function trackDatabaseQuery(requestId: string, query: string, duration: number): void {
   const metrics = requestMetrics.get(requestId);
   if (!metrics) return;
 
@@ -415,9 +411,7 @@ function alertServerError(metrics: PerformanceMetrics): void {
 /**
  * Performance middleware wrapper
  */
-export function withPerformanceTracking(
-  handler: (req: NextRequest) => Promise<NextResponse>
-) {
+export function withPerformanceTracking(handler: (req: NextRequest) => Promise<NextResponse>) {
   return async (req: NextRequest): Promise<NextResponse> => {
     const requestId = startRequestTracking(req);
 

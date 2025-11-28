@@ -9,9 +9,11 @@ Fixed 3 critical security vulnerabilities in the Tournament Platform SaaS applic
 ## 1. Socket.io JWT Authentication ✅ **COMPLETE**
 
 ### Problem
+
 Socket.io connections were not authenticated. Anyone could connect and join tournament rooms without verification.
 
 ### Solution
+
 - **Middleware already existed** in `lib/socket/middleware.ts` but wasn't being used
 - Applied `authMiddleware` to Socket.io server in `lib/socket/server.ts`
 - Validates JWT tokens from NextAuth
@@ -19,23 +21,26 @@ Socket.io connections were not authenticated. Anyone could connect and join tour
 - Falls back to anonymous/guest mode if token invalid (doesn't block connections)
 
 ### Files Modified
+
 - `apps/web/lib/socket/server.ts`
   - Added import for middleware functions
   - Applied `authMiddleware` using `io.use()` before connection handler
   - Updated connection log to show authenticated user info
 
 ### Environment Variables Required
+
 - `AUTH_SECRET` or `NEXTAUTH_SECRET` - For JWT verification
 - `UPSTASH_REDIS_REST_URL` - For rate limiting
 - `UPSTASH_REDIS_REST_TOKEN` - For rate limiting
 
 ### Testing
+
 ```javascript
 // Client-side connection with token:
 const socket = io('https://your-app.com', {
   auth: {
-    token: 'your-jwt-token-here'
-  }
+    token: 'your-jwt-token-here',
+  },
 });
 ```
 
@@ -44,9 +49,11 @@ const socket = io('https://your-app.com', {
 ## 2. Socket.io Rate Limiting ✅ **COMPLETE**
 
 ### Problem
+
 No rate limiting on Socket.io connections. Vulnerable to connection flooding and abuse.
 
 ### Solution
+
 - **Middleware already existed** in `lib/socket/middleware.ts` but wasn't being used
 - Applied `rateLimitMiddleware` to Socket.io server
 - Uses Upstash Redis for distributed rate limiting
@@ -55,16 +62,20 @@ No rate limiting on Socket.io connections. Vulnerable to connection flooding and
 - Returns clear error message with retry-after time
 
 ### Files Modified
+
 - `apps/web/lib/socket/server.ts`
   - Applied `rateLimitMiddleware` using `io.use()`
   - Applied `loggingMiddleware` for monitoring
 
 ### Rate Limits
+
 - **Connection rate**: 10 connections/minute per IP
 - **Event rate**: 100 events/minute per user (configured, not enforced in this PR)
 
 ### Monitoring
+
 Rate limit violations are logged to Redis with key pattern:
+
 ```
 socket_rate_limit_violation:{ip}:{timestamp}
 ```
@@ -74,9 +85,11 @@ socket_rate_limit_violation:{ip}:{timestamp}
 ## 3. Audit Log Database Storage ✅ **COMPLETE**
 
 ### Problem
+
 Audit logs GET endpoint was returning mock data instead of real database records.
 
 ### Solution
+
 - **Audit logger already existed** and was writing to database via `lib/audit/logger.ts`
 - Updated `app/api/admin/audit-logs/route.ts` to use real database queries
 - Replaced mock data with calls to `getAuditLogs()` function
@@ -84,6 +97,7 @@ Audit logs GET endpoint was returning mock data instead of real database records
 - Fixed missing `orgId` parameter in audit log calls across admin APIs
 
 ### Files Modified
+
 1. **`apps/web/app/api/admin/audit-logs/route.ts`**
    - Replaced mock GET endpoint with real `getAuditLogs()` call
    - Replaced mock POST endpoint with real `logAdminAction()` call
@@ -102,7 +116,9 @@ Audit logs GET endpoint was returning mock data instead of real database records
    - Added missing `orgId` parameter to `logAdminAction()` call
 
 ### Database Schema
+
 Audit logs are stored in the `audit_logs` table with:
+
 - `id`, `org_id`, `user_id`, `user_name`
 - `action` (create, update, delete, ban, suspend, etc.)
 - `resource` (user, tournament, match, player, etc.)
@@ -112,6 +128,7 @@ Audit logs are stored in the `audit_logs` table with:
 - Multi-tenant indexed by `org_id`
 
 ### Features
+
 - **Persistent storage**: All admin actions logged to PostgreSQL
 - **Filtering**: Query by org, user, action, resource, date range
 - **Pagination**: Limit/offset support
@@ -123,12 +140,14 @@ Audit logs are stored in the `audit_logs` table with:
 ## Impact Assessment
 
 ### Before
+
 - ❌ Unauthenticated Socket.io connections
 - ❌ No connection rate limiting
 - ❌ Audit logs only in memory (console.log)
 - ❌ Risk: Unauthorized access, DoS attacks, no compliance trail
 
 ### After
+
 - ✅ JWT-authenticated Socket.io with role-based access
 - ✅ Rate limiting (10 conn/min per IP)
 - ✅ Database-backed audit logs with full query support
@@ -139,7 +158,9 @@ Audit logs are stored in the `audit_logs` table with:
 ## Deployment Checklist
 
 ### Environment Variables
+
 Ensure these are set in production:
+
 ```bash
 # Authentication (Required)
 AUTH_SECRET="your-secret-key-here"
@@ -154,9 +175,11 @@ REDIS_URL="redis://localhost:6379"
 ```
 
 ### Database Migration
+
 No new migrations required. The `audit_logs` table already exists.
 
 ### Testing Recommendations
+
 1. **Socket.io Auth**: Test with valid/invalid/expired JWT tokens
 2. **Rate Limiting**: Attempt 15+ connections in 1 minute, verify rejection
 3. **Audit Logs**: Perform admin action, verify database record created
@@ -167,12 +190,14 @@ No new migrations required. The `audit_logs` table already exists.
 ## Performance Considerations
 
 ### Socket.io Middleware
+
 - **Auth Middleware**: ~10-20ms per connection (JWT decode)
 - **Rate Limit Check**: ~5-10ms per connection (Redis lookup)
 - **Total Overhead**: ~15-30ms per connection
 - **Acceptable**: For WebSocket handshakes (happens once per client)
 
 ### Audit Logging
+
 - **Write**: Async, doesn't block API response
 - **Read**: Indexed queries, fast even with millions of records
 - **Storage**: ~1KB per audit log entry

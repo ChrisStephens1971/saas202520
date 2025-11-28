@@ -28,10 +28,7 @@ import {
  * @param {string} id - Organization ID (from URL)
  * @returns {GetOrganizationResponse} Organization details with user's role
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -106,10 +103,7 @@ export async function GET(
  * @param {string} id - Organization ID (from URL)
  * @returns {UpdateOrganizationResponse} Updated organization
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();

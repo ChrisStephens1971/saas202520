@@ -8,11 +8,13 @@
 ## Quick Start
 
 ### 1. Navigate to Admin Tournament Management
+
 ```
 URL: /admin/tournaments
 ```
 
 ### 2. Create Your First Tournament
+
 1. Click "Create Tournament" button
 2. Complete 3-step wizard:
    - **Step 1:** Enter name, slug, description
@@ -20,6 +22,7 @@ URL: /admin/tournaments
    - **Step 3:** Review and create
 
 ### 3. Manage Tournaments
+
 - **View:** Click "View" button or tournament row
 - **Edit:** Click "Edit" button (owner/td only)
 - **Delete:** Click "Delete" button (owner only)
@@ -32,6 +35,7 @@ URL: /admin/tournaments
 ### Socket.io Integration
 
 #### Hooks Used (Already Implemented)
+
 ```typescript
 import { useSocket, useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
 ```
@@ -39,11 +43,13 @@ import { useSocket, useSocketEvent, useTournamentRoom } from '@/hooks/useSocket'
 **Location:** `/apps/web/hooks/useSocket.ts`
 
 **Events Listened:**
+
 - `tournament:created` - New tournament added to list
 - `tournament:updated` - Tournament data refreshed
 - `tournament:deleted` - Tournament removed from list
 
 #### Socket Context (Already Implemented)
+
 ```typescript
 import { useSocketContext } from '@/contexts/SocketContext';
 ```
@@ -51,6 +57,7 @@ import { useSocketContext } from '@/contexts/SocketContext';
 **Location:** `/apps/web/contexts/SocketContext.tsx`
 
 **Features:**
+
 - Auto-reconnection
 - Connection status tracking
 - Room subscription management
@@ -60,18 +67,20 @@ import { useSocketContext } from '@/contexts/SocketContext';
 ### Authentication Integration
 
 #### Session Data (Already Implemented)
+
 ```typescript
 import { useSession } from 'next-auth/react';
 
 const { data: session } = useSession();
 
 // Access user data
-session?.user?.id
-session?.user?.role  // 'owner' | 'td' | 'scorekeeper' | 'streamer'
-session?.user?.orgId // Tenant ID
+session?.user?.id;
+session?.user?.role; // 'owner' | 'td' | 'scorekeeper' | 'streamer'
+session?.user?.orgId; // Tenant ID
 ```
 
 #### Permission Checks
+
 ```typescript
 const canEdit = session?.user?.role === 'owner' || session?.user?.role === 'td';
 const canDelete = session?.user?.role === 'owner';
@@ -82,6 +91,7 @@ const canDelete = session?.user?.role === 'owner';
 ### API Contracts Integration
 
 #### Types Imported
+
 ```typescript
 import type {
   Tournament,
@@ -97,6 +107,7 @@ import type {
 **Location:** `/packages/api-contracts/src/tournaments.ts`
 
 #### Validation Schemas
+
 ```typescript
 import {
   CreateTournamentRequestSchema,
@@ -112,23 +123,27 @@ import {
 ### UI Components Integration
 
 #### Admin Layout (Already Implemented)
+
 ```typescript
 // Location: /apps/web/app/admin/layout.tsx
 // Provides navigation, sidebar, and layout structure
 ```
 
 **Tournament pages automatically inherit:**
+
 - Admin navigation sidebar
 - Role-based access control
 - Dark mode support
 - Responsive layout
 
 #### Tailwind Classes
+
 Uses existing Tailwind configuration with dark mode support:
+
 ```typescript
-className="bg-white dark:bg-gray-800"
-className="text-gray-900 dark:text-white"
-className="border-gray-300 dark:border-gray-600"
+className = 'bg-white dark:bg-gray-800';
+className = 'text-gray-900 dark:text-white';
+className = 'border-gray-300 dark:border-gray-600';
 ```
 
 ---
@@ -136,6 +151,7 @@ className="border-gray-300 dark:border-gray-600"
 ## API Endpoints (Backend Implementation Required)
 
 ### 1. Create Tournament
+
 ```typescript
 POST /api/tournaments
 
@@ -166,6 +182,7 @@ socket.to(`org:${orgId}`).emit('tournament:created', {
 ```
 
 ### 2. Update Tournament
+
 ```typescript
 PUT /api/tournaments/:id
 
@@ -195,6 +212,7 @@ socket.to(`org:${orgId}`).emit('tournament:updated', {
 ```
 
 ### 3. Delete Tournament
+
 ```typescript
 DELETE /api/tournaments/:id
 
@@ -211,6 +229,7 @@ socket.to(`org:${orgId}`).emit('tournament:deleted', {
 ```
 
 ### 4. List Tournaments (Already Implemented)
+
 ```typescript
 GET /api/tournaments?limit=50&offset=0&status=active
 
@@ -224,6 +243,7 @@ Response:
 ```
 
 ### 5. Get Tournament Details (Already Implemented)
+
 ```typescript
 GET /api/tournaments/:id
 
@@ -238,6 +258,7 @@ Response:
 ## Backend Implementation Example
 
 ### Create Tournament Handler
+
 ```typescript
 // File: apps/web/app/api/tournaments/route.ts
 
@@ -295,22 +316,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ tournament }, { status: 201 });
   } catch (error) {
     console.error('Error creating tournament:', error);
-    return NextResponse.json(
-      { error: 'Failed to create tournament' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create tournament' }, { status: 500 });
   }
 }
 ```
 
 ### Update Tournament Handler
+
 ```typescript
 // File: apps/web/app/api/tournaments/[id]/route.ts
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // 1. Authenticate
     const session = await auth();
@@ -366,22 +382,17 @@ export async function PUT(
     return NextResponse.json({ tournament });
   } catch (error) {
     console.error('Error updating tournament:', error);
-    return NextResponse.json(
-      { error: 'Failed to update tournament' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update tournament' }, { status: 500 });
   }
 }
 ```
 
 ### Delete Tournament Handler
+
 ```typescript
 // File: apps/web/app/api/tournaments/[id]/route.ts
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // 1. Authenticate
     const session = await auth();
@@ -419,10 +430,7 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting tournament:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete tournament' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete tournament' }, { status: 500 });
   }
 }
 ```
@@ -432,6 +440,7 @@ export async function DELETE(
 ## Socket.io Event Types
 
 ### Define Event Interfaces
+
 ```typescript
 // File: apps/web/lib/socket/events.ts
 
@@ -469,6 +478,7 @@ export interface ServerToClientEvents {
 ### 1. Manual Testing Checklist
 
 **Create Tournament:**
+
 - [ ] Navigate to `/admin/tournaments`
 - [ ] Click "Create Tournament"
 - [ ] Complete wizard (all 3 steps)
@@ -476,6 +486,7 @@ export interface ServerToClientEvents {
 - [ ] Check Socket.io event in browser console
 
 **Edit Tournament:**
+
 - [ ] Click "Edit" on a tournament
 - [ ] Change name, description, or settings
 - [ ] Save changes
@@ -483,18 +494,21 @@ export interface ServerToClientEvents {
 - [ ] Check other users see update (real-time)
 
 **Delete Tournament:**
+
 - [ ] Click "Delete" on a tournament
 - [ ] Confirm deletion
 - [ ] Verify tournament removed from list
 - [ ] Check other users see removal (real-time)
 
 **Bulk Operations:**
+
 - [ ] Select multiple tournaments
 - [ ] Click "Delete Selected"
 - [ ] Confirm bulk deletion
 - [ ] Verify all removed from list
 
 ### 2. E2E Test Example
+
 ```typescript
 // File: apps/web/tests/e2e/admin-tournaments.spec.ts
 
@@ -531,7 +545,7 @@ test('Admin can create, edit, and delete tournament', async ({ page }) => {
 
   // Delete tournament
   await page.click('text=Delete');
-  page.on('dialog', dialog => dialog.accept());
+  page.on('dialog', (dialog) => dialog.accept());
   await page.click('text=Delete');
 
   // Verify deleted
@@ -544,27 +558,35 @@ test('Admin can create, edit, and delete tournament', async ({ page }) => {
 ## Troubleshooting
 
 ### Issue: Socket events not received
+
 **Solution:**
+
 1. Check Socket.io connection status (use `ConnectionStatus` component)
 2. Verify user is subscribed to org room: `org:${orgId}`
 3. Check server logs for emitted events
 4. Verify event names match exactly
 
 ### Issue: Permission denied
+
 **Solution:**
+
 1. Check user role: `session.user.role`
 2. Verify `canEdit` and `canDelete` logic
 3. Check backend permission validation
 
 ### Issue: Tournament not found after creation
+
 **Solution:**
+
 1. Verify API response includes `tournament.id`
 2. Check navigation: `router.push(\`/admin/tournaments/\${id}\`)`
 3. Verify database insert succeeded
 4. Check org context matches
 
 ### Issue: Real-time updates delayed
+
 **Solution:**
+
 1. Check Socket.io reconnection frequency
 2. Verify event emission happens after database write
 3. Check for rate limiting on Socket.io events
@@ -575,6 +597,7 @@ test('Admin can create, edit, and delete tournament', async ({ page }) => {
 ## Performance Optimization
 
 ### 1. Table Optimization
+
 ```typescript
 // Use pagination to limit rendered rows
 pagination: {
@@ -587,6 +610,7 @@ const TournamentRow = React.memo(({ tournament }) => { ... });
 ```
 
 ### 2. Socket Event Debouncing
+
 ```typescript
 // Debounce rapid updates
 import { debounce } from 'lodash';
@@ -599,6 +623,7 @@ useSocketEvent('tournament:updated', debouncedUpdate);
 ```
 
 ### 3. Server-Side Pagination
+
 ```typescript
 // For 1000+ tournaments, use server-side pagination
 const [page, setPage] = useState(0);
@@ -606,8 +631,8 @@ const [pageSize, setPageSize] = useState(50);
 
 useEffect(() => {
   fetch(`/api/tournaments?offset=${page * pageSize}&limit=${pageSize}`)
-    .then(res => res.json())
-    .then(data => setTournaments(data.tournaments));
+    .then((res) => res.json())
+    .then((data) => setTournaments(data.tournaments));
 }, [page, pageSize]);
 ```
 
@@ -616,6 +641,7 @@ useEffect(() => {
 ## Deployment Checklist
 
 ### Frontend Deployment
+
 - [ ] All TypeScript files compile without errors
 - [ ] ESLint validation passes
 - [ ] Dark mode tested
@@ -623,6 +649,7 @@ useEffect(() => {
 - [ ] Socket.io connection tested
 
 ### Backend Deployment
+
 - [ ] API route handlers implemented
 - [ ] Socket.io events integrated
 - [ ] Permission checks added
@@ -630,6 +657,7 @@ useEffect(() => {
 - [ ] Database indexes created
 
 ### Integration Testing
+
 - [ ] Create tournament flow tested
 - [ ] Edit tournament flow tested
 - [ ] Delete tournament flow tested
@@ -641,6 +669,7 @@ useEffect(() => {
 ## Support
 
 For questions or issues:
+
 1. Check this integration guide
 2. Review `/docs/sprint-9-phase-2-implementation.md`
 3. Check source code comments

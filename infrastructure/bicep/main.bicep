@@ -1,5 +1,5 @@
 // Main Bicep Configuration
-// Azure SaaS Project: {{PROJECT_NAME}}
+// Azure SaaS Project: saas202520 (Tournament Platform)
 
 targetScope = 'subscription'
 
@@ -33,7 +33,7 @@ module naming 'modules/naming.bicep' = {
     location: location
     slice: slice
     owner: 'ops@verdaio.com'
-    costCenter: '{{AZURE_PROJECT}}-llc'
+    costCenter: '202520-llc'
   }
 }
 
@@ -59,56 +59,33 @@ resource rgNet 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: naming.outputs.commonTags
 }
 
-// Log Analytics Workspace
-module logAnalytics 'modules/log-analytics.bicep' = {
-  name: 'logAnalytics'
-  scope: rgApp
-  params: {
-    name: naming.outputs.logAnalyticsName
-    location: location
-    tags: naming.outputs.commonTags
-  }
-}
-
-// Application Insights
-module appInsights 'modules/app-insights.bicep' = {
-  name: 'appInsights'
-  scope: rgApp
-  params: {
-    name: naming.outputs.appInsightsName
-    location: location
-    workspaceId: logAnalytics.outputs.id
-    tags: naming.outputs.commonTags
-  }
-}
-
-// Key Vault
-module keyVault 'modules/key-vault.bicep' = {
-  name: 'keyVault'
-  scope: rgApp
-  params: {
-    name: '${naming.outputs.keyVaultName}-01'
-    location: location
-    tags: naming.outputs.commonTags
-  }
-}
-
-// Virtual Network
-module vnet 'modules/vnet.bicep' = {
-  name: 'vnet'
-  scope: rgNet
-  params: {
-    name: naming.outputs.vnetName
-    location: location
-    addressPrefix: '10.0.0.0/16'
-    tags: naming.outputs.commonTags
-  }
-}
+// TODO (V2): Add resource deployments using modules
+// Subscription-scoped deployments can only create resource groups directly.
+// Other resources need to be deployed via modules with scope property or separate RG-scoped deployments.
+//
+// Planned resources for V2:
+// - Log Analytics Workspace (in rgApp)
+// - Application Insights (in rgApp)
+// - Key Vault (in rgApp)
+// - Virtual Network (in rgNet)
+// - App Service Plan & App Service (in rgApp)
+// - Azure Database for PostgreSQL (in rgData)
+//
+// To deploy these, either:
+// 1. Create separate Bicep modules in infrastructure/bicep/modules/ for each resource type
+// 2. Use resource group-scoped deployments after creating the RGs above
+// 3. Use Azure Portal or Azure CLI to create resources in the RGs
+//
+// V1 Focus: Tournament platform web app deployment
+// - Resource groups created via this template
+// - App resources deployed via Azure Portal/CLI or GitHub Actions
 
 // Outputs
 output resourceGroupAppName string = rgApp.name
 output resourceGroupDataName string = rgData.name
 output resourceGroupNetName string = rgNet.name
-output keyVaultName string = keyVault.outputs.name
-output vnetName string = vnet.outputs.name
-output appInsightsInstrumentationKey string = appInsights.outputs.instrumentationKey
+output namePrefix string = naming.outputs.namePrefix
+output logAnalyticsName string = naming.outputs.logAnalyticsName
+output appInsightsName string = naming.outputs.appInsightsName
+output keyVaultName string = '${naming.outputs.keyVaultName}-01'
+output vnetName string = naming.outputs.vnetName

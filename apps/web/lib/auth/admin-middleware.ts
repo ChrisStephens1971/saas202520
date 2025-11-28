@@ -109,7 +109,9 @@ export async function verifyAdmin(_request: NextRequest): Promise<AdminAuthResul
     }
 
     // 5. Return authorized user
-    const adminMember = user.organizationMembers.find((m) => m.role === 'admin' || m.role === 'owner');
+    const adminMember = user.organizationMembers.find(
+      (m) => m.role === 'admin' || m.role === 'owner'
+    );
     if (!adminMember) {
       return {
         authorized: false,

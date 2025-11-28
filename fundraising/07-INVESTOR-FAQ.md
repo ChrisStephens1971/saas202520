@@ -1,4 +1,5 @@
 # Investor FAQ
+
 ## Frequently Asked Questions from Investors
 
 **Project:** saas202509 - Multi-Tenant HOA Accounting System
@@ -19,6 +20,7 @@ We're building the first multi-tenant fund accounting platform specifically for 
 ### Q: How big is the market?
 
 **A:**
+
 - **TAM:** 370,000 HOAs in the US × $5,000/year = **$1.85 billion**
 - **SAM:** 100,000 HOAs (50+ units) = **$500 million**
 - **SOM:** 1% in 5 years = **$5 million ARR**
@@ -42,13 +44,14 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 
 **A:** SaaS subscription model with three tiers:
 
-| Tier | HOA Size | Price | Target |
-|------|----------|-------|--------|
-| Tier 1 | 50-100 units | $400/mo ($4,800/year) | Small HOAs |
+| Tier   | HOA Size      | Price                 | Target      |
+| ------ | ------------- | --------------------- | ----------- |
+| Tier 1 | 50-100 units  | $400/mo ($4,800/year) | Small HOAs  |
 | Tier 2 | 100-250 units | $600/mo ($7,200/year) | Medium HOAs |
-| Tier 3 | 250-500 units | $800/mo ($9,600/year) | Large HOAs |
+| Tier 3 | 250-500 units | $800/mo ($9,600/year) | Large HOAs  |
 
 **Unit Economics:**
+
 - **LTV:** $24K-$48K (5-year retention)
 - **CAC:** $3K-$5K (enterprise sales cycle)
 - **LTV/CAC:** 5-10x (healthy SaaS)
@@ -63,11 +66,13 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** They serve property managers, not HOAs directly. Key differences:
 
 **AppFolio/Buildium:**
+
 - Focus: Property management for rental properties
 - Accounting: Generic, not designed for fund accounting
 - Weakness: No separation of Operating/Reserve/Special Assessment funds
 
 **Us:**
+
 - Focus: HOA fund accounting exclusively
 - Accounting: Built-in fund separation, double-entry bookkeeping
 - Strength: Event-sourced ledger, immutable audit trail, zero error tolerance
@@ -81,14 +86,17 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** Both are general property accounting/management AI platforms:
 
 **IronLedger:**
+
 - Focus: AI accounting agents for property accounting (general)
 - Weakness: Not HOA-specific, no fund accounting expertise
 
 **Palomma:**
+
 - Focus: AI agents for property management (leasing, sales, collections)
 - Weakness: Not accounting-focused
 
 **Us:**
+
 - Vertical specialization: HOAs only
 - Deeper features: Fund accounting, compliance, audit trails
 - Higher barrier to entry: Complex domain requires years to master
@@ -115,15 +123,18 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** Pre-revenue, MVP in development. However:
 
 **Completed:**
+
 - 50+ customer discovery interviews
 - 90% cited bank reconciliation as #1 pain point
 - Identified willingness to pay ($70K → $5K/year = 93% cost reduction)
 
 **In Progress:**
+
 - MVP development (launching Month 3)
 - Pilot program agreements (targeting 3-5 HOAs)
 
 **Next 6 Months:**
+
 - Launch MVP with pilots
 - Achieve $10K-$50K ARR
 - Apply to Y Combinator (Winter 2026)
@@ -158,11 +169,13 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** [Customize based on your background]
 
 **Example:**
+
 - Software engineering background: Built multi-tenant SaaS platforms before
 - Domain expertise: Served on HOA board, understand pain points firsthand
 - Execution track record: [Prior startups, shipped products, relevant experience]
 
 **Gaps we'll fill:**
+
 - CTO hiring: First use of funds (25% equity reserved)
 - CPA advisor: Already engaged for fund accounting guidance
 - HOA advisors: Board members providing feedback
@@ -186,6 +199,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **Execution risk** (solo founder, complex domain).
 
 **Mitigation:**
+
 1. **Hire CTO immediately** (first use of funds, 25% equity reserved)
 2. **Advisor network** (CPA, HOA board members, PropTech founders)
 3. **Pilot program** (validate product with real customers before scaling)
@@ -202,6 +216,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **$100K-$500K** on a SAFE with **$1.5M-$2M valuation cap** and **20% discount**.
 
 **Use of funds (12-month runway):**
+
 - Engineering: $180K (2 engineers × 6 months)
 - Founder salary: $60K (6 months)
 - Design: $45K (1 designer × 6 months)
@@ -232,6 +247,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **Series A in 18-24 months** at $1M+ ARR.
 
 **Expected terms:**
+
 - Amount: $1M-$3M
 - Valuation: $5M-$8M pre-money
 - Use: Scale to 200+ customers, 8-person team, profitability path
@@ -245,6 +261,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** Pre-revenue, so using **SAFE with $1.5M-$2M valuation cap**.
 
 **Rationale:**
+
 - Below average pre-seed ($5.7M per Pitchbook 2025)
 - Fair for solo founder, pre-revenue
 - YC-backed competitors (IronLedger, Palomma) at $10M+ post-YC
@@ -315,21 +332,25 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** Four-phase GTM strategy:
 
 **Phase 1: Pilot Program (Months 1-6)**
+
 - Target: 3-5 HOAs via network
 - Offer: 50% discount for feedback
 - Goal: Validate product
 
 **Phase 2: Direct Sales (Months 6-18)**
+
 - Target: Self-managed HOAs (50-250 units)
 - Channels: Direct outreach, HOA conferences, board member networks
 - Goal: 50-100 customers
 
 **Phase 3: Partnerships (Months 18+)**
+
 - Target: Small property management companies
 - Model: Revenue share (20%) or white-label
 - Goal: Scale via partners
 
 **Phase 4: Self-Serve (Year 3+)**
+
 - Target: DIY treasurers
 - Channels: SEO, content marketing, Google Ads
 - Goal: 50% of customers via self-serve
@@ -341,6 +362,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **60-90 days** (enterprise sales to HOA boards).
 
 **Typical flow:**
+
 1. **Week 1-2:** Initial contact (treasurer or president)
 2. **Week 3-4:** Product demo to board
 3. **Week 5-8:** Board discussion, proposal review
@@ -357,6 +379,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **10-15% annually** (industry standard for SMB SaaS).
 
 **Why HOAs are sticky:**
+
 - High switching costs (data migration, retraining)
 - Used for financial statements (board reports, audits)
 - Multi-year contracts (annual prepay discount)
@@ -373,6 +396,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** **Acquisition in 5-7 years** at $50M-$150M valuation (10-20x ARR at $5M-$10M).
 
 **Target acquirers:**
+
 1. **AppFolio** ($1.5B market cap) - Add HOA fund accounting to portfolio
 2. **Buildium/RealPage** - Expand property management suite
 3. **Yardi** (private, $3B+ valuation) - Largest property management software
@@ -380,6 +404,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 5. **Private Equity** - Roll-up play (consolidate HOA software)
 
 **Comparable exits:**
+
 - Buildium acquired for **$580M** (2019)
 - AppFolio IPO at **$2.1B** (2015)
 
@@ -407,12 +432,15 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 **A:** Three risks:
 
 **1. Execution risk (solo founder)**
+
 - Mitigation: Hire CTO immediately, build advisor network
 
 **2. Sales cycle risk (board decisions are slow)**
+
 - Mitigation: Target HOAs with upcoming elections, offer seasonal promotions
 
 **3. Competitive risk (AppFolio/Buildium could add features)**
+
 - Mitigation: 2-3 year head start, vertical specialization, innovator's dilemma
 
 **I'm aware of the risks and have a mitigation plan for each.**
@@ -436,6 +464,7 @@ The market is underserved: 90% of HOAs use spreadsheets or generic accounting so
 
 **Honest answer:**
 "If we can't achieve product-market fit in 18 months, I'll either:
+
 1. Pivot to adjacent market (e.g., condo associations, co-ops)
 2. Return remaining capital to investors
 3. Explore acquisition (acqui-hire scenario)
@@ -451,11 +480,13 @@ I'm committed to maximizing investor return, even if that means shutting down gr
 **A:** **Light touch with strategic help:**
 
 **Ideal investor provides:**
+
 - ✅ Warm intros to potential customers (HOA board members)
 - ✅ Strategic advice (scaling SaaS, enterprise sales)
 - ✅ Follow-on capital (invest in Series A)
 
 **Not looking for:**
+
 - ❌ Board seats (too early)
 - ❌ Micromanagement
 - ❌ Operational involvement
@@ -496,6 +527,7 @@ I'm committed to maximizing investor return, even if that means shutting down gr
 ### Q: Can I see your financials?
 
 **A:** **Absolutely.** After you sign an NDA, I'll share:
+
 - 5-year financial projections
 - Unit economics model
 - Cap table (current + pro forma)
@@ -515,6 +547,7 @@ I'm committed to maximizing investor return, even if that means shutting down gr
 
 **If pre-revenue:**
 "We don't have paying customers yet (pre-revenue). However, I can connect you with:
+
 - HOA board members from our discovery interviews
 - Pilot program participants (once MVP launches)
 - Industry references (CPAs, property managers)"

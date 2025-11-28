@@ -7,10 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getChipStandings, getChipStats } from '@/lib/chip-tracker';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
     const { searchParams } = new URL(request.url);

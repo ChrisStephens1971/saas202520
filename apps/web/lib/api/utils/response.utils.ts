@@ -21,10 +21,7 @@ const API_VERSION = '1.0';
  * @param meta - Optional metadata
  * @returns Formatted success response
  */
-export function apiSuccess<T>(
-  data: T,
-  meta?: Record<string, any>
-): ApiSuccessResponse<T> {
+export function apiSuccess<T>(data: T, meta?: Record<string, any>): ApiSuccessResponse<T> {
   return {
     success: true,
     data,
@@ -127,10 +124,7 @@ export function apiForbidden(
  * @param identifier - Optional resource identifier
  * @returns Not found error response
  */
-export function apiNotFound(
-  resource: string,
-  identifier?: string
-): ApiErrorResponse {
+export function apiNotFound(resource: string, identifier?: string): ApiErrorResponse {
   const message = identifier
     ? `${resource} with ID "${identifier}" not found`
     : `${resource} not found`;
@@ -148,10 +142,7 @@ export function apiNotFound(
  * @param reset - Unix timestamp when limit resets
  * @returns Rate limit error response
  */
-export function apiRateLimitExceeded(
-  limit: number,
-  reset: number
-): ApiErrorResponse {
+export function apiRateLimitExceeded(limit: number, reset: number): ApiErrorResponse {
   const resetDate = new Date(reset * 1000);
 
   return apiError(
@@ -173,10 +164,7 @@ export function apiRateLimitExceeded(
  * @param details - Validation errors or other details
  * @returns Bad request error response
  */
-export function apiBadRequest(
-  message: string,
-  details?: Record<string, any>
-): ApiErrorResponse {
+export function apiBadRequest(message: string, details?: Record<string, any>): ApiErrorResponse {
   return apiError('validation_error', message, details);
 }
 
@@ -193,11 +181,7 @@ export function apiInternalError(
   includeDetails: boolean = false,
   errorDetails?: Record<string, any>
 ): ApiErrorResponse {
-  return apiError(
-    'internal_error',
-    message,
-    includeDetails ? errorDetails : undefined
-  );
+  return apiError('internal_error', message, includeDetails ? errorDetails : undefined);
 }
 
 /**
@@ -219,10 +203,7 @@ export function apiServiceUnavailable(
  * @param details - Conflict details
  * @returns Conflict error response
  */
-export function apiConflict(
-  message: string,
-  details?: Record<string, any>
-): ApiErrorResponse {
+export function apiConflict(message: string, details?: Record<string, any>): ApiErrorResponse {
   return apiError('resource_conflict', message, details);
 }
 
@@ -234,18 +215,11 @@ export function apiConflict(
  * @param includeStack - Whether to include stack trace (only in development)
  * @returns API error response
  */
-export function errorToApiResponse(
-  error: Error,
-  includeStack: boolean = false
-): ApiErrorResponse {
-  return apiInternalError(
-    error.message || 'An unexpected error occurred',
-    includeStack,
-    {
-      name: error.name,
-      ...(includeStack && error.stack && { stack: error.stack }),
-    }
-  );
+export function errorToApiResponse(error: Error, includeStack: boolean = false): ApiErrorResponse {
+  return apiInternalError(error.message || 'An unexpected error occurred', includeStack, {
+    name: error.name,
+    ...(includeStack && error.stack && { stack: error.stack }),
+  });
 }
 
 /**

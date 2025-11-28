@@ -24,12 +24,27 @@ const estimateMatchDuration = (
 ): DurationEstimate => {
   // Base duration estimates
   const BASE_DURATION: Record<number, number> = {
-    1: 5, 2: 10, 3: 15, 4: 20, 5: 25, 6: 30, 7: 35, 8: 40, 9: 45, 10: 50, 11: 55, 13: 65, 15: 75,
+    1: 5,
+    2: 10,
+    3: 15,
+    4: 20,
+    5: 25,
+    6: 30,
+    7: 35,
+    8: 40,
+    9: 45,
+    10: 50,
+    11: 55,
+    13: 65,
+    15: 75,
   };
 
   // Skill multipliers
   const SKILL_MULTIPLIERS: Record<string, number> = {
-    BEGINNER: 1.3, INTERMEDIATE: 1.0, ADVANCED: 0.9, EXPERT: 0.8,
+    BEGINNER: 1.3,
+    INTERMEDIATE: 1.0,
+    ADVANCED: 0.9,
+    EXPERT: 0.8,
   };
 
   // Use historical if available
@@ -260,9 +275,7 @@ describe('ETA Calculator - ETA Calculation', () => {
     const activeMatchStarted = new Date('2024-01-01T09:50:00Z');
     const activeMatchDuration = 25;
 
-    const activeMatchEnd = new Date(
-      activeMatchStarted.getTime() + activeMatchDuration * 60 * 1000
-    );
+    const activeMatchEnd = new Date(activeMatchStarted.getTime() + activeMatchDuration * 60 * 1000);
 
     const remainingTime = Math.max(0, activeMatchEnd.getTime() - now.getTime());
 
@@ -303,9 +316,7 @@ describe('ETA Calculator - Player Wait Time', () => {
     const now = new Date('2024-01-01T10:00:00Z');
     const matchStartTime = new Date('2024-01-01T10:15:00Z');
 
-    const waitMinutes = Math.round(
-      (matchStartTime.getTime() - now.getTime()) / (1000 * 60)
-    );
+    const waitMinutes = Math.round((matchStartTime.getTime() - now.getTime()) / (1000 * 60));
 
     expect(waitMinutes).toBe(15);
   });
@@ -472,9 +483,7 @@ describe('ETA Calculator - Table Availability', () => {
       { id: 'table-3', freeAt: new Date('2024-01-01T10:30:00Z') },
     ];
 
-    const sortedTables = [...tableTimes].sort(
-      (a, b) => a.freeAt.getTime() - b.freeAt.getTime()
-    );
+    const sortedTables = [...tableTimes].sort((a, b) => a.freeAt.getTime() - b.freeAt.getTime());
 
     expect(sortedTables[0].id).toBe('table-2');
   });

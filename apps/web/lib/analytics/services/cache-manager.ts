@@ -174,13 +174,7 @@ export async function invalidate(pattern: string): Promise<void> {
     let deletedCount = 0;
 
     do {
-      const [newCursor, keys] = await redis.scan(
-        cursor,
-        'MATCH',
-        pattern,
-        'COUNT',
-        100
-      );
+      const [newCursor, keys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
       cursor = newCursor;
 
       if (keys.length > 0) {
@@ -189,9 +183,7 @@ export async function invalidate(pattern: string): Promise<void> {
       }
     } while (cursor !== '0');
 
-    console.log(
-      `[CacheManager] Invalidated ${deletedCount} keys matching pattern: ${pattern}`
-    );
+    console.log(`[CacheManager] Invalidated ${deletedCount} keys matching pattern: ${pattern}`);
   } catch (error) {
     console.error(`[CacheManager] Error invalidating pattern ${pattern}:`, error);
     stats.errors++;
@@ -207,11 +199,7 @@ export async function invalidate(pattern: string): Promise<void> {
  * @param params - Additional parameters for the key
  * @returns Formatted cache key
  */
-export function getCacheKey(
-  namespace: string,
-  tenantId: string,
-  ...params: string[]
-): string {
+export function getCacheKey(namespace: string, tenantId: string, ...params: string[]): string {
   const parts = [namespace, tenantId, ...params];
   return parts.filter(Boolean).join(':');
 }
@@ -292,9 +280,7 @@ export async function getCacheStats(): Promise<{
     const info = await redis.info('memory');
     const lines = info.split('\r\n');
 
-    const usedMemory = lines
-      .find((line) => line.startsWith('used_memory_human:'))
-      ?.split(':')[1];
+    const usedMemory = lines.find((line) => line.startsWith('used_memory_human:'))?.split(':')[1];
     const peakMemory = lines
       .find((line) => line.startsWith('used_memory_peak_human:'))
       ?.split(':')[1];
@@ -405,10 +391,7 @@ export async function mget<T>(keys: string[]): Promise<Map<string, T>> {
           result.set(keys[index], JSON.parse(value) as T);
           stats.hits++;
         } catch (error) {
-          console.error(
-            `[CacheManager] Error parsing value for key ${keys[index]}:`,
-            error
-          );
+          console.error(`[CacheManager] Error parsing value for key ${keys[index]}:`, error);
           stats.misses++;
         }
       } else {
@@ -429,9 +412,7 @@ export async function mget<T>(keys: string[]): Promise<Map<string, T>> {
  *
  * @param entries - Array of [key, value, ttl] tuples
  */
-export async function mset<T>(
-  entries: Array<[string, T, number?]>
-): Promise<void> {
+export async function mset<T>(entries: Array<[string, T, number?]>): Promise<void> {
   const redis = getRedisClient();
 
   try {

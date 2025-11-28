@@ -37,10 +37,7 @@ export type PeriodType = 'day' | 'week' | 'month' | 'quarter' | 'year';
  * @param periodType - Type of period
  * @returns Start and end dates for the period
  */
-function getPeriodBoundaries(
-  date: Date,
-  periodType: PeriodType
-): { start: Date; end: Date } {
+function getPeriodBoundaries(date: Date, periodType: PeriodType): { start: Date; end: Date } {
   switch (periodType) {
     case 'day':
       return { start: startOfDay(date), end: endOfDay(date) };
@@ -208,9 +205,7 @@ export async function aggregateRevenue(
     });
 
     console.log(
-      `[Aggregation] Revenue aggregation complete for tenant ${tenantId}: $${
-        netRevenue / 100
-      }`
+      `[Aggregation] Revenue aggregation complete for tenant ${tenantId}: $${netRevenue / 100}`
     );
   } catch (error) {
     console.error(`[Aggregation] Error aggregating revenue for tenant ${tenantId}:`, error);
@@ -227,10 +222,7 @@ export async function aggregateRevenue(
  * @param tenantId - Organization/tenant ID
  * @param cohortMonth - First day of the cohort month (YYYY-MM-01)
  */
-export async function aggregateCohorts(
-  tenantId: string,
-  cohortMonth: Date
-): Promise<void> {
+export async function aggregateCohorts(tenantId: string, cohortMonth: Date): Promise<void> {
   console.log(
     `[Aggregation] Computing cohorts for tenant ${tenantId}, month ${format(
       cohortMonth,
@@ -435,8 +427,7 @@ export async function aggregateTournaments(
       (t) => t.startedAt && t.completedAt
     );
     const totalDurationMinutes = tournamentsWithDuration.reduce((sum, t) => {
-      const duration =
-        (t.completedAt!.getTime() - t.startedAt!.getTime()) / (1000 * 60);
+      const duration = (t.completedAt!.getTime() - t.startedAt!.getTime()) / (1000 * 60);
       return sum + duration;
     }, 0);
     const avgDurationMinutes =
@@ -449,9 +440,8 @@ export async function aggregateTournaments(
     tournaments.forEach((t) => {
       formatCounts[t.format] = (formatCounts[t.format] || 0) + 1;
     });
-    const mostPopularFormat = Object.entries(formatCounts).sort(
-      ([, a], [, b]) => b - a
-    )[0]?.[0] || null;
+    const mostPopularFormat =
+      Object.entries(formatCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || null;
 
     // Calculate revenue from tournaments in this period
     const tournamentIds = tournaments.map((t) => t.id);
@@ -504,10 +494,7 @@ export async function aggregateTournaments(
       `[Aggregation] Tournament aggregation complete for tenant ${tenantId}: ${tournamentCount} tournaments, ${completedCount} completed`
     );
   } catch (error) {
-    console.error(
-      `[Aggregation] Error aggregating tournaments for tenant ${tenantId}:`,
-      error
-    );
+    console.error(`[Aggregation] Error aggregating tournaments for tenant ${tenantId}:`, error);
     throw error;
   }
 }

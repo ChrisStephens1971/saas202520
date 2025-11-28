@@ -201,9 +201,7 @@ server.register(async function (fastify) {
         // STEP 3: Verify room access token
         const roomToken = verifyRoomToken(roomTokenParam, '');
         if (!roomToken) {
-          console.warn(
-            `[WebSocket] Invalid room token from user ${userToken.userId}`
-          );
+          console.warn(`[WebSocket] Invalid room token from user ${userToken.userId}`);
           socket.close(1008, 'Invalid room access token');
           return;
         }
@@ -224,16 +222,10 @@ server.register(async function (fastify) {
         const tournamentId = normalizeId(roomToken.tournamentId);
         const secureRoomId = `${tournamentId}-${normalizedRoomOrg}`;
 
-        const room = roomManager.getOrCreateRoom(
-          secureRoomId,
-          tournamentId,
-          normalizedRoomOrg
-        );
+        const room = roomManager.getOrCreateRoom(secureRoomId, tournamentId, normalizedRoomOrg);
 
         if (!room) {
-          console.warn(
-            `[WebSocket] Room quota exceeded for org ${normalizedRoomOrg}`
-          );
+          console.warn(`[WebSocket] Room quota exceeded for org ${normalizedRoomOrg}`);
           socket.close(1008, 'Room quota exceeded');
           return;
         }
@@ -241,9 +233,7 @@ server.register(async function (fastify) {
         // STEP 6: Add connection to room
         const added = room.addConnection(socket, roomToken);
         if (!added) {
-          console.warn(
-            `[WebSocket] Failed to add connection for user ${userToken.userId}`
-          );
+          console.warn(`[WebSocket] Failed to add connection for user ${userToken.userId}`);
           socket.close(1008, 'Access denied');
           return;
         }
@@ -302,10 +292,7 @@ server.register(async function (fastify) {
         });
 
         socket.on('error', (error) => {
-          console.error(
-            `[WebSocket] Socket error for user ${userToken.userId}:`,
-            error
-          );
+          console.error(`[WebSocket] Socket error for user ${userToken.userId}:`, error);
           room.removeConnection(socket);
         });
       } catch (error) {

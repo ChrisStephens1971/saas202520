@@ -28,15 +28,18 @@ State the decision in full sentences, with active voice ("We will...").
 What becomes easier or more difficult to do because of this change?
 
 ### Positive Consequences
+
 - Benefit 1
 - Benefit 2
 - Benefit 3
 
 ### Negative Consequences
+
 - Trade-off 1
 - Trade-off 2
 
 ### Neutral Consequences
+
 - Other impact 1
 
 ---
@@ -44,13 +47,16 @@ What becomes easier or more difficult to do because of this change?
 ## Alternatives Considered
 
 ### Alternative 1: [Name]
+
 **Description:** [Brief description]
 
 **Pros:**
+
 - Pro 1
 - Pro 2
 
 **Cons:**
+
 - Con 1
 - Con 2
 
@@ -59,12 +65,15 @@ What becomes easier or more difficult to do because of this change?
 ---
 
 ### Alternative 2: [Name]
+
 **Description:** [Brief description]
 
 **Pros:**
+
 - Pro 1
 
 **Cons:**
+
 - Con 1
 
 **Why rejected:** [Reason]
@@ -101,6 +110,7 @@ This ADR follows the format described in [Michael Nygard's article](https://cogn
 **ADR Naming Convention:** `NNN-short-title.md` where NNN is a 3-digit number (001, 002, etc.)
 
 **Example ADRs:**
+
 - `001-use-postgresql-for-database.md`
 - `002-adopt-react-for-frontend.md`
 - `003-implement-microservices-architecture.md`

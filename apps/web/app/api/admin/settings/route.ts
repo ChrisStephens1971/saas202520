@@ -61,10 +61,7 @@ export async function GET(_request: NextRequest) {
     return NextResponse.json({ settings });
   } catch (error) {
     console.error('Error fetching settings:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch settings' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
   }
 }
 
@@ -157,10 +154,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ settings, message: 'Settings updated successfully' });
   } catch (error) {
     console.error('Error updating settings:', error);
-    return NextResponse.json(
-      { error: 'Failed to update settings' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
   }
 }
 

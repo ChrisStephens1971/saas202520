@@ -96,7 +96,8 @@ export async function getPlayerProfile(
         : [];
 
     // Get top rivalries
-    const rivalries = isOwner || privacySettings.showHistory ? await getTopRivalries(playerId, tenantId, 5) : [];
+    const rivalries =
+      isOwner || privacySettings.showHistory ? await getTopRivalries(playerId, tenantId, 5) : [];
 
     return {
       profile: profile as unknown as PlayerProfile,
@@ -186,7 +187,10 @@ export async function updatePlayerProfile(
  * @param tenantId - Tenant ID
  * @returns Player statistics
  */
-export async function getPlayerStatistics(playerId: string, tenantId: string): Promise<PlayerStatistics> {
+export async function getPlayerStatistics(
+  playerId: string,
+  tenantId: string
+): Promise<PlayerStatistics> {
   try {
     let statistics = await prisma.playerStatistics.findFirst({
       where: {
@@ -344,7 +348,10 @@ export async function getHeadToHeadRecord(
 
     const lastPlayed =
       allMatches.length > 0
-        ? allMatches.reduce((latest, match) => (match.playedAt > latest ? match.playedAt : latest), allMatches[0].playedAt)
+        ? allMatches.reduce(
+            (latest, match) => (match.playedAt > latest ? match.playedAt : latest),
+            allMatches[0].playedAt
+          )
         : new Date();
 
     // Get recent matches with details
@@ -374,7 +381,11 @@ export async function getHeadToHeadRecord(
  * @param limit - Number of rivalries to return
  * @returns Array of head-to-head statistics
  */
-async function getTopRivalries(playerId: string, tenantId: string, limit: number = 5): Promise<HeadToHeadStats[]> {
+async function getTopRivalries(
+  playerId: string,
+  tenantId: string,
+  limit: number = 5
+): Promise<HeadToHeadStats[]> {
   try {
     // Get all opponents
     const matches = await prisma.matchHistory.findMany({
@@ -494,7 +505,10 @@ async function getWinRateLeaderboard(tenantId: string, limit: number): Promise<L
   }));
 }
 
-async function getTournamentsLeaderboard(tenantId: string, limit: number): Promise<LeaderboardEntry[]> {
+async function getTournamentsLeaderboard(
+  tenantId: string,
+  limit: number
+): Promise<LeaderboardEntry[]> {
   const stats = await prisma.playerStatistics.findMany({
     where: {
       tenantId,
@@ -538,7 +552,10 @@ async function getPrizesLeaderboard(tenantId: string, limit: number): Promise<Le
   }));
 }
 
-async function getAchievementsLeaderboard(tenantId: string, limit: number): Promise<LeaderboardEntry[]> {
+async function getAchievementsLeaderboard(
+  tenantId: string,
+  limit: number
+): Promise<LeaderboardEntry[]> {
   // Get achievement counts per player
   const achievementCounts = await prisma.playerAchievement.groupBy({
     by: ['playerId'],
@@ -578,9 +595,21 @@ async function getAchievementsLeaderboard(tenantId: string, limit: number): Prom
  * @param request - Search request parameters
  * @returns Search results with pagination
  */
-export async function searchPlayers(tenantId: string, request: SearchPlayersRequest): Promise<SearchPlayersResponse> {
+export async function searchPlayers(
+  tenantId: string,
+  request: SearchPlayersRequest
+): Promise<SearchPlayersResponse> {
   try {
-    const { query: _query, skillLevel, location, minWinRate, sortBy = 'name', sortOrder = 'asc', limit = 20, offset = 0 } = request;
+    const {
+      query: _query,
+      skillLevel,
+      location,
+      minWinRate,
+      sortBy = 'name',
+      sortOrder = 'asc',
+      limit = 20,
+      offset = 0,
+    } = request;
 
     // Build where clause
     const where: Prisma.PlayerProfileWhereInput = {

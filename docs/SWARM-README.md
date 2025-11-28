@@ -29,6 +29,7 @@ node scripts/track-costs.js report
 
 1. Go to GitHub Projects board
 2. Create new issue:
+
    ```markdown
    ## Add health check endpoint
 
@@ -89,24 +90,24 @@ node scripts/track-costs.js report
 
 ### Workflows
 
-| Workflow | Purpose | Trigger |
-|----------|---------|---------|
-| Coordinator | Orchestrates work | Manual / Schedule |
-| Contract Worker | API validation | PR to `packages/api-contracts/` |
-| Backend Worker | Backend CI | PR to backend paths |
-| Frontend Worker | Frontend CI + Preview | PR to frontend paths |
-| Test Worker | Test execution | PR to `tests/` |
-| Reviewer/Merger | Auto-review & merge | All PRs |
+| Workflow        | Purpose               | Trigger                         |
+| --------------- | --------------------- | ------------------------------- |
+| Coordinator     | Orchestrates work     | Manual / Schedule               |
+| Contract Worker | API validation        | PR to `packages/api-contracts/` |
+| Backend Worker  | Backend CI            | PR to backend paths             |
+| Frontend Worker | Frontend CI + Preview | PR to frontend paths            |
+| Test Worker     | Test execution        | PR to `tests/`                  |
+| Reviewer/Merger | Auto-review & merge   | All PRs                         |
 
 ### Scripts
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `aggregate-status.py` | Status dashboard | `python scripts/aggregate-status.py` |
-| `track-costs.js` | Cost tracking | `node scripts/track-costs.js report` |
-| `detect-deadlocks.js` | Deadlock detection | `node scripts/detect-deadlocks.js check` |
-| `collect-metrics.js` | Metrics collection | `node scripts/collect-metrics.js` |
-| `board-adapter-github.js` | Board polling | `node scripts/board-adapters/board-adapter-github.js poll` |
+| Script                    | Purpose            | Usage                                                      |
+| ------------------------- | ------------------ | ---------------------------------------------------------- |
+| `aggregate-status.py`     | Status dashboard   | `python scripts/aggregate-status.py`                       |
+| `track-costs.js`          | Cost tracking      | `node scripts/track-costs.js report`                       |
+| `detect-deadlocks.js`     | Deadlock detection | `node scripts/detect-deadlocks.js check`                   |
+| `collect-metrics.js`      | Metrics collection | `node scripts/collect-metrics.js`                          |
+| `board-adapter-github.js` | Board polling      | `node scripts/board-adapters/board-adapter-github.js poll` |
 
 ## Configuration
 
@@ -116,13 +117,14 @@ node scripts/track-costs.js report
 {
   "lanes": {
     "backend": {
-      "maxConcurrent": 3,    // Max parallel work
-      "model": "haiku"       // AI model to use
+      "maxConcurrent": 3, // Max parallel work
+      "model": "haiku" // AI model to use
     }
   },
   "cost": {
-    "budgetPerMonth": 500,   // Monthly budget
-    "alerts": [              // Alert thresholds
+    "budgetPerMonth": 500, // Monthly budget
+    "alerts": [
+      // Alert thresholds
       { "threshold": 90, "action": "pause-non-critical" }
     ]
   }
@@ -132,6 +134,7 @@ node scripts/track-costs.js report
 ### Security Paths
 
 Paths requiring human review:
+
 - `**/auth/**` - Authentication code
 - `**/tenant/**` - Tenant isolation
 - `prisma/migrations/**` - Database changes
@@ -161,6 +164,7 @@ This system is configured for **subdomain-based multi-tenancy**:
 ### Auto-Merge Conditions
 
 PR must meet ALL:
+
 - ✅ Less than 10 files changed
 - ✅ Less than 800 lines added
 - ✅ No security-sensitive paths
@@ -171,6 +175,7 @@ PR must meet ALL:
 ### Human Review Triggers
 
 Required for:
+
 - 🔒 Security-sensitive file changes
 - 🔒 Database migrations
 - 🔒 Breaking API changes
@@ -217,11 +222,11 @@ node scripts/detect-deadlocks.js check
 
 ## Documentation
 
-| Document | Purpose |
-|----------|---------|
-| [SWARM-RUNBOOK.md](SWARM-RUNBOOK.md) | Operations guide |
-| [MULTI-TENANT-SWARM-GUIDE.md](MULTI-TENANT-SWARM-GUIDE.md) | Multi-tenant specifics |
-| [AGENT-ONBOARDING.md](AGENT-ONBOARDING.md) | New team member guide |
+| Document                                                        | Purpose                |
+| --------------------------------------------------------------- | ---------------------- |
+| [SWARM-RUNBOOK.md](SWARM-RUNBOOK.md)                            | Operations guide       |
+| [MULTI-TENANT-SWARM-GUIDE.md](MULTI-TENANT-SWARM-GUIDE.md)      | Multi-tenant specifics |
+| [AGENT-ONBOARDING.md](AGENT-ONBOARDING.md)                      | New team member guide  |
 | [DAYS-2-5-SUMMARY.md](swarm-implementation/DAYS-2-5-SUMMARY.md) | Implementation details |
 
 ## Troubleshooting
@@ -229,6 +234,7 @@ node scripts/detect-deadlocks.js check
 ### Agent Not Working
 
 **Check:**
+
 ```bash
 # Is coordinator enabled?
 cat config.json | jq '.agents.coordinator.enabled'
@@ -243,6 +249,7 @@ ls agent-status/backend-*.json | wc -l
 ### Costs Too High
 
 **Fix:**
+
 ```bash
 # Review breakdown
 node scripts/track-costs.js report
@@ -257,6 +264,7 @@ gh workflow run coordinator.yml
 ### Deadlock
 
 **Resolve:**
+
 ```bash
 # Check for circular dependencies
 node scripts/detect-deadlocks.js check
@@ -270,18 +278,21 @@ gh pr close 123
 ## Rollout Phases
 
 ### Week 1: Manual Mode
+
 - Manually trigger coordinator
 - Validate everything works
 - Monitor costs closely
 - Team learns the system
 
 ### Week 2: Semi-Automated
+
 - Enable coordinator polling (every 30 min)
 - More tickets through system
 - Tune capacities
 - Build confidence
 
 ### Week 3+: Full Automation
+
 - Polling every 15 minutes
 - Minimal human intervention
 - Continuous improvement
@@ -290,6 +301,7 @@ gh pr close 123
 ## Success Metrics
 
 **After 1 Month:**
+
 - 3-5x velocity improvement
 - 15-20 features/sprint (vs 5 before)
 - <4 hour PR cycle time

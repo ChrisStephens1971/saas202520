@@ -73,17 +73,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const {
-      page,
-      limit,
-      search,
-      role,
-      orgId,
-      startDate,
-      endDate,
-      sortBy,
-      sortOrder,
-    } = validation.data;
+    const { page, limit, search, role, orgId, startDate, endDate, sortBy, sortOrder } =
+      validation.data;
 
     // Build where clause
     const where: Prisma.UserWhereInput = {};

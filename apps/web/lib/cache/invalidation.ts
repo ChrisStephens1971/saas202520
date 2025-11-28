@@ -259,20 +259,14 @@ export class CacheInvalidation {
   /**
    * User updated - invalidate user data
    */
-  private static async handleUserUpdated(
-    tenantId: string,
-    userId: string
-  ): Promise<void> {
+  private static async handleUserUpdated(tenantId: string, userId: string): Promise<void> {
     await UserCache.invalidateUser(tenantId, userId);
   }
 
   /**
    * User deleted - remove all user data
    */
-  private static async handleUserDeleted(
-    tenantId: string,
-    userId: string
-  ): Promise<void> {
+  private static async handleUserDeleted(tenantId: string, userId: string): Promise<void> {
     await UserCache.invalidateUser(tenantId, userId);
     await AnalyticsCache.invalidateAnalytics(tenantId);
   }
@@ -291,10 +285,7 @@ export class CacheInvalidation {
   /**
    * User logged out - clear session
    */
-  private static async handleUserLoggedOut(
-    tenantId: string,
-    userId: string
-  ): Promise<void> {
+  private static async handleUserLoggedOut(tenantId: string, userId: string): Promise<void> {
     await UserCache.deleteSession(tenantId, userId);
   }
 
@@ -368,17 +359,10 @@ export class BulkInvalidation {
   /**
    * Invalidate cache for multiple tournaments at once
    */
-  static async invalidateTournaments(
-    tenantId: string,
-    tournamentIds: string[]
-  ): Promise<void> {
-    console.log(
-      `[Cache Invalidation] Clearing cache for ${tournamentIds.length} tournaments`
-    );
+  static async invalidateTournaments(tenantId: string, tournamentIds: string[]): Promise<void> {
+    console.log(`[Cache Invalidation] Clearing cache for ${tournamentIds.length} tournaments`);
 
-    const promises = tournamentIds.map((id) =>
-      TournamentCache.invalidateTournament(tenantId, id)
-    );
+    const promises = tournamentIds.map((id) => TournamentCache.invalidateTournament(tenantId, id));
 
     await Promise.all(promises);
   }
@@ -386,17 +370,10 @@ export class BulkInvalidation {
   /**
    * Invalidate cache for multiple users at once
    */
-  static async invalidateUsers(
-    tenantId: string,
-    userIds: string[]
-  ): Promise<void> {
-    console.log(
-      `[Cache Invalidation] Clearing cache for ${userIds.length} users`
-    );
+  static async invalidateUsers(tenantId: string, userIds: string[]): Promise<void> {
+    console.log(`[Cache Invalidation] Clearing cache for ${userIds.length} users`);
 
-    const promises = userIds.map((id) =>
-      UserCache.invalidateUser(tenantId, id)
-    );
+    const promises = userIds.map((id) => UserCache.invalidateUser(tenantId, id));
 
     await Promise.all(promises);
   }
@@ -447,11 +424,7 @@ export class TimeBasedInvalidation {
    * @param pattern - Cache key pattern
    * @param intervalMs - Interval in milliseconds
    */
-  static scheduleRecurring(
-    tenantId: string,
-    pattern: string,
-    intervalMs: number
-  ): NodeJS.Timeout {
+  static scheduleRecurring(tenantId: string, pattern: string, intervalMs: number): NodeJS.Timeout {
     return setInterval(async () => {
       try {
         const count = await cacheService.invalidate(tenantId, pattern);
@@ -522,11 +495,7 @@ export function InvalidateCache(
   tenantIdParam: string,
   resourceIdParam?: string
 ) {
-  return function (
-    _target: unknown,
-    _propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) {
+  return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (...args: unknown[]) {

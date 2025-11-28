@@ -90,7 +90,12 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
       {/* Skill Level */}
       <div>
         <Label htmlFor="skillLevel">Skill Level</Label>
-        <Select value={formData.skillLevel} onChange={(e) => setFormData({ ...formData, skillLevel: e.target.value as PlayerProfile['skillLevel'] })}>
+        <Select
+          value={formData.skillLevel}
+          onChange={(e) =>
+            setFormData({ ...formData, skillLevel: e.target.value as PlayerProfile['skillLevel'] })
+          }
+        >
           <SelectItem value="BEGINNER">Beginner</SelectItem>
           <SelectItem value="INTERMEDIATE">Intermediate</SelectItem>
           <SelectItem value="ADVANCED">Advanced</SelectItem>

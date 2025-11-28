@@ -5,6 +5,7 @@ Complete reference for all TypeScript interfaces, types, and return values.
 ## Revenue Calculator Interfaces
 
 ### RevenueMetrics
+
 ```typescript
 interface RevenueMetrics {
   mrr: number;
@@ -23,6 +24,7 @@ interface RevenueMetrics {
 ```
 
 ### ChurnRate
+
 ```typescript
 interface ChurnRate {
   rate: number; // Percentage (0-100)
@@ -41,6 +43,7 @@ interface ChurnRate {
 ```
 
 ### GrowthRate
+
 ```typescript
 interface GrowthRate {
   metric: string;
@@ -54,6 +57,7 @@ interface GrowthRate {
 ```
 
 ### RevenueProjection
+
 ```typescript
 interface RevenueProjection {
   projections: Array<{
@@ -74,6 +78,7 @@ interface RevenueProjection {
 ```
 
 ### RevenueBreakdown
+
 ```typescript
 interface RevenueBreakdown {
   period: {
@@ -97,6 +102,7 @@ interface RevenueBreakdown {
 ```
 
 ### LifetimeValue
+
 ```typescript
 interface LifetimeValue {
   cohort: Date;
@@ -112,6 +118,7 @@ interface LifetimeValue {
 ## Cohort Analyzer Interfaces
 
 ### CohortAnalysis
+
 ```typescript
 interface CohortAnalysis {
   cohort: Date;
@@ -140,6 +147,7 @@ interface CohortAnalysis {
 ```
 
 ### RetentionDataPoint
+
 ```typescript
 interface RetentionDataPoint {
   monthNumber: number;
@@ -152,6 +160,7 @@ interface RetentionDataPoint {
 ```
 
 ### CohortLTV
+
 ```typescript
 interface CohortLTV {
   cohort: Date;
@@ -169,6 +178,7 @@ interface CohortLTV {
 ```
 
 ### CohortComparison
+
 ```typescript
 interface CohortComparison {
   cohorts: Array<{
@@ -189,6 +199,7 @@ interface CohortComparison {
 ```
 
 ### RetentionBenchmarks
+
 ```typescript
 interface RetentionBenchmarks {
   tenantId: string;
@@ -204,6 +215,7 @@ interface RetentionBenchmarks {
 ```
 
 ### RetentionPrediction
+
 ```typescript
 interface RetentionPrediction {
   cohort: Date;
@@ -221,6 +233,7 @@ interface RetentionPrediction {
 ```
 
 ### CohortSegment
+
 ```typescript
 interface CohortSegment {
   cohort: Date;
@@ -242,6 +255,7 @@ interface CohortSegment {
 ## Analytics Service Interfaces
 
 ### AnalyticsOptions
+
 ```typescript
 interface AnalyticsOptions {
   startDate?: Date;
@@ -254,6 +268,7 @@ interface AnalyticsOptions {
 ```
 
 ### RevenueAnalytics
+
 ```typescript
 interface RevenueAnalytics {
   current: {
@@ -280,6 +295,7 @@ interface RevenueAnalytics {
 ```
 
 ### CohortAnalytics
+
 ```typescript
 interface CohortAnalytics {
   cohorts: CohortAnalysis[];
@@ -292,6 +308,7 @@ interface CohortAnalytics {
 ```
 
 ### TournamentAnalytics
+
 ```typescript
 interface TournamentAnalytics {
   period: { start: Date; end: Date };
@@ -320,6 +337,7 @@ interface TournamentAnalytics {
 ```
 
 ### DashboardSummary
+
 ```typescript
 interface DashboardSummary {
   tenantId: string;
@@ -351,6 +369,7 @@ interface DashboardSummary {
 ```
 
 ### AnalyticsHealth
+
 ```typescript
 interface AnalyticsHealth {
   tenantId: string;
@@ -377,17 +396,19 @@ interface AnalyticsHealth {
 ## Cache Manager Types
 
 ### DEFAULT_TTL
+
 ```typescript
 const DEFAULT_TTL = {
-  REAL_TIME: 60,      // 1 minute
-  SHORT: 300,          // 5 minutes
-  MEDIUM: 1800,        // 30 minutes
-  LONG: 3600,          // 1 hour
-  VERY_LONG: 86400,    // 24 hours
-}
+  REAL_TIME: 60, // 1 minute
+  SHORT: 300, // 5 minutes
+  MEDIUM: 1800, // 30 minutes
+  LONG: 3600, // 1 hour
+  VERY_LONG: 86400, // 24 hours
+};
 ```
 
 ### Cache Stats
+
 ```typescript
 interface CacheStats {
   hitRate: number;
@@ -409,22 +430,24 @@ interface CacheStats {
 ## Seeder Configuration
 
 ### SeederConfig
+
 ```typescript
 interface SeederConfig {
   tenantId: string;
   months: number;
-  baseUsers: number;         // Starting cohort size
-  baseRevenue: number;       // Starting monthly revenue (in dollars)
-  baseTournaments: number;   // Starting tournaments per month
-  growthRate: number;        // Monthly growth rate (e.g., 0.05 = 5%)
-  churnRate: number;         // Monthly churn rate (e.g., 0.15 = 15%)
-  seasonality: boolean;      // Add seasonal patterns
+  baseUsers: number; // Starting cohort size
+  baseRevenue: number; // Starting monthly revenue (in dollars)
+  baseTournaments: number; // Starting tournaments per month
+  growthRate: number; // Monthly growth rate (e.g., 0.05 = 5%)
+  churnRate: number; // Monthly churn rate (e.g., 0.15 = 15%)
+  seasonality: boolean; // Add seasonal patterns
 }
 ```
 
 ## Usage Examples
 
 ### Basic Revenue Query
+
 ```typescript
 import { calculateMRR } from '@/lib/analytics/services';
 
@@ -433,6 +456,7 @@ const metrics: RevenueMetrics = await calculateMRR('tenant_123');
 ```
 
 ### Dashboard with Caching
+
 ```typescript
 import { getDashboardSummary } from '@/lib/analytics/services';
 
@@ -441,17 +465,16 @@ const dashboard: DashboardSummary = await getDashboardSummary('tenant_123');
 ```
 
 ### Cohort Analysis
+
 ```typescript
 import { analyzeCohort } from '@/lib/analytics/services';
 
-const analysis: CohortAnalysis = await analyzeCohort(
-  'tenant_123',
-  new Date('2024-01-01')
-);
+const analysis: CohortAnalysis = await analyzeCohort('tenant_123', new Date('2024-01-01'));
 // analysis.retentionCurve, analysis.metrics, analysis.revenue
 ```
 
 ### Cache Operations
+
 ```typescript
 import { getCached, setCached, DEFAULT_TTL } from '@/lib/analytics/services';
 
@@ -465,6 +488,7 @@ const data = await getCached<{ data: string }>('my-key');
 ## Type Guards
 
 ### Check Confidence Level
+
 ```typescript
 function isHighConfidence(result: RevenueMetrics | CohortAnalysis): boolean {
   return result.confidence === 'high';
@@ -472,6 +496,7 @@ function isHighConfidence(result: RevenueMetrics | CohortAnalysis): boolean {
 ```
 
 ### Check Status
+
 ```typescript
 function isHealthy(health: AnalyticsHealth): boolean {
   return health.status === 'healthy';
@@ -479,16 +504,17 @@ function isHealthy(health: AnalyticsHealth): boolean {
 ```
 
 ### Check Trend
+
 ```typescript
 function isPositiveTrend(dashboard: DashboardSummary): boolean {
-  return dashboard.trends.revenue === 'up' &&
-         dashboard.trends.retention === 'up';
+  return dashboard.trends.revenue === 'up' && dashboard.trends.retention === 'up';
 }
 ```
 
 ## Common Patterns
 
 ### Error Handling
+
 ```typescript
 try {
   const metrics = await calculateMRR('tenant_123');
@@ -502,12 +528,14 @@ try {
 ```
 
 ### Optional Chaining
+
 ```typescript
 const growth = dashboard.growth?.mrrGrowth ?? 0;
 const previousMRR = metrics.previousPeriod?.mrr ?? 0;
 ```
 
 ### Type Narrowing
+
 ```typescript
 if (analysis.metrics.month12Retention !== null) {
   // TypeScript knows month12Retention is a number here

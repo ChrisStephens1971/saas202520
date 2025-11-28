@@ -131,7 +131,7 @@ test.describe('Progressive Web App', () => {
 
     // Check if beforeinstallprompt event can be triggered
     const isInstallable = await page.evaluate(() => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         window.addEventListener('beforeinstallprompt', () => {
           resolve(true);
         });
@@ -151,7 +151,7 @@ test.describe('Progressive Web App', () => {
     // Check for static asset with proper caching
     const responses = [];
 
-    page.on('response', response => {
+    page.on('response', (response) => {
       if (response.url().match(/\.(js|css|png|jpg|webp)$/)) {
         responses.push(response);
       }

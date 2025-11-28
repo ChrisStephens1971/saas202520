@@ -77,7 +77,10 @@ export function getBestEncoding(
     return 'identity';
   }
 
-  const encodings = acceptEncoding.toLowerCase().split(',').map(e => e.trim());
+  const encodings = acceptEncoding
+    .toLowerCase()
+    .split(',')
+    .map((e) => e.trim());
 
   // Prefer brotli (better compression ratio)
   if (config.enableBrotli && encodings.includes('br')) {
@@ -155,7 +158,7 @@ export function compressData(
   }
 
   const compressedSize = compressed.length;
-  const ratio = originalSize > 0 ? 1 - (compressedSize / originalSize) : 0;
+  const ratio = originalSize > 0 ? 1 - compressedSize / originalSize : 0;
 
   return {
     data: compressed,
@@ -262,23 +265,21 @@ export function trimPayload(
     truncateStrings?: number;
   } = {}
 ): any {
-  const {
-    removeNull = true,
-    removeEmpty = true,
-    truncateStrings,
-  } = options;
+  const { removeNull = true, removeEmpty = true, truncateStrings } = options;
 
   if (data === null || data === undefined) {
     return removeNull ? undefined : data;
   }
 
   if (Array.isArray(data)) {
-    const trimmed = data.map(item => trimPayload(item, options)).filter(item => {
-      if (removeNull && (item === null || item === undefined)) return false;
-      if (removeEmpty && Array.isArray(item) && item.length === 0) return false;
-      if (removeEmpty && typeof item === 'object' && Object.keys(item).length === 0) return false;
-      return true;
-    });
+    const trimmed = data
+      .map((item) => trimPayload(item, options))
+      .filter((item) => {
+        if (removeNull && (item === null || item === undefined)) return false;
+        if (removeEmpty && Array.isArray(item) && item.length === 0) return false;
+        if (removeEmpty && typeof item === 'object' && Object.keys(item).length === 0) return false;
+        return true;
+      });
 
     return removeEmpty && trimmed.length === 0 ? undefined : trimmed;
   }
@@ -297,7 +298,12 @@ export function trimPayload(
       // Skip empty arrays/objects
       if (removeEmpty) {
         if (Array.isArray(trimmedValue) && trimmedValue.length === 0) continue;
-        if (typeof trimmedValue === 'object' && trimmedValue !== null && Object.keys(trimmedValue).length === 0) continue;
+        if (
+          typeof trimmedValue === 'object' &&
+          trimmedValue !== null &&
+          Object.keys(trimmedValue).length === 0
+        )
+          continue;
       }
 
       trimmed[key] = trimmedValue;

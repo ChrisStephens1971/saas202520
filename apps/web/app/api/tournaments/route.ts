@@ -123,8 +123,19 @@ export async function GET(request: NextRequest) {
       name: tournament.name,
       slug: tournament.name.toLowerCase().replace(/\s+/g, '-'),
       description: tournament.description,
-      status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
-      format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
+      status: tournament.status as
+        | 'draft'
+        | 'registration'
+        | 'active'
+        | 'paused'
+        | 'completed'
+        | 'cancelled',
+      format: tournament.format as
+        | 'single_elimination'
+        | 'double_elimination'
+        | 'round_robin'
+        | 'modified_single'
+        | 'chip_format',
       sport: 'pool' as const,
       gameType: 'eight-ball' as const,
       raceToWins: 7,
@@ -285,8 +296,19 @@ export async function POST(request: NextRequest) {
         name: tournament.name,
         slug,
         description: tournament.description,
-        status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
-        format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
+        status: tournament.status as
+          | 'draft'
+          | 'registration'
+          | 'active'
+          | 'paused'
+          | 'completed'
+          | 'cancelled',
+        format: tournament.format as
+          | 'single_elimination'
+          | 'double_elimination'
+          | 'round_robin'
+          | 'modified_single'
+          | 'chip_format',
         sport,
         gameType,
         raceToWins,

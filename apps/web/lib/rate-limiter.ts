@@ -279,9 +279,9 @@ export async function isPlayerOptedOut(playerId: string): Promise<boolean> {
  * Check if current time is within quiet hours for a player
  */
 export async function isWithinQuietHours(playerId: string): Promise<boolean> {
-  const preference = await prisma.notificationPreference.findUnique({
+  const preference = (await prisma.notificationPreference.findUnique({
     where: { playerId },
-  }) as any;
+  })) as any;
 
   if (!preference?.quietHoursStart || !preference?.quietHoursEnd) {
     return false; // No quiet hours set

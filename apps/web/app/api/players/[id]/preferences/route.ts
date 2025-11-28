@@ -16,10 +16,7 @@ import { validateNotificationDelivery } from '@/lib/rate-limiter';
 /**
  * Get player notification preferences
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -87,20 +84,14 @@ export async function GET(
     );
   } catch (error) {
     console.error('Error fetching player preferences:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
 /**
  * Update player notification preferences
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -110,13 +101,7 @@ export async function PUT(
     const { id: playerId } = await params;
     const body = await request.json();
 
-    const {
-      smsEnabled,
-      emailEnabled,
-      quietHoursStart,
-      quietHoursEnd,
-      timezone,
-    } = body;
+    const { smsEnabled, emailEnabled, quietHoursStart, quietHoursEnd, timezone } = body;
 
     // Verify player exists
     const player = await prisma.player.findUnique({
@@ -179,9 +164,6 @@ export async function PUT(
     );
   } catch (error) {
     console.error('Error updating player preferences:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

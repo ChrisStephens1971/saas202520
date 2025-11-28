@@ -21,6 +21,7 @@ This directory contains meeting notes, 1-on-1 templates, and other conversation 
 ## How to Use
 
 ### Meeting Notes Best Practices
+
 - Create notes before the meeting with agenda
 - Take notes during the meeting
 - Add action items with owners and due dates
@@ -28,11 +29,14 @@ This directory contains meeting notes, 1-on-1 templates, and other conversation 
 - Follow up on action items
 
 ### Naming Convention
+
 Use format: `YYYY-MM-DD-meeting-title.md`
 Example: `2025-01-15-customer-interview-acme-corp.md`
 
 ### For Solo Founders
+
 Even as a solo founder, documenting key conversations and decisions:
+
 - Creates a record for future reference
 - Helps clarify thinking
 - Tracks commitments and follow-ups

@@ -11,14 +11,16 @@ This swarm system is configured for **subdomain-based multi-tenant** architectur
 Every database query, API endpoint, and file operation MUST include tenant_id scoping.
 
 **Correct:**
+
 ```typescript
 // Good - includes tenant_id
 const tournaments = await prisma.tournament.findMany({
-  where: { tenant_id: tenantId }
+  where: { tenant_id: tenantId },
 });
 ```
 
 **Incorrect:**
+
 ```typescript
 // BAD - no tenant scoping!
 const tournaments = await prisma.tournament.findMany();
@@ -27,6 +29,7 @@ const tournaments = await prisma.tournament.findMany();
 ### 2. Subdomain Routing
 
 Users access the application via their tenant subdomain:
+
 - `https://tenant-a.tournament.com`
 - `https://tenant-b.tournament.com`
 
@@ -35,6 +38,7 @@ The middleware extracts tenant_id from the subdomain on every request.
 ### 3. API Headers
 
 All API requests must include:
+
 ```
 X-Tenant-ID: <uuid>
 ```
@@ -48,6 +52,7 @@ The backend validates this header matches the authenticated user's tenant.
 When creating/modifying API endpoints:
 
 **Checklist:**
+
 - [ ] Schema includes `tenant_id: string (uuid)` field
 - [ ] Endpoint requires `X-Tenant-ID` header
 - [ ] Response filters by tenant_id
@@ -59,6 +64,7 @@ When creating/modifying API endpoints:
 When implementing features:
 
 **Checklist:**
+
 - [ ] All database queries include `{ tenant_id: tenantId }`
 - [ ] Middleware validates tenant_id
 - [ ] No cross-tenant data leakage
@@ -71,17 +77,17 @@ When implementing features:
 // Prisma queries
 const result = await prisma.model.findMany({
   where: {
-    tenant_id: ctx.tenantId,  // ALWAYS include
+    tenant_id: ctx.tenantId, // ALWAYS include
     // ... other filters
-  }
+  },
 });
 
 // Creating records
 const record = await prisma.model.create({
   data: {
-    tenant_id: ctx.tenantId,  // ALWAYS include
+    tenant_id: ctx.tenantId, // ALWAYS include
     // ... other fields
-  }
+  },
 });
 ```
 
@@ -90,6 +96,7 @@ const record = await prisma.model.create({
 When building UI:
 
 **Checklist:**
+
 - [ ] Subdomain displayed in header
 - [ ] API client includes X-Tenant-ID header
 - [ ] No hardcoded tenant references
@@ -103,8 +110,8 @@ When building UI:
 const response = await fetch('/api/tournaments', {
   headers: {
     'X-Tenant-ID': getTenantId(),
-    'Authorization': `Bearer ${token}`
-  }
+    Authorization: `Bearer ${token}`,
+  },
 });
 ```
 
@@ -113,6 +120,7 @@ const response = await fetch('/api/tournaments', {
 When writing tests:
 
 **Checklist:**
+
 - [ ] Create separate data for each tenant
 - [ ] Test cross-tenant access is denied
 - [ ] Validate subdomain routing
@@ -130,9 +138,7 @@ test('Tenant A cannot access Tenant B data', async () => {
   const tournamentA = createTournament({ tenant_id: tenantA.id });
 
   // Try to access with Tenant B context
-  const result = await api
-    .get(`/tournaments/${tournamentA.id}`)
-    .set('X-Tenant-ID', tenantB.id);
+  const result = await api.get(`/tournaments/${tournamentA.id}`).set('X-Tenant-ID', tenantB.id);
 
   expect(result.status).toBe(404);
 });
@@ -143,6 +149,7 @@ test('Tenant A cannot access Tenant B data', async () => {
 ### Contract Tests
 
 Every PR is automatically checked for:
+
 - tenant_id in schema definitions
 - X-Tenant-ID header requirement
 - No cross-tenant path patterns
@@ -150,6 +157,7 @@ Every PR is automatically checked for:
 ### Backend Tests
 
 Every PR runs:
+
 - Query analysis for missing tenant_id
 - Prisma query validation
 - Integration tests with multi-tenant data
@@ -157,6 +165,7 @@ Every PR runs:
 ### E2E Tests
 
 Playwright tests validate:
+
 - Subdomain routing
 - Cross-tenant access denial
 - API header inclusion
@@ -176,12 +185,14 @@ The reviewer automatically requires human approval for:
 ### Common Vulnerabilities
 
 1. **Query without tenant_id**
+
    ```typescript
    // Vulnerable!
    const users = await prisma.user.findMany();
    ```
 
 2. **Path traversal**
+
    ```typescript
    // Vulnerable!
    const file = fs.readFileSync(`/uploads/${req.params.filename}`);
@@ -189,6 +200,7 @@ The reviewer automatically requires human approval for:
    ```
 
 3. **Cached data leak**
+
    ```typescript
    // Vulnerable!
    const cache = redis.get('tournaments');
@@ -264,11 +276,13 @@ The reviewer automatically requires human approval for:
 ### User Can See Other Tenant's Data
 
 **Check:**
+
 1. Database queries include tenant_id?
 2. API endpoints validate X-Tenant-ID?
 3. Cache keys include tenant_id?
 
 **Fix:**
+
 ```bash
 # Search for queries without tenant_id
 grep -r "findMany\|findFirst" apps/ packages/ | grep -v "tenant_id"
@@ -279,11 +293,13 @@ grep -r "findMany\|findFirst" apps/ packages/ | grep -v "tenant_id"
 ### Subdomain Not Routing Correctly
 
 **Check:**
+
 1. DNS configuration
 2. Middleware tenant extraction
 3. Environment subdomain setting
 
 **Fix:**
+
 ```typescript
 // Verify middleware
 const subdomain = req.hostname.split('.')[0];
@@ -294,11 +310,13 @@ req.tenantId = tenant.id;
 ### Agent Bypassing Tenant Checks
 
 **Check:**
+
 1. Review CODEOWNERS - security paths configured?
 2. Check workflow - security-scan job passing?
 3. Verify config.json - security paths listed?
 
 **Fix:**
+
 ```bash
 # Force human review for tenant code
 gh pr edit 123 --add-label "security-review"
@@ -306,4 +324,4 @@ gh pr edit 123 --add-label "security-review"
 
 ---
 
-*For operational procedures, see SWARM-RUNBOOK.md*
+_For operational procedures, see SWARM-RUNBOOK.md_

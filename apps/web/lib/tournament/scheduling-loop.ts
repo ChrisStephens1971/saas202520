@@ -101,10 +101,7 @@ export function stopSchedulingLoop(tournamentId: string): void {
 /**
  * Run single scheduling cycle
  */
-async function runSchedulingCycle(
-  tournamentId: string,
-  config: SchedulingConfig
-): Promise<void> {
+async function runSchedulingCycle(tournamentId: string, config: SchedulingConfig): Promise<void> {
   const startTime = Date.now();
   const stats = schedulerStats.get(tournamentId);
 
@@ -134,7 +131,11 @@ async function runSchedulingCycle(
 
     // Auto-assign matches if enabled
     let assignments = 0;
-    if (config.autoAssign && queueStatus.availableTables > 0 && queueStatus.readyMatches.length > 0) {
+    if (
+      config.autoAssign &&
+      queueStatus.availableTables > 0 &&
+      queueStatus.readyMatches.length > 0
+    ) {
       if (config.optimizeAssignments) {
         // Use optimization algorithm
         const { suggestedAssignments } = await optimizeQueueAssignments(tournamentId);
@@ -220,9 +221,7 @@ async function runSchedulingCycle(
 
     // Stop scheduler if too many errors
     if (stats && stats.errors > 10) {
-      console.error(
-        `Too many errors for tournament ${tournamentId}, stopping scheduler`
-      );
+      console.error(`Too many errors for tournament ${tournamentId}, stopping scheduler`);
       stopSchedulingLoop(tournamentId);
     }
   }
@@ -236,9 +235,7 @@ async function runSchedulingCycle(
  * Manually trigger a scheduling cycle
  * Useful for testing or forcing an immediate update
  */
-export async function triggerSchedulingCycle(
-  tournamentId: string
-): Promise<{
+export async function triggerSchedulingCycle(tournamentId: string): Promise<{
   assignments: number;
   queueStatus: any;
   etas: any;
@@ -266,10 +263,7 @@ export async function triggerSchedulingCycle(
 /**
  * Force ETAs recalculation after a match completes
  */
-export async function onMatchCompleted(
-  tournamentId: string,
-  matchId: string
-): Promise<void> {
+export async function onMatchCompleted(tournamentId: string, matchId: string): Promise<void> {
   // Recalculate ETAs
   await updateETAsAfterMatchCompletion(tournamentId);
 
@@ -325,9 +319,7 @@ export function stopAllSchedulers(): void {
 /**
  * Auto-start scheduler when tournament becomes active
  */
-export async function autoStartSchedulerForTournament(
-  tournamentId: string
-): Promise<void> {
+export async function autoStartSchedulerForTournament(tournamentId: string): Promise<void> {
   const tournament = await prisma.tournament.findUnique({
     where: { id: tournamentId },
     select: { status: true },
@@ -348,9 +340,7 @@ export async function autoStartSchedulerForTournament(
 /**
  * Auto-stop scheduler when tournament completes
  */
-export async function autoStopSchedulerForTournament(
-  tournamentId: string
-): Promise<void> {
+export async function autoStopSchedulerForTournament(tournamentId: string): Promise<void> {
   const tournament = await prisma.tournament.findUnique({
     where: { id: tournamentId },
     select: { status: true },

@@ -156,9 +156,7 @@ function QueuedMatchCard({ queuedMatch, position, onAssign, onClick }: QueuedMat
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold text-white">
-                  Match #{match.position}
-                </span>
+                <span className="font-semibold text-white">Match #{match.position}</span>
                 <span className="text-xs text-gray-400">Round {match.round}</span>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${priorityColor}`}>
                   Priority {priority}
@@ -168,15 +166,35 @@ function QueuedMatchCard({ queuedMatch, position, onAssign, onClick }: QueuedMat
               {/* Players */}
               <div className="text-sm text-gray-300 space-y-0.5">
                 <div className="flex items-center gap-1">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                   <span>{playerNames.playerA || 'TBD'}</span>
                 </div>
                 <div className="flex items-center gap-1 text-gray-400 text-xs ml-5">vs</div>
                 <div className="flex items-center gap-1">
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                   <span>{playerNames.playerB || 'TBD'}</span>
                 </div>
@@ -202,7 +220,12 @@ function QueuedMatchCard({ queuedMatch, position, onAssign, onClick }: QueuedMat
             {/* Wait Time */}
             <div className="flex items-center gap-1">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               <span>Waiting: {formattedWaitTime}</span>
             </div>
@@ -211,7 +234,12 @@ function QueuedMatchCard({ queuedMatch, position, onAssign, onClick }: QueuedMat
             {estimatedStartTime && (
               <div className="flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
                 <span>ETA: {formattedETA}</span>
               </div>
@@ -219,9 +247,11 @@ function QueuedMatchCard({ queuedMatch, position, onAssign, onClick }: QueuedMat
 
             {/* Match State */}
             <div className="flex items-center gap-1">
-              <div className={`w-2 h-2 rounded-full ${
-                match.state === 'ready' ? 'bg-green-500' : 'bg-yellow-500'
-              }`} />
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  match.state === 'ready' ? 'bg-green-500' : 'bg-yellow-500'
+                }`}
+              />
               <span className="capitalize">{match.state}</span>
             </div>
           </div>

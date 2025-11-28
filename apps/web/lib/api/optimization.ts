@@ -95,10 +95,7 @@ export function parsePaginationParams(
  * // }
  * ```
  */
-export function paginateArray<T>(
-  items: T[],
-  params: PaginationParams
-): PaginatedResponse<T> {
+export function paginateArray<T>(items: T[], params: PaginationParams): PaginatedResponse<T> {
   const { page, pageSize } = params;
   const total = items.length;
   const totalPages = Math.ceil(total / pageSize);
@@ -204,8 +201,8 @@ export function parseFieldSelection(searchParams: URLSearchParams): FieldSelecti
   const includeParam = searchParams.get('fields');
   const excludeParam = searchParams.get('excludeFields');
 
-  const include = includeParam ? includeParam.split(',').map(f => f.trim()) : undefined;
-  const exclude = excludeParam ? excludeParam.split(',').map(f => f.trim()) : undefined;
+  const include = includeParam ? includeParam.split(',').map((f) => f.trim()) : undefined;
+  const exclude = excludeParam ? excludeParam.split(',').map((f) => f.trim()) : undefined;
 
   return { include, exclude };
 }
@@ -279,7 +276,7 @@ export function selectFieldsArray<T extends Record<string, unknown>>(
   items: T[],
   options: FieldSelectionOptions
 ): Partial<T>[] {
-  return items.map(item => selectFields(item, options));
+  return items.map((item) => selectFields(item, options));
 }
 
 /**
@@ -370,7 +367,7 @@ export function etagMatches(etag: string, ifNoneMatch: string | null): boolean {
   if (!ifNoneMatch) return false;
 
   // Handle multiple ETags in If-None-Match
-  const clientETags = ifNoneMatch.split(',').map(e => e.trim());
+  const clientETags = ifNoneMatch.split(',').map((e) => e.trim());
   return clientETags.includes(etag) || clientETags.includes('*');
 }
 
@@ -517,10 +514,7 @@ export function parseSortParams(
  * @param params - Sort parameters
  * @returns Sorted array
  */
-export function sortArray<T extends Record<string, unknown>>(
-  items: T[],
-  params: SortParams
-): T[] {
+export function sortArray<T extends Record<string, unknown>>(items: T[], params: SortParams): T[] {
   const { field, direction } = params;
 
   return [...items].sort((a, b) => {

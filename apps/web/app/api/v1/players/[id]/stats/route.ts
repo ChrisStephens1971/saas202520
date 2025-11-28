@@ -32,10 +32,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/players/clx1234/stats
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -43,10 +40,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -87,7 +81,8 @@ export async function GET(
       },
     });
 
-    const privacySettings = (profile?.privacySettings as unknown as { showStatistics?: boolean }) || {};
+    const privacySettings =
+      (profile?.privacySettings as unknown as { showStatistics?: boolean }) || {};
     if (!privacySettings.showStatistics) {
       return forbiddenError('Player statistics are private');
     }
@@ -162,15 +157,13 @@ export async function GET(
     });
 
     // Calculate recent performance
-    const last10Wins = recentMatches
-      .slice(0, 10)
-      .filter(m => m.result === 'WIN').length;
+    const last10Wins = recentMatches.slice(0, 10).filter((m) => m.result === 'WIN').length;
     const last10Matches = Math.min(recentMatches.length, 10);
 
     const last30DaysWins = recentTournaments.reduce((sum, t) => {
       const wins = [
-        ...t.matchesAsPlayerA.filter(m => m.winnerId === playerId),
-        ...t.matchesAsPlayerB.filter(m => m.winnerId === playerId),
+        ...t.matchesAsPlayerA.filter((m) => m.winnerId === playerId),
+        ...t.matchesAsPlayerB.filter((m) => m.winnerId === playerId),
       ].length;
       return sum + wins;
     }, 0);
@@ -180,13 +173,17 @@ export async function GET(
     }, 0);
 
     // Get performance by format (simplified - would need aggregation)
-    const performanceByFormat = stats?.favoriteFormat ? [{
-      format: stats.favoriteFormat,
-      tournaments: stats.totalTournaments,
-      wins: stats.totalWins,
-      losses: stats.totalLosses,
-      winRate: stats.winRate ? parseFloat(stats.winRate.toString()) : 0,
-    }] : [];
+    const performanceByFormat = stats?.favoriteFormat
+      ? [
+          {
+            format: stats.favoriteFormat,
+            tournaments: stats.totalTournaments,
+            wins: stats.totalWins,
+            losses: stats.totalLosses,
+            winRate: stats.winRate ? parseFloat(stats.winRate.toString()) : 0,
+          },
+        ]
+      : [];
 
     // Transform to API response format
     const data: PlayerStats = {
@@ -224,7 +221,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 991, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/players/${id}/stats:`, error);

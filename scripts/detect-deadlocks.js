@@ -108,7 +108,7 @@ class DeadlockDetector {
         agentId,
         blockedBy: agent.blockedBy,
         reason: agent.reason || 'Unknown',
-        duration: this.calculateBlockedDuration(agent)
+        duration: this.calculateBlockedDuration(agent),
       });
 
       console.log(`  - ${agentId} blocked by ${agent.blockedBy || 'unknown'}`);
@@ -140,7 +140,7 @@ class DeadlockDetector {
       console.log('\n✅ No deadlocks detected');
 
       // Check for long-running blocks
-      const longBlocks = blockedAgents.filter(a => {
+      const longBlocks = blockedAgents.filter((a) => {
         const duration = parseInt(a.duration) || 0;
         return duration > 3600; // More than 1 hour
       });
@@ -189,7 +189,7 @@ class DeadlockDetector {
       deadlocksFound: cycles.length,
       cycles: cycles,
       blockedAgents: blockedAgents,
-      recommendations: []
+      recommendations: [],
     };
 
     // Generate recommendations
@@ -198,7 +198,7 @@ class DeadlockDetector {
         type: 'deadlock',
         agents: cycle,
         action: 'Break cycle by canceling or manually completing one task',
-        priority: 'critical'
+        priority: 'critical',
       });
     }
 
@@ -216,7 +216,7 @@ class DeadlockDetector {
           lane: lane,
           blockedCount: count,
           action: `Consider increasing capacity for ${lane} lane`,
-          priority: 'high'
+          priority: 'high',
         });
       }
     }
@@ -276,7 +276,9 @@ class DeadlockDetector {
   }
 
   async monitorContinuously(intervalSeconds = 60) {
-    console.log(`🔄 Starting continuous deadlock monitoring (checking every ${intervalSeconds}s)\n`);
+    console.log(
+      `🔄 Starting continuous deadlock monitoring (checking every ${intervalSeconds}s)\n`
+    );
 
     const check = async () => {
       const result = await this.detectDeadlocks();

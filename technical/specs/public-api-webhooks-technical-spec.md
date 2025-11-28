@@ -19,6 +19,7 @@ Currently, tournament data is locked within the platform with no programmatic ac
 Build a RESTful API v1 with 15+ read-only endpoints, API key authentication, Redis-based rate limiting, and a webhook system for real-time event notifications. Include a developer portal for API key management, usage monitoring, and webhook configuration. Provide comprehensive OpenAPI documentation with interactive Swagger UI.
 
 **Key Components:**
+
 - RESTful API endpoints for tournaments, players, matches, leaderboards, and venues
 - API key authentication with bcrypt hashing
 - Redis-based rate limiting (3 tiers: 100/hr, 1000/hr, 10000/hr)
@@ -38,6 +39,7 @@ Build a RESTful API v1 with 15+ read-only endpoints, API key authentication, Red
 ### Non-Goals
 
 **Out of Scope for v1:**
+
 - Write endpoints (POST, PUT, DELETE) - Planned for v2
 - GraphQL API - Evaluate based on developer feedback
 - Native SDKs (JavaScript, Python, PHP) - v1 focuses on REST API
@@ -52,6 +54,7 @@ Build a RESTful API v1 with 15+ read-only endpoints, API key authentication, Red
 ### Current State
 
 The platform currently has:
+
 - Next.js 14+ application with App Router
 - PostgreSQL database with multi-tenant architecture (tenant_id on all tables)
 - Redis for caching and real-time features
@@ -59,6 +62,7 @@ The platform currently has:
 - No external API access or developer-facing documentation
 
 **Existing Infrastructure:**
+
 - API routes in `app/api/` (Next.js 14 App Router)
 - Authentication via NextAuth.js
 - Database queries using Prisma ORM
@@ -67,6 +71,7 @@ The platform currently has:
 ### Constraints
 
 **Technical Constraints:**
+
 - Must use Next.js API Routes (no separate API server)
 - Must maintain <100ms API response time (p95)
 - Redis must handle rate limiting for all API requests
@@ -74,12 +79,14 @@ The platform currently has:
 - All API endpoints must be HTTPS only
 
 **Business Constraints:**
+
 - Launch in Sprint 10 Week 3 (5 days development time)
 - Must be production-ready for private beta (10 developers)
 - Cannot disrupt existing platform features
 - Must support 100,000+ API calls/month at launch
 
 **Timeline Constraints:**
+
 - Day 1-2: Foundation and core endpoints
 - Day 3: Rate limiting and webhook foundation
 - Day 4: Developer portal and webhook management
@@ -168,6 +175,7 @@ The platform currently has:
 **Technology:** Next.js 14 App Router (`app/api/v1/`)
 
 **Structure:**
+
 ```
 app/api/v1/
 ├── tournaments/
@@ -198,6 +206,7 @@ app/api/v1/
 ```
 
 **Interfaces:**
+
 - Request: HTTP GET with Authorization header
 - Response: JSON with data, meta, and error fields
 - Middleware: apiKeyAuth, rateLimiter, tenantScoping, errorHandler
@@ -211,6 +220,7 @@ app/api/v1/
 **File:** `lib/api/middleware/apiKeyAuth.ts`
 
 **Interfaces:**
+
 ```typescript
 interface ApiKeyAuthResult {
   apiKey: ApiKey;
@@ -218,10 +228,11 @@ interface ApiKeyAuthResult {
   tier: 'free' | 'pro' | 'enterprise';
 }
 
-async function apiKeyAuth(request: NextRequest): Promise<ApiKeyAuthResult>
+async function apiKeyAuth(request: NextRequest): Promise<ApiKeyAuthResult>;
 ```
 
 **Process:**
+
 1. Extract Authorization header (Bearer token)
 2. Hash API key with bcrypt
 3. Query database for matching key_hash
@@ -238,6 +249,7 @@ async function apiKeyAuth(request: NextRequest): Promise<ApiKeyAuthResult>
 **File:** `lib/api/services/rateLimiter.ts`
 
 **Interfaces:**
+
 ```typescript
 interface RateLimitResult {
   allowed: boolean;
@@ -249,15 +261,17 @@ interface RateLimitResult {
 async function checkRateLimit(
   apiKeyId: string,
   tier: 'free' | 'pro' | 'enterprise'
-): Promise<RateLimitResult>
+): Promise<RateLimitResult>;
 ```
 
 **Rate Limits:**
+
 - Free: 100 requests/hour
 - Pro: 1,000 requests/hour
 - Enterprise: 10,000 requests/hour
 
 **Redis Keys:**
+
 - Pattern: `rate_limit:{api_key_id}:{hour}`
 - Data: Sorted set with request timestamps
 - Expiry: 1 hour (automatic cleanup)
@@ -271,20 +285,22 @@ async function checkRateLimit(
 **File:** `lib/api/services/apiKeyService.ts`
 
 **Interfaces:**
+
 ```typescript
 async function generateApiKey(
   tenantId: string,
   userId: string,
   name: string,
   tier: 'free' | 'pro' | 'enterprise'
-): Promise<{ key: string; prefix: string }>
+): Promise<{ key: string; prefix: string }>;
 
-async function validateApiKey(key: string): Promise<ApiKey | null>
+async function validateApiKey(key: string): Promise<ApiKey | null>;
 
-async function revokeApiKey(apiKeyId: string): Promise<void>
+async function revokeApiKey(apiKeyId: string): Promise<void>;
 ```
 
 **API Key Format:**
+
 - Live: `sk_live_` + 32 random characters
 - Test: `sk_test_` + 32 random characters
 - Stored: Only bcrypt hash (original key never stored)
@@ -299,6 +315,7 @@ async function revokeApiKey(apiKeyId: string): Promise<void>
 **File:** `lib/api/services/webhookService.ts`
 
 **Interfaces:**
+
 ```typescript
 interface WebhookSubscription {
   id: string;
@@ -310,12 +327,13 @@ interface WebhookSubscription {
   isActive: boolean;
 }
 
-async function createWebhook(data: CreateWebhookInput): Promise<WebhookSubscription>
-async function publishEvent(event: WebhookEvent, data: any): Promise<void>
-async function deliverWebhook(webhookId: string, payload: any): Promise<void>
+async function createWebhook(data: CreateWebhookInput): Promise<WebhookSubscription>;
+async function publishEvent(event: WebhookEvent, data: any): Promise<void>;
+async function deliverWebhook(webhookId: string, payload: any): Promise<void>;
 ```
 
 **Event Types:**
+
 ```typescript
 enum WebhookEvent {
   TOURNAMENT_CREATED = 'tournament.created',
@@ -338,6 +356,7 @@ enum WebhookEvent {
 **File:** `lib/api/workers/webhookWorker.ts`
 
 **Interfaces:**
+
 ```typescript
 interface WebhookJob {
   webhookId: string;
@@ -349,10 +368,11 @@ interface WebhookJob {
   attempt: number;
 }
 
-async function processWebhook(job: Job<WebhookJob>): Promise<void>
+async function processWebhook(job: Job<WebhookJob>): Promise<void>;
 ```
 
 **Retry Logic:**
+
 - Attempt 1: Immediate
 - Attempt 2: +1 minute (if 5xx or timeout)
 - Attempt 3: +5 minutes
@@ -360,6 +380,7 @@ async function processWebhook(job: Job<WebhookJob>): Promise<void>
 - Max attempts: 3 retries (4 total attempts)
 
 **Delivery Process:**
+
 1. Fetch webhook subscription from database
 2. Verify webhook is active
 3. Generate HMAC SHA-256 signature
@@ -375,6 +396,7 @@ async function processWebhook(job: Job<WebhookJob>): Promise<void>
 **Technology:** Next.js 14, React, Tailwind CSS
 
 **Files:**
+
 ```
 app/(dashboard)/developer/
 ├── page.tsx                    # Dashboard overview
@@ -385,6 +407,7 @@ app/(dashboard)/developer/
 ```
 
 **Features:**
+
 - Create/revoke API keys
 - View usage statistics (daily, weekly, monthly)
 - Configure webhook endpoints
@@ -399,6 +422,7 @@ app/(dashboard)/developer/
 **Technology:** OpenAPI 3.0, Swagger UI
 
 **Files:**
+
 - `public/api/openapi.yaml` - OpenAPI specification
 - `app/(dashboard)/developer/documentation/page.tsx` - Swagger UI integration
 
@@ -443,10 +467,12 @@ ALTER TABLE api_keys ADD CONSTRAINT chk_rate_limit
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant_id)
 - Foreign key to `users(id)` (user_id - creator)
 
 **Notes:**
+
 - `key_hash`: bcrypt hash, never store plaintext key
 - `key_prefix`: First 15 chars for display in UI (`sk_live_abc123...`)
 - `rate_limit`: Redundant with tier for flexibility (can override per key)
@@ -484,10 +510,12 @@ ALTER TABLE webhooks ADD CONSTRAINT chk_events_not_empty
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant_id)
 - Foreign key to `api_keys(id)` (api_key_id - associated API key)
 
 **Notes:**
+
 - `url`: Must be HTTPS only
 - `secret`: Generated on creation, used for HMAC signature
 - `events`: Array of subscribed event types
@@ -525,9 +553,11 @@ ALTER TABLE webhook_deliveries ADD CONSTRAINT chk_attempt_number
 ```
 
 **Relationships:**
+
 - Foreign key to `webhooks(id)` (webhook_id)
 
 **Notes:**
+
 - `event_id`: Unique identifier for idempotency (`evt_` prefix)
 - `payload`: Full JSON event data
 - `status_code`: NULL if network error or timeout
@@ -558,10 +588,12 @@ CREATE INDEX idx_api_usage_endpoint ON api_usage(endpoint, timestamp DESC);
 ```
 
 **Relationships:**
+
 - Foreign key to `api_keys(id)` (api_key_id)
 - Foreign key to `organizations(id)` (tenant_id)
 
 **Notes:**
+
 - High write volume table
 - Consider time-series database or partitioning for scale
 - Retention: Keep detailed logs for 90 days, then aggregate
@@ -570,6 +602,7 @@ CREATE INDEX idx_api_usage_endpoint ON api_usage(endpoint, timestamp DESC);
 ### Redis Data Structures
 
 **Rate Limiting:**
+
 ```
 Key: rate_limit:{api_key_id}:{hour}
 Type: Sorted Set (ZSET)
@@ -579,6 +612,7 @@ Expiry: 1 hour (automatic cleanup)
 ```
 
 **Webhook Queue:**
+
 ```
 Queue: webhook:queue
 Type: Bull Queue
@@ -588,6 +622,7 @@ Delayed Jobs: Retry jobs scheduled with delay
 ```
 
 **API Response Cache (Optional):**
+
 ```
 Key: api_cache:{endpoint}:{query_hash}
 Type: String (JSON)
@@ -604,15 +639,18 @@ Expiry: 60 seconds (for frequently accessed data)
 **Method:** Bearer token authentication
 
 **Header:**
+
 ```
 Authorization: Bearer YOUR_API_KEY_HERE
 ```
 
 **Example API Key Format (for reference only, not real keys):**
+
 - Live: `sk_live_` + 32 random characters (example: `sk_live_abc123...xyz789`)
 - Test: `sk_test_` + 32 random characters (example: `sk_test_def456...uvw012`)
 
 **Error Responses:**
+
 ```json
 // 401 Unauthorized - Missing or invalid API key
 {
@@ -637,6 +675,7 @@ Authorization: Bearer YOUR_API_KEY_HERE
 ### Rate Limiting
 
 **Headers (all responses):**
+
 ```
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 95
@@ -644,6 +683,7 @@ X-RateLimit-Reset: 1699293600
 ```
 
 **429 Rate Limit Exceeded:**
+
 ```json
 {
   "error": {
@@ -659,6 +699,7 @@ X-RateLimit-Reset: 1699293600
 ```
 
 **Response Headers:**
+
 ```
 HTTP/1.1 429 Too Many Requests
 Retry-After: 3600
@@ -670,6 +711,7 @@ X-RateLimit-Reset: 1699293600
 ### Standard Response Structure
 
 **Success Response:**
+
 ```json
 {
   "data": [...],
@@ -683,6 +725,7 @@ X-RateLimit-Reset: 1699293600
 ```
 
 **Error Response:**
+
 ```json
 {
   "error": {
@@ -700,6 +743,7 @@ X-RateLimit-Reset: 1699293600
 **Purpose:** List all tournaments with pagination and filtering
 
 **Query Parameters:**
+
 - `page` (integer, default: 1): Page number
 - `limit` (integer, default: 20, max: 100): Items per page
 - `status` (string): Filter by status (upcoming, active, completed)
@@ -709,12 +753,14 @@ X-RateLimit-Reset: 1699293600
 - `start_date_to` (ISO date): Filter tournaments starting before this date
 
 **Request:**
+
 ```http
 GET /api/v1/tournaments?page=1&limit=20&status=active
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": [
@@ -744,6 +790,7 @@ Authorization: Bearer sk_live_...
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid query parameters
 - `401 Unauthorized`: Missing or invalid API key
 - `429 Too Many Requests`: Rate limit exceeded
@@ -753,12 +800,14 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get detailed tournament information
 
 **Request:**
+
 ```http
 GET /api/v1/tournaments/550e8400-e29b-41d4-a716-446655440000
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": {
@@ -778,8 +827,8 @@ Authorization: Bearer sk_live_...
     "max_players": 32,
     "current_round": 3,
     "total_rounds": 5,
-    "buy_in": 50.00,
-    "prize_pool": 1600.00,
+    "buy_in": 50.0,
+    "prize_pool": 1600.0,
     "organizer": {
       "id": "770e8400-e29b-41d4-a716-446655440000",
       "name": "Tournament Organizer Inc."
@@ -791,6 +840,7 @@ Authorization: Bearer sk_live_...
 ```
 
 **Error Responses:**
+
 - `404 Not Found`: Tournament does not exist or not accessible by tenant
 - `401 Unauthorized`: Missing or invalid API key
 
@@ -799,16 +849,19 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get all matches in a tournament
 
 **Query Parameters:**
+
 - `round` (integer): Filter by round number
 - `status` (string): Filter by match status (scheduled, in_progress, completed)
 
 **Request:**
+
 ```http
 GET /api/v1/tournaments/550e8400-e29b-41d4-a716-446655440000/matches?round=3
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": [
@@ -846,12 +899,14 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get tournament bracket structure with complete match tree
 
 **Request:**
+
 ```http
 GET /api/v1/tournaments/550e8400-e29b-41d4-a716-446655440000/bracket
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": {
@@ -887,18 +942,21 @@ Authorization: Bearer sk_live_...
 **Purpose:** List all players with search and pagination
 
 **Query Parameters:**
+
 - `page` (integer, default: 1)
 - `limit` (integer, default: 20, max: 100)
 - `search` (string): Search by name or nickname
 - `venue_id` (string): Filter by primary venue
 
 **Request:**
+
 ```http
 GET /api/v1/players?search=john&limit=10
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": [
@@ -931,12 +989,14 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get aggregated player statistics
 
 **Request:**
+
 ```http
 GET /api/v1/players/990e8400-e29b-41d4-a716-446655440000/stats
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": {
@@ -984,12 +1044,14 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get detailed match information
 
 **Request:**
+
 ```http
 GET /api/v1/matches/880e8400-e29b-41d4-a716-446655440000
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": {
@@ -1027,16 +1089,19 @@ Authorization: Bearer sk_live_...
 **Purpose:** Get global player rankings
 
 **Query Parameters:**
+
 - `limit` (integer, default: 100, max: 500): Number of players to return
 - `type` (string, default: 'global'): Leaderboard type (global, venue, format)
 
 **Request:**
+
 ```http
 GET /api/v1/leaderboards?limit=50
 Authorization: Bearer sk_live_...
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "data": [
@@ -1062,6 +1127,7 @@ Authorization: Bearer sk_live_...
 ### Webhook Payload Structure
 
 **Standard Webhook Payload:**
+
 ```json
 {
   "id": "evt_abc123def456ghi789",
@@ -1081,6 +1147,7 @@ Authorization: Bearer sk_live_...
 ```
 
 **Webhook Headers:**
+
 ```http
 POST /webhooks/tournaments HTTP/1.1
 Host: yourapp.com
@@ -1093,6 +1160,7 @@ User-Agent: TournamentPlatform-Webhooks/1.0
 ```
 
 **Signature Verification (HMAC SHA-256):**
+
 ```typescript
 const signature = request.headers['x-webhook-signature'];
 const timestamp = request.headers['x-webhook-timestamp'];
@@ -1123,6 +1191,7 @@ if (Math.abs(currentTime - parseInt(timestamp)) > 300) {
 **Goal:** Set up database schema, authentication, and core API infrastructure
 
 **Tasks:**
+
 - [x] Database schema migration (api_keys, webhooks, webhook_deliveries, api_usage)
 - [x] API key service (generate, validate, revoke)
 - [x] Authentication middleware (Bearer token, bcrypt verification)
@@ -1135,6 +1204,7 @@ if (Math.abs(currentTime - parseInt(timestamp)) > 300) {
 **Estimated Effort:** 1.5 days
 
 **Key Files:**
+
 ```
 lib/api/
 ├── middleware/
@@ -1159,6 +1229,7 @@ prisma/
 **Goal:** Implement all 15 read-only API endpoints
 
 **Tasks:**
+
 - [x] Tournament endpoints (5)
   - GET /api/v1/tournaments
   - GET /api/v1/tournaments/:id
@@ -1183,6 +1254,7 @@ prisma/
 **Estimated Effort:** 1.5 days
 
 **Key Files:**
+
 ```
 app/api/v1/
 ├── tournaments/
@@ -1215,6 +1287,7 @@ app/api/v1/
 **Goal:** Build webhook subscription, event publishing, and delivery system
 
 **Tasks:**
+
 - [x] Webhook service (CRUD operations)
 - [x] Signature service (HMAC SHA-256 generation)
 - [x] Event publisher (publish events to Redis queue)
@@ -1227,6 +1300,7 @@ app/api/v1/
 **Estimated Effort:** 1 day
 
 **Key Files:**
+
 ```
 lib/api/
 ├── services/
@@ -1246,6 +1320,7 @@ lib/queues/
 **Goal:** Build UI for API key management, webhook configuration, and usage analytics
 
 **Tasks:**
+
 - [x] Developer dashboard page (overview, usage stats)
 - [x] API key management page (create, list, revoke)
 - [x] Webhook management page (add, edit, delete, test)
@@ -1256,6 +1331,7 @@ lib/queues/
 **Estimated Effort:** 1 day
 
 **Key Files:**
+
 ```
 app/(dashboard)/developer/
 ├── page.tsx                     # Dashboard
@@ -1283,6 +1359,7 @@ components/developer/
 **Goal:** Complete OpenAPI spec, documentation, testing, and private beta launch
 
 **Tasks:**
+
 - [x] OpenAPI 3.0 specification (all endpoints documented)
 - [x] Swagger UI integration
 - [x] Code examples (JavaScript, Python, curl)
@@ -1301,6 +1378,7 @@ components/developer/
 **Estimated Effort:** 1 day
 
 **Key Files:**
+
 ```
 public/api/
 └── openapi.yaml
@@ -1336,6 +1414,7 @@ tests/api/
 ### Unit Tests
 
 **Services (lib/api/services/):**
+
 - `apiKeyService.test.ts`
   - Test API key generation (format, uniqueness)
   - Test key validation (valid, invalid, expired)
@@ -1353,6 +1432,7 @@ tests/api/
   - Test webhook activation/deactivation
 
 **Middleware (lib/api/middleware/):**
+
 - `apiKeyAuth.test.ts`
   - Test valid API key extraction
   - Test invalid API key rejection
@@ -1360,7 +1440,7 @@ tests/api/
   - Test expired key handling
 - `rateLimiter.test.ts`
   - Test rate limit enforcement
-  - Test header injection (X-RateLimit-*)
+  - Test header injection (X-RateLimit-\*)
   - Test 429 response when exceeded
 - `tenantScoping.test.ts`
   - Test tenant_id extraction from API key
@@ -1369,6 +1449,7 @@ tests/api/
 ### Integration Tests
 
 **API Endpoints (tests/api/integration/):**
+
 - `tournaments.test.ts`
   - Test GET /api/v1/tournaments (pagination, filtering)
   - Test GET /api/v1/tournaments/:id (valid, not found)
@@ -1389,6 +1470,7 @@ tests/api/
   - Test event filtering (subscribed vs unsubscribed)
 
 **Webhook Flow:**
+
 ```typescript
 describe('Webhook Delivery', () => {
   it('should deliver webhook with correct signature', async () => {
@@ -1435,6 +1517,7 @@ describe('Webhook Delivery', () => {
 ### Performance Tests
 
 **Load Testing (tests/api/load/):**
+
 ```javascript
 import http from 'k6/http';
 import { check } from 'k6';
@@ -1447,7 +1530,7 @@ export let options = {
 export default function () {
   const params = {
     headers: {
-      'Authorization': 'Bearer sk_live_test_key',
+      Authorization: 'Bearer sk_live_test_key',
     },
   };
 
@@ -1456,13 +1539,13 @@ export default function () {
   check(res, {
     'status is 200': (r) => r.status === 200,
     'response time < 100ms': (r) => r.timings.duration < 100,
-    'rate limit headers present': (r) =>
-      r.headers['X-RateLimit-Limit'] !== undefined,
+    'rate limit headers present': (r) => r.headers['X-RateLimit-Limit'] !== undefined,
   });
 }
 ```
 
 **Performance Targets:**
+
 - **p50 response time:** <50ms
 - **p95 response time:** <100ms
 - **p99 response time:** <200ms
@@ -1470,6 +1553,7 @@ export default function () {
 - **Rate limit check overhead:** <5ms
 
 **Scenarios:**
+
 1. **High read load:** 100 concurrent users fetching tournaments
 2. **Pagination stress:** Sequential page requests (1-100)
 3. **Rate limit boundary:** Request exactly at rate limit threshold
@@ -1478,35 +1562,41 @@ export default function () {
 ### Security Considerations
 
 **Authentication:**
+
 - API keys hashed with bcrypt (cost factor: 10)
 - Keys never stored in plaintext
 - HTTPS only (TLS 1.2+)
 - Bearer token in Authorization header (not query param)
 
 **Authorization:**
+
 - Tenant isolation enforced on all queries (tenant_id filter)
 - API key scoped to tenant (cannot access other tenants)
 - Cross-tenant access tests in integration suite
 
 **Data Validation:**
+
 - Input validation on all query parameters
 - SQL injection prevention (Prisma parameterized queries)
 - XSS prevention (no HTML in API responses)
 - Request size limits (1MB max body)
 
 **Rate Limiting:**
+
 - Redis-based distributed rate limiting
 - Prevents brute force attacks
 - Protects against DDoS
 - Per-key rate limits (not global)
 
 **Webhook Security:**
+
 - HTTPS-only webhook URLs
 - HMAC SHA-256 signature verification
 - Timestamp check (reject requests >5 minutes old)
 - Secret rotation capability
 
 **Monitoring:**
+
 - Failed authentication attempts logged
 - Rate limit violations logged
 - Webhook delivery failures logged
@@ -1519,6 +1609,7 @@ export default function () {
 ### Deployment Strategy
 
 **Environments:**
+
 1. **Development** (local)
    - Local PostgreSQL, Redis
    - Test API keys
@@ -1537,6 +1628,7 @@ export default function () {
    - Full rate limiting enabled
 
 **Deployment Steps:**
+
 ```bash
 # 1. Database migration
 npm run db:migrate:deploy
@@ -1555,6 +1647,7 @@ curl https://api.platform.com/api/v1/health
 ```
 
 **Gradual Rollout:**
+
 - **Day 1 (Private Beta):** 10 invited developers
 - **Week 2:** Monitor metrics, fix critical bugs
 - **Week 3:** Public beta (all users)
@@ -1589,6 +1682,7 @@ curl https://api.platform.com/api/v1/health
    - Database query time
 
 **Alerts (via Vercel, Sentry, or custom):**
+
 ```yaml
 # High error rate
 - name: API Error Rate
@@ -1622,6 +1716,7 @@ curl https://api.platform.com/api/v1/health
 ```
 
 **Dashboards:**
+
 - Vercel Analytics (request volume, response times)
 - Custom developer portal analytics (usage by tier)
 - Webhook delivery dashboard (success rate, retry rate)
@@ -1652,6 +1747,7 @@ curl https://api.platform.com/api/v1/health
    - Re-run migration after fix
 
 **Rollback Commands:**
+
 ```bash
 # Revert Vercel deployment
 vercel rollback
@@ -1673,12 +1769,14 @@ redis-cli FLUSHDB
 ### External Dependencies
 
 **Core Services:**
+
 - **Vercel** - Hosting and serverless functions
 - **PostgreSQL** (Supabase/Neon) - Database
 - **Redis** (Upstash) - Rate limiting and webhook queue
 - **Next.js 14+** - Application framework
 
 **Libraries:**
+
 - **bcrypt** (v5.1+) - API key hashing
 - **bull** (v4.11+) - Background job queue for webhooks
 - **ioredis** (v5.3+) - Redis client
@@ -1689,6 +1787,7 @@ redis-cli FLUSHDB
 - **crypto** (Node.js built-in) - HMAC signature generation
 
 **Development Dependencies:**
+
 - **@types/swagger-ui-react** - TypeScript definitions
 - **openapi-types** (v12+) - OpenAPI spec types
 - **k6** - Load testing
@@ -1698,18 +1797,21 @@ redis-cli FLUSHDB
 ### Internal Dependencies
 
 **Must Be Completed First:**
+
 - [x] Multi-tenant authentication system (NextAuth.js)
 - [x] Organizations/tenants table in database
 - [x] Redis connection setup
 - [x] Base API route structure
 
 **Related Features:**
+
 - Tournament management system (data source for API)
 - Player management system (data source for API)
 - Match tracking system (data source for API)
 - Leaderboard system (data source for API)
 
 **Database Schema Dependencies:**
+
 - `organizations` table (tenant_id foreign key)
 - `users` table (api_key creator reference)
 - `tournaments`, `players`, `matches` tables (data endpoints)
@@ -1721,18 +1823,21 @@ redis-cli FLUSHDB
 ### Expected Load
 
 **Launch (Month 1):**
+
 - 50 active developers
 - 100,000 API calls/month (~3,000/day)
 - 25 webhook subscriptions
 - 5,000 webhook deliveries/month
 
 **Growth (Month 3-6):**
+
 - 200 active developers
 - 1,000,000 API calls/month (~33,000/day)
 - 100 webhook subscriptions
 - 50,000 webhook deliveries/month
 
 **Scale Target (Year 1):**
+
 - 1,000+ active developers
 - 10,000,000 API calls/month (~330,000/day)
 - 500 webhook subscriptions
@@ -1741,40 +1846,46 @@ redis-cli FLUSHDB
 ### Performance Targets
 
 **API Response Times:**
+
 - **p50:** <50ms (50th percentile)
 - **p95:** <100ms (95th percentile)
 - **p99:** <200ms (99th percentile)
 
 **Webhook Delivery:**
+
 - **Initial delivery:** <2 seconds from event
 - **Delivery success rate:** >99%
 - **Retry delays:** 1min, 5min, 15min (exponential backoff)
 
 **Database Query Times:**
+
 - Simple queries (tournaments list): <20ms
 - Complex queries (bracket generation): <100ms
 - Aggregations (player stats): <200ms
 
 **Developer Portal:**
+
 - Page load time: <500ms
 - Dashboard charts: <1 second to render
 
 ### Scalability Considerations
 
 **Horizontal Scaling:**
+
 - Next.js API routes are stateless (scale via Vercel)
 - Redis cluster for distributed rate limiting
 - PostgreSQL read replicas for high read load
 - Multiple webhook workers (Bull queue supports horizontal scaling)
 
 **Caching Strategy:**
+
 ```typescript
 // Cache frequently accessed, slowly changing data
 const CACHE_TTL = {
-  tournaments_list: 60,      // 60 seconds
-  tournament_detail: 30,     // 30 seconds
-  leaderboards: 300,         // 5 minutes
-  player_stats: 120,         // 2 minutes
+  tournaments_list: 60, // 60 seconds
+  tournament_detail: 30, // 30 seconds
+  leaderboards: 300, // 5 minutes
+  player_stats: 120, // 2 minutes
 };
 
 // Cache keys
@@ -1782,24 +1893,28 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ```
 
 **Database Optimization:**
+
 - Indexes on all foreign keys (tenant_id, tournament_id, player_id)
 - Composite indexes for common queries (e.g., `tenant_id + status + start_date`)
 - Pagination cursor-based (not offset-based) for large datasets
 - Connection pooling (max 100 connections)
 
 **Rate Limiting Scale:**
+
 - Redis Sorted Set (ZSET) for sliding window
 - Keys expire automatically (1 hour TTL)
 - Distributed across Redis cluster for high throughput
 - Can handle 10,000+ checks per second
 
 **Webhook Queue Scale:**
+
 - Bull queue backed by Redis
 - Multiple worker processes (4-8 workers)
 - Priority queue (if needed in future)
 - Dead letter queue for failed deliveries after max retries
 
 **Cost Optimization:**
+
 - Cache popular endpoints (reduce database queries)
 - Archive old webhook_deliveries logs (>30 days)
 - Aggregate api_usage logs daily (reduce table size)
@@ -1809,18 +1924,18 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 
 ## Risks & Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **API Abuse/DDoS** | High - Service outage, cost spike | Medium | - Robust rate limiting (Redis)<br>- API key revocation capability<br>- Cloudflare WAF/CDN protection<br>- Monitor unusual patterns<br>- Automatic IP blocking for repeated abuse |
-| **Breaking Changes in API** | High - Breaks developer integrations | Low | - API versioning (/v1/, /v2/)<br>- Never remove fields, only add<br>- Deprecation policy (6-month notice)<br>- Maintain backward compatibility<br>- Comprehensive changelog |
-| **Webhook Delivery Failures** | Medium - Missed events, frustrated developers | Medium | - Retry logic (3 attempts, exponential backoff)<br>- Delivery logs for debugging<br>- Manual retry capability<br>- Email alerts for persistent failures<br>- Webhook health monitoring |
-| **Security Vulnerabilities** | High - Data breach, unauthorized access | Low | - HTTPS only<br>- API key bcrypt hashing<br>- Webhook signature verification (HMAC)<br>- Tenant isolation enforcement<br>- Regular security audits<br>- Rate limiting prevents brute force |
-| **Low Developer Adoption** | High - Feature doesn't achieve goals | Medium | - Excellent documentation (interactive)<br>- Simple onboarding (one-click API key)<br>- Fast support responses<br>- Showcase integrations<br>- Free tier to reduce barriers<br>- Promote in communities |
-| **Performance Degradation** | Medium - Slow API responses, poor UX | Medium | - Database query optimization (indexes)<br>- Response caching (Redis)<br>- Horizontal scaling (stateless)<br>- Load testing before launch<br>- Performance monitoring<br>- p95 <100ms budget |
-| **Webhook Queue Overload** | Medium - Delayed event delivery | Low | - Bull queue with Redis<br>- Horizontal scaling of workers<br>- Monitor queue depth<br>- Alert for queue backlog<br>- Rate limiting prevents thundering herd |
-| **Database Connection Exhaustion** | High - API timeouts, failures | Medium | - Connection pooling (max 100)<br>- Connection timeout limits<br>- Monitor active connections<br>- Auto-scaling read replicas<br>- Query optimization |
-| **API Key Compromise** | Medium - Unauthorized access | Low | - API key revocation capability<br>- Last used timestamp monitoring<br>- Unusual activity alerts<br>- Key rotation recommendation<br>- Tenant isolation limits damage |
-| **Incomplete Documentation** | Medium - Developer frustration, high support load | High | - Comprehensive docs before launch<br>- Code examples in 3 languages<br>- Interactive Swagger UI<br>- Beta feedback on docs<br>- FAQ for common issues<br>- Video tutorials |
+| Risk                               | Impact                                            | Probability | Mitigation                                                                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **API Abuse/DDoS**                 | High - Service outage, cost spike                 | Medium      | - Robust rate limiting (Redis)<br>- API key revocation capability<br>- Cloudflare WAF/CDN protection<br>- Monitor unusual patterns<br>- Automatic IP blocking for repeated abuse                        |
+| **Breaking Changes in API**        | High - Breaks developer integrations              | Low         | - API versioning (/v1/, /v2/)<br>- Never remove fields, only add<br>- Deprecation policy (6-month notice)<br>- Maintain backward compatibility<br>- Comprehensive changelog                             |
+| **Webhook Delivery Failures**      | Medium - Missed events, frustrated developers     | Medium      | - Retry logic (3 attempts, exponential backoff)<br>- Delivery logs for debugging<br>- Manual retry capability<br>- Email alerts for persistent failures<br>- Webhook health monitoring                  |
+| **Security Vulnerabilities**       | High - Data breach, unauthorized access           | Low         | - HTTPS only<br>- API key bcrypt hashing<br>- Webhook signature verification (HMAC)<br>- Tenant isolation enforcement<br>- Regular security audits<br>- Rate limiting prevents brute force              |
+| **Low Developer Adoption**         | High - Feature doesn't achieve goals              | Medium      | - Excellent documentation (interactive)<br>- Simple onboarding (one-click API key)<br>- Fast support responses<br>- Showcase integrations<br>- Free tier to reduce barriers<br>- Promote in communities |
+| **Performance Degradation**        | Medium - Slow API responses, poor UX              | Medium      | - Database query optimization (indexes)<br>- Response caching (Redis)<br>- Horizontal scaling (stateless)<br>- Load testing before launch<br>- Performance monitoring<br>- p95 <100ms budget            |
+| **Webhook Queue Overload**         | Medium - Delayed event delivery                   | Low         | - Bull queue with Redis<br>- Horizontal scaling of workers<br>- Monitor queue depth<br>- Alert for queue backlog<br>- Rate limiting prevents thundering herd                                            |
+| **Database Connection Exhaustion** | High - API timeouts, failures                     | Medium      | - Connection pooling (max 100)<br>- Connection timeout limits<br>- Monitor active connections<br>- Auto-scaling read replicas<br>- Query optimization                                                   |
+| **API Key Compromise**             | Medium - Unauthorized access                      | Low         | - API key revocation capability<br>- Last used timestamp monitoring<br>- Unusual activity alerts<br>- Key rotation recommendation<br>- Tenant isolation limits damage                                   |
+| **Incomplete Documentation**       | Medium - Developer frustration, high support load | High        | - Comprehensive docs before launch<br>- Code examples in 3 languages<br>- Interactive Swagger UI<br>- Beta feedback on docs<br>- FAQ for common issues<br>- Video tutorials                             |
 
 ---
 
@@ -1829,12 +1944,14 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ### Alternative 1: GraphQL API Instead of REST
 
 **Pros:**
+
 - Flexible queries (clients request exactly what they need)
 - Reduces over-fetching and under-fetching
 - Strong typing with GraphQL schema
 - Single endpoint (/graphql)
 
 **Cons:**
+
 - More complex to implement and document
 - Steeper learning curve for developers
 - Harder to cache responses
@@ -1842,6 +1959,7 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 - Webhooks still needed (GraphQL doesn't replace them)
 
 **Why Not Chosen:**
+
 - REST is more familiar to most developers
 - Simpler caching strategy
 - Easier rate limiting
@@ -1850,17 +1968,20 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ### Alternative 2: WebSockets for Real-Time Data Instead of Webhooks
 
 **Pros:**
+
 - True real-time bidirectional communication
 - Lower latency for live updates
 - No need for webhook endpoint setup
 
 **Cons:**
+
 - Requires persistent connections (higher server cost)
 - More complex for developers (connection management)
 - Not suitable for all use cases (e.g., mobile apps with battery constraints)
 - Harder to scale (stateful connections)
 
 **Why Not Chosen:**
+
 - Webhooks are simpler and more universal
 - Lower infrastructure cost (no persistent connections)
 - Better for most integration use cases
@@ -1869,18 +1990,21 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ### Alternative 3: API Gateway (Kong, AWS API Gateway) Instead of Next.js
 
 **Pros:**
+
 - Dedicated API management features
 - Built-in rate limiting, authentication, logging
 - Plugin ecosystem for extensibility
 - Better separation of concerns
 
 **Cons:**
+
 - Additional infrastructure to manage
 - Increased complexity
 - Higher cost (separate service)
 - Longer development time (learning curve)
 
 **Why Not Chosen:**
+
 - Next.js API routes sufficient for v1
 - Keep infrastructure simple initially
 - Faster time to market
@@ -1889,17 +2013,20 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ### Alternative 4: SDK-First Approach (Official SDKs Before REST API)
 
 **Pros:**
+
 - Better developer experience (language-specific)
 - Type safety built-in
 - Handles authentication, rate limiting, retries automatically
 
 **Cons:**
+
 - Much longer development time (multiple languages)
 - SDKs need maintenance across versions
 - REST API still needed (SDKs wrap it)
 - Delays launch
 
 **Why Not Chosen:**
+
 - REST API is foundation (SDKs can come later)
 - Faster to launch with REST only
 - Community can build SDKs if desired
@@ -1948,23 +2075,27 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 ## References
 
 ### API Design Best Practices
+
 - [REST API Design Best Practices](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
 - [OpenAPI Specification 3.0](https://swagger.io/specification/)
 - [HMAC Authentication](https://docs.stripe.com/webhooks/signatures)
 - [Webhook Best Practices](https://hookdeck.com/webhooks/guides/webhook-best-practices)
 
 ### Rate Limiting
+
 - [Rate Limiting Strategies](https://blog.logrocket.com/rate-limiting-node-js/)
 - [Redis Rate Limiter](https://redis.io/docs/manual/patterns/rate-limiter/)
 - [Sliding Window Algorithm](https://blog.cloudflare.com/counting-things-a-lot-of-different-things/)
 
 ### Competitive Analysis
+
 - **Stripe API:** [docs.stripe.com/api](https://docs.stripe.com/api)
 - **GitHub API:** [docs.github.com/rest](https://docs.github.com/rest)
 - **Twilio API:** [twilio.com/docs/api](https://www.twilio.com/docs/api)
 - **SendGrid API:** [docs.sendgrid.com/api-reference](https://docs.sendgrid.com/api-reference)
 
 ### Related Documents
+
 - **PRD:** `product/PRDs/public-api-webhooks.md`
 - **Sprint Plan:** `sprints/current/sprint-10-business-growth.md`
 - **Multi-Tenant Architecture:** `technical/multi-tenant-architecture.md`
@@ -1974,6 +2105,6 @@ const cacheKey = `api:tournaments:${tenantId}:${queryHash}`;
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                       | Changes                                       |
+| ---------- | ---------------------------- | --------------------------------------------- |
 | 2025-11-06 | Claude (Technical Architect) | Initial comprehensive technical specification |

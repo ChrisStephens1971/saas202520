@@ -34,10 +34,7 @@ const UpdateUserSchema = z.object({
 /**
  * Get user details with full history
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {
@@ -153,10 +150,7 @@ export async function GET(
 /**
  * Update user (admin override)
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {
@@ -248,9 +242,7 @@ export async function PATCH(
 
     // Update role in specific organization if requested
     if (data.role && data.orgId) {
-      const membership = existingUser.organizationMembers.find(
-        (m) => m.orgId === data.orgId
-      );
+      const membership = existingUser.organizationMembers.find((m) => m.orgId === data.orgId);
 
       if (membership) {
         await prisma.organizationMember.update({

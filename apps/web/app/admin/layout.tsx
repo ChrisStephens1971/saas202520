@@ -15,11 +15,7 @@ import NotificationBell from '@/components/NotificationBell';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await auth();
 
   // Require authentication
@@ -44,9 +40,7 @@ export default async function AdminLayout({
         {/* Page Header Space */}
         <header className="border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700">
           <div className="flex h-16 items-center justify-between px-6">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Admin Dashboard
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
 
             {/* User Info */}
             <div className="flex items-center gap-4">
@@ -64,9 +58,7 @@ export default async function AdminLayout({
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto p-6">{children}</main>
       </div>
     </div>
   );

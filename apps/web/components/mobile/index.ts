@@ -26,7 +26,7 @@ export {
   useHaptic,
   isHapticSupported,
   isHapticEnabled,
-  setHapticEnabled
+  setHapticEnabled,
 } from '@/lib/pwa/haptics';
 
 export type { HapticFeedbackType } from '@/lib/pwa/haptics';

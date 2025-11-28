@@ -14,7 +14,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
-import type { CreateTournamentRequest, TournamentFormat, GameType } from '@tournament/api-contracts';
+import type {
+  CreateTournamentRequest,
+  TournamentFormat,
+  GameType,
+} from '@tournament/api-contracts';
 import { generateSlug } from '@tournament/api-contracts';
 import { TournamentStatusBadge } from '@/components/admin/TournamentStatusBadge';
 
@@ -141,7 +145,7 @@ export default function AdminNewTournamentPage() {
     {
       value: 'single_elimination',
       label: 'Single Elimination',
-      description: 'Traditional single-elim bracket - lose once and you\'re out',
+      description: "Traditional single-elim bracket - lose once and you're out",
     },
     {
       value: 'double_elimination',
@@ -256,10 +260,7 @@ export default function AdminNewTournamentPage() {
 
                 {/* Tournament Name */}
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
                     Tournament Name *
                   </label>
                   <input
@@ -277,10 +278,7 @@ export default function AdminNewTournamentPage() {
 
                 {/* Slug */}
                 <div>
-                  <label
-                    htmlFor="slug"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
+                  <label htmlFor="slug" className="block text-sm font-medium text-gray-300 mb-2">
                     URL Slug *
                   </label>
                   <div className="flex items-center gap-2">

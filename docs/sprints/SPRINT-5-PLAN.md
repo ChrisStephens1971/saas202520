@@ -11,6 +11,7 @@
 **Focus:** Create user-facing interfaces for the chip format tournament system, enabling tournament directors and players to interact with the chip-based tournament workflow.
 
 **Success Criteria:**
+
 - Tournament directors can configure and manage chip format tournaments
 - Players can view live chip standings
 - Match assignments display in real-time
@@ -23,6 +24,7 @@
 ## Sprint Goals
 
 ### Primary Goals (Must Have)
+
 1. **Tournament Setup UI** - Configure chip format tournaments
 2. **Live Chip Standings** - Real-time leaderboard display
 3. **Queue Management UI** - View and manage match queue
@@ -30,11 +32,13 @@
 5. **Finals Cutoff UI** - Trigger and manage finals cutoff
 
 ### Secondary Goals (Should Have)
+
 6. **Manual Chip Adjustments** - TD interface for corrections
 7. **Queue Statistics Dashboard** - Visual queue status
 8. **Player Chip History** - View chip progression
 
 ### Stretch Goals (Nice to Have)
+
 9. **Real-time Updates** - WebSocket integration
 10. **Mobile Responsive** - Mobile-first design
 11. **Chip Progression Charts** - Visual analytics
@@ -50,6 +54,7 @@
 **So that** I can run chip-based qualifications
 
 **Acceptance Criteria:**
+
 - [ ] Can select "Chip Format" as tournament type
 - [ ] Can configure winner chips (default: 3)
 - [ ] Can configure loser chips (default: 1)
@@ -62,6 +67,7 @@
 - [ ] Clear help text for each setting
 
 **API Endpoints Used:**
+
 - POST `/api/tournaments` (existing, with chipConfig)
 
 ---
@@ -73,6 +79,7 @@
 **So that** I can see current rankings and qualification status
 
 **Acceptance Criteria:**
+
 - [ ] Displays player rankings by chip count
 - [ ] Shows chip count, matches played, wins/losses
 - [ ] Highlights top N players (finalist zone)
@@ -83,15 +90,13 @@
 - [ ] Shows tournament statistics (avg chips, max, min)
 
 **API Endpoints Used:**
+
 - GET `/api/tournaments/[id]/chip-standings?includeStats=true`
 
 **Components:**
+
 ```typescript
-- ChipStandingsTable
-- ChipStandingRow
-- PlayerChipBadge
-- QualificationIndicator
-- TournamentStats
+-ChipStandingsTable - ChipStandingRow - PlayerChipBadge - QualificationIndicator - TournamentStats;
 ```
 
 ---
@@ -103,6 +108,7 @@
 **So that** I can see who's available for pairing
 
 **Acceptance Criteria:**
+
 - [ ] Shows number of players in queue
 - [ ] Shows active matches count
 - [ ] Shows pending matches count
@@ -113,14 +119,13 @@
 - [ ] Shows next recommended pairing
 
 **API Endpoints Used:**
+
 - GET `/api/tournaments/[id]/queue-stats`
 
 **Components:**
+
 ```typescript
-- QueueDashboard
-- QueueStatusCard
-- AvailablePlayersList
-- ActiveMatchesList
+-QueueDashboard - QueueStatusCard - AvailablePlayersList - ActiveMatchesList;
 ```
 
 ---
@@ -132,6 +137,7 @@
 **So that** players can compete and earn chips
 
 **Acceptance Criteria:**
+
 - [ ] Single-click match assignment
 - [ ] Batch assignment (multiple matches at once)
 - [ ] Shows assigned player names
@@ -142,15 +148,14 @@
 - [ ] Shows loading state during assignment
 
 **API Endpoints Used:**
+
 - POST `/api/tournaments/[id]/matches/assign-next`
 - POST `/api/tournaments/[id]/matches/assign-next` (with count for batch)
 
 **Components:**
+
 ```typescript
-- MatchAssignmentButton
-- BatchAssignmentControl
-- AssignmentConfirmation
-- MatchAssignmentCard
+-MatchAssignmentButton - BatchAssignmentControl - AssignmentConfirmation - MatchAssignmentCard;
 ```
 
 ---
@@ -162,6 +167,7 @@
 **So that** top players advance to bracket play
 
 **Acceptance Criteria:**
+
 - [ ] Shows "Apply Finals Cutoff" button
 - [ ] Confirms action before applying
 - [ ] Shows preview of finalists/eliminated
@@ -172,15 +178,17 @@
 - [ ] Can view cutoff results after applied
 
 **API Endpoints Used:**
+
 - POST `/api/tournaments/[id]/apply-finals-cutoff`
 
 **Components:**
+
 ```typescript
-- FinalsCutoffButton
-- FinalsCutoffConfirmation
-- FinalistsList
-- EliminatedPlayersList
-- TiebreakerResults
+-FinalsCutoffButton -
+  FinalsCutoffConfirmation -
+  FinalistsList -
+  EliminatedPlayersList -
+  TiebreakerResults;
 ```
 
 ---
@@ -192,6 +200,7 @@
 **So that** I can correct errors or apply penalties
 
 **Acceptance Criteria:**
+
 - [ ] Can select player from dropdown
 - [ ] Can enter positive or negative adjustment
 - [ ] Must provide reason for adjustment
@@ -203,16 +212,18 @@
 - [ ] Prevents negative chip counts
 
 **API Endpoints Used:**
+
 - PATCH `/api/tournaments/[id]/players/[playerId]/chips`
 
 **Components:**
+
 ```typescript
-- ChipAdjustmentModal
-- PlayerSelector
-- AdjustmentInput
-- ReasonTextarea
-- AdjustmentPreview
-- ChipHistoryList
+-ChipAdjustmentModal -
+  PlayerSelector -
+  AdjustmentInput -
+  ReasonTextarea -
+  AdjustmentPreview -
+  ChipHistoryList;
 ```
 
 ---
@@ -224,6 +235,7 @@
 **So that** I can monitor tournament flow
 
 **Acceptance Criteria:**
+
 - [ ] Shows visual progress bars
 - [ ] Displays match completion percentage
 - [ ] Shows average chips per player
@@ -233,15 +245,14 @@
 - [ ] Responsive to different screen sizes
 
 **API Endpoints Used:**
+
 - GET `/api/tournaments/[id]/queue-stats`
 - GET `/api/tournaments/[id]/chip-standings?includeStats=true`
 
 **Components:**
+
 ```typescript
-- QueueStatsDashboard
-- StatCard
-- ProgressBar
-- StatusIndicator
+-QueueStatsDashboard - StatCard - ProgressBar - StatusIndicator;
 ```
 
 ---
@@ -253,6 +264,7 @@
 **So that** I can see how I earned my chips
 
 **Acceptance Criteria:**
+
 - [ ] Shows chronological list of chip awards
 - [ ] Displays match ID for each award
 - [ ] Shows chips earned per match
@@ -262,14 +274,13 @@
 - [ ] Can expand to see match details
 
 **API Endpoints Used:**
+
 - GET `/api/tournaments/[id]/players/[playerId]` (includes chipHistory)
 
 **Components:**
+
 ```typescript
-- ChipHistoryTimeline
-- ChipAwardCard
-- ManualAdjustmentCard
-- ChipTotal
+-ChipHistoryTimeline - ChipAwardCard - ManualAdjustmentCard - ChipTotal;
 ```
 
 ---
@@ -279,6 +290,7 @@
 ### Framework & Libraries
 
 **Frontend Stack:**
+
 ```json
 {
   "framework": "Next.js 16 (App Router)",
@@ -293,6 +305,7 @@
 ### Component Architecture
 
 **Directory Structure:**
+
 ```
 apps/web/app/
 ├── tournaments/
@@ -318,6 +331,7 @@ apps/web/app/
 ### Data Fetching Strategy
 
 **Use SWR for real-time updates:**
+
 ```typescript
 import useSWR from 'swr';
 
@@ -379,20 +393,24 @@ const chipFormatColors = {
 ## Implementation Plan
 
 ### Phase 1: Core UI (Days 1-5)
+
 **Priority: MUST HAVE**
 
 **Day 1-2: Tournament Setup**
+
 - [ ] Create chip format tournament creation form
 - [ ] Add configuration validation
 - [ ] Integrate with existing tournament creation flow
 
 **Day 3-4: Chip Standings**
+
 - [ ] Build standings table component
 - [ ] Add real-time refresh
 - [ ] Implement sorting and filtering
 - [ ] Add statistics display
 
 **Day 5: Queue Dashboard**
+
 - [ ] Create queue status cards
 - [ ] Build available players list
 - [ ] Add auto-refresh functionality
@@ -400,21 +418,25 @@ const chipFormatColors = {
 ---
 
 ### Phase 2: Actions & Management (Days 6-9)
+
 **Priority: MUST HAVE**
 
 **Day 6-7: Match Assignment**
+
 - [ ] Build single match assignment button
 - [ ] Add batch assignment interface
 - [ ] Implement loading and error states
 - [ ] Add assignment confirmations
 
 **Day 8: Finals Cutoff**
+
 - [ ] Create finals cutoff trigger UI
 - [ ] Build confirmation modal
 - [ ] Display finalist/eliminated lists
 - [ ] Show tiebreaker results
 
 **Day 9: Manual Adjustments**
+
 - [ ] Build chip adjustment modal
 - [ ] Add player selection
 - [ ] Implement reason requirement
@@ -423,19 +445,23 @@ const chipFormatColors = {
 ---
 
 ### Phase 3: Polish & Enhancement (Days 10-14)
+
 **Priority: NICE TO HAVE**
 
 **Day 10-11: Advanced Features**
+
 - [ ] Add chip history timeline
 - [ ] Build queue statistics dashboard
 - [ ] Create chip progression charts
 
 **Day 12-13: Real-time Updates**
+
 - [ ] Implement WebSocket connection
 - [ ] Add live match updates
 - [ ] Push standings changes
 
 **Day 14: Mobile & Testing**
+
 - [ ] Mobile responsive refinements
 - [ ] Cross-browser testing
 - [ ] Accessibility audit
@@ -446,18 +472,21 @@ const chipFormatColors = {
 ## Testing Strategy
 
 ### Unit Tests
+
 - [ ] Component rendering tests
 - [ ] User interaction tests
 - [ ] Form validation tests
 - [ ] State management tests
 
 ### Integration Tests
+
 - [ ] End-to-end tournament flow
 - [ ] Match assignment workflow
 - [ ] Finals cutoff process
 - [ ] Manual adjustment flow
 
 ### Manual Testing
+
 - [ ] Tournament director workflows
 - [ ] Player viewing experience
 - [ ] Mobile device testing
@@ -491,6 +520,7 @@ pnpm add -D @types/recharts
 ```
 
 **Justification:**
+
 - `swr` - Data fetching with automatic revalidation
 - `recharts` - Chip progression charts
 - `date-fns` - Timestamp formatting
@@ -500,6 +530,7 @@ pnpm add -D @types/recharts
 ## Success Metrics
 
 ### Quantitative Metrics
+
 - [ ] All 8 user stories completed
 - [ ] 100% component test coverage
 - [ ] <2s page load time
@@ -507,6 +538,7 @@ pnpm add -D @types/recharts
 - [ ] Mobile lighthouse score >90
 
 ### Qualitative Metrics
+
 - [ ] TDs can run entire tournament from UI
 - [ ] Players can track progress easily
 - [ ] No confusion about qualification status
@@ -517,12 +549,15 @@ pnpm add -D @types/recharts
 ## Risks & Mitigation
 
 ### Risk 1: Real-time Updates Complexity
+
 **Mitigation:** Start with polling (SWR), add WebSockets in Phase 3
 
 ### Risk 2: Mobile Performance
+
 **Mitigation:** Progressive enhancement, test early on mobile
 
 ### Risk 3: State Management Complexity
+
 **Mitigation:** Use SWR caching, avoid premature optimization
 
 ---
@@ -530,16 +565,19 @@ pnpm add -D @types/recharts
 ## Sprint Ceremonies
 
 ### Daily Standup
+
 - What did I complete yesterday?
 - What will I work on today?
 - Any blockers?
 
 ### Sprint Review (End of Sprint)
+
 - Demo all completed features
 - Get user feedback
 - Document lessons learned
 
 ### Sprint Retrospective
+
 - What went well?
 - What can improve?
 - Action items for next sprint
@@ -549,6 +587,7 @@ pnpm add -D @types/recharts
 ## Definition of Done
 
 A user story is "Done" when:
+
 - [ ] Code is written and follows standards
 - [ ] Component tests passing
 - [ ] Integration tests passing
@@ -562,6 +601,7 @@ A user story is "Done" when:
 ## Next Sprint Preview (Sprint 6)
 
 **Potential Focus Areas:**
+
 - Real-time updates (WebSockets)
 - Analytics & reporting dashboard
 - Admin panel for system management
@@ -573,11 +613,13 @@ A user story is "Done" when:
 ## Resources
 
 ### Documentation
+
 - API Docs: `docs/api/chip-format-api.md`
 - Implementation: `docs/progress/CHIP-FORMAT-COMPLETE.md`
 - Figma Designs: (TBD)
 
 ### Related Sprints
+
 - Sprint 4: Chip Format Backend (COMPLETE)
 - Sprint 3: Notifications & Payments (COMPLETE)
 - Sprint 2: Bracket Systems (COMPLETE)
@@ -587,15 +629,19 @@ A user story is "Done" when:
 ## Sprint Board
 
 **Backlog:**
+
 - All user stories listed above
 
 **To Do:**
+
 - (Sprint starts on Day 1)
 
 **In Progress:**
+
 - (None yet)
 
 **Done:**
+
 - (None yet)
 
 ---

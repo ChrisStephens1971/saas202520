@@ -107,11 +107,7 @@ export interface AchievementDefinition {
   updatedAt: Date;
 }
 
-export type AchievementCategory =
-  | 'PARTICIPATION'
-  | 'PERFORMANCE'
-  | 'ENGAGEMENT'
-  | 'FORMAT_MASTERY';
+export type AchievementCategory = 'PARTICIPATION' | 'PERFORMANCE' | 'ENGAGEMENT' | 'FORMAT_MASTERY';
 
 export type AchievementTier = 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
 

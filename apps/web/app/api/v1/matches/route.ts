@@ -42,25 +42,16 @@ export async function GET(request: NextRequest) {
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
 
     // Validate query parameters
-    const validation = safeValidateQuery(
-      matchListQuerySchema,
-      request.nextUrl.searchParams
-    );
+    const validation = safeValidateQuery(matchListQuerySchema, request.nextUrl.searchParams);
 
     if (!validation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: validation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: validation.error.errors });
     }
 
     const { page, limit, status, tournamentId } = validation.data;
@@ -97,10 +88,7 @@ export async function GET(request: NextRequest) {
       where,
       skip: calculateSkip(page, limit),
       take: limit,
-      orderBy: [
-        { startedAt: 'desc' },
-        { round: 'desc' },
-      ],
+      orderBy: [{ startedAt: 'desc' }, { round: 'desc' }],
       select: {
         id: true,
         tournamentId: true,
@@ -132,11 +120,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Transform to API response format
-    const data: MatchSummary[] = matches.map(m => {
+    const data: MatchSummary[] = matches.map((m) => {
       const score = m.score as unknown as { playerA?: number; playerB?: number };
-      const winner = m.winnerId
-        ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB)
-        : null;
+      const winner = m.winnerId ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB) : null;
 
       return {
         id: m.id,
@@ -161,7 +147,6 @@ export async function GET(request: NextRequest) {
     const rateLimitHeaders = getRateLimitHeaders(1000, 990, Date.now() + 3600000);
 
     return apiPaginated(data, pagination, rateLimitHeaders);
-
   } catch (error) {
     console.error('[API Error] GET /api/v1/matches:', error);
     return internalError(

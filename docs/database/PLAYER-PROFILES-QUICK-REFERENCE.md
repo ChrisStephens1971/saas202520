@@ -7,15 +7,15 @@
 
 ## Table Quick Reference
 
-| Table | Purpose | Key Columns | Common Queries |
-|-------|---------|-------------|----------------|
-| **player_profiles** | Bio, photo, social | player_id, bio, photo_url, skill_level | Profile display |
-| **player_statistics** | Win/loss stats | player_id, win_rate, total_tournaments | Leaderboards |
-| **achievement_definitions** | Achievement catalog | code, name, requirements | Unlock checks |
-| **player_achievements** | Unlocked achievements | player_id, achievement_id, unlocked_at | Trophy case |
-| **match_history** | All matches played | player_id, opponent_id, result, played_at | History timeline |
-| **head_to_head_records** | Rivalry stats | player1_id, player2_id, wins | H2H records |
-| **player_settings** | Privacy & preferences | player_id, is_profile_public, theme | Settings page |
+| Table                       | Purpose               | Key Columns                               | Common Queries   |
+| --------------------------- | --------------------- | ----------------------------------------- | ---------------- |
+| **player_profiles**         | Bio, photo, social    | player_id, bio, photo_url, skill_level    | Profile display  |
+| **player_statistics**       | Win/loss stats        | player_id, win_rate, total_tournaments    | Leaderboards     |
+| **achievement_definitions** | Achievement catalog   | code, name, requirements                  | Unlock checks    |
+| **player_achievements**     | Unlocked achievements | player_id, achievement_id, unlocked_at    | Trophy case      |
+| **match_history**           | All matches played    | player_id, opponent_id, result, played_at | History timeline |
+| **head_to_head_records**    | Rivalry stats         | player1_id, player2_id, wins              | H2H records      |
+| **player_settings**         | Privacy & preferences | player_id, is_profile_public, theme       | Settings page    |
 
 ---
 
@@ -33,9 +33,9 @@ const profile = await prisma.player.findUnique({
     achievements: {
       include: { achievement: true },
       orderBy: { unlockedAt: 'desc' },
-      take: 10
-    }
-  }
+      take: 10,
+    },
+  },
 });
 ```
 
@@ -47,18 +47,15 @@ const profile = await prisma.player.findUnique({
 const leaderboard = await prisma.playerStatistics.findMany({
   where: {
     tenantId,
-    totalTournaments: { gte: 10 }
+    totalTournaments: { gte: 10 },
   },
   include: {
     player: {
-      include: { profile: { select: { photoUrl: true } } }
-    }
+      include: { profile: { select: { photoUrl: true } } },
+    },
   },
-  orderBy: [
-    { winRate: 'desc' },
-    { totalTournaments: 'desc' }
-  ],
-  take: 10
+  orderBy: [{ winRate: 'desc' }, { totalTournaments: 'desc' }],
+  take: 10,
 });
 ```
 
@@ -71,14 +68,14 @@ const history = await prisma.matchHistory.findMany({
   where: {
     playerId,
     tenantId,
-    ...(cursor && { playedAt: { lt: cursor } })
+    ...(cursor && { playedAt: { lt: cursor } }),
   },
   include: {
     tournament: { select: { name: true } },
-    opponent: { select: { name: true } }
+    opponent: { select: { name: true } },
   },
   orderBy: { playedAt: 'desc' },
-  take: 20
+  take: 20,
 });
 ```
 
@@ -95,9 +92,9 @@ const h2h = await prisma.headToHeadRecord.findUnique({
     tenantId_player1Id_player2Id: {
       tenantId,
       player1Id: p1,
-      player2Id: p2
-    }
-  }
+      player2Id: p2,
+    },
+  },
 });
 ```
 
@@ -110,9 +107,9 @@ const hasAchievement = await prisma.playerAchievement.findUnique({
   where: {
     playerId_achievementId: {
       playerId,
-      achievementId
-    }
-  }
+      achievementId,
+    },
+  },
 });
 
 return hasAchievement !== null;
@@ -123,14 +120,10 @@ return hasAchievement !== null;
 ### 6. Unlock Achievement
 
 ```typescript
-async function unlockAchievement(
-  playerId: string,
-  achievementCode: string,
-  metadata?: any
-) {
+async function unlockAchievement(playerId: string, achievementCode: string, metadata?: any) {
   try {
     const achievement = await prisma.achievementDefinition.findUnique({
-      where: { code: achievementCode }
+      where: { code: achievementCode },
     });
 
     if (!achievement) throw new Error('Achievement not found');
@@ -140,8 +133,8 @@ async function unlockAchievement(
         playerId,
         tenantId,
         achievementId: achievement.id,
-        metadata
-      }
+        metadata,
+      },
     });
 
     return true; // Newly unlocked
@@ -161,7 +154,7 @@ async function unlockAchievement(
 ```typescript
 async function updatePlayerStats(playerId: string, matchResult: 'WIN' | 'LOSS') {
   const stats = await prisma.playerStatistics.findUnique({
-    where: { playerId }
+    where: { playerId },
   });
 
   const isWin = matchResult === 'WIN';
@@ -190,8 +183,8 @@ async function updatePlayerStats(playerId: string, matchResult: 'WIN' | 'LOSS') 
       winRate: newWinRate,
       currentStreak: newCurrentStreak,
       longestStreak: newLongestStreak,
-      lastPlayedAt: new Date()
-    }
+      lastPlayedAt: new Date(),
+    },
   });
 }
 ```
@@ -208,9 +201,7 @@ async function updateHeadToHead(
   tenantId: string
 ) {
   // Ensure player1_id < player2_id
-  const [p1, p2] = player1Id < player2Id
-    ? [player1Id, player2Id]
-    : [player2Id, player1Id];
+  const [p1, p2] = player1Id < player2Id ? [player1Id, player2Id] : [player2Id, player1Id];
 
   const isPlayer1Winner = winnerId === p1;
 
@@ -219,14 +210,14 @@ async function updateHeadToHead(
       tenantId_player1Id_player2Id: {
         tenantId,
         player1Id: p1,
-        player2Id: p2
-      }
+        player2Id: p2,
+      },
     },
     update: {
       totalMatches: { increment: 1 },
       player1Wins: { increment: isPlayer1Winner ? 1 : 0 },
       player2Wins: { increment: isPlayer1Winner ? 0 : 1 },
-      lastPlayedAt: new Date()
+      lastPlayedAt: new Date(),
     },
     create: {
       tenantId,
@@ -236,8 +227,8 @@ async function updateHeadToHead(
       player1Wins: isPlayer1Winner ? 1 : 0,
       player2Wins: isPlayer1Winner ? 0 : 1,
       lastPlayedAt: new Date(),
-      favorsPlayer1: isPlayer1Winner
-    }
+      favorsPlayer1: isPlayer1Winner,
+    },
   });
 }
 ```
@@ -267,8 +258,8 @@ async function recordMatchHistory(
       tenantId,
       matchNumber: 1, // From match data
       roundNumber: 1, // From match data
-      playedAt: new Date()
-    }
+      playedAt: new Date(),
+    },
   });
 }
 ```
@@ -289,13 +280,13 @@ async function canViewPlayerData(
   // Check if viewer is admin
   const viewer = await prisma.user.findUnique({
     where: { id: viewerId },
-    select: { role: true }
+    select: { role: true },
   });
   if (viewer?.role === 'admin') return true;
 
   // Check privacy settings
   const settings = await prisma.playerSettings.findUnique({
-    where: { playerId }
+    where: { playerId },
   });
 
   if (!settings?.isProfilePublic) return false;
@@ -320,6 +311,7 @@ async function canViewPlayerData(
 ### 1. Head-to-Head Player Order
 
 **WRONG:**
+
 ```typescript
 // ❌ This creates duplicate records!
 const h2h = await prisma.headToHeadRecord.findUnique({
@@ -327,13 +319,14 @@ const h2h = await prisma.headToHeadRecord.findUnique({
     tenantId_player1Id_player2Id: {
       tenantId,
       player1Id: playerA,
-      player2Id: playerB
-    }
-  }
+      player2Id: playerB,
+    },
+  },
 });
 ```
 
 **RIGHT:**
+
 ```typescript
 // ✅ Always sort player IDs first
 const [p1, p2] = [playerA, playerB].sort();
@@ -342,9 +335,9 @@ const h2h = await prisma.headToHeadRecord.findUnique({
     tenantId_player1Id_player2Id: {
       tenantId,
       player1Id: p1,
-      player2Id: p2
-    }
-  }
+      player2Id: p2,
+    },
+  },
 });
 ```
 
@@ -353,21 +346,23 @@ const h2h = await prisma.headToHeadRecord.findUnique({
 ### 2. Tenant Isolation
 
 **WRONG:**
+
 ```typescript
 // ❌ Missing tenant check - SECURITY RISK!
 const profile = await prisma.playerProfile.findUnique({
-  where: { playerId }
+  where: { playerId },
 });
 ```
 
 **RIGHT:**
+
 ```typescript
 // ✅ Always include tenant_id
 const profile = await prisma.playerProfile.findFirst({
   where: {
     playerId,
-    tenantId
-  }
+    tenantId,
+  },
 });
 ```
 
@@ -376,12 +371,14 @@ const profile = await prisma.playerProfile.findFirst({
 ### 3. Win Rate Calculation
 
 **WRONG:**
+
 ```typescript
 // ❌ Division by zero error!
 const winRate = (wins / matches) * 100;
 ```
 
 **RIGHT:**
+
 ```typescript
 // ✅ Handle zero matches
 const winRate = matches > 0 ? (wins / matches) * 100 : 0;
@@ -392,19 +389,21 @@ const winRate = matches > 0 ? (wins / matches) * 100 : 0;
 ### 4. Achievement Duplication
 
 **WRONG:**
+
 ```typescript
 // ❌ Can fail if already unlocked
 await prisma.playerAchievement.create({
-  data: { playerId, achievementId }
+  data: { playerId, achievementId },
 });
 ```
 
 **RIGHT:**
+
 ```typescript
 // ✅ Handle duplicates gracefully
 try {
   await prisma.playerAchievement.create({
-    data: { playerId, achievementId }
+    data: { playerId, achievementId },
   });
 } catch (error) {
   if (error.code === 'P2002') {
@@ -420,15 +419,17 @@ try {
 ### 5. Privacy Checks
 
 **WRONG:**
+
 ```typescript
 // ❌ No privacy check!
 const stats = await prisma.playerStatistics.findUnique({
-  where: { playerId }
+  where: { playerId },
 });
 return res.json(stats);
 ```
 
 **RIGHT:**
+
 ```typescript
 // ✅ Check privacy settings first
 const canView = await canViewPlayerData(viewerId, playerId, 'statistics');
@@ -437,7 +438,7 @@ if (!canView) {
 }
 
 const stats = await prisma.playerStatistics.findUnique({
-  where: { playerId }
+  where: { playerId },
 });
 return res.json(stats);
 ```
@@ -449,19 +450,21 @@ return res.json(stats);
 ### 1. Use Includes Wisely
 
 **Slow:**
+
 ```typescript
 // ❌ Loading all achievements (could be 20+)
 const player = await prisma.player.findUnique({
   where: { id: playerId },
   include: {
     achievements: {
-      include: { achievement: true }
-    }
-  }
+      include: { achievement: true },
+    },
+  },
 });
 ```
 
 **Fast:**
+
 ```typescript
 // ✅ Limit to recent achievements
 const player = await prisma.player.findUnique({
@@ -470,9 +473,9 @@ const player = await prisma.player.findUnique({
     achievements: {
       include: { achievement: true },
       orderBy: { unlockedAt: 'desc' },
-      take: 5
-    }
-  }
+      take: 5,
+    },
+  },
 });
 ```
 
@@ -481,26 +484,28 @@ const player = await prisma.player.findUnique({
 ### 2. Use Cursor Pagination
 
 **Slow:**
+
 ```typescript
 // ❌ Offset pagination gets slower with large offsets
 const history = await prisma.matchHistory.findMany({
   where: { playerId },
   orderBy: { playedAt: 'desc' },
   skip: page * 20,
-  take: 20
+  take: 20,
 });
 ```
 
 **Fast:**
+
 ```typescript
 // ✅ Cursor pagination (consistent performance)
 const history = await prisma.matchHistory.findMany({
   where: {
     playerId,
-    ...(cursor && { playedAt: { lt: cursor } })
+    ...(cursor && { playedAt: { lt: cursor } }),
   },
   orderBy: { playedAt: 'desc' },
-  take: 20
+  take: 20,
 });
 ```
 
@@ -524,6 +529,7 @@ return profile;
 ### 4. Batch Achievement Checks
 
 **Slow:**
+
 ```typescript
 // ❌ N+1 queries
 for (const achievementCode of achievementCodes) {
@@ -532,30 +538,29 @@ for (const achievementCode of achievementCodes) {
 ```
 
 **Fast:**
+
 ```typescript
 // ✅ Batch check
 const achievements = await prisma.achievementDefinition.findMany({
-  where: { code: { in: achievementCodes } }
+  where: { code: { in: achievementCodes } },
 });
 
 const unlocked = await prisma.playerAchievement.findMany({
   where: {
     playerId,
-    achievementId: { in: achievements.map(a => a.id) }
-  }
+    achievementId: { in: achievements.map((a) => a.id) },
+  },
 });
 
-const toUnlock = achievements.filter(a =>
-  !unlocked.find(u => u.achievementId === a.id)
-);
+const toUnlock = achievements.filter((a) => !unlocked.find((u) => u.achievementId === a.id));
 
 await prisma.playerAchievement.createMany({
-  data: toUnlock.map(a => ({
+  data: toUnlock.map((a) => ({
     playerId,
     tenantId,
-    achievementId: a.id
+    achievementId: a.id,
   })),
-  skipDuplicates: true
+  skipDuplicates: true,
 });
 ```
 
@@ -565,28 +570,28 @@ await prisma.playerAchievement.createMany({
 
 ### Quick Lookup
 
-| Code | Name | Category | Points | Requirement |
-|------|------|----------|--------|-------------|
-| FIRST_STEPS | First Steps | PARTICIPATION | 10 | Play 1 tournament |
-| PARTICIPANT | Participant | PARTICIPATION | 20 | Play 5 tournaments |
-| REGULAR | Regular | PARTICIPATION | 40 | Play 25 tournaments |
-| VETERAN | Veteran | PARTICIPATION | 60 | Play 100 tournaments |
-| EARLY_BIRD | Early Bird | PARTICIPATION | 15 | Register 24h early |
-| WINNER | Winner | PERFORMANCE | 25 | Win 1 tournament |
-| CHAMPION | Champion | PERFORMANCE | 50 | Win 5 tournaments |
-| DYNASTY | Dynasty | PERFORMANCE | 75 | Win 20 tournaments |
-| UNDEFEATED | Undefeated | PERFORMANCE | 70 | Win without losses |
-| COMEBACK_KID | Comeback Kid | PERFORMANCE | 45 | Win from loser bracket |
-| PERFECTIONIST | Perfectionist | PERFORMANCE | 65 | Win all matches |
-| UNDERDOG | Underdog | PERFORMANCE | 100 | Win as lowest seed |
-| SOCIAL_BUTTERFLY | Social Butterfly | ENGAGEMENT | 40 | Play 50 opponents |
-| RIVAL | Rival | ENGAGEMENT | 30 | Play 1 opponent 10x |
-| GLOBETROTTER | Globetrotter | ENGAGEMENT | 35 | Play 5 venues |
-| MARATHON | Marathon | ENGAGEMENT | 55 | 10+ hour tournament |
-| LUCKY_13 | Lucky 13 | ENGAGEMENT | 13 | Finish exactly 13th |
-| DOMINANT | Dominant | FORMAT_MASTERY | 70 | Win 10 same format |
-| SPECIALIST | Specialist | FORMAT_MASTERY | 90 | 80% win rate |
-| ALL_ROUNDER | All-Rounder | FORMAT_MASTERY | 45 | Play 5 formats |
+| Code             | Name             | Category       | Points | Requirement            |
+| ---------------- | ---------------- | -------------- | ------ | ---------------------- |
+| FIRST_STEPS      | First Steps      | PARTICIPATION  | 10     | Play 1 tournament      |
+| PARTICIPANT      | Participant      | PARTICIPATION  | 20     | Play 5 tournaments     |
+| REGULAR          | Regular          | PARTICIPATION  | 40     | Play 25 tournaments    |
+| VETERAN          | Veteran          | PARTICIPATION  | 60     | Play 100 tournaments   |
+| EARLY_BIRD       | Early Bird       | PARTICIPATION  | 15     | Register 24h early     |
+| WINNER           | Winner           | PERFORMANCE    | 25     | Win 1 tournament       |
+| CHAMPION         | Champion         | PERFORMANCE    | 50     | Win 5 tournaments      |
+| DYNASTY          | Dynasty          | PERFORMANCE    | 75     | Win 20 tournaments     |
+| UNDEFEATED       | Undefeated       | PERFORMANCE    | 70     | Win without losses     |
+| COMEBACK_KID     | Comeback Kid     | PERFORMANCE    | 45     | Win from loser bracket |
+| PERFECTIONIST    | Perfectionist    | PERFORMANCE    | 65     | Win all matches        |
+| UNDERDOG         | Underdog         | PERFORMANCE    | 100    | Win as lowest seed     |
+| SOCIAL_BUTTERFLY | Social Butterfly | ENGAGEMENT     | 40     | Play 50 opponents      |
+| RIVAL            | Rival            | ENGAGEMENT     | 30     | Play 1 opponent 10x    |
+| GLOBETROTTER     | Globetrotter     | ENGAGEMENT     | 35     | Play 5 venues          |
+| MARATHON         | Marathon         | ENGAGEMENT     | 55     | 10+ hour tournament    |
+| LUCKY_13         | Lucky 13         | ENGAGEMENT     | 13     | Finish exactly 13th    |
+| DOMINANT         | Dominant         | FORMAT_MASTERY | 70     | Win 10 same format     |
+| SPECIALIST       | Specialist       | FORMAT_MASTERY | 90     | 80% win rate           |
+| ALL_ROUNDER      | All-Rounder      | FORMAT_MASTERY | 45     | Play 5 formats         |
 
 ---
 
@@ -605,8 +610,8 @@ async function testProfileLoad(playerId: string) {
     include: {
       profile: true,
       statistics: true,
-      settings: true
-    }
+      settings: true,
+    },
   });
 
   const duration = performance.now() - start;
@@ -627,10 +632,10 @@ async function testLeaderboard(tenantId: string) {
   const leaderboard = await prisma.playerStatistics.findMany({
     where: {
       tenantId,
-      totalTournaments: { gte: 10 }
+      totalTournaments: { gte: 10 },
     },
     orderBy: { winRate: 'desc' },
-    take: 100
+    take: 100,
   });
 
   const duration = performance.now() - start;
@@ -645,16 +650,19 @@ async function testLeaderboard(tenantId: string) {
 ## Environment-Specific Notes
 
 ### Development
+
 - Use seed data for testing
 - Enable query logging: `DATABASE_LOG=true`
 - Use smaller datasets (100-1000 players)
 
 ### Staging
+
 - Full dataset size (10,000+ players)
 - Performance testing with realistic data
 - Load testing tools (k6, artillery)
 
 ### Production
+
 - Monitor query performance
 - Set up alerts for slow queries (>100ms)
 - Enable connection pooling
@@ -721,16 +729,19 @@ LIMIT 10;
 ## Support & Resources
 
 **Documentation:**
+
 - Full schema: `PLAYER-PROFILES-SCHEMA.md`
 - Index strategy: `PLAYER-PROFILES-INDEX-STRATEGY.md`
 - Implementation summary: `SPRINT-10-WEEK-2-DATABASE-SUMMARY.md`
 
 **Migration Files:**
+
 - Schema: `prisma/schema-additions/player-profiles.prisma`
 - SQL: `prisma/migrations/20251106_add_player_profiles/migration.sql`
 - Seeds: `prisma/seeds/achievement-definitions.ts`
 
 **Need Help?**
+
 - Check Prisma docs: https://www.prisma.io/docs
 - Review Sprint 10 plan: `docs/sprints/SPRINT-10-PLAN.md`
 - Ask in team Slack: #dev-database

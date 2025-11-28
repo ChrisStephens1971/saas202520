@@ -147,15 +147,13 @@ describe('Match State Machine', () => {
     });
 
     it('should NOT require players when transitioning to ready from assigned (unassign)', () => {
-      expect(() =>
-        validateTransitionPrerequisites('assigned', 'ready', {})
-      ).not.toThrow();
+      expect(() => validateTransitionPrerequisites('assigned', 'ready', {})).not.toThrow();
     });
 
     it('should require tableId for assigned state', () => {
-      expect(() =>
-        validateTransitionPrerequisites('ready', 'assigned', {})
-      ).toThrow('tableId required');
+      expect(() => validateTransitionPrerequisites('ready', 'assigned', {})).toThrow(
+        'tableId required'
+      );
 
       expect(() =>
         validateTransitionPrerequisites('ready', 'assigned', { tableId: 't1' })
@@ -163,9 +161,9 @@ describe('Match State Machine', () => {
     });
 
     it('should require winnerId and score for completed state', () => {
-      expect(() =>
-        validateTransitionPrerequisites('active', 'completed', {})
-      ).toThrow('winnerId required');
+      expect(() => validateTransitionPrerequisites('active', 'completed', {})).toThrow(
+        'winnerId required'
+      );
 
       expect(() =>
         validateTransitionPrerequisites('active', 'completed', { winnerId: 'p1' })
@@ -180,9 +178,9 @@ describe('Match State Machine', () => {
     });
 
     it('should require reason for cancelled state', () => {
-      expect(() =>
-        validateTransitionPrerequisites('ready', 'cancelled', {})
-      ).toThrow('reason required');
+      expect(() => validateTransitionPrerequisites('ready', 'cancelled', {})).toThrow(
+        'reason required'
+      );
 
       expect(() =>
         validateTransitionPrerequisites('ready', 'cancelled', { reason: 'Player no-show' })
@@ -235,9 +233,9 @@ describe('Match State Machine', () => {
     });
 
     it('should throw if prerequisites not met', () => {
-      expect(() =>
-        transitionMatchState('match-1', 'pending', 'ready', {}, 'user-1')
-      ).toThrow('both playerAId and playerBId required');
+      expect(() => transitionMatchState('match-1', 'pending', 'ready', {}, 'user-1')).toThrow(
+        'both playerAId and playerBId required'
+      );
     });
   });
 
@@ -283,13 +281,7 @@ describe('Match State Machine', () => {
       expect(t1.toState).toBe('ready');
 
       // ready → assigned
-      const t2 = transitionMatchState(
-        matchId,
-        'ready',
-        'assigned',
-        { tableId: 't1' },
-        actor
-      );
+      const t2 = transitionMatchState(matchId, 'ready', 'assigned', { tableId: 't1' }, actor);
       expect(t2.toState).toBe('assigned');
 
       // assigned → active
@@ -324,24 +316,12 @@ describe('Match State Machine', () => {
 
       // Can cancel from ready
       expect(() =>
-        transitionMatchState(
-          matchId,
-          'ready',
-          'cancelled',
-          { reason: 'Player no-show' },
-          actor
-        )
+        transitionMatchState(matchId, 'ready', 'cancelled', { reason: 'Player no-show' }, actor)
       ).not.toThrow();
 
       // Can cancel from active
       expect(() =>
-        transitionMatchState(
-          matchId,
-          'active',
-          'cancelled',
-          { reason: 'Equipment failure' },
-          actor
-        )
+        transitionMatchState(matchId, 'active', 'cancelled', { reason: 'Equipment failure' }, actor)
       ).not.toThrow();
     });
 
@@ -354,13 +334,7 @@ describe('Match State Machine', () => {
       expect(t1.toState).toBe('ready');
 
       // ready → assigned (reassign to different table)
-      const t2 = transitionMatchState(
-        matchId,
-        'ready',
-        'assigned',
-        { tableId: 't2' },
-        actor
-      );
+      const t2 = transitionMatchState(matchId, 'ready', 'assigned', { tableId: 't2' }, actor);
       expect(t2.toState).toBe('assigned');
     });
   });

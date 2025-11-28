@@ -17,8 +17,7 @@ interface InstallPromptProps {
 }
 
 export function InstallPrompt({ onInstall, onDismiss }: InstallPromptProps) {
-  const { state, showPrompt, deferPrompt, neverShowAgain, getInstructions } =
-    useInstallPrompt();
+  const { state, showPrompt, deferPrompt, neverShowAgain, getInstructions } = useInstallPrompt();
   const [isVisible, setIsVisible] = React.useState(false);
   const [showInstructions, setShowInstructions] = React.useState(false);
 
@@ -76,9 +75,7 @@ export function InstallPrompt({ onInstall, onDismiss }: InstallPromptProps) {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <div className="mx-4 max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Install App
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Install App</h3>
             <button
               onClick={() => {
                 setShowInstructions(false);

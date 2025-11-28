@@ -27,11 +27,13 @@ Successfully implemented a complete webhook system for the tournament platform w
 **File:** `prisma/schema.prisma`
 
 Added 3 new tables:
+
 - `api_keys` - API key management with bcrypt hashing
 - `webhooks` - Webhook subscriptions with event filtering
 - `webhook_deliveries` - Complete delivery attempt logs
 
 **Key Features:**
+
 - Multi-tenant isolation (tenant_id on all tables)
 - Delivery statistics tracking
 - Indexed for performance
@@ -42,11 +44,13 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/types/webhook-events.types.ts`
 
 **8 Event Types:**
+
 - Tournament: created, started, completed
 - Match: started, completed
 - Player: registered, checked_in, eliminated
 
 **Key Features:**
+
 - TypeScript enums and interfaces
 - Type-safe payload definitions
 - Event validation helpers
@@ -57,6 +61,7 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/utils/webhook-signature.utils.ts`
 
 **Functions:**
+
 - `generateSignature()` - Create HMAC SHA-256 signatures
 - `verifySignature()` - Constant-time signature verification
 - `generateWebhookSecret()` - Secure random secret generation
@@ -65,6 +70,7 @@ Added 3 new tables:
 - `verifyWebhookRequest()` - Complete request verification
 
 **Security:**
+
 - HMAC SHA-256 hashing
 - Constant-time comparison (prevents timing attacks)
 - Timestamp validation (prevents replay attacks)
@@ -110,6 +116,7 @@ Added 3 new tables:
    - Re-queues failed delivery
 
 **Additional:**
+
 - `getWebhooksForEvent()` - Internal helper for event publisher
 
 ### 5. Event Publisher Service
@@ -117,10 +124,12 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/services/event-publisher.service.ts`
 
 **Core Functions:**
+
 - `publishEvent(event, data, tenantId)` - Generic event publisher
 - `generateEventId()` - Unique event ID generator
 
 **Convenience Functions (8):**
+
 - `publishTournamentCreated()`
 - `publishTournamentStarted()`
 - `publishTournamentCompleted()`
@@ -131,6 +140,7 @@ Added 3 new tables:
 - `publishPlayerEliminated()`
 
 **Behavior:**
+
 1. Finds all active webhooks subscribed to event
 2. Creates delivery log entry for each
 3. Queues delivery job in Bull queue
@@ -141,28 +151,33 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/queues/webhook.queue.ts`
 
 **Configuration:**
+
 - Queue name: `webhook-delivery`
 - Redis-backed persistence
 - 4 total attempts (1 initial + 3 retries)
 - Exponential backoff starting at 1 minute
 
 **Retry Schedule:**
+
 - Attempt 1: Immediate
 - Attempt 2: +1 minute
 - Attempt 3: +5 minutes (approximately)
 - Attempt 4: +15 minutes (approximately)
 
 **Job Management:**
+
 - Auto-remove completed jobs after 24 hours
 - Keep max 1000 completed jobs
 - Keep failed jobs for 7 days
 - Max 5000 failed jobs retained
 
 **Event Handlers:**
+
 - completed, failed, waiting, active, stalled events
 - Comprehensive logging
 
 **Utility Functions:**
+
 - `getQueueStats()` - Queue statistics
 - `clearQueue()` - Clear all jobs
 - `pauseQueue()` / `resumeQueue()` - Queue control
@@ -173,6 +188,7 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/workers/webhook-delivery.worker.ts`
 
 **Process Flow:**
+
 1. Get webhook from database
 2. Verify webhook is active
 3. Create HMAC signature
@@ -182,6 +198,7 @@ Added 3 new tables:
 7. Handle success/failure/retry
 
 **Response Handling:**
+
 - **2xx (Success)**: Mark delivered, increment success count
 - **4xx (Client Error)**: Mark failed, don't retry
 - **5xx (Server Error)**: Mark failed, retry with backoff
@@ -189,6 +206,7 @@ Added 3 new tables:
 - **Network Error**: Mark failed, retry
 
 **Features:**
+
 - 10-second request timeout
 - Stores first 1000 chars of response
 - Updates delivery statistics
@@ -196,6 +214,7 @@ Added 3 new tables:
 - No retry for client errors
 
 **Worker Management:**
+
 - `startWebhookWorker()` - Start processing
 - `stopWebhookWorker()` - Graceful shutdown
 - `getWorkerStats()` - Worker statistics
@@ -208,11 +227,13 @@ Added 3 new tables:
 **Endpoint:** `POST /api/v1/webhooks/:id/test`
 
 **Behavior:**
+
 - Sends test event immediately (no queue)
 - 5-second timeout (faster than production)
 - Returns full delivery result
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -228,6 +249,7 @@ Added 3 new tables:
 ```
 
 **Use Case:**
+
 - Test webhook endpoints during development
 - Verify signature verification works
 - Check connectivity and response time
@@ -237,6 +259,7 @@ Added 3 new tables:
 **File:** `apps/web/lib/api/integration-examples.md`
 
 **Comprehensive Documentation:**
+
 - Tournament event integration points
 - Match event integration points
 - Player event integration points
@@ -245,6 +268,7 @@ Added 3 new tables:
 - Monitoring examples
 
 **Code Examples for:**
+
 - Tournament created/started/completed
 - Match started/completed
 - Player registered/checked_in/eliminated
@@ -304,6 +328,7 @@ Added 3 new tables:
 ### Multi-Tenant Support
 
 All tables include `tenant_id`:
+
 - Webhooks scoped to tenant
 - Events scoped to tenant
 - Complete data isolation
@@ -311,28 +336,33 @@ All tables include `tenant_id`:
 ### Security
 
 **HMAC SHA-256 Signatures:**
+
 - Every webhook request signed
 - Constant-time verification
 - Timestamp validation (5-minute window)
 - Prevents replay attacks
 
 **HTTPS Only:**
+
 - Webhook URLs must use HTTPS
 - TLS 1.2+ required
 
 ### Reliability
 
 **Retry Logic:**
+
 - 4 total delivery attempts
 - Exponential backoff
 - Smart retry (5xx yes, 4xx no)
 
 **Error Handling:**
+
 - Comprehensive error logging
 - Delivery attempt tracking
 - Last error stored per webhook
 
 **Timeout Handling:**
+
 - 10-second production timeout
 - 5-second test endpoint timeout
 - Graceful abort handling
@@ -340,16 +370,19 @@ All tables include `tenant_id`:
 ### Performance
 
 **Asynchronous Delivery:**
+
 - Bull queue with Redis
 - Non-blocking event publishing
 - Horizontal scaling support
 
 **Delivery Statistics:**
+
 - Success/failure counts
 - Success rate calculation
 - Last delivery timestamp
 
 **Queue Management:**
+
 - Auto-cleanup of old jobs
 - Stalled job detection
 - Graceful shutdown
@@ -357,16 +390,19 @@ All tables include `tenant_id`:
 ### Developer Experience
 
 **Test Endpoint:**
+
 - Immediate feedback
 - No queue delays
 - Full response details
 
 **Comprehensive Logging:**
+
 - Queue events logged
 - Worker events logged
 - Delivery attempts logged
 
 **Type Safety:**
+
 - Full TypeScript types
 - Type-safe event payloads
 - Intellisense support
@@ -385,10 +421,7 @@ const webhook = await createWebhook({
   tenantId: 'org_123',
   apiKeyId: 'key_456',
   url: 'https://api.example.com/webhooks',
-  events: [
-    WebhookEvent.TOURNAMENT_STARTED,
-    WebhookEvent.MATCH_COMPLETED,
-  ],
+  events: [WebhookEvent.TOURNAMENT_STARTED, WebhookEvent.MATCH_COMPLETED],
 });
 
 console.log('Webhook created:', webhook.id);
@@ -401,10 +434,7 @@ console.log('Secret:', webhook.secret); // Only shown once
 import { publishTournamentStarted } from '@/lib/api/services/event-publisher.service';
 
 // In your tournament start logic
-const webhooksNotified = await publishTournamentStarted(
-  tournamentId,
-  tenantId
-);
+const webhooksNotified = await publishTournamentStarted(tournamentId, tenantId);
 
 console.log(`Event sent to ${webhooksNotified} webhook(s)`);
 ```
@@ -445,6 +475,7 @@ npx prisma generate
 ### 2. Configure Redis
 
 Add to `.env`:
+
 ```
 REDIS_HOST=localhost
 REDIS_PORT=6379
@@ -455,11 +486,13 @@ REDIS_DB=0
 ### 3. Start Webhook Worker
 
 Option A: Separate process
+
 ```bash
 node apps/web/lib/api/workers/webhook-delivery.worker.ts
 ```
 
 Option B: In your main server
+
 ```typescript
 // In server.ts or similar
 import { startWebhookWorker } from './lib/api/workers/webhook-delivery.worker';
@@ -470,6 +503,7 @@ startWebhookWorker();
 ### 4. Integrate Event Publishing
 
 Add event publishers at key points:
+
 - Tournament creation → `publishTournamentCreated()`
 - Tournament start → `publishTournamentStarted()`
 - Match completion → `publishMatchCompleted()`
@@ -481,6 +515,7 @@ See `lib/api/integration-examples.md` for detailed integration code.
 ### 5. Create API Endpoints
 
 Create REST API endpoints for:
+
 - `POST /api/v1/webhooks` - Create webhook
 - `GET /api/v1/webhooks` - List webhooks
 - `GET /api/v1/webhooks/:id` - Get webhook
@@ -494,6 +529,7 @@ Create REST API endpoints for:
 ### 6. Add API Authentication
 
 Implement API key authentication middleware:
+
 - Extract API key from Authorization header
 - Validate key against `api_keys` table
 - Attach tenant context to request
@@ -532,18 +568,21 @@ Implement API key authentication middleware:
 ### Key Metrics to Track
 
 **Queue Health:**
+
 - Queue depth (waiting + delayed jobs)
 - Processing rate (jobs/second)
 - Failed job rate
 - Average processing time
 
 **Delivery Performance:**
+
 - Success rate per webhook
 - Average delivery time
 - Timeout rate
 - Retry rate
 
 **System Health:**
+
 - Redis connection status
 - Worker uptime
 - Memory usage
@@ -625,6 +664,7 @@ Create these for monitoring:
 ### Event Publishing Errors
 
 **Never fail main operation:**
+
 ```typescript
 try {
   await publishEvent(...);
@@ -637,6 +677,7 @@ try {
 ### Delivery Errors
 
 **Logged and tracked:**
+
 - Network errors → Retry
 - Timeouts → Retry
 - 5xx errors → Retry
@@ -645,6 +686,7 @@ try {
 ### Queue Errors
 
 **Monitored and alerted:**
+
 - Queue connection lost → Alert
 - Jobs stalling → Alert
 - High failure rate → Alert

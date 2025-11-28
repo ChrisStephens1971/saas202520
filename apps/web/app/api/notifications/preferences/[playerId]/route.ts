@@ -45,9 +45,6 @@ export async function GET(
     return NextResponse.json({ preferences }, { status: 200 });
   } catch (error) {
     console.error('Error fetching notification preferences:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

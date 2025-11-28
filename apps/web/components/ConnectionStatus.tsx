@@ -44,11 +44,11 @@ export function ConnectionStatus({
 
   const getStatusText = () => {
     if (isConnected) return 'Connected';
-    if (isConnecting) return `Connecting${reconnectAttempts > 1 ? ` (${reconnectAttempts})` : ''}...`;
+    if (isConnecting)
+      return `Connecting${reconnectAttempts > 1 ? ` (${reconnectAttempts})` : ''}...`;
     if (error) return 'Connection Error';
     return 'Disconnected';
   };
-
 
   // Badge variant - minimal indicator
   if (variant === 'badge') {
@@ -56,11 +56,12 @@ export function ConnectionStatus({
       <div
         className={`
           relative inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium
-          ${isConnected
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-            : isConnecting
-            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+          ${
+            isConnected
+              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+              : isConnecting
+                ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
           }
         `}
         title={getStatusText()}
@@ -77,11 +78,12 @@ export function ConnectionStatus({
       <div
         className={`
           flex items-center gap-2 px-3 py-2 rounded-lg border
-          ${isConnected
-            ? 'bg-green-50 border-green-300 dark:bg-green-950 dark:border-green-700'
-            : isConnecting
-            ? 'bg-yellow-50 border-yellow-300 dark:bg-yellow-950 dark:border-yellow-700'
-            : 'bg-red-50 border-red-300 dark:bg-red-950 dark:border-red-700'
+          ${
+            isConnected
+              ? 'bg-green-50 border-green-300 dark:bg-green-950 dark:border-green-700'
+              : isConnecting
+                ? 'bg-yellow-50 border-yellow-300 dark:bg-yellow-950 dark:border-yellow-700'
+                : 'bg-red-50 border-red-300 dark:bg-red-950 dark:border-red-700'
           }
           ${position === 'fixed' ? 'fixed bottom-4 right-4 z-50 shadow-lg' : ''}
         `}
@@ -109,11 +111,12 @@ export function ConnectionStatus({
         className={`
           flex items-center gap-3 px-4 py-3 rounded-lg border-2 shadow-lg
           transition-all duration-200 hover:scale-105
-          ${isConnected
-            ? 'bg-green-50 border-green-500 dark:bg-green-950 dark:border-green-600'
-            : isConnecting
-            ? 'bg-yellow-50 border-yellow-500 dark:bg-yellow-950 dark:border-yellow-600'
-            : 'bg-red-50 border-red-500 dark:bg-red-950 dark:border-red-600'
+          ${
+            isConnected
+              ? 'bg-green-50 border-green-500 dark:bg-green-950 dark:border-green-600'
+              : isConnecting
+                ? 'bg-yellow-50 border-yellow-500 dark:bg-yellow-950 dark:border-yellow-600'
+                : 'bg-red-50 border-red-500 dark:bg-red-950 dark:border-red-600'
           }
         `}
       >
@@ -127,7 +130,9 @@ export function ConnectionStatus({
                 } opacity-75`}
               ></span>
             )}
-            <span className={`relative inline-flex rounded-full h-4 w-4 ${getStatusColor()}`}></span>
+            <span
+              className={`relative inline-flex rounded-full h-4 w-4 ${getStatusColor()}`}
+            ></span>
           </span>
         </div>
 
@@ -140,9 +145,7 @@ export function ConnectionStatus({
             </div>
           )}
           {showDetails && error && (
-            <div className="text-xs text-red-600 dark:text-red-400">
-              {error}
-            </div>
+            <div className="text-xs text-red-600 dark:text-red-400">{error}</div>
           )}
         </div>
 
@@ -218,9 +221,7 @@ export function ConnectionStatus({
                 <div className="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wide">
                   Error
                 </div>
-                <div className="mt-1 text-red-600 dark:text-red-400 text-sm">
-                  {error}
-                </div>
+                <div className="mt-1 text-red-600 dark:text-red-400 text-sm">{error}</div>
               </div>
             )}
 

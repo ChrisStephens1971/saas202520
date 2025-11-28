@@ -95,11 +95,7 @@ export default function QueueDashboard({ tournamentId }: Props) {
   }
 
   const queueHealth =
-    data.availableCount >= 4
-      ? 'healthy'
-      : data.availableCount >= 2
-      ? 'warning'
-      : 'critical';
+    data.availableCount >= 4 ? 'healthy' : data.availableCount >= 2 ? 'warning' : 'critical';
 
   return (
     <div className="bg-white rounded-lg shadow">
@@ -114,15 +110,15 @@ export default function QueueDashboard({ tournamentId }: Props) {
             queueHealth === 'healthy'
               ? 'bg-green-100 text-green-800'
               : queueHealth === 'warning'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-red-100 text-red-800'
+                ? 'bg-yellow-100 text-yellow-800'
+                : 'bg-red-100 text-red-800'
           }`}
         >
           {queueHealth === 'healthy'
             ? '✓ Healthy'
             : queueHealth === 'warning'
-            ? '⚠ Warning'
-            : '⚠ Critical'}
+              ? '⚠ Warning'
+              : '⚠ Critical'}
         </div>
       </div>
 
@@ -135,25 +131,19 @@ export default function QueueDashboard({ tournamentId }: Props) {
         </div>
 
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <div className="text-3xl font-bold text-yellow-600">
-            {data.activeMatchesCount}
-          </div>
+          <div className="text-3xl font-bold text-yellow-600">{data.activeMatchesCount}</div>
           <div className="text-sm text-gray-600 mt-1">Active Matches</div>
           <div className="text-xs text-gray-500 mt-1">In progress</div>
         </div>
 
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <div className="text-3xl font-bold text-purple-600">
-            {data.pendingMatchesCount}
-          </div>
+          <div className="text-3xl font-bold text-purple-600">{data.pendingMatchesCount}</div>
           <div className="text-sm text-gray-600 mt-1">Pending Matches</div>
           <div className="text-xs text-gray-500 mt-1">Assigned, not started</div>
         </div>
 
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <div className="text-3xl font-bold text-green-600">
-            {data.completedMatchesCount}
-          </div>
+          <div className="text-3xl font-bold text-green-600">{data.completedMatchesCount}</div>
           <div className="text-sm text-gray-600 mt-1">Completed</div>
           <div className="text-xs text-gray-500 mt-1">Finished matches</div>
         </div>
@@ -161,14 +151,14 @@ export default function QueueDashboard({ tournamentId }: Props) {
 
       {/* Available Players List */}
       <div className="p-6 border-t">
-        <h3 className="text-lg font-semibold mb-4">
-          Available Players ({data.availableCount})
-        </h3>
+        <h3 className="text-lg font-semibold mb-4">Available Players ({data.availableCount})</h3>
 
         {data.availablePlayers.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <p className="text-lg">No players currently available</p>
-            <p className="text-sm mt-2">Players will appear here when they&apos;re ready for matches</p>
+            <p className="text-sm mt-2">
+              Players will appear here when they&apos;re ready for matches
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -195,7 +185,9 @@ export default function QueueDashboard({ tournamentId }: Props) {
       {/* WebSocket connection status */}
       <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`} />
+          <span
+            className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`}
+          />
           <span>{isConnected ? 'Live updates active' : 'Connecting...'}</span>
         </div>
       </div>

@@ -16,14 +16,6 @@ export const metadata: Metadata = {
   description: 'Tournament Director Console - Manage tournaments in real-time',
 };
 
-export default function ConsoleLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="console-layout">
-      {children}
-    </div>
-  );
+export default function ConsoleLayout({ children }: { children: React.ReactNode }) {
+  return <div className="console-layout">{children}</div>;
 }

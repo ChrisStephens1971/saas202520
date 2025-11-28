@@ -74,9 +74,7 @@ export default function UserTable({
               )}
             </div>
             <div>
-              <div className="font-medium text-gray-900">
-                {row.original.name || 'Unnamed User'}
-              </div>
+              <div className="font-medium text-gray-900">{row.original.name || 'Unnamed User'}</div>
               <div className="text-sm text-gray-500">{row.original.email}</div>
             </div>
           </div>
@@ -120,9 +118,7 @@ export default function UserTable({
         accessorKey: 'organizationCount',
         header: 'Orgs',
         cell: ({ row }) => (
-          <div className="text-center text-gray-700">
-            {row.original.organizationCount}
-          </div>
+          <div className="text-center text-gray-700">{row.original.organizationCount}</div>
         ),
       },
       {
@@ -235,9 +231,7 @@ export default function UserTable({
         {/* Filter by Role */}
         <select
           value={(table.getColumn('role')?.getFilterValue() as string) ?? ''}
-          onChange={(e) =>
-            table.getColumn('role')?.setFilterValue(e.target.value || undefined)
-          }
+          onChange={(e) => table.getColumn('role')?.setFilterValue(e.target.value || undefined)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Roles</option>
@@ -249,9 +243,7 @@ export default function UserTable({
         {/* Filter by Status */}
         <select
           value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
-          onChange={(e) =>
-            table.getColumn('status')?.setFilterValue(e.target.value || undefined)
-          }
+          onChange={(e) => table.getColumn('status')?.setFilterValue(e.target.value || undefined)}
           className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Statuses</option>
@@ -282,10 +274,7 @@ export default function UserTable({
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
                         {header.column.getIsSorted() && (
                           <span className="text-xs">
                             {header.column.getIsSorted() === 'asc' ? '↑' : '↓'}
@@ -340,8 +329,7 @@ export default function UserTable({
             Previous
           </button>
           <span className="px-3 py-1 text-sm text-gray-700">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
           <button
             onClick={() => table.nextPage()}

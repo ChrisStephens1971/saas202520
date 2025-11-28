@@ -244,9 +244,7 @@ export function isApiError(response: any): response is ApiErrorResponse {
   return response && typeof response === 'object' && 'error' in response;
 }
 
-export function isPaginatedResponse<T>(
-  response: any
-): response is PaginatedResponse<T> {
+export function isPaginatedResponse<T>(response: any): response is PaginatedResponse<T> {
   return (
     response &&
     typeof response === 'object' &&

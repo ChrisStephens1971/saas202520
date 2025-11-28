@@ -35,12 +35,7 @@ function getIcon(icon: KPIMetric['icon']) {
   switch (icon) {
     case 'dollar':
       return (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -51,12 +46,7 @@ function getIcon(icon: KPIMetric['icon']) {
       );
     case 'users':
       return (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -67,12 +57,7 @@ function getIcon(icon: KPIMetric['icon']) {
       );
     case 'trophy':
       return (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -83,12 +68,7 @@ function getIcon(icon: KPIMetric['icon']) {
       );
     case 'chart':
       return (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -110,9 +90,7 @@ function KPICard({ metric }: { metric: KPIMetric }) {
     <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-            {metric.label}
-          </p>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{metric.label}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-2">
             {formatValue(metric.value, metric.format)}
           </p>
@@ -125,11 +103,7 @@ function KPICard({ metric }: { metric: KPIMetric }) {
       <div className="mt-4 flex items-center gap-2">
         <span className={`flex items-center text-sm font-medium ${trendColor}`}>
           {isPositive ? (
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z"
@@ -137,11 +111,7 @@ function KPICard({ metric }: { metric: KPIMetric }) {
               />
             </svg>
           ) : (
-            <svg
-              className="w-4 h-4 mr-1"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z"
@@ -151,9 +121,7 @@ function KPICard({ metric }: { metric: KPIMetric }) {
           )}
           {Math.abs(metric.trend).toFixed(1)}%
         </span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          vs previous period
-        </span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">vs previous period</span>
       </div>
     </div>
   );
@@ -164,10 +132,7 @@ export function KPICards({ metrics, isLoading }: KPICardsProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, i) => (
-          <div
-            key={i}
-            className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow animate-pulse"
-          >
+          <div key={i} className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow animate-pulse">
             <div className="flex items-center justify-between">
               <div className="space-y-2 flex-1">
                 <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-24"></div>

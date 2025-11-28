@@ -13,10 +13,7 @@ interface AssignMatchRequest {
   tableId: string;
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -28,10 +25,7 @@ export async function POST(
     const { tableId } = body;
 
     if (!tableId) {
-      return NextResponse.json(
-        { error: 'Missing required field: tableId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: tableId' }, { status: 400 });
     }
 
     // Fetch match
@@ -144,9 +138,6 @@ export async function POST(
     );
   } catch (error) {
     console.error('Error assigning match:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

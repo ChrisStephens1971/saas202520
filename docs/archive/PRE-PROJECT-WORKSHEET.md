@@ -15,6 +15,7 @@
 - [ ] **Larger Team** (6+ people)
 
 **My team:**
+
 ```
 _________________________________________________________________
 
@@ -32,6 +33,7 @@ _________________________________________________________________
 - [ ] **Enterprise** - Established product, need full governance
 
 **Current stage:**
+
 ```
 _________________________________________________________________
 
@@ -69,6 +71,7 @@ _________________________________________________________________
 ```
 
 **User persona examples:**
+
 - Small business owners (e.g., "Salon owners managing 5-20 employees")
 - Department managers (e.g., "Marketing managers at mid-size companies")
 - Individual professionals (e.g., "Freelance designers managing client projects")
@@ -92,6 +95,7 @@ _________________________________________________________________
 ```
 
 **Examples:**
+
 - Payment collection for HOA dues
 - Appointment booking for salon clients
 - Invoice generation for freelancers
@@ -114,6 +118,7 @@ _________________________________________________________________
 ```
 
 **Examples:**
+
 - "5 HOAs processing payments through the platform"
 - "10 salons booking 50+ appointments/week"
 - "20 freelancers sending invoices"
@@ -146,21 +151,25 @@ _________________________________________________________________
 **If you have preferences:**
 
 **Frontend:**
+
 ```
 _________________________________________________________________
 ```
 
 **Backend:**
+
 ```
 _________________________________________________________________
 ```
 
 **Database:**
+
 ```
 _________________________________________________________________
 ```
 
 **Hosting:**
+
 ```
 _________________________________________________________________
 ```
@@ -198,21 +207,25 @@ _________________________________________________________________
 ## Tips for Filling This Out
 
 ### Keep It Simple
+
 - Don't overthink it
 - 1-2 sentences per answer is enough
 - You can refine later
 
 ### Be Specific
+
 - Instead of "small businesses" → "hair salons with 2-10 stylists"
 - Instead of "task management" → "daily job scheduling for HVAC technicians"
 - Instead of "better" → "collect payments 30% faster than checks"
 
 ### Focus on ONE Thing
+
 - Resist the urge to list 10 features
 - Pick the ONE thing users need most
 - Everything else can wait
 
 ### Think Customer-First
+
 - What's painful for them TODAY?
 - What would they pay to solve?
 - What's the simplest solution that helps?

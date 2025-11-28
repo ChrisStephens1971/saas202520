@@ -110,11 +110,8 @@ export function estimateMatchDuration(
 
   let skillMultiplier = 1.0;
   if (skillLevels.length > 0) {
-    const multipliers = skillLevels.map(
-      (skill) => SKILL_MULTIPLIERS[skill] || 1.0
-    );
-    skillMultiplier =
-      multipliers.reduce((sum, m) => sum + m, 0) / multipliers.length;
+    const multipliers = skillLevels.map((skill) => SKILL_MULTIPLIERS[skill] || 1.0);
+    skillMultiplier = multipliers.reduce((sum, m) => sum + m, 0) / multipliers.length;
   }
 
   const adjustedMinutes = Math.round(baseMinutes * skillMultiplier);
@@ -124,8 +121,7 @@ export function estimateMatchDuration(
     adjustedMinutes,
     factors: {
       raceTo,
-      skillLevel:
-        skillLevels.length > 0 ? skillLevels.join(' vs ') : undefined,
+      skillLevel: skillLevels.length > 0 ? skillLevels.join(' vs ') : undefined,
     },
   };
 }
@@ -133,9 +129,7 @@ export function estimateMatchDuration(
 /**
  * Get historical average match duration for a tournament
  */
-export async function getHistoricalAverageDuration(
-  tournamentId: string
-): Promise<number | null> {
+export async function getHistoricalAverageDuration(tournamentId: string): Promise<number | null> {
   const completedMatches = await prisma.match.findMany({
     where: {
       tournamentId,
@@ -156,8 +150,7 @@ export async function getHistoricalAverageDuration(
   const durations = completedMatches
     .map((match) => {
       if (!match.startedAt || !match.completedAt) return null;
-      const durationMs =
-        match.completedAt.getTime() - match.startedAt.getTime();
+      const durationMs = match.completedAt.getTime() - match.startedAt.getTime();
       return Math.round(durationMs / (1000 * 60)); // Convert to minutes
     })
     .filter((d): d is number => d !== null && d > 0);
@@ -176,9 +169,7 @@ export async function getHistoricalAverageDuration(
 /**
  * Calculate ETAs for all pending matches in a tournament
  */
-export async function calculateMatchETAs(
-  tournamentId: string
-): Promise<ETAUpdate> {
+export async function calculateMatchETAs(tournamentId: string): Promise<ETAUpdate> {
   const tournament = await prisma.tournament.findUnique({
     where: { id: tournamentId },
     include: {
@@ -203,15 +194,11 @@ export async function calculateMatchETAs(
   }
 
   // Get available tables
-  const availableTables = tournament.tables.filter(
-    (t) => t.status === 'available'
-  );
+  const availableTables = tournament.tables.filter((t) => t.status === 'available');
 
   // Separate matches by state
   const activeMatches = tournament.matches.filter((m) => m.state === 'active');
-  const assignedMatches = tournament.matches.filter(
-    (m) => m.state === 'assigned'
-  );
+  const assignedMatches = tournament.matches.filter((m) => m.state === 'assigned');
   const readyMatches = tournament.matches.filter((m) => m.state === 'ready');
   const pendingMatches = tournament.matches.filter((m) => m.state === 'pending');
 
@@ -240,10 +227,8 @@ export async function calculateMatchETAs(
   // Add active match end times
   for (const match of activeMatches) {
     if (match.tableId && match.startedAt) {
-      const playerASkill =
-        ((match.playerA?.rating as any)?.skillLevel as string) || undefined;
-      const playerBSkill =
-        ((match.playerB?.rating as any)?.skillLevel as string) || undefined;
+      const playerASkill = ((match.playerA?.rating as any)?.skillLevel as string) || undefined;
+      const playerBSkill = ((match.playerB?.rating as any)?.skillLevel as string) || undefined;
 
       const estimate = estimateMatchDuration(
         raceTo,
@@ -262,20 +247,14 @@ export async function calculateMatchETAs(
   }
 
   // Calculate ETAs for all non-completed matches
-  const allPendingMatches = [
-    ...assignedMatches,
-    ...readyMatches,
-    ...pendingMatches,
-  ];
+  const allPendingMatches = [...assignedMatches, ...readyMatches, ...pendingMatches];
 
   const etas: MatchETA[] = [];
   let position = 1;
 
   for (const match of allPendingMatches) {
-    const playerASkill =
-      ((match.playerA?.rating as any)?.skillLevel as string) || undefined;
-    const playerBSkill =
-      ((match.playerB?.rating as any)?.skillLevel as string) || undefined;
+    const playerASkill = ((match.playerA?.rating as any)?.skillLevel as string) || undefined;
+    const playerBSkill = ((match.playerB?.rating as any)?.skillLevel as string) || undefined;
 
     const estimate = estimateMatchDuration(
       raceTo,
@@ -309,9 +288,7 @@ export async function calculateMatchETAs(
 
     // Calculate ETA
     const estimatedStartTime =
-      match.state === 'active' && match.startedAt
-        ? match.startedAt
-        : earliestTableTime;
+      match.state === 'active' && match.startedAt ? match.startedAt : earliestTableTime;
 
     const estimatedEndTime = new Date(
       estimatedStartTime.getTime() + estimate.adjustedMinutes * 60 * 1000
@@ -370,9 +347,7 @@ export async function getMatchETA(matchId: string): Promise<MatchETA | null> {
  * Recalculate ETAs after a match completes
  * This should be called automatically when match state changes
  */
-export async function updateETAsAfterMatchCompletion(
-  tournamentId: string
-): Promise<ETAUpdate> {
+export async function updateETAsAfterMatchCompletion(tournamentId: string): Promise<ETAUpdate> {
   return calculateMatchETAs(tournamentId);
 }
 
@@ -426,9 +401,7 @@ export async function getPlayerWaitTime(
   const now = new Date();
   const waitMinutes = Math.max(
     0,
-    Math.round(
-      (eta.estimatedStartTime.getTime() - now.getTime()) / (1000 * 60)
-    )
+    Math.round((eta.estimatedStartTime.getTime() - now.getTime()) / (1000 * 60))
   );
 
   return {

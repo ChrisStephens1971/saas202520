@@ -8,10 +8,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import type { ScoreHistoryResponse } from '@tournament/shared/types/scoring';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -65,9 +62,6 @@ export async function GET(
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error('Error fetching score history:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

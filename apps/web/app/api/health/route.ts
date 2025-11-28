@@ -14,7 +14,7 @@ export async function GET() {
     {
       status: 'ok',
       timestamp: new Date().toISOString(),
-      service: 'tournament-platform-api'
+      service: 'tournament-platform-api',
     },
     { status: 200 }
   );

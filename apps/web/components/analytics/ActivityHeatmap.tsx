@@ -19,11 +19,7 @@ interface ActivityHeatmapProps {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const HOURS = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
-export function ActivityHeatmap({
-  data,
-  width = 900,
-  height = 300,
-}: ActivityHeatmapProps) {
+export function ActivityHeatmap({ data, width = 900, height = 300 }: ActivityHeatmapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -36,27 +32,14 @@ export function ActivityHeatmap({
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
 
-    const svg = d3
-      .select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+    const svg = d3.select(svgRef.current).attr('width', width).attr('height', height);
 
-    const g = svg
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Create scales
-    const xScale = d3
-      .scaleBand()
-      .domain(HOURS)
-      .range([0, chartWidth])
-      .padding(0.05);
+    const xScale = d3.scaleBand().domain(HOURS).range([0, chartWidth]).padding(0.05);
 
-    const yScale = d3
-      .scaleBand()
-      .domain(DAYS)
-      .range([0, chartHeight])
-      .padding(0.05);
+    const yScale = d3.scaleBand().domain(DAYS).range([0, chartHeight]).padding(0.05);
 
     // Find max value for color scale
     const maxValue = Math.max(...data.map((d) => d.value));
@@ -67,9 +50,7 @@ export function ActivityHeatmap({
       .range(['#f0f0f0', '#fdae61', '#d73027']);
 
     // Create a map for quick lookup
-    const dataMap = new Map(
-      data.map((d) => [`${d.row}-${d.col}`, d.value])
-    );
+    const dataMap = new Map(data.map((d) => [`${d.row}-${d.col}`, d.value]));
 
     // Add cells
     DAYS.forEach((day, dayIndex) => {
@@ -119,11 +100,7 @@ export function ActivityHeatmap({
           });
 
         // Add text labels for high values
-        if (
-          value > maxValue * 0.3 &&
-          xScale.bandwidth() > 25 &&
-          yScale.bandwidth() > 25
-        ) {
+        if (value > maxValue * 0.3 && xScale.bandwidth() > 25 && yScale.bandwidth() > 25) {
           g.append('text')
             .attr('x', (xScale(hour) || 0) + xScale.bandwidth() / 2)
             .attr('y', (yScale(day) || 0) + yScale.bandwidth() / 2)
@@ -188,9 +165,7 @@ export function ActivityHeatmap({
     const legendX = width - margin.right - legendWidth;
     const legendY = 30;
 
-    const legendScale = scaleLinear()
-      .domain([0, maxValue])
-      .range([0, legendWidth]);
+    const legendScale = scaleLinear().domain([0, maxValue]).range([0, legendWidth]);
 
     const legendAxis = d3
       .axisBottom(legendScale)
@@ -204,18 +179,9 @@ export function ActivityHeatmap({
       .attr('x1', '0%')
       .attr('x2', '100%');
 
-    gradient
-      .append('stop')
-      .attr('offset', '0%')
-      .attr('stop-color', '#f0f0f0');
-    gradient
-      .append('stop')
-      .attr('offset', '50%')
-      .attr('stop-color', '#fdae61');
-    gradient
-      .append('stop')
-      .attr('offset', '100%')
-      .attr('stop-color', '#d73027');
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#f0f0f0');
+    gradient.append('stop').attr('offset', '50%').attr('stop-color', '#fdae61');
+    gradient.append('stop').attr('offset', '100%').attr('stop-color', '#d73027');
 
     svg
       .append('rect')

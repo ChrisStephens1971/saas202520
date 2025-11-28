@@ -35,6 +35,7 @@ bash scripts/check-github-health.sh
 ```
 
 **Expected output if healthy:**
+
 ```
 === GitHub Health Check ===
 Repository: ChrisStephens1971/saas202520
@@ -48,6 +49,7 @@ Repository: ChrisStephens1971/saas202520
 ```
 
 **If failures found:**
+
 - **STOP** - Do not proceed with new work
 - View failure logs: `gh run view --log`
 - Fix the error immediately
@@ -70,6 +72,7 @@ gh pr list --limit 5
 ```
 
 **Review:**
+
 - Did yesterday's work complete as planned?
 - Any PRs awaiting review?
 - Any code review feedback to address?
@@ -78,12 +81,14 @@ gh pr list --limit 5
 #### 3. Plan Today's Tasks (10-15 minutes)
 
 **Open workflow checklist:**
+
 ```bash
 # View current phase and tasks
 cat .project-workflow.json | jq '.currentPhase, .phases[.currentPhase].checklist'
 ```
 
 **Select 1-3 tasks for today:**
+
 - Choose based on:
   - Current phase priorities
   - Blockers (unblock others first)
@@ -91,17 +96,19 @@ cat .project-workflow.json | jq '.currentPhase, .phases[.currentPhase].checklist
   - Complexity (mix easy and hard tasks)
 
 **Update task status to in-progress:**
+
 ```json
 // In .project-workflow.json
 {
   "id": "dev-02",
   "task": "Complete Sprint 2 (key workflows)",
-  "status": "in-progress",  // ← Update from "pending"
+  "status": "in-progress", // ← Update from "pending"
   "startedDate": "2025-11-09"
 }
 ```
 
 **Document plan:**
+
 - Write down 3 goals for today
 - Note any potential blockers
 - Set time estimates (realistic)
@@ -116,6 +123,7 @@ cat .project-workflow.json | jq '.currentPhase, .phases[.currentPhase].checklist
 **Recommended:** Multiple times per day (2-5 commits)
 
 **Commit best practices:**
+
 ```bash
 # Use conventional commits
 git commit -m "feat: add user profile page"
@@ -126,6 +134,7 @@ git commit -m "refactor: simplify database query logic"
 ```
 
 **Conventional commit types:**
+
 - `feat:` - New feature
 - `fix:` - Bug fix
 - `docs:` - Documentation only
@@ -136,6 +145,7 @@ git commit -m "refactor: simplify database query logic"
 - `style:` - Code formatting (no logic change)
 
 **Commit size:**
+
 - **Ideal:** 50-200 lines changed per commit
 - **Too small:** <10 lines (unless trivial fix)
 - **Too large:** >500 lines (break into smaller commits)
@@ -149,26 +159,28 @@ git commit -m "refactor: simplify database query logic"
 {
   "id": "dev-02",
   "task": "Complete Sprint 2 (key workflows)",
-  "status": "completed",  // ← Update from "in-progress"
+  "status": "completed", // ← Update from "in-progress"
   "completedDate": "2025-11-09"
 }
 ```
 
 **Recalculate completion percentage:**
+
 ```javascript
 // Formula
-const completedTasks = checklist.filter(t => t.status === 'completed').length
-const totalTasks = checklist.length
-const completionPercent = Math.round((completedTasks / totalTasks) * 100)
+const completedTasks = checklist.filter((t) => t.status === 'completed').length;
+const totalTasks = checklist.length;
+const completionPercent = Math.round((completedTasks / totalTasks) * 100);
 ```
 
 **Update phase status if needed:**
+
 ```json
 {
   "phases": {
     "development": {
-      "status": "in-progress",  // Options: not-started | in-progress | completed
-      "completionPercent": 65,   // ← Recalculated
+      "status": "in-progress", // Options: not-started | in-progress | completed
+      "completionPercent": 65, // ← Recalculated
       "lastUpdated": "2025-11-09"
     }
   }
@@ -178,6 +190,7 @@ const completionPercent = Math.round((completedTasks / totalTasks) * 100)
 #### 3. Document Decisions (As needed)
 
 **When to document:**
+
 - Made an architecture decision → Create ADR
 - Chose between alternatives → Document why
 - Solved a complex problem → Add inline comments
@@ -185,6 +198,7 @@ const completionPercent = Math.round((completedTasks / totalTasks) * 100)
 - Fixed a tricky bug → Add comment explaining fix
 
 **Use Architecture Decision Records (ADRs):**
+
 ```bash
 # Create new ADR
 cp technical/adr-template.md technical/adr/001-use-postgresql.md
@@ -197,6 +211,7 @@ cp technical/adr-template.md technical/adr/001-use-postgresql.md
 ```
 
 **Update README if needed:**
+
 - New dependencies added
 - Setup process changed
 - Environment variables added
@@ -205,27 +220,32 @@ cp technical/adr-template.md technical/adr/001-use-postgresql.md
 #### 4. Fix Errors Immediately
 
 **GitHub Actions failures:**
+
 - **Fix before next commit**
 - Don't accumulate failures
 - Pre-push hook will block if failing
 
 **Linting errors:**
+
 - Fix as you code (use editor integration)
 - Don't disable linter rules without discussion
 - Run `npm run lint:fix` or `black .` frequently
 
 **Test failures:**
+
 - Fix or update tests immediately
 - Don't comment out failing tests
 - If test is wrong, fix the test
 - If code is wrong, fix the code
 
 **TypeScript errors:**
+
 - Fix type errors as they appear
 - Don't use `@ts-ignore` or `any` unless necessary
 - Proper types prevent bugs
 
 **Security alerts:**
+
 - Address same day
 - Update vulnerable dependencies
 - Check for security patches
@@ -249,11 +269,13 @@ git push origin <branch-name>
 ```
 
 **Pre-push hook will:**
+
 - Check GitHub Actions status
 - Block if latest workflow failed
 - Show error message with fix instructions
 
 **If blocked:**
+
 - View logs: `gh run view --log`
 - Fix the error
 - Push again
@@ -261,12 +283,14 @@ git push origin <branch-name>
 #### 2. Update Workflow State (10 minutes)
 
 **Update `.project-workflow.json`:**
+
 - Mark completed tasks
 - Update completion percentages
 - Note any blockers
 - Set tomorrow's priorities
 
 **Update `.project-state.json` if needed:**
+
 ```json
 {
   "workflow": {
@@ -277,6 +301,7 @@ git push origin <branch-name>
 ```
 
 **Document blockers:**
+
 ```json
 // In .project-workflow.json or separate blockers.json
 {
@@ -302,11 +327,13 @@ gh run list --limit 1
 ```
 
 **Expected:**
+
 ```
 ✓ CI/CD Pipeline  master  push  2m ago  ✓
 ```
 
 **If failed:**
+
 - View logs immediately
 - Fix the error
 - Don't leave until green
@@ -315,16 +342,19 @@ gh run list --limit 1
 #### 4. Plan Tomorrow (5-10 minutes)
 
 **Review next tasks:**
+
 - What's next in `.project-workflow.json`?
 - Any blockers to address first?
 - Any meetings or interruptions tomorrow?
 
 **Set priorities:**
+
 1. High priority: Blockers, failures, critical bugs
 2. Medium priority: Planned tasks from checklist
 3. Low priority: Tech debt, optimizations, nice-to-haves
 
 **Time box:**
+
 - Don't over-plan
 - 3-5 tasks maximum
 - Leave buffer for unexpected work
@@ -342,6 +372,7 @@ gh run list --limit 1
 #### Sprint Review (Previous Sprint)
 
 **Review completed work:**
+
 ```bash
 # Check last week's commits
 git log --oneline --since="1 week ago"
@@ -354,40 +385,47 @@ git diff --stat HEAD@{1.week.ago}
 ```
 
 **Calculate velocity:**
+
 ```javascript
 // From .project-workflow.json or sprint tracking
-const plannedStoryPoints = 20
-const completedStoryPoints = 18
-const velocity = completedStoryPoints  // Use for next sprint
+const plannedStoryPoints = 20;
+const completedStoryPoints = 18;
+const velocity = completedStoryPoints; // Use for next sprint
 
-const completionRate = (completedStoryPoints / plannedStoryPoints) * 100
+const completionRate = (completedStoryPoints / plannedStoryPoints) * 100;
 // 90% completion rate
 ```
 
 **Document wins and learnings:**
+
 ```markdown
 ## Sprint N Review
 
 ### Completed
+
 - Feature X (8 points)
 - Feature Y (5 points)
 - Bug fixes (5 points)
-Total: 18 points
+  Total: 18 points
 
 ### Incomplete
+
 - Feature Z (2 points) - moved to next sprint
 
 ### Velocity
+
 - Planned: 20 points
 - Completed: 18 points
 - Velocity: 18 points/sprint
 
 ### Wins
+
 - Shipped user authentication ahead of schedule
 - Resolved all GitHub Actions failures
 - Test coverage increased to 75%
 
 ### Learnings
+
 - Database migrations slower than expected
 - Need to allocate time for code reviews
 - Underestimated third-party API integration
@@ -396,6 +434,7 @@ Total: 18 points
 #### Sprint Planning (Next Sprint)
 
 **Select user stories:**
+
 1. Review backlog (from roadmap or product/backlog.md)
 2. Select stories based on:
    - Priority (Now > Next > Later)
@@ -404,13 +443,16 @@ Total: 18 points
    - Team capacity (vacations, etc.)
 
 **Break into tasks:**
+
 ```markdown
 ## Sprint N+1 Plan
 
 ### Goal
+
 Implement core payment processing
 
 ### User Stories
+
 1. As a user, I can add a payment method (8 points)
    - Backend: Stripe integration
    - Frontend: Payment form
@@ -429,10 +471,12 @@ Total: 15 points (based on last sprint velocity of 18)
 ```
 
 **Set sprint goal:**
+
 - Single sentence describing sprint outcome
 - Example: "Users can manage payments end-to-end"
 
 **Use template:**
+
 ```bash
 cp sprints/sprint-plan-template.md sprints/sprint-N+1-plan.md
 ```
@@ -446,6 +490,7 @@ cp sprints/sprint-plan-template.md sprints/sprint-N+1-plan.md
 #### Progress Review
 
 **Check sprint progress:**
+
 ```javascript
 // Calculate mid-sprint progress
 const daysSinceSprintStart = 3
@@ -460,12 +505,14 @@ if (actualProgress < expectedProgress - 10) {
 ```
 
 **Questions to ask:**
+
 - Are we on track for sprint/phase goals?
 - Any blockers that need addressing?
 - Should we adjust scope or priorities?
 - Do we need help or resources?
 
 **Adjust if needed:**
+
 - De-scope low-priority tasks
 - Get help on blockers
 - Shift priorities
@@ -474,6 +521,7 @@ if (actualProgress < expectedProgress - 10) {
 #### GitHub Health Trend
 
 **Review workflow success rate:**
+
 ```bash
 # Get last 20 runs
 gh run list --limit 20 --json conclusion
@@ -485,6 +533,7 @@ gh run list --limit 20 --json conclusion
 **Target:** ≥95% success rate
 
 **If below target:**
+
 - Identify recurring failures
 - Plan fixes
 - May indicate flaky tests or infrastructure issues
@@ -498,11 +547,13 @@ gh run list --limit 20 --json conclusion
 #### Sprint Review
 
 **Demo completed features:**
+
 - Show working software
 - Test critical paths
 - Verify acceptance criteria met
 
 **Update workflow:**
+
 ```json
 // In .project-workflow.json
 {
@@ -522,15 +573,18 @@ gh run list --limit 20 --json conclusion
 ```
 
 **Document deliverables:**
+
 ```markdown
 ## Sprint N Deliverables
 
 ### Features Shipped
+
 - User authentication (✓)
 - User profile management (✓)
 - Email notifications (✓)
 
 ### Metrics
+
 - Commits: 42
 - PRs merged: 8
 - Lines of code: +1,245 / -320
@@ -541,11 +595,13 @@ gh run list --limit 20 --json conclusion
 #### Retrospective
 
 **Use template:**
+
 ```bash
 cp sprints/retrospective-template.md sprints/sprint-N-retrospective.md
 ```
 
 **Discuss:**
+
 1. **What went well?**
    - Celebrate wins
    - Identify successful practices
@@ -562,28 +618,33 @@ cp sprints/retrospective-template.md sprints/sprint-N-retrospective.md
    - Set deadlines
 
 **Example retrospective:**
+
 ```markdown
 ## Sprint N Retrospective
 
 ### What Went Well
+
 - All GitHub Actions stayed green
 - Code reviews completed within 24 hours
 - Team collaboration was excellent
 - Shipped ahead of schedule
 
 ### What Didn't Go Well
+
 - Underestimated database migration time
 - Flaky tests caused delays
 - Documentation fell behind
 - Didn't allocate time for bug fixes
 
 ### Action Items
+
 1. Add 20% buffer for database work (Owner: Dev team)
 2. Fix flaky tests before next sprint (Owner: QA)
 3. Allocate 10% of sprint for documentation (Owner: All)
 4. Reserve 2 points per sprint for bugs (Owner: PM)
 
 ### Metrics
+
 - Sprint completion: 90%
 - Velocity: 18 points
 - Test coverage: 75%
@@ -603,12 +664,14 @@ npm audit  # or pip-audit, etc.
 ```
 
 **Triage alerts:**
+
 - **Critical:** Fix immediately
 - **High:** Fix within 7 days
 - **Medium:** Fix within 30 days
 - **Low:** Fix when convenient
 
 **Update dependencies:**
+
 ```bash
 # Check outdated packages
 npm outdated  # or pip list --outdated
@@ -623,6 +686,7 @@ npm test
 #### Dependency Updates (Friday)
 
 **Check for updates:**
+
 ```bash
 # JavaScript
 npm outdated
@@ -635,6 +699,7 @@ npm audit
 ```
 
 **Update strategy:**
+
 - **Patch versions:** Update automatically (1.2.3 → 1.2.4)
 - **Minor versions:** Update weekly (1.2.0 → 1.3.0)
 - **Major versions:** Test in separate branch (1.0.0 → 2.0.0)
@@ -642,12 +707,14 @@ npm audit
 #### Documentation Review (Friday)
 
 **Check if docs need updates:**
+
 - README accurate?
 - API docs up to date?
 - ADRs reflect current decisions?
 - Deployment docs current?
 
 **Update as needed:**
+
 ```bash
 # Update README
 vi README.md
@@ -666,60 +733,70 @@ vi workflows/deployment-runbook.md
 ### Planning Phase Adjustments
 
 **Daily practices:**
+
 - **Commits:** Mostly documentation (ADRs, specs, roadmaps)
 - **GitHub Actions:** May not be active yet (fewer workflows)
 - **Focus:** Document quality and completeness
 - **Progress:** Track in `.project-workflow.json` planning checklist
 
 **Weekly practices:**
+
 - **Skip:** Sprint planning/review (not in development yet)
 - **Focus:** Weekly progress on planning deliverables
 
 ### Foundation Phase Adjustments
 
 **Daily practices:**
+
 - **Commits:** Frequent (infrastructure setup, many changes)
 - **GitHub Actions:** Active, expect some failures during setup
 - **Focus:** Getting to "green" status
 - **Progress:** Track in `.project-workflow.json` foundation checklist
 
 **Weekly practices:**
+
 - **Skip:** Sprint planning (not iterating yet)
 - **Focus:** Weekly milestones (DB setup, auth complete, etc.)
 
 ### Development Phase Adjustments
 
 **Daily practices:**
+
 - **Standard:** All daily practices apply
 - **Commits:** Multiple per day (feature development)
 - **GitHub Actions:** Must stay green
 - **Progress:** Track in sprint plans + workflow checklist
 
 **Weekly practices:**
+
 - **Full sprint workflow:** Planning, reviews, retrospectives
 - **Focus:** Velocity and feature completion
 
 ### Testing Phase Adjustments
 
 **Daily practices:**
+
 - **Commits:** Test additions, bug fixes, optimizations
 - **GitHub Actions:** Must stay green (critical in testing)
 - **Focus:** Test coverage and quality metrics
 - **Progress:** Track in `.project-workflow.json` testing checklist
 
 **Weekly practices:**
+
 - **Modified sprints:** Focus on quality gates, not new features
 - **Focus:** Metrics trending toward targets
 
 ### Launch Phase Adjustments
 
 **Daily practices:**
+
 - **Commits:** Infrastructure, documentation, runbooks
 - **GitHub Actions:** Must be rock solid green
 - **Focus:** Production readiness
 - **Progress:** Track in `.project-workflow.json` launch checklist
 
 **Weekly practices:**
+
 - **Skip:** Feature sprints
 - **Focus:** Launch checklist completion, deployment testing
 
@@ -730,6 +807,7 @@ vi workflows/deployment-runbook.md
 ### Zero-Tolerance Policy
 
 **From GitHub Health Monitoring system:**
+
 - ❌ **NEVER** ignore failing GitHub Actions
 - ❌ **NEVER** push code while workflows failing
 - ❌ **NEVER** let warnings accumulate
@@ -737,11 +815,13 @@ vi workflows/deployment-runbook.md
 - ✅ **ALWAYS** investigate warnings same day
 
 **Integration with daily practices:**
+
 - **Morning:** First thing, check GitHub health
 - **During:** Fix failures immediately when they occur
 - **Evening:** Verify still green before leaving
 
 **Pre-push hook enforcement:**
+
 - Automatically checks before every push
 - Blocks push if workflows failing
 - Forces adherence to zero-tolerance policy
@@ -770,6 +850,7 @@ gh run list --limit 1        # Verify still green
 ### I Forgot to Check GitHub Health This Morning
 
 **Solution:**
+
 - Check now: `bash scripts/check-github-health.sh`
 - If failures, fix immediately
 - Set calendar reminder for tomorrow
@@ -777,11 +858,13 @@ gh run list --limit 1        # Verify still green
 ### I Can't Keep Up with Daily Commits
 
 **Causes:**
+
 - Tasks too large (break into smaller tasks)
 - Context switching (minimize interruptions)
 - Perfectionism (commit work in progress, refine later)
 
 **Solutions:**
+
 - Commit incomplete work to feature branch
 - Use `WIP: ` prefix for work-in-progress commits
 - Squash commits later before merging
@@ -791,6 +874,7 @@ gh run list --limit 1        # Verify still green
 **Symptom:** `.project-workflow.json` doesn't match reality
 
 **Solutions:**
+
 - Set end-of-day reminder to update
 - Update as you complete tasks (not batch)
 - Use script to auto-detect completed tasks (future enhancement)
@@ -798,6 +882,7 @@ gh run list --limit 1        # Verify still green
 ### I'm Behind on Weekly Practices
 
 **Solutions:**
+
 - Friday sprint review is non-negotiable (30 min minimum)
 - Mid-week check can be shortened to 15 min
 - Security checks can be automated (Dependabot, Renovate)
@@ -805,6 +890,7 @@ gh run list --limit 1        # Verify still green
 ### GitHub Actions Constantly Failing
 
 **Solutions:**
+
 - Stop new work, focus on fixing
 - Review test reliability
 - Check for flaky tests
@@ -847,22 +933,26 @@ END OF DAY (15-30 min)
 ## 📚 Additional Resources
 
 **Workflow:**
+
 - `PROJECT-WORKFLOW.md` - Complete lifecycle guide
 - `.project-workflow.json` - Interactive task checklist
 - `.project-state.json` - Project state tracking
 
 **GitHub Health:**
+
 - `scripts/check-github-health.sh` - Health check script
 - `GITHUB-HEALTH-MONITORING.md` - Complete monitoring system
 - `.githooks/pre-push` - Pre-push hook enforcement
 
 **Templates:**
+
 - `sprints/sprint-plan-template.md` - Sprint planning
 - `sprints/retrospective-template.md` - Retrospectives
 - `technical/adr-template.md` - Architecture decisions
 - `workflows/runbook-template.md` - Deployment runbooks
 
 **Documentation:**
+
 - `DOCUMENTATION-AUTOMATION.md` - Auto-documentation system
 - `generate_session_doc.py` - Session documentation
 - `generate_changelog.py` - Changelog generation
@@ -875,4 +965,4 @@ END OF DAY (15-30 min)
 
 ---
 
-*Consistency in daily practices leads to project success. Stay disciplined!* 🚀
+_Consistency in daily practices leads to project success. Stay disciplined!_ 🚀

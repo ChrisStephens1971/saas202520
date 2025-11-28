@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "echo 'Build temporarily disabled for sync-service (TODO: fix type errors)'",
+    "build": "echo '⏸️  Sync-service build skipped - Offline features deferred to V2. See apps/sync-service/README.md'",
     "start": "node dist/index.js",
-    "lint": "echo 'Lint temporarily disabled for sync-service (TODO: fix lint errors)'",
+    "lint": "echo '⏸️  Sync-service lint skipped - Offline features deferred to V2. See apps/sync-service/README.md'",
     "test": "vitest --run --passWithNoTests"
   },
   "dependencies": {

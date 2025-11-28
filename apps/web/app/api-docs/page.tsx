@@ -15,31 +15,20 @@ export default function ApiDocsPage() {
       {/* Header */}
       <div className="bg-white border-b border-gray-200 py-6 px-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900">
-            API Documentation
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">API Documentation</h1>
           <p className="mt-2 text-gray-600">
             Explore and test the Tournament Platform API endpoints
           </p>
           <div className="mt-4 flex gap-4">
-            <a
-              href="/api-docs/overview"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
+            <a href="/api-docs/overview" className="text-blue-600 hover:text-blue-700 font-medium">
               Getting Started Guide
             </a>
             <span className="text-gray-300">|</span>
-            <a
-              href="#authentication"
-              className="text-gray-600 hover:text-gray-700"
-            >
+            <a href="#authentication" className="text-gray-600 hover:text-gray-700">
               Authentication
             </a>
             <span className="text-gray-300">|</span>
-            <a
-              href="#rate-limiting"
-              className="text-gray-600 hover:text-gray-700"
-            >
+            <a href="#rate-limiting" className="text-gray-600 hover:text-gray-700">
               Rate Limiting
             </a>
           </div>
@@ -64,8 +53,9 @@ export default function ApiDocsPage() {
       {/* Custom styles for better integration */}
       <style jsx global>{`
         .swagger-ui {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-            'Helvetica Neue', Arial, sans-serif;
+          font-family:
+            -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+            sans-serif;
         }
 
         .swagger-ui .topbar {

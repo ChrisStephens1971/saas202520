@@ -53,8 +53,18 @@ export default async function ConsolePage() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="rounded-md bg-blue-500 p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  <svg
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
                   </svg>
                 </div>
               </div>
@@ -62,7 +72,7 @@ export default async function ConsolePage() {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Active</dt>
                   <dd className="text-lg font-semibold text-gray-900">
-                    {tournaments.filter(t => t.status === 'active').length}
+                    {tournaments.filter((t) => t.status === 'active').length}
                   </dd>
                 </dl>
               </div>
@@ -73,8 +83,18 @@ export default async function ConsolePage() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="rounded-md bg-green-500 p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  <svg
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -82,7 +102,7 @@ export default async function ConsolePage() {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Registration</dt>
                   <dd className="text-lg font-semibold text-gray-900">
-                    {tournaments.filter(t => t.status === 'registration').length}
+                    {tournaments.filter((t) => t.status === 'registration').length}
                   </dd>
                 </dl>
               </div>
@@ -93,8 +113,18 @@ export default async function ConsolePage() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="rounded-md bg-yellow-500 p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -102,7 +132,7 @@ export default async function ConsolePage() {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Draft</dt>
                   <dd className="text-lg font-semibold text-gray-900">
-                    {tournaments.filter(t => t.status === 'draft').length}
+                    {tournaments.filter((t) => t.status === 'draft').length}
                   </dd>
                 </dl>
               </div>
@@ -113,8 +143,18 @@ export default async function ConsolePage() {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="rounded-md bg-gray-500 p-3">
-                  <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="h-6 w-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
               </div>
@@ -122,7 +162,7 @@ export default async function ConsolePage() {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Completed</dt>
                   <dd className="text-lg font-semibold text-gray-900">
-                    {tournaments.filter(t => t.status === 'completed').length}
+                    {tournaments.filter((t) => t.status === 'completed').length}
                   </dd>
                 </dl>
               </div>
@@ -167,15 +207,10 @@ export default async function ConsolePage() {
           ) : (
             <div className="divide-y divide-gray-200">
               {tournaments.map((tournament) => (
-                <div
-                  key={tournament.id}
-                  className="px-6 py-4 hover:bg-gray-50 cursor-pointer"
-                >
+                <div key={tournament.id} className="px-6 py-4 hover:bg-gray-50 cursor-pointer">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {tournament.name}
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-900">{tournament.name}</h3>
                       <div className="mt-1 flex items-center gap-4 text-xs text-gray-500">
                         <span className="capitalize">{tournament.format.replace(/-/g, ' ')}</span>
                         <span>•</span>
@@ -188,10 +223,10 @@ export default async function ConsolePage() {
                           tournament.status === 'active'
                             ? 'bg-green-100 text-green-800'
                             : tournament.status === 'registration'
-                            ? 'bg-blue-100 text-blue-800'
-                            : tournament.status === 'draft'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-800'
+                              ? 'bg-blue-100 text-blue-800'
+                              : tournament.status === 'draft'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-gray-100 text-gray-800'
                         }`}
                       >
                         {tournament.status}

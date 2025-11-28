@@ -7,19 +7,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import {
-  sendBulkCheckInReminders,
-  notifyTournamentStarting,
-} from '@/lib/match-notifications';
+import { sendBulkCheckInReminders, notifyTournamentStarting } from '@/lib/match-notifications';
 
 interface SendRemindersRequest {
   type: 'check_in' | 'tournament_starting';
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -31,10 +25,7 @@ export async function POST(
     const { type } = body;
 
     if (!type) {
-      return NextResponse.json(
-        { error: 'Missing required field: type' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: type' }, { status: 400 });
     }
 
     // Verify tournament exists
@@ -43,10 +34,7 @@ export async function POST(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     // TODO: Check if user has permission to send reminders for this tournament
@@ -101,16 +89,10 @@ export async function POST(
         { status: 200 }
       );
     } else {
-      return NextResponse.json(
-        { error: 'Invalid reminder type' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid reminder type' }, { status: 400 });
     }
   } catch (error) {
     console.error('Error sending reminders:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

@@ -10,6 +10,7 @@
 ## Overview
 
 This runbook covers response to suspicious OAuth application consent including:
+
 - User granted consent to malicious OAuth app
 - Overly permissive app permissions (Mail.Read, Files.ReadWrite.All, etc.)
 - App with suspicious publisher or no verified publisher
@@ -21,6 +22,7 @@ This runbook covers response to suspicious OAuth application consent including:
 ## Detection Indicators
 
 ### Automated Alerts (Sentinel)
+
 - "Suspicious OAuth app file download activities"
 - "OAuth app with suspicious Graph API permissions"
 - "Mass consent grants to same application"
@@ -28,6 +30,7 @@ This runbook covers response to suspicious OAuth application consent including:
 - "Application with suspicious redirect URI"
 
 ### Manual Discovery
+
 - User reports unexpected OAuth consent request
 - App appears in user's "My Apps" that they don't recognize
 - Unexpected emails being sent from user accounts
@@ -71,6 +74,7 @@ az monitor activity-log list \
 ### 3. Assess Permissions Granted
 
 **High-Risk Permissions to Watch For:**
+
 - `Mail.Read` / `Mail.ReadWrite` - Can read/modify all emails
 - `Mail.Send` - Can send emails as user
 - `Files.Read.All` / `Files.ReadWrite.All` - Can access all OneDrive/SharePoint files
@@ -97,6 +101,7 @@ az ad app permission delete \
 ```
 
 **PowerShell:**
+
 ```powershell
 Connect-MgGraph -Scopes "DelegatedPermissionGrant.ReadWrite.All"
 
@@ -252,6 +257,7 @@ az ad sp update \
 ### 4. Educate Users
 
 **Send organization-wide alert:**
+
 ```
 Subject: SECURITY ALERT: OAuth Consent Phishing Attempt Detected
 
@@ -280,6 +286,7 @@ Stay vigilant!
 ### Impact Assessment
 
 **Determine what data was compromised:**
+
 - Emails read/sent?
 - Files accessed/downloaded?
 - User data exfiltrated?
@@ -289,6 +296,7 @@ Stay vigilant!
 ### Compliance Notifications
 
 **May require notification if:**
+
 - **GDPR:** Personal data of EU residents accessed
 - **HIPAA:** PHI accessed
 - **State laws:** PII accessed (varies by state)
@@ -313,6 +321,7 @@ az ad sp show --id <service-principal-id> --query "oauth2PermissionGrants" -o js
 ### Root Cause Analysis
 
 **Common Causes:**
+
 1. User consent enabled (should be admin-only)
 2. No app governance in place
 3. Phishing email with OAuth link
@@ -324,6 +333,7 @@ az ad sp show --id <service-principal-id> --query "oauth2PermissionGrants" -o js
 ## Prevention Checklist
 
 **Immediate (Week 1):**
+
 - [ ] Disable user consent for apps
 - [ ] Enable Admin Consent Workflow
 - [ ] Review all existing app registrations
@@ -331,6 +341,7 @@ az ad sp show --id <service-principal-id> --query "oauth2PermissionGrants" -o js
 - [ ] Enable Sentinel analytics rules for suspicious consent
 
 **Short-term (Month 1):**
+
 - [ ] Enable Microsoft Defender for Cloud Apps app governance
 - [ ] Create Conditional Access policies for risky apps
 - [ ] Conduct user security awareness training
@@ -338,6 +349,7 @@ az ad sp show --id <service-principal-id> --query "oauth2PermissionGrants" -o js
 - [ ] Implement app approval process
 
 **Long-term (Quarter 1):**
+
 - [ ] Quarterly review of all app permissions
 - [ ] Automated app risk scoring
 - [ ] Integration with threat intelligence feeds
@@ -349,17 +361,21 @@ az ad sp show --id <service-principal-id> --query "oauth2PermissionGrants" -o js
 ## Common OAuth Phishing Techniques
 
 **1. Typosquatting:**
+
 - Legitimate: "Microsoft Teams"
 - Malicious: "Microsoft Tеams" (Cyrillic 'е')
 
 **2. Similar Icons:**
+
 - Uses Microsoft/Google logo to appear legitimate
 
 **3. Redirect URI Tricks:**
+
 - Legitimate: `https://app.example.com/callback`
 - Malicious: `https://app.evil.com/callback`
 
 **4. Over-permissioned Apps:**
+
 - Requests more permissions than needed
 - "Flashlight app" requesting `Mail.ReadWrite.All`
 
@@ -382,6 +398,7 @@ az ad app permission list --id <app-id>
 ```
 
 **PowerShell:**
+
 ```powershell
 # Revoke OAuth grant
 Remove-MgOauth2PermissionGrant -OAuth2PermissionGrantId <grant-id>

@@ -20,10 +20,7 @@
 import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 // Compression imports removed - not used in middleware
-import {
-  startRequestTracking,
-  endRequestTracking,
-} from '@/lib/monitoring/performance-middleware';
+import { startRequestTracking, endRequestTracking } from '@/lib/monitoring/performance-middleware';
 
 /**
  * Check if request is an API route
@@ -82,8 +79,7 @@ export default auth(async (req) => {
    * to allow first-time setup and organization switching.
    */
   const isOrgManagementRoute =
-    nextUrl.pathname === '/select-organization' ||
-    nextUrl.pathname === '/api/organizations';
+    nextUrl.pathname === '/select-organization' || nextUrl.pathname === '/api/organizations';
 
   // Redirect logged-in users away from login/signup pages
   if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/signup')) {

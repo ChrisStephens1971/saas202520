@@ -9,6 +9,7 @@
 ## 🎯 Sprint Goal
 
 Build mobile-first scoring interface and Stripe payment integration to enable:
+
 - Real-time match scoring with validation
 - Entry fee collection via Stripe Connect
 - Automated payout calculations
@@ -23,6 +24,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 ### Stories Completed: 16/16 (100%)
 
 #### High Priority: 13/13 ✅
+
 - ✅ SCORE-001: Mobile-first scoring card UI
 - ✅ SCORE-002: Race-to validation logic
 - ✅ SCORE-003: Illegal score guards
@@ -38,6 +40,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - ✅ PAY-007: Printable payout sheet (PDF)
 
 #### Medium Priority: 3/3 ✅
+
 - ✅ SCORE-007: Scorekeeper role & permissions
 - ✅ PAY-008: Dispute evidence pack
 - ✅ TEST-004: Payment workflow tests
@@ -49,6 +52,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 ### 1. Mobile-First Scoring System
 
 **Files Created:**
+
 - `apps/web/app/components/scoring/ScoringCard.tsx` - React scoring UI component
 - `packages/shared/src/types/scoring.ts` - TypeScript types
 - `packages/shared/src/lib/scoring-validation.ts` - Validation logic
@@ -57,9 +61,11 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - `apps/web/app/api/matches/[id]/score/history/route.ts` - Score history API
 
 **Database Models:**
+
 - `ScoreUpdate` - Audit trail for all score changes
 
 **Key Features:**
+
 - ✅ Large touch targets for mobile devices (py-6 buttons)
 - ✅ Race-to validation (prevents invalid scores)
 - ✅ Illegal score guards (max score = race-to)
@@ -70,6 +76,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - ✅ Device ID tracking for offline sync compatibility
 
 **Technical Highlights:**
+
 - Validates scores before submission
 - Prevents scores exceeding race-to (e.g., 10-8 in race-to-9)
 - Hill-hill confirmation prevents accidental clicks
@@ -81,6 +88,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 ### 2. Stripe Payment Integration
 
 **Files Created:**
+
 - `apps/web/lib/stripe.ts` - Stripe SDK helper
 - `apps/web/lib/pdf-generator.ts` - PDF payout sheet generator
 - `apps/web/app/api/payments/stripe/onboarding/route.ts` - Connect onboarding
@@ -94,18 +102,21 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - `apps/web/app/api/tournaments/[id]/payouts/sheet/route.ts` - PDF payout sheet
 
 **Database Models:**
+
 - `StripeAccount` - One per organization (Stripe Connect account)
 - `Payment` - Entry fees and side pots
 - `Refund` - Full/partial refunds
 - `Payout` - Prize pool distributions
 
 **Dependencies Installed:**
+
 - `stripe` (v19.2.1) - Stripe Node.js SDK
 - `@stripe/stripe-js` (v8.3.0) - Stripe frontend SDK
 - `pdfkit` (v0.17.2) - PDF generation
 - `@types/pdfkit` (v0.17.3) - TypeScript types
 
 **Key Features:**
+
 - ✅ Stripe Connect onboarding flow
 - ✅ Entry fee collection with Payment Intents
 - ✅ Automatic receipt generation
@@ -116,6 +127,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - ✅ Multi-tenant isolation (one Stripe account per org)
 
 **Technical Highlights:**
+
 - Stripe Connect Standard accounts for org independence
 - Payment status tracking (pending → succeeded → refunded)
 - Payout calculations support percentage-based prize structures
@@ -128,16 +140,19 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 ### 3. Scorekeeper Role & Permissions
 
 **Files Created:**
+
 - `apps/web/lib/permissions.ts` - RBAC helper functions
 - `apps/web/app/api/organizations/[id]/scorekeepers/route.ts` - Manage scorekeepers
 
 **Roles Supported:**
+
 - `owner` - Full access
 - `td` (Tournament Director) - Can manage tournament and payments
 - `scorekeeper` - Can score matches only
 - `streamer` - Future use
 
 **Key Features:**
+
 - ✅ Role-based access control (RBAC)
 - ✅ Scorekeepers can score matches but not manage payments
 - ✅ TDs and owners can assign/remove scorekeeper roles
@@ -145,6 +160,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 - ✅ Multi-tenant aware (org-scoped permissions)
 
 **Technical Highlights:**
+
 - `canScoreMatches()` - Checks if user can enter scores
 - `canManagePayments()` - Checks if user can process refunds
 - `canManageTournament()` - Checks if user can change settings
@@ -156,6 +172,7 @@ Build mobile-first scoring interface and Stripe payment integration to enable:
 ### 4. Database Schema Extensions
 
 **New Tables:**
+
 ```sql
 -- Scoring System
 ScoreUpdate
@@ -198,6 +215,7 @@ Payout
 ## 🧪 Testing
 
 **Test Files Created:**
+
 - `packages/shared/src/lib/scoring-validation.test.ts` - Unit tests for scoring validation logic (12 tests)
 - `apps/web/tests/unit/stripe-payments.test.ts` - Mocked unit tests for Stripe payment flows (23 tests)
 - `apps/web/tests/integration/stripe-payments.test.ts` - Integration tests (excluded from test runs)
@@ -208,6 +226,7 @@ Payout
 **Test Coverage (35 tests passing):**
 
 ### Scoring Validation (12 tests passing)
+
 - ✅ Race-to validation (prevents invalid scores)
 - ✅ Illegal score guards (prevents exceeding race-to)
 - ✅ Hill-hill detection (8-8 in race-to-9)
@@ -219,6 +238,7 @@ Payout
 - ✅ Large score difference warnings
 
 ### Stripe Payment Workflows (23 tests passing)
+
 - ✅ Complete payment flow (Stripe account creation, payment intents, confirmations)
 - ✅ Refund workflows (full, partial, validation)
 - ✅ Payout calculations (prize structures, house take, side pots)
@@ -228,6 +248,7 @@ Payout
 **Test Framework:** Vitest 2.1.9
 
 **Test Configuration:**
+
 - Environment: Node.js
 - Mocking: Vitest `vi.mock()` for Prisma and Stripe
 - Integration tests excluded (require real database)
@@ -235,6 +256,7 @@ Payout
 - Sequential execution for database safety
 
 **Current Test Status:**
+
 - ✅ 35 tests passing (scoring validation + payment workflows)
 - ⚠️ API route tests need additional mocking architecture work
 - ✅ All critical business logic tested with mocks
@@ -245,11 +267,13 @@ Payout
 ## 📝 API Endpoints Created
 
 ### Scoring APIs
+
 - `POST /api/matches/[id]/score/increment` - Increment player score
 - `POST /api/matches/[id]/score/undo` - Undo last score action
 - `GET /api/matches/[id]/score/history` - Get score history
 
 ### Payment APIs
+
 - `POST /api/payments/stripe/onboarding` - Create Stripe Connect account
 - `GET /api/payments/stripe/account` - Get account status
 - `POST /api/payments/create-intent` - Create payment intent
@@ -258,12 +282,14 @@ Payout
 - `GET /api/payments/[id]/dispute-evidence` - Get dispute evidence
 
 ### Payout APIs
+
 - `POST /api/tournaments/[id]/payouts/calculate` - Calculate payouts
 - `GET /api/tournaments/[id]/payouts` - Get tournament payouts
 - `PUT /api/tournaments/[id]/payouts` - Mark payout as paid
 - `GET /api/tournaments/[id]/payouts/sheet` - Download PDF payout sheet
 
 ### Permission APIs
+
 - `GET /api/organizations/[id]/scorekeepers` - List scorekeepers
 - `POST /api/organizations/[id]/scorekeepers` - Assign scorekeeper role
 - `DELETE /api/organizations/[id]/scorekeepers` - Remove scorekeeper role
@@ -275,6 +301,7 @@ Payout
 ## 🔐 Security & Compliance
 
 **Security Measures:**
+
 - ✅ All endpoints require authentication (NextAuth session)
 - ✅ Role-based access control (RBAC) enforced
 - ✅ Tenant isolation (orgId filtering on all queries)
@@ -283,6 +310,7 @@ Payout
 - ✅ Payment dispute evidence for chargebacks
 
 **Audit Trail:**
+
 - ✅ All score changes logged to `ScoreUpdate` table
 - ✅ All tournament events logged to `TournamentEvent` table
 - ✅ Payment actions tracked (create, confirm, refund)
@@ -290,6 +318,7 @@ Payout
 - ✅ Undo actions preserve original history
 
 **Multi-Tenant Compliance:**
+
 - ✅ One Stripe account per organization
 - ✅ All payments scoped to tournament → org
 - ✅ Cross-tenant access prevented at API layer
@@ -300,6 +329,7 @@ Payout
 ## 🎨 UI/UX Highlights
 
 **Mobile-First Design:**
+
 - Large touch targets (py-6 = 1.5rem padding)
 - Responsive grid layout (max-w-2xl container)
 - Color-coded players (blue vs green)
@@ -308,6 +338,7 @@ Payout
 - Error and warning banners
 
 **User Experience:**
+
 - < 15 seconds per game scoring (goal: achieved)
 - Hill-hill confirmation prevents mistakes
 - Undo button always visible when available
@@ -320,12 +351,14 @@ Payout
 ## 📦 Dependencies & Tech Stack
 
 **New Dependencies:**
+
 - `stripe` (v19.2.1)
 - `@stripe/stripe-js` (v8.3.0)
 - `pdfkit` (v0.17.2)
 - `@types/pdfkit` (v0.17.3)
 
 **Existing Stack:**
+
 - Next.js 16 (API Routes)
 - React 19 (UI Components)
 - Prisma 6.18 (ORM)
@@ -339,12 +372,14 @@ Payout
 ## 🚧 Known Limitations & Future Work
 
 **Current Limitations:**
+
 1. Payout calculator doesn't auto-link players to placements (manual assignment required)
 2. No Stripe webhook handlers (status updates require manual polling)
 3. PDF payout sheets use basic formatting (no branding/logos)
 4. Payment receipts rely on Stripe-hosted URLs (no custom receipt generation)
 
 **Future Enhancements:**
+
 1. Auto-assign payouts based on tournament results
 2. Implement Stripe webhooks for real-time status updates
 3. Add organization branding to PDF payout sheets
@@ -358,10 +393,12 @@ Payout
 ## 📚 Documentation
 
 **Files Created:**
+
 - `docs/progress/SPRINT-03-SUMMARY.md` - This file
 - `sprints/current/sprint-03-scoring-payments.md` - Sprint plan (updated)
 
 **Code Documentation:**
+
 - All functions include JSDoc comments
 - API endpoints documented inline
 - TypeScript types provide self-documentation
@@ -372,12 +409,14 @@ Payout
 ## ✅ Acceptance Criteria Status
 
 ### Scoring
+
 - ✅ Score entered in <15 seconds per game
 - ✅ Illegal scores blocked (e.g., 10-9 in race-to-9)
 - ✅ Hill-hill confirmation prompt works
 - ✅ Undo reverts last action, preserves audit trail
 
 ### Payments
+
 - ✅ Venue completes Stripe onboarding
 - ✅ Entry fees collected, receipts sent
 - ✅ Refunds processed successfully
@@ -391,6 +430,7 @@ Payout
 ## 🎯 Sprint Retrospective
 
 ### What Went Well ✅
+
 1. Comprehensive feature implementation (100% completion)
 2. Strong type safety with TypeScript and Zod
 3. Complete audit trail for compliance
@@ -399,6 +439,7 @@ Payout
 6. Database schema extensible for future features
 
 ### Challenges Overcome 💪
+
 1. Stripe Connect setup (resolved with Standard accounts)
 2. PDF generation (resolved with PDFKit)
 3. Optimistic locking for concurrent scoring
@@ -406,6 +447,7 @@ Payout
 5. Undo functionality with audit trail preservation
 
 ### Lessons Learned 📖
+
 1. Stripe Connect requires careful account type selection
 2. Optimistic locking essential for real-time scoring
 3. Audit trails must capture actor AND device for CRDT sync
@@ -417,6 +459,7 @@ Payout
 ## 🏁 Next Steps
 
 **Sprint 3 is Complete!** Ready for:
+
 1. Integration testing with real Stripe test accounts
 2. Manual QA of scoring UI on mobile devices
 3. Load testing for concurrent scoring
@@ -424,6 +467,7 @@ Payout
 5. Planning Sprint 4 (next features)
 
 **Recommended Sprint 4 Features:**
+
 - Tournament bracket visualization
 - Live scoring dashboards
 - Player registration workflows

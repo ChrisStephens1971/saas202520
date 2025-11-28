@@ -75,16 +75,10 @@ async function resolveHeadToHead(
       state: 'completed',
       OR: [
         {
-          AND: [
-            { playerAId: playerA.id },
-            { playerBId: playerB.id },
-          ],
+          AND: [{ playerAId: playerA.id }, { playerBId: playerB.id }],
         },
         {
-          AND: [
-            { playerAId: playerB.id },
-            { playerBId: playerA.id },
-          ],
+          AND: [{ playerAId: playerB.id }, { playerBId: playerA.id }],
         },
       ],
     },
@@ -99,12 +93,8 @@ async function resolveHeadToHead(
   }
 
   // Count wins for each player
-  const playerAWins = headToHeadMatches.filter(
-    (match) => match.winnerId === playerA.id
-  ).length;
-  const playerBWins = headToHeadMatches.filter(
-    (match) => match.winnerId === playerB.id
-  ).length;
+  const playerAWins = headToHeadMatches.filter((match) => match.winnerId === playerA.id).length;
+  const playerBWins = headToHeadMatches.filter((match) => match.winnerId === playerB.id).length;
 
   if (playerAWins > playerBWins) {
     return {
@@ -239,9 +229,7 @@ export async function applyFinalsCutoff(
     finalists = [...nonTiedFinalists, ...resolvedTiedFinalists];
   }
 
-  const eliminated = standings.filter(
-    (s) => !finalists.find((f) => f.playerId === s.playerId)
-  );
+  const eliminated = standings.filter((s) => !finalists.find((f) => f.playerId === s.playerId));
 
   // Lock qualification phase
   await prisma.tournament.update({

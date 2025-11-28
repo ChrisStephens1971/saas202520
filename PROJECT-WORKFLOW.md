@@ -85,9 +85,11 @@ gantt
 ### Morning Routine (15-30 minutes)
 
 1. **Check GitHub Actions Health**
+
    ```bash
    bash scripts/check-github-health.sh
    ```
+
    - **If failures found:** Stop and fix immediately (zero-tolerance policy)
    - **If warnings:** Investigate and plan fix
    - **If green:** Proceed with day's work
@@ -130,9 +132,11 @@ gantt
 ### End of Day (15-30 minutes)
 
 1. **Push All Code**
+
    ```bash
    git push origin <branch>
    ```
+
    - Pre-push hook will check GitHub Actions status
    - If blocked, fix failures before pushing
 
@@ -142,9 +146,11 @@ gantt
    - Calculate completion percentage
 
 3. **Check GitHub Actions (Again)**
+
    ```bash
    gh run list --limit 1
    ```
+
    - Verify latest push didn't break anything
    - If failures, stay late to fix (don't leave broken)
 
@@ -238,9 +244,11 @@ gantt
 ### Weekly Health Checks
 
 1. **Security Alerts**
+
    ```bash
    gh api repos/{owner}/{repo}/dependabot/alerts
    ```
+
    - Review and triage alerts
    - Update dependencies with vulnerabilities
 
@@ -263,10 +271,12 @@ gantt
 **Goal:** Understand the problem, define the solution, plan the approach.
 
 **Entry Criteria:**
+
 - New project created from template
 - User ready to define product vision
 
 **Exit Criteria (Recommended):**
+
 - ✅ Product roadmap complete (Now/Next/Later defined)
 - ✅ Architecture decisions documented (at least 2-3 ADRs)
 - ✅ Success metrics defined (OKRs or similar)
@@ -314,18 +324,21 @@ Use `.project-workflow.json` → `phases.planning.checklist`:
 ### Key Activities
 
 **Discovery:**
+
 - User research and interviews (if applicable)
 - Competitive analysis
 - Feature brainstorming
 - Risk identification
 
 **Planning:**
+
 - Roadmap creation using Now/Next/Later framework
 - Database schema design
 - API design (high-level)
 - Security requirements definition
 
 **Documentation:**
+
 - ADRs for major decisions
 - Product requirements (PRD)
 - Technical specifications
@@ -334,6 +347,7 @@ Use `.project-workflow.json` → `phases.planning.checklist`:
 ### Daily Practices in Planning Phase
 
 **Modified for Planning:**
+
 - Commits may be documentation-heavy (ADRs, specs, roadmaps)
 - GitHub Actions may not be active yet (fewer workflows)
 - Focus on document quality and completeness
@@ -374,11 +388,13 @@ Use `.project-workflow.json` → `phases.planning.checklist`:
 **Goal:** Build the technical foundation for the application.
 
 **Entry Criteria:**
+
 - Planning phase complete
 - Architecture decisions made
 - Sprint 1 plan ready
 
 **Exit Criteria (Recommended):**
+
 - ✅ Project scaffolded with all dependencies
 - ✅ Database connected and migrations working
 - ✅ Authentication implemented and tested
@@ -435,24 +451,28 @@ Use `.project-workflow.json` → `phases.foundation.checklist`:
 ### Key Activities
 
 **Infrastructure Setup:**
+
 - Local development environment
 - Database setup (local and dev environments)
 - Environment variable management
 - Docker configuration (optional)
 
 **Core Systems:**
+
 - Authentication service
 - API framework setup
 - Database models/schemas
 - Error handling patterns
 
 **Quality Assurance:**
+
 - Testing framework
 - CI/CD pipelines
 - Code quality tools (ESLint, Prettier, etc.)
 - Git hooks enabled
 
 **Azure-Specific (if using Azure template):**
+
 - Resource naming conventions applied
 - Key Vault for secrets
 - App Service or Container Apps setup
@@ -461,6 +481,7 @@ Use `.project-workflow.json` → `phases.foundation.checklist`:
 ### Daily Practices in Foundation Phase
 
 **Modified for Foundation:**
+
 - Expect frequent commits (infrastructure setup)
 - GitHub Actions will be actively running (monitor closely)
 - May have breaking changes frequently (normal during setup)
@@ -506,11 +527,13 @@ Use `.project-workflow.json` → `phases.foundation.checklist`:
 **Goal:** Build core features through iterative sprints.
 
 **Entry Criteria:**
+
 - Foundation phase complete
 - Deployable application exists
 - GitHub Actions green
 
 **Exit Criteria (Recommended):**
+
 - ✅ All "Now" features from roadmap complete
 - ✅ Sprint goals achieved (typically 2-4 sprints)
 - ✅ Code review process followed
@@ -578,18 +601,21 @@ graph LR
 ```
 
 **Monday:** Sprint planning
+
 - Review backlog
 - Select user stories
 - Break into tasks
 - Set sprint goal
 
 **Tuesday-Thursday:** Development
+
 - Implement features
 - Write tests
 - Code reviews
 - Daily commits
 
 **Friday:** Sprint review & retrospective
+
 - Demo completed work
 - Discuss what went well/poorly
 - Plan improvements
@@ -598,24 +624,28 @@ graph LR
 ### Key Activities
 
 **Feature Development:**
+
 - User stories → tasks → code
 - Test-driven development (TDD) recommended
 - Continuous integration
 - Feature flags for incomplete features
 
 **Code Quality:**
+
 - Peer code reviews (required)
 - Automated testing
 - Linting and formatting
 - Refactoring sessions
 
 **Collaboration:**
+
 - Daily standups (if team)
 - Pair programming (optional)
 - Knowledge sharing
 - Documentation updates
 
 **Integration:**
+
 - Third-party APIs
 - Payment providers (Stripe, etc.)
 - Email services (SendGrid, etc.)
@@ -624,12 +654,14 @@ graph LR
 ### Daily Practices in Development Phase
 
 **Standard practices apply:**
+
 - Morning GitHub health check
 - Multiple commits per day
 - End of day push (green status)
 - Update sprint progress daily
 
 **Additional for Development:**
+
 - Code reviews before merge
 - Update test coverage
 - Document new APIs
@@ -675,11 +707,13 @@ graph LR
 **Goal:** Ensure production-ready quality through comprehensive testing and optimization.
 
 **Entry Criteria:**
+
 - Development phase complete
 - Core features implemented
 - Test coverage ≥60%
 
 **Exit Criteria (Recommended):**
+
 - ✅ Test coverage ≥80%
 - ✅ Performance benchmarks met
 - ✅ Security audit passed
@@ -732,6 +766,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 ### Key Activities
 
 **Testing:**
+
 - Unit testing (comprehensive)
 - Integration testing
 - End-to-end testing
@@ -740,6 +775,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 - Accessibility testing
 
 **Optimization:**
+
 - Database indexing
 - Query optimization
 - Frontend bundling
@@ -748,6 +784,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 - CDN setup
 
 **Quality Assurance:**
+
 - Bug triage and fixing
 - Regression testing
 - Cross-platform testing
@@ -757,6 +794,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 ### Testing Checklist
 
 **Functional Testing:**
+
 - [ ] All user workflows tested
 - [ ] Authentication flows tested
 - [ ] Authorization rules verified
@@ -765,6 +803,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 - [ ] API endpoints tested
 
 **Non-Functional Testing:**
+
 - [ ] Performance under load
 - [ ] Security vulnerabilities addressed
 - [ ] Accessibility standards met (WCAG AA)
@@ -773,6 +812,7 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 - [ ] Error handling tested
 
 **Data Integrity:**
+
 - [ ] Database constraints tested
 - [ ] Data validation working
 - [ ] Multi-tenant isolation verified (if applicable)
@@ -782,11 +822,13 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 ### Daily Practices in Testing Phase
 
 **Standard practices apply:**
+
 - Morning GitHub health check
 - Daily commits (test additions, bug fixes)
 - End of day push (green status)
 
 **Additional for Testing:**
+
 - Run test suites frequently
 - Document bugs as found
 - Prioritize bug fixes
@@ -795,18 +837,21 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 ### Performance Targets
 
 **Frontend:**
+
 - Lighthouse score ≥90
 - First Contentful Paint <2s
 - Time to Interactive <4s
 - Page weight <2MB
 
 **Backend:**
+
 - API response time <200ms (95th percentile)
 - Database query time <100ms
 - Handle 100 concurrent users
 - Zero unhandled errors
 
 **Azure-Specific:**
+
 - App Service response time <500ms
 - Database DTU usage <80%
 - CDN cache hit ratio >80%
@@ -852,11 +897,13 @@ Use `.project-workflow.json` → `phases.testing.checklist`:
 **Goal:** Prepare for production deployment and go-live.
 
 **Entry Criteria:**
+
 - Testing phase complete
 - Quality gates passed
 - Application production-ready
 
 **Exit Criteria (Recommended):**
+
 - ✅ Production environment configured
 - ✅ Monitoring and alerting active
 - ✅ Deployment runbook complete
@@ -912,6 +959,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Key Activities
 
 **Infrastructure:**
+
 - Production environment setup
 - Database migration
 - CDN configuration
@@ -919,6 +967,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - SSL certificates
 
 **Monitoring:**
+
 - APM tools configured
 - Error tracking active
 - Uptime monitoring
@@ -926,6 +975,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - Dashboards created
 
 **Deployment:**
+
 - CI/CD to production
 - Blue-green or rolling deployment
 - Database migration strategy
@@ -933,6 +983,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - Smoke tests defined
 
 **Documentation:**
+
 - Deployment runbook
 - Incident response plan
 - Architecture diagrams
@@ -942,6 +993,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Go-Live Checklist
 
 **Pre-Launch (T-minus 1 week):**
+
 - [ ] Production environment configured
 - [ ] Monitoring tools active
 - [ ] Deployment tested in staging
@@ -950,6 +1002,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - [ ] Team briefed on launch plan
 
 **Launch Day (T-0):**
+
 - [ ] Deploy to production
 - [ ] Switch DNS (if applicable)
 - [ ] Verify all services running
@@ -958,6 +1011,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - [ ] Announce launch (if applicable)
 
 **Post-Launch (T+48 hours):**
+
 - [ ] Monitor continuously
 - [ ] Address any issues immediately
 - [ ] Collect user feedback
@@ -968,11 +1022,13 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Daily Practices in Launch Phase
 
 **Standard practices apply:**
+
 - Morning GitHub health check
 - Daily commits (infrastructure, docs)
 - End of day push (green status)
 
 **Additional for Launch:**
+
 - Monitor production environment
 - Test deployment procedures
 - Verify monitoring alerts
@@ -981,6 +1037,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Azure-Specific Launch Checklist
 
 **Production Environment:**
+
 - [ ] App Service production tier (P1V2 or higher)
 - [ ] PostgreSQL production tier (GP or higher)
 - [ ] Redis Premium tier (if using)
@@ -991,12 +1048,14 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - [ ] Defender for Cloud enabled
 
 **Scaling & Performance:**
+
 - [ ] Auto-scaling rules configured
 - [ ] CDN enabled
 - [ ] Database connection pooling
 - [ ] Caching strategy implemented
 
 **Security:**
+
 - [ ] Network security groups configured
 - [ ] Private endpoints enabled (if required)
 - [ ] DDoS protection enabled
@@ -1050,27 +1109,32 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### How Workflow Integrates with Existing Templates
 
 **Planning Phase:**
+
 - Uses `product/roadmap-template.md`
 - Uses `technical/adr-template.md`
 - Uses `business/okr-template.md`
 - Uses `sprints/sprint-plan-template.md`
 
 **Foundation Phase:**
+
 - Uses `technical/architecture-template.md`
 - Uses `technical/api-spec-template.md`
 - Creates `.env.local` from `.env.example`
 
 **Development Phase:**
+
 - Uses `sprints/sprint-plan-template.md` (multiple sprints)
 - Uses `sprints/user-story-template.md`
 - Uses `sprints/retrospective-template.md`
 
 **Testing Phase:**
+
 - Uses testing checklists
 - Uses performance benchmarking tools
 - Uses security audit templates
 
 **Launch Phase:**
+
 - Uses `workflows/runbook-template.md`
 - Uses deployment checklists
 - Uses incident response templates
@@ -1078,22 +1142,26 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### How Workflow Integrates with Existing Systems
 
 **GitHub Health Monitoring:**
+
 - Daily practices include `bash scripts/check-github-health.sh`
 - Pre-push hook enforces zero-tolerance policy
 - Part of every phase's daily routine
 
 **Git Automation:**
+
 - Pre-commit hook validates no placeholders
 - Commit-msg hook enforces conventional commits
 - Pre-push hook checks GitHub Actions status
 - Post-commit hook can auto-generate docs
 
 **Documentation Automation:**
+
 - `generate_session_doc.py` for sprint summaries
 - `generate_changelog.py` for release notes
 - `generate_adr.py` for architecture decisions
 
 **SQLite Database:**
+
 - `.project-state.json` syncs to `verdaio-dashboard.db`
 - Dashboard shows workflow progress across projects
 - Phase completion tracked in database
@@ -1103,6 +1171,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 **Two files track workflow state:**
 
 1. **`.project-state.json`** (high-level)
+
    ```json
    {
      "version": "2.1",
@@ -1123,13 +1192,16 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
        "development": {
          "status": "in-progress",
          "completionPercent": 45,
-         "checklist": [ /* detailed tasks */ ]
+         "checklist": [
+           /* detailed tasks */
+         ]
        }
      }
    }
    ```
 
 **Sync strategy:**
+
 - `.project-workflow.json` is source of truth for tasks
 - `.project-state.json` reflects current phase
 - Database syncs from `.project-state.json`
@@ -1141,12 +1213,14 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### MVP-First Approach
 
 **Characteristics:**
+
 - Fast time to market
 - Minimal feature set
 - Solo founder or small team
 - Tight budget
 
 **Workflow Adjustments:**
+
 - **Planning:** 3-5 days (not 1-2 weeks)
 - **Foundation:** 1 week (minimal setup)
 - **Development:** 2-4 weeks (1-2 sprints only)
@@ -1154,6 +1228,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - **Launch:** 3-5 days (minimal monitoring)
 
 **Focus:**
+
 - Core user workflow only
 - "Now" features from roadmap
 - Manual processes OK initially
@@ -1162,12 +1237,14 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Complete Build Approach
 
 **Characteristics:**
+
 - Full feature set upfront
 - Professional team
 - Adequate budget and timeline
 - Enterprise or complex product
 
 **Workflow Adjustments:**
+
 - **Planning:** 2 weeks (thorough planning)
 - **Foundation:** 2 weeks (robust infrastructure)
 - **Development:** 6-8 weeks (3-4 sprints)
@@ -1175,6 +1252,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - **Launch:** 2 weeks (full production setup)
 
 **Focus:**
+
 - All "Now" and some "Next" features
 - Automation from day 1
 - Comprehensive testing
@@ -1183,12 +1261,14 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Growth-Stage Approach
 
 **Characteristics:**
+
 - Existing product being enhanced
 - Proven product-market fit
 - Active user base
 - Revenue and team
 
 **Workflow Adjustments:**
+
 - **Planning:** 1 week (feature planning)
 - **Foundation:** N/A (already exists)
 - **Development:** Continuous (sprints ongoing)
@@ -1196,6 +1276,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 - **Launch:** Per feature (continuous deployment)
 
 **Focus:**
+
 - Incremental features
 - A/B testing
 - Performance optimization
@@ -1210,6 +1291,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 **Symptom:** Stuck in one phase for too long
 
 **Solutions:**
+
 1. Review `.project-workflow.json` checklist
 2. Identify blockers
 3. Adjust scope if needed
@@ -1221,6 +1303,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 **Symptom:** Can't keep workflows green
 
 **Solutions:**
+
 1. Stop new feature work
 2. Focus on fixing failures
 3. Review `.github/workflows/` configurations
@@ -1233,6 +1316,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 **Symptom:** Can't reach 80% target
 
 **Solutions:**
+
 1. Write tests for new code first
 2. Identify untested areas: `npm run coverage`
 3. Focus on critical paths
@@ -1244,6 +1328,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 **Symptom:** Features growing beyond plan
 
 **Solutions:**
+
 1. Review roadmap (Now/Next/Later)
 2. Move new ideas to "Next" or "Later"
 3. Stick to sprint commitments
@@ -1257,6 +1342,7 @@ Use `.project-workflow.json` → `phases.launch.checklist`:
 ### Phase Metrics
 
 Track in `.project-workflow.json`:
+
 - Completion percentage per phase
 - Time spent in each phase
 - Number of tasks completed vs total
@@ -1264,6 +1350,7 @@ Track in `.project-workflow.json`:
 ### Development Metrics
 
 Track during sprints:
+
 - Velocity (story points per sprint)
 - Commit frequency
 - Code review turnaround time
@@ -1272,6 +1359,7 @@ Track during sprints:
 ### Quality Metrics
 
 Track throughout:
+
 - GitHub Actions success rate
 - Number of failing workflows
 - Bug count by severity
@@ -1283,6 +1371,7 @@ Track throughout:
 ## 📚 Additional Resources
 
 **Template Files:**
+
 - `product/` - Product planning templates
 - `sprints/` - Sprint planning and tracking
 - `technical/` - Technical documentation
@@ -1290,16 +1379,19 @@ Track throughout:
 - `workflows/` - Process documentation
 
 **Scripts:**
+
 - `scripts/check-github-health.sh` - Daily health check
 - `scripts/generate_session_doc.py` - Session documentation
 - `scripts/generate_changelog.py` - Changelog generation
 
 **Guides:**
+
 - `DAILY-PRACTICES.md` - Detailed daily routine (see workflows/)
 - `GITHUB-HEALTH-MONITORING.md` - GitHub monitoring system
 - `DOCUMENTATION-AUTOMATION.md` - Documentation automation
 
 **Tools:**
+
 - `.project-workflow.json` - Interactive checklist
 - `.project-state.json` - Project state tracking
 - Git hooks (`.githooks/`) - Automated validation
@@ -1312,9 +1404,11 @@ Track throughout:
 **Template Version:** 2.1
 
 **Version History:**
+
 - **1.0 (2025-11-09):** Initial workflow system release
 
 **Future Enhancements:**
+
 - Phase transition automation
 - Workflow analytics dashboard
 - AI-assisted task suggestions
@@ -1325,17 +1419,20 @@ Track throughout:
 ## 📞 Support
 
 **Questions about workflow?**
+
 - Review this document first
 - Check `.project-workflow.json` for current state
 - Run `bash scripts/check-github-health.sh` if stuck
 - Consult CLAUDE.md for AI assistance
 
 **Issues with templates?**
+
 - See `TEMPLATES-INVENTORY.md` for complete list
 - Check template-specific README files
 - Review examples in template directories
 
 **System issues?**
+
 - GitHub Actions: See `GITHUB-HEALTH-MONITORING.md`
 - Git hooks: Check `.githooks/README.md`
 - Database: See `verdaio-dashboard.db` documentation
@@ -1349,4 +1446,4 @@ Track throughout:
 
 ---
 
-*Happy building! Follow the workflow, maintain GitHub health, and ship great products.* 🚀
+_Happy building! Follow the workflow, maintain GitHub health, and ship great products._ 🚀

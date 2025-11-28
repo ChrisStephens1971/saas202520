@@ -44,14 +44,14 @@
 
 ### Decision Matrix
 
-| Your Situation | Recommended Tools | Why |
-|----------------|-------------------|-----|
-| **Planning only** | None (use built-ins) | Everything you need is available |
-| **Solo MVP coding** | Claude Code Templates (minimal) | Best for quick development |
-| **Small team coding** | Claude Code Templates + Skills | Add document processing |
-| **Enterprise dev** | All three tiers | Full capabilities |
-| **Framework-specific** | WSHobson + Claude Code Templates | Specialized framework help |
-| **Document processing** | Claude Skills only | PDFs, Excel, Word, etc. |
+| Your Situation          | Recommended Tools                | Why                              |
+| ----------------------- | -------------------------------- | -------------------------------- |
+| **Planning only**       | None (use built-ins)             | Everything you need is available |
+| **Solo MVP coding**     | Claude Code Templates (minimal)  | Best for quick development       |
+| **Small team coding**   | Claude Code Templates + Skills   | Add document processing          |
+| **Enterprise dev**      | All three tiers                  | Full capabilities                |
+| **Framework-specific**  | WSHobson + Claude Code Templates | Specialized framework help       |
+| **Document processing** | Claude Skills only               | PDFs, Excel, Word, etc.          |
 
 ---
 
@@ -66,6 +66,7 @@
 **When:** Ready to write code
 
 **Install:**
+
 ```bash
 # Frontend development
 npx claude-code-templates@latest --agent development-team/frontend-developer
@@ -81,6 +82,7 @@ npx claude-code-templates@latest --command testing/generate-tests
 ```
 
 **Verify:**
+
 ```bash
 # Check .claude/ directory created
 ls .claude/
@@ -97,6 +99,7 @@ ls .claude/
 **When:** Need to process PDFs, Excel, Word documents
 
 **Install:**
+
 ```bash
 # Browse marketplace
 /plugin marketplace add anthropics/skills
@@ -109,6 +112,7 @@ ls .claude/
 ```
 
 **Verify:**
+
 ```bash
 # Check settings file
 cat .claude/settings.local.json
@@ -126,6 +130,7 @@ cat .claude/settings.local.json
 **When:** Working with specific frameworks (React, Python/FastAPI, etc.)
 
 **Install:**
+
 ```bash
 # Add marketplace
 /plugin marketplace add wshobson/agents
@@ -138,6 +143,7 @@ cat .claude/settings.local.json
 ```
 
 **Verify:**
+
 ```bash
 # List installed plugins
 /plugin list
@@ -154,6 +160,7 @@ cat .claude/settings.local.json
 **When:** Need integration with external tools
 
 **Examples:**
+
 - Socket MCP - Dependency security scanning
 - Clarity MCP - Web analytics integration
 - Figma MCP - Design system tokens
@@ -208,6 +215,7 @@ cat .claude/settings.local.json
 **RIGHT:** "Task tool's Explore/Plan agents are built-in - I can use them immediately!"
 
 **Example - Correct Usage:**
+
 ```
 User: "Explore the codebase and find all API endpoints"
 Claude: *Uses Task tool with subagent_type: "Explore" immediately*
@@ -220,6 +228,7 @@ Claude: *Uses Task tool with subagent_type: "Explore" immediately*
 **RIGHT:** Use built-ins for planning, install extensions when coding
 
 **Timeline:**
+
 - Week 1-2: Planning → Use built-ins only
 - Week 3+: Coding → Install Claude Code Templates
 - As needed: Documents → Install Claude Skills
@@ -227,12 +236,14 @@ Claude: *Uses Task tool with subagent_type: "Explore" immediately*
 ### ❌ Mistake #3: Confusing Extensions with Built-ins
 
 **Built-in (Always Available):**
+
 - Task tool Explore agent ✅
 - Task tool Plan agent ✅
 - Glob/Grep tools ✅
 - Virtual agents in CLAUDE.md ✅
 
 **Requires Installation:**
+
 - Claude Code Templates 📦
 - Claude Skills (xlsx, pdf, docx) 📦
 - WSHobson Agents 📦
@@ -243,6 +254,7 @@ Claude: *Uses Task tool with subagent_type: "Explore" immediately*
 ## 📚 Quick Reference
 
 **See also:**
+
 - `BUILT-IN-VS-INSTALLABLE.md` - Complete breakdown
 - `_START-HERE.md` - Getting started guide
 - `CLAUDE.md` - Virtual agents reference
@@ -255,12 +267,14 @@ Claude: *Uses Task tool with subagent_type: "Explore" immediately*
 ## 🎯 Your Next Steps
 
 **Right Now (No Installation):**
+
 1. ✅ Read `_START-HERE.md`
 2. ✅ Say "help me get started" to Claude
 3. ✅ Use built-in virtual agents for planning
 4. ✅ Create roadmap, PRDs, sprint plans
 
 **When Ready to Code:**
+
 1. 📦 Install Claude Code Templates
 2. 📦 Install Claude Skills (if needed for documents)
 3. 📦 Install WSHobson (if framework-specific work)

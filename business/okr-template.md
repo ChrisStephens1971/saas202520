@@ -20,6 +20,7 @@
 **Why this matters:** [Explain the importance and expected impact]
 
 ### Key Result 1.1: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%] 🟢/🟡/🔴
@@ -27,9 +28,11 @@
 - **Confidence:** [High | Medium | Low]
 
 **Progress Updates:**
+
 - [Date]: [Update on progress, blockers, learnings]
 
 ### Key Result 1.2: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%]
@@ -37,9 +40,11 @@
 - **Confidence:** [High | Medium | Low]
 
 **Progress Updates:**
+
 - [Date]: [Update]
 
 ### Key Result 1.3: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%]
@@ -47,6 +52,7 @@
 - **Confidence:** [High | Medium | Low]
 
 **Progress Updates:**
+
 - [Date]: [Update]
 
 ---
@@ -56,6 +62,7 @@
 **Why this matters:** [Explain the importance and expected impact]
 
 ### Key Result 2.1: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%]
@@ -63,6 +70,7 @@
 - **Confidence:** [High | Medium | Low]
 
 ### Key Result 2.2: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%]
@@ -76,6 +84,7 @@
 **Why this matters:** [Explain the importance and expected impact]
 
 ### Key Result 3.1: [Measurable outcome]
+
 - **Target:** [Specific number or milestone]
 - **Current:** [Starting baseline]
 - **Progress:** [X%]
@@ -101,31 +110,33 @@ Projects and work that support the OKRs but aren't KRs themselves:
 ## Weekly Check-ins
 
 ### Week of [Date]
+
 **Overall Status:** 🟢 On Track | 🟡 At Risk | 🔴 Off Track
 
 **Highlights:**
+
 - Achievement 1
 - Achievement 2
 
 **Concerns:**
+
 - Concern 1
 
 **Focus for next week:**
+
 - Priority 1
 
 ---
 
 ### Week of [Date]
+
 **Overall Status:**
 
-**Highlights:**
--
+## **Highlights:**
 
-**Concerns:**
--
+## **Concerns:**
 
-**Focus for next week:**
--
+## **Focus for next week:**
 
 ---
 
@@ -133,8 +144,8 @@ Projects and work that support the OKRs but aren't KRs themselves:
 
 ### Final Scores
 
-| Objective | Score | Notes |
-|-----------|-------|-------|
+| Objective   | Score     | Notes         |
+| ----------- | --------- | ------------- |
 | Objective 1 | 0.0 - 1.0 | [Explanation] |
 | Objective 2 | 0.0 - 1.0 | [Explanation] |
 | Objective 3 | 0.0 - 1.0 | [Explanation] |
@@ -142,6 +153,7 @@ Projects and work that support the OKRs but aren't KRs themselves:
 **Overall Score:** [Average score]
 
 ### Scoring Guide
+
 - **1.0:** Achieved everything and more
 - **0.7-0.9:** Mostly achieved, great progress
 - **0.4-0.6:** Made progress but fell short
@@ -152,18 +164,22 @@ Projects and work that support the OKRs but aren't KRs themselves:
 ## Retrospective
 
 ### What Went Well
+
 - Success 1
 - Success 2
 
 ### What Didn't Go Well
+
 - Challenge 1
 - Challenge 2
 
 ### Learnings
+
 - Learning 1: [What we learned and will apply next quarter]
 - Learning 2: [Insight gained]
 
 ### Adjustments for Next Quarter
+
 - [ ] Change 1
 - [ ] Change 2
 

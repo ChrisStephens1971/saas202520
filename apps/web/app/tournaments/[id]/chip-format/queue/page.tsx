@@ -47,10 +47,7 @@ export default async function QueuePage({ params }: PageProps) {
           Tournaments
         </Link>
         <span>/</span>
-        <Link
-          href={`/tournaments/${id}/chip-format`}
-          className="hover:text-gray-900"
-        >
+        <Link href={`/tournaments/${id}/chip-format`} className="hover:text-gray-900">
           {tournament.name}
         </Link>
         <span>/</span>
@@ -75,11 +72,7 @@ export default async function QueuePage({ params }: PageProps) {
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Match Assignment</h2>
         <div className="flex flex-wrap gap-4">
-          <MatchAssignmentButton
-            tournamentId={id}
-            chipConfig={chipConfig}
-            count={1}
-          />
+          <MatchAssignmentButton tournamentId={id} chipConfig={chipConfig} count={1} />
           <MatchAssignmentButton
             tournamentId={id}
             chipConfig={chipConfig}
@@ -99,9 +92,12 @@ export default async function QueuePage({ params }: PageProps) {
             Pairing Strategy: {chipConfig.pairingStrategy.replace('_', ' ')}
           </h3>
           <p className="text-xs text-blue-700">
-            {chipConfig.pairingStrategy === 'random' && 'Players are paired randomly from the queue'}
-            {chipConfig.pairingStrategy === 'rating' && 'Players are paired based on similar ratings'}
-            {chipConfig.pairingStrategy === 'chip_diff' && 'Players are paired based on similar chip counts'}
+            {chipConfig.pairingStrategy === 'random' &&
+              'Players are paired randomly from the queue'}
+            {chipConfig.pairingStrategy === 'rating' &&
+              'Players are paired based on similar ratings'}
+            {chipConfig.pairingStrategy === 'chip_diff' &&
+              'Players are paired based on similar chip counts'}
           </p>
         </div>
       </div>

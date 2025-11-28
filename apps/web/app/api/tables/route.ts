@@ -16,14 +16,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { auth } from '@/auth';
 import { z } from 'zod';
-import {
-  createTable,
-  createTablesBulk,
-  getAllTables,
-} from '@/lib/tournament/table-manager';
-import type {
-  TableListResponse,
-} from '@/lib/tournament/types';
+import { createTable, createTablesBulk, getAllTables } from '@/lib/tournament/table-manager';
+import type { TableListResponse } from '@/lib/tournament/types';
 
 // ============================================================================
 // VALIDATION SCHEMAS

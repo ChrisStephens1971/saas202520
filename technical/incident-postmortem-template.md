@@ -17,11 +17,13 @@
 ## Impact
 
 ### User Impact
+
 - **Users Affected:** [Number or percentage]
 - **Services Impacted:** [List services]
 - **User-Facing Symptoms:** [What users experienced]
 
 ### Business Impact
+
 - **Revenue Impact:** [$X estimated or "None"]
 - **SLA Breach:** [Yes/No - which SLA if applicable]
 - **Customer Escalations:** [Number of support tickets]
@@ -32,15 +34,15 @@
 
 All times in [UTC/PST/EST]
 
-| Time | Event |
-|------|-------|
-| 10:00 | [Initial trigger event] |
-| 10:05 | [Monitoring alert fired] |
-| 10:10 | [On-call engineer paged] |
-| 10:15 | [Investigation started] |
-| 10:30 | [Root cause identified] |
-| 10:45 | [Fix deployed to production] |
-| 11:00 | [Service fully restored] |
+| Time  | Event                           |
+| ----- | ------------------------------- |
+| 10:00 | [Initial trigger event]         |
+| 10:05 | [Monitoring alert fired]        |
+| 10:10 | [On-call engineer paged]        |
+| 10:15 | [Investigation started]         |
+| 10:30 | [Root cause identified]         |
+| 10:45 | [Fix deployed to production]    |
+| 11:00 | [Service fully restored]        |
 | 11:15 | [Monitoring confirmed recovery] |
 
 **Total Duration:** 1 hour 15 minutes
@@ -50,12 +52,15 @@ All times in [UTC/PST/EST]
 ## Root Cause
 
 ### What Happened?
+
 [Detailed technical explanation of what caused the incident]
 
 ### Why Did It Happen?
+
 [Underlying reasons - was it a code bug, config error, infrastructure issue, etc.?]
 
 ### Contributing Factors
+
 - Factor 1: [Description]
 - Factor 2: [Description]
 
@@ -64,6 +69,7 @@ All times in [UTC/PST/EST]
 ## Detection
 
 ### How Was It Detected?
+
 - [ ] Automated monitoring alert
 - [ ] User report
 - [ ] Internal team member noticed
@@ -78,14 +84,17 @@ All times in [UTC/PST/EST]
 ## Response
 
 ### What Went Well
+
 - Action 1: [What worked in our response]
 - Action 2: [What helped resolve it quickly]
 
 ### What Could Have Gone Better
+
 - Issue 1: [What slowed us down]
 - Issue 2: [What we missed]
 
 ### Communication
+
 - **Internal:** [How team was notified and coordinated]
 - **External:** [Status page updates, customer comms sent]
 - **Timeliness:** [Was communication prompt and clear?]
@@ -95,14 +104,17 @@ All times in [UTC/PST/EST]
 ## Resolution
 
 ### Immediate Fix (What stopped the bleeding)
+
 [What was done to restore service immediately]
 
 ### Steps Taken
+
 1. Step 1
 2. Step 2
 3. Step 3
 
 ### Verification
+
 [How we confirmed the fix worked]
 
 ---
@@ -129,12 +141,14 @@ All times in [UTC/PST/EST]
 ## Action Items
 
 ### Immediate (Do within 24 hours)
+
 - [ ] **Action 1:** [Specific action]
   - Owner: [Name]
   - Due: [Date]
   - Status: [Done | In Progress | Blocked]
 
 ### Short-term (Do within 1 week)
+
 - [ ] **Action 2:** [Specific action]
   - Owner: [Name]
   - Due: [Date]
@@ -146,6 +160,7 @@ All times in [UTC/PST/EST]
   - Priority: [High | Medium | Low]
 
 ### Long-term (Do within 1 month)
+
 - [ ] **Action 4:** [Specific action]
   - Owner: [Name]
   - Due: [Date]
@@ -158,18 +173,22 @@ All times in [UTC/PST/EST]
 ### How Can We Prevent This?
 
 **Technical Improvements:**
+
 - Improvement 1
 - Improvement 2
 
 **Process Improvements:**
+
 - Process change 1
 - Process change 2
 
 **Monitoring Improvements:**
+
 - Additional alerts needed
 - Dashboard changes
 
 **Documentation Improvements:**
+
 - Runbook updates
 - Playbook additions
 
@@ -178,11 +197,13 @@ All times in [UTC/PST/EST]
 ## Lessons Learned
 
 ### What We Learned
+
 1. Learning 1
 2. Learning 2
 3. Learning 3
 
 ### Knowledge Gaps Identified
+
 - Gap 1: [What we didn't know that we should have]
 - Gap 2: [Missing documentation or training]
 
@@ -200,12 +221,15 @@ Have we seen similar issues before?
 ## Supporting Data
 
 ### Logs
+
 [Links to relevant logs, stack traces, error messages]
 
 ### Metrics
+
 [Links to dashboards, graphs showing the incident]
 
 ### Screenshots
+
 [Any relevant screenshots]
 
 ---
@@ -221,9 +245,11 @@ Have we seen similar issues before?
 ## Appendix
 
 ### Technical Details
+
 [Additional technical context that doesn't fit above]
 
 ### External References
+
 - [Link to documentation]
 - [Link to vendor status page]
 - [Related reading]
@@ -233,6 +259,7 @@ Have we seen similar issues before?
 ## Signoff
 
 Reviewed and approved by:
+
 - [ ] Incident Lead: [Name]
 - [ ] Engineering Manager: [Name]
 - [ ] On-call Engineer: [Name]

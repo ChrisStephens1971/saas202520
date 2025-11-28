@@ -9,6 +9,7 @@ Quick guide to verify your SaaS planning is complete before development.
 ## When to Use This
 
 **After completing planning (Lite or Full template):**
+
 - Verify nothing critical was missed
 - Identify gaps before coding
 - Get go/no-go decision
@@ -23,31 +24,38 @@ Quick guide to verify your SaaS planning is complete before development.
 These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 
 ### Product & Strategy (2 items)
+
 - [ ] 🔴 Clear problem statement customers will pay to solve
 - [ ] 🔴 Defined target customer with specific characteristics
 
 ### Technical Architecture (3 items)
+
 - [ ] 🔴 Multi-tenancy strategy selected with rationale
 - [ ] 🔴 Technology stack chosen (aligned with team expertise)
 - [ ] 🔴 Database architecture designed with tenant isolation
 
 ### Security & Compliance (2 items)
+
 - [ ] 🔴 Compliance requirements identified (GDPR, SOC 2, etc.)
 - [ ] 🔴 Data classification done (PII, financial, sensitive)
 
 ### Business Model (3 items)
+
 - [ ] 🔴 Pricing model selected (per-seat, usage, tiered, etc.)
 - [ ] 🔴 Pricing tiers defined with feature matrix
 - [ ] 🔴 Unit economics calculated (CAC, LTV, margins)
 
 ### Product Features (1 item)
+
 - [ ] 🔴 MVP feature list defined (5 or fewer core features)
 
 ### Go-to-Market (2 items)
+
 - [ ] 🔴 Customer acquisition strategy defined
 - [ ] 🔴 First 10 customers identified (ideally by name)
 
 ### Operations (2 items)
+
 - [ ] 🔴 Core team roles identified (who does what)
 - [ ] 🔴 Budget allocated for 12 months
 
@@ -60,7 +68,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## Section-by-Section Readiness
 
 ### 1. Product Vision & Strategy (10 items)
+
 **Essential questions:**
+
 - Clear problem worth solving?
 - Target customer defined?
 - Market size understood?
@@ -72,7 +82,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 2. Technical Architecture (15 items)
+
 **Essential questions:**
+
 - Multi-tenancy approach decided?
 - Tech stack selected?
 - Database designed?
@@ -84,7 +96,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 3. Security & Compliance (15 items)
+
 **Essential questions:**
+
 - Compliance requirements identified?
 - Authentication method selected?
 - Data encryption planned?
@@ -97,7 +111,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 4. Business Model (15 items)
+
 **Essential questions:**
+
 - Pricing model chosen?
 - Pricing tiers defined?
 - Unit economics calculated?
@@ -110,7 +126,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 5. Product Features (15 items)
+
 **Essential questions:**
+
 - MVP features defined (3-5 max)?
 - User flows mapped?
 - Wireframes created?
@@ -122,7 +140,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 6. Go-to-Market (15 items)
+
 **Essential questions:**
+
 - Customer acquisition plan?
 - First 10 customers identified?
 - Marketing channels prioritized?
@@ -135,7 +155,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 7. Support & Success (10 items)
+
 **Essential questions:**
+
 - Support model defined?
 - Response time commitments?
 - Knowledge base planned?
@@ -147,7 +169,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 8. Operations & Team (15 items)
+
 **Essential questions:**
+
 - Team roles defined?
 - Budget allocated?
 - Development roadmap?
@@ -160,7 +184,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 9. Data & Analytics (10 items)
+
 **Essential questions:**
+
 - Analytics tool selected?
 - Key metrics defined?
 - Event tracking planned?
@@ -172,7 +198,9 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ---
 
 ### 10. Risk Management (10 items)
+
 **Essential questions:**
+
 - Top risks identified?
 - Mitigation plans for major risks?
 - Technical risks addressed?
@@ -185,11 +213,11 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 
 ## Overall Scoring
 
-| Score | Status | Action |
-|-------|--------|--------|
-| **90-100%** | Excellent | ✅ Ready to proceed |
-| **80-89%** | Good | ✅ Proceed with minor gaps |
-| **70-79%** | Fair | ⚠️ Address critical gaps first |
+| Score         | Status     | Action                          |
+| ------------- | ---------- | ------------------------------- |
+| **90-100%**   | Excellent  | ✅ Ready to proceed             |
+| **80-89%**    | Good       | ✅ Proceed with minor gaps      |
+| **70-79%**    | Fair       | ⚠️ Address critical gaps first  |
 | **Below 70%** | Incomplete | ❌ Not ready, complete planning |
 
 **Critical items:** Must be 100% regardless of overall score
@@ -201,6 +229,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 **For solo founders, different criteria apply:**
 
 ### Must Have (100% Required):
+
 - [ ] Product vision clear
 - [ ] Tech stack selected (familiar to you)
 - [ ] Multi-tenancy approach decided
@@ -210,6 +239,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - [ ] 6-month budget allocated
 
 ### Can Be "Good Enough" (70-80% okay):
+
 - Product roadmap beyond MVP
 - Advanced scalability planning
 - Formal compliance (unless regulated)
@@ -217,6 +247,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - Detailed risk management
 
 ### Can Defer Until Traction:
+
 - SOC 2 audit
 - Advanced integrations
 - Team hiring plans
@@ -228,6 +259,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## Red Flags (Stop and Reconsider)
 
 **Stop if:**
+
 - ❌ Scored <50% on Technical Architecture
 - ❌ No clarity on problem/customer
 - ❌ Can't name first 10 customers
@@ -262,6 +294,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## Common Gaps by Founder Type
 
 ### First-Time Founders Often Missing:
+
 - Unit economics (CAC, LTV calculations)
 - Realistic timelines
 - Compliance requirements
@@ -269,6 +302,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - Risk mitigation
 
 ### Technical Founders Often Missing:
+
 - Go-to-market strategy
 - Pricing strategy
 - Customer identification
@@ -276,6 +310,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - Support model
 
 ### Business Founders Often Missing:
+
 - Technical architecture details
 - Scalability approach
 - Security measures
@@ -289,6 +324,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## What to Do With Gaps
 
 ### High-Priority Gaps (Address Before Development):
+
 - Critical items (marked 🔴)
 - Technical architecture basics
 - Security fundamentals
@@ -296,6 +332,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - First customer identification
 
 ### Medium-Priority Gaps (Address in First Sprint):
+
 - Advanced scalability
 - Detailed roadmap
 - Support processes
@@ -303,6 +340,7 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 - Risk mitigation details
 
 ### Low-Priority Gaps (Address Post-MVP):
+
 - Advanced compliance (SOC 2)
 - Sophisticated analytics
 - Detailed hiring plans
@@ -349,17 +387,20 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## When to Re-Validate
 
 **Monthly During Development:**
+
 - Quick validation (30 min)
 - Check if assumptions still valid
 - Identify new gaps from learnings
 
 **Before Major Milestones:**
+
 - Before beta launch
 - Before public launch
 - Before first enterprise sale
 - Before Series A fundraising
 
 **After Pivots:**
+
 - Complete re-validation needed
 - May require new planning document
 
@@ -368,21 +409,27 @@ These are marked with 🔴 in full checklist. **Cannot proceed without these:**
 ## Industry-Specific Additions
 
 ### If Healthcare:
+
 Add these critical items:
+
 - [ ] 🔴 HIPAA compliance requirements mapped
 - [ ] 🔴 Business Associate Agreements prepared
 - [ ] PHI handling procedures documented
 - [ ] HITRUST certification timeline
 
 ### If Fintech:
+
 Add these critical items:
+
 - [ ] 🔴 Required licenses identified
 - [ ] 🔴 Banking partnerships established or planned
 - [ ] AML/KYC program designed
 - [ ] OFAC screening implemented
 
 ### If EdTech:
+
 Add these critical items:
+
 - [ ] 🔴 FERPA compliance addressed
 - [ ] 🔴 COPPA compliance (if users <13)
 - [ ] WCAG 2.1 AA accessibility plan
@@ -393,6 +440,7 @@ Add these critical items:
 ## Bottom Line
 
 **The validation checklist helps you:**
+
 - Catch gaps before they become problems
 - Ensure you've thought through essentials
 - Prioritize what needs attention
@@ -400,6 +448,7 @@ Add these critical items:
 - Avoid common founder mistakes
 
 **Minimum to proceed:**
+
 - 80% overall completion
 - 100% of critical items (🔴)
 - All 10 quick validation questions answered clearly
@@ -415,12 +464,14 @@ Add these critical items:
 **Full Checklist:** [planning-validation-checklist.md](planning-validation-checklist.md) (130+ items, detailed scoring)
 
 **Use This Quick Reference When:**
+
 - Need fast go/no-go decision
 - Want to check critical items only
 - Reviewing before key milestone
 - Don't have time for full checklist
 
 **Use Full Checklist When:**
+
 - Comprehensive validation needed
 - First time planning SaaS
 - Preparing for fundraising

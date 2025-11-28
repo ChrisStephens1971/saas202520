@@ -2,13 +2,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Plus,
-  Minus,
-  Undo,
-  Check,
-  Trophy
-} from 'lucide-react';
+import { Plus, Minus, Undo, Check, Trophy } from 'lucide-react';
 import TouchOptimizedButton from '@/components/mobile/TouchOptimizedButton';
 import BottomSheet from '@/components/mobile/BottomSheet';
 import { gameHaptics, triggerHaptic } from '@/lib/pwa/haptics';
@@ -74,23 +68,19 @@ interface MobileScorerProps {
  * - Screen reader support
  * - Keyboard navigation
  */
-export function MobileScorer({
-  match,
-  onComplete,
-  onCancel
-}: MobileScorerProps) {
+export function MobileScorer({ match, onComplete, onCancel }: MobileScorerProps) {
   const [player1, setPlayer1] = useState<Player>({
     id: match.player1.id,
     name: match.player1.name,
     score: 0,
-    gamesWon: 0
+    gamesWon: 0,
   });
 
   const [player2, setPlayer2] = useState<Player>({
     id: match.player2.id,
     name: match.player2.name,
     score: 0,
-    gamesWon: 0
+    gamesWon: 0,
   });
 
   const [history, setHistory] = useState<ScoreHistory[]>([]);
@@ -107,8 +97,8 @@ export function MobileScorer({
           player2Score: player2.score,
           player1Games: player1.gamesWon,
           player2Games: player2.gamesWon,
-          action
-        }
+          action,
+        },
       ]);
     },
     [player1, player2]
@@ -218,12 +208,12 @@ export function MobileScorer({
     setPlayer1((prev) => ({
       ...prev,
       score: lastState.player1Score,
-      gamesWon: lastState.player1Games
+      gamesWon: lastState.player1Games,
     }));
     setPlayer2((prev) => ({
       ...prev,
       score: lastState.player2Score,
-      gamesWon: lastState.player2Games
+      gamesWon: lastState.player2Games,
     }));
     setHistory((prev) => prev.slice(0, -1));
     gameHaptics.undo();
@@ -234,7 +224,7 @@ export function MobileScorer({
       onComplete(winner, {
         player1: { score: player1.score, gamesWon: player1.gamesWon },
         player2: { score: player2.score, gamesWon: player2.gamesWon },
-        history
+        history,
       });
     }
   }, [winner, player1, player2, history, onComplete]);
@@ -245,9 +235,7 @@ export function MobileScorer({
       <div className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
         <div className="px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-              Score Match
-            </h1>
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white">Score Match</h1>
             <div className="flex gap-2">
               <TouchOptimizedButton
                 variant="ghost"
@@ -271,7 +259,8 @@ export function MobileScorer({
 
           {/* Match Format */}
           <div className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
-            Best of {match.format.gamesToWin * 2 - 1} games • {match.format.pointsToWin} points to win
+            Best of {match.format.gamesToWin * 2 - 1} games • {match.format.pointsToWin} points to
+            win
           </div>
         </div>
       </div>
@@ -285,18 +274,14 @@ export function MobileScorer({
               {player1.name}
             </h2>
             <div className="flex items-center justify-center gap-3">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Games Won
-              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Games Won</div>
               <div className="flex gap-1">
                 {Array.from({ length: match.format.gamesToWin }).map((_, i) => (
                   <div
                     key={i}
                     className={cn(
                       'w-3 h-3 rounded-full',
-                      i < player1.gamesWon
-                        ? 'bg-green-500'
-                        : 'bg-gray-300 dark:bg-gray-600'
+                      i < player1.gamesWon ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
                     )}
                   />
                 ))}
@@ -409,18 +394,14 @@ export function MobileScorer({
               {player2.name}
             </h2>
             <div className="flex items-center justify-center gap-3">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Games Won
-              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Games Won</div>
               <div className="flex gap-1">
                 {Array.from({ length: match.format.gamesToWin }).map((_, i) => (
                   <div
                     key={i}
                     className={cn(
                       'w-3 h-3 rounded-full',
-                      i < player2.gamesWon
-                        ? 'bg-green-500'
-                        : 'bg-gray-300 dark:bg-gray-600'
+                      i < player2.gamesWon ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
                     )}
                   />
                 ))}
@@ -481,14 +462,14 @@ export function MobileScorer({
             Recent Actions
           </div>
           <div className="space-y-1">
-            {history.slice(-3).reverse().map((item, _index) => (
-              <div
-                key={item.timestamp}
-                className="text-xs text-gray-700 dark:text-gray-300"
-              >
-                {item.action}
-              </div>
-            ))}
+            {history
+              .slice(-3)
+              .reverse()
+              .map((item, _index) => (
+                <div key={item.timestamp} className="text-xs text-gray-700 dark:text-gray-300">
+                  {item.action}
+                </div>
+              ))}
           </div>
         </div>
       )}

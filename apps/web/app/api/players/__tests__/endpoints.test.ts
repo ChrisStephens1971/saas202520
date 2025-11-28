@@ -274,9 +274,7 @@ describe('GET /api/players/[id]/statistics', () => {
   });
 
   it('should support recalculation', async () => {
-    const request = createRequest(
-      '/api/players/player-1/statistics?recalculate=true'
-    );
+    const request = createRequest('/api/players/player-1/statistics?recalculate=true');
     const params = Promise.resolve({ id: 'player-1' });
 
     const response = await getStatistics(request, { params });
@@ -347,9 +345,7 @@ describe('GET /api/players/[id]/matches', () => {
   });
 
   it('should filter by tournament', async () => {
-    const request = createRequest(
-      '/api/players/player-1/matches?tournamentId=tournament-1'
-    );
+    const request = createRequest('/api/players/player-1/matches?tournamentId=tournament-1');
     const params = Promise.resolve({ id: 'player-1' });
 
     const response = await getMatches(request, { params });

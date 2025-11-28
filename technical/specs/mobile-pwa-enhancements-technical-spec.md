@@ -12,6 +12,7 @@
 ### Problem
 
 Tournament organizers and participants face significant challenges on mobile devices:
+
 - Poor mobile experience with small tap targets and no gesture support
 - Unreliable connectivity at venues causing disruptions
 - Slow performance (3-5s load times on 3G)
@@ -21,6 +22,7 @@ Tournament organizers and participants face significant challenges on mobile dev
 ### Solution Summary
 
 Transform the tournament platform into a Progressive Web App (PWA) with:
+
 - **Service Worker** using Workbox for intelligent caching and offline support
 - **Touch-optimized UI** with 44px+ tap targets, gesture navigation, haptic feedback
 - **IndexedDB storage** for offline tournament data via Dexie.js
@@ -51,6 +53,7 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 ### Current State
 
 **Existing Architecture:**
+
 - Next.js 14+ application with App Router
 - PostgreSQL database with multi-tenant architecture
 - Redis for caching and real-time features
@@ -59,6 +62,7 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 - No push notification infrastructure
 
 **Current Performance:**
+
 - Mobile page load: 4.2s on 3G
 - Time to Interactive: 5.1s
 - Lighthouse PWA score: 45
@@ -68,6 +72,7 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 ### Constraints
 
 **Technical Constraints:**
+
 - Must maintain multi-tenant data isolation
 - Cannot break existing desktop experience
 - Must support iOS Safari (limited PWA features)
@@ -75,12 +80,14 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 - Must work with existing Next.js 14 App Router architecture
 
 **Business Constraints:**
+
 - No budget for native app development
 - Free tier of Firebase Cloud Messaging (FCM)
 - Performance budgets: <300KB JS, <50KB CSS
 - Must support offline tournament operations
 
 **Timeline Constraints:**
+
 - 5 days for implementation
 - Week 5 for beta testing
 - Week 6 for gradual rollout
@@ -150,12 +157,14 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 **Location:** `/public/sw.js` (generated), `/app/sw-config.ts` (configuration)
 
 **Interfaces:**
+
 - **Cache API:** Store static assets and API responses
 - **Background Sync API:** Queue offline actions for later sync
 - **Push API:** Receive and display push notifications
 - **Fetch API:** Intercept network requests for caching
 
 **Key Features:**
+
 - Cache-first strategy for static assets (HTML, CSS, JS, images)
 - Network-first strategy for API calls with cache fallback
 - Stale-while-revalidate for tournament pages
@@ -163,15 +172,14 @@ Transform the tournament platform into a Progressive Web App (PWA) with:
 - Push notification handling with action buttons
 
 **Implementation:**
+
 ```typescript
 // workbox-config.ts
 import { GenerateSW } from 'workbox-webpack-plugin';
 
 export const workboxConfig = {
   globDirectory: 'out/',
-  globPatterns: [
-    '**/*.{html,js,css,png,svg,jpg,gif,json,woff,woff2}'
-  ],
+  globPatterns: ['**/*.{html,js,css,png,svg,jpg,gif,json,woff,woff2}'],
   swDest: 'out/sw.js',
   runtimeCaching: [
     // Static assets - Cache first
@@ -243,9 +251,7 @@ self.addEventListener('push', (event) => {
     data: { url: data.url },
   };
 
-  event.waitUntil(
-    self.registration.showNotification(data.title, options)
-  );
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 // Notification click handler
@@ -264,6 +270,7 @@ self.addEventListener('notificationclick', (event) => {
 **Location:** `/app/components/mobile/`
 
 **Components:**
+
 - `BottomNavigation` - Thumb-zone navigation (5 tabs)
 - `SwipeableCard` - Horizontal swipe for tournament cards
 - `TouchFeedback` - Visual + haptic feedback wrapper
@@ -274,6 +281,7 @@ self.addEventListener('notificationclick', (event) => {
 - `GestureHandler` - Centralized gesture recognition
 
 **Example - BottomNavigation:**
+
 ```typescript
 // app/components/mobile/BottomNavigation.tsx
 'use client';
@@ -322,6 +330,7 @@ export function BottomNavigation() {
 ```
 
 **Example - InstallPrompt:**
+
 ```typescript
 // app/components/mobile/InstallPrompt.tsx
 'use client';
@@ -418,6 +427,7 @@ export function InstallPrompt() {
 **Location:** `/app/lib/db/`
 
 **Schema:**
+
 ```typescript
 // app/lib/db/index.ts
 import Dexie, { Table } from 'dexie';
@@ -481,12 +491,12 @@ export async function cacheTournament(tournament: Tournament) {
 }
 
 export async function getCachedTournament(id: string, tenantId: string) {
-  return db.tournaments
-    .where({ id, tenantId })
-    .first();
+  return db.tournaments.where({ id, tenantId }).first();
 }
 
-export async function queueOfflineAction(action: Omit<SyncAction, 'id' | 'timestamp' | 'status' | 'retries'>) {
+export async function queueOfflineAction(
+  action: Omit<SyncAction, 'id' | 'timestamp' | 'status' | 'retries'>
+) {
   await db.syncQueue.add({
     ...action,
     timestamp: Date.now(),
@@ -496,9 +506,7 @@ export async function queueOfflineAction(action: Omit<SyncAction, 'id' | 'timest
 }
 
 export async function syncOfflineActions(tenantId: string) {
-  const pending = await db.syncQueue
-    .where({ status: 'pending', tenantId })
-    .toArray();
+  const pending = await db.syncQueue.where({ status: 'pending', tenantId }).toArray();
 
   const results = [];
   for (const action of pending) {
@@ -531,7 +539,7 @@ export async function syncOfflineActions(tenantId: string) {
 
 // Clean old cached data (call periodically)
 export async function cleanOldCache() {
-  const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   await db.tournaments.where('lastViewed').below(sevenDaysAgo).delete();
 }
 ```
@@ -543,6 +551,7 @@ export async function cleanOldCache() {
 **Location:** `/app/lib/push/`
 
 **Implementation:**
+
 ```typescript
 // app/lib/push/manager.ts
 export class NotificationManager {
@@ -603,9 +612,7 @@ export class NotificationManager {
 
   private static urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
@@ -657,6 +664,7 @@ export const NotificationTemplates = {
 **Location:** `/app/lib/haptics/`, `/app/lib/gestures/`
 
 **Haptic Feedback:**
+
 ```typescript
 // app/lib/haptics/index.ts
 type HapticPattern = 'light' | 'medium' | 'heavy' | 'success' | 'error';
@@ -677,6 +685,7 @@ export function hapticFeedback(pattern: HapticPattern) {
 ```
 
 **Gesture Handler:**
+
 ```typescript
 // app/lib/gestures/useSwipe.ts
 import { useEffect, useRef } from 'react';
@@ -774,10 +783,12 @@ CREATE TRIGGER update_push_subscriptions_updated_at
 ```
 
 **Relationships:**
+
 - Foreign key to `tenants(id)` - Multi-tenant isolation
 - Foreign key to `users(id)` - User ownership
 
 **Privacy:**
+
 - Endpoint and keys encrypted at rest
 - Deleted when user unsubscribes or deletes account
 - GDPR/CCPA compliant (explicit opt-in)
@@ -810,10 +821,12 @@ CREATE INDEX idx_push_notifications_type ON push_notifications(notification_type
 ```
 
 **Relationships:**
+
 - Foreign key to `tenants(id)` - Multi-tenant isolation
 - Foreign key to `users(id)` - Recipient
 
 **Analytics:**
+
 - Track delivery success/failure
 - Track click-through rates
 - Identify optimal notification times
@@ -854,6 +867,7 @@ $$ LANGUAGE plpgsql;
 ```
 
 **Relationships:**
+
 - Foreign key to `tenants(id)` - Multi-tenant isolation
 - Foreign key to `users(id)` - Action ownership
 
@@ -866,6 +880,7 @@ $$ LANGUAGE plpgsql;
 **Purpose:** Dynamic PWA manifest with tenant-specific branding
 
 **Request:**
+
 ```
 GET /api/pwa/manifest.json
 Headers:
@@ -873,6 +888,7 @@ Headers:
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "name": "Tournament Manager - TenantName",
@@ -924,6 +940,7 @@ Headers:
 ```
 
 **Implementation:**
+
 ```typescript
 // app/api/pwa/manifest/route.ts
 import { NextRequest, NextResponse } from 'next/server';
@@ -994,6 +1011,7 @@ export async function GET(request: NextRequest) {
 **Purpose:** Register push notification subscription
 
 **Request:**
+
 ```json
 {
   "subscription": {
@@ -1016,6 +1034,7 @@ export async function GET(request: NextRequest) {
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1024,11 +1043,13 @@ export async function GET(request: NextRequest) {
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid subscription format
 - `401 Unauthorized`: Not authenticated
 - `409 Conflict`: Subscription already exists
 
 **Implementation:**
+
 ```typescript
 // app/api/push/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server';
@@ -1065,14 +1086,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      subscriptionId: result.rows[0].id
+      subscriptionId: result.rows[0].id,
     });
   } catch (error) {
     console.error('Push subscription error:', error);
-    return NextResponse.json(
-      { error: 'Failed to save subscription' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
   }
 }
 ```
@@ -1082,6 +1100,7 @@ export async function POST(request: NextRequest) {
 **Purpose:** Remove push notification subscription
 
 **Request:**
+
 ```json
 {
   "endpoint": "https://fcm.googleapis.com/fcm/send/..."
@@ -1089,6 +1108,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true
@@ -1100,6 +1120,7 @@ export async function POST(request: NextRequest) {
 **Purpose:** Sync offline actions from client
 
 **Request:**
+
 ```json
 {
   "actions": [
@@ -1118,6 +1139,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "synced": 1,
@@ -1126,6 +1148,7 @@ export async function POST(request: NextRequest) {
 ```
 
 **Response (207 Multi-Status):**
+
 ```json
 {
   "synced": 0,
@@ -1143,11 +1166,13 @@ export async function POST(request: NextRequest) {
 **Purpose:** Fetch complete tournament data for offline caching
 
 **Request:**
+
 ```
 GET /api/offline/tournament/uuid-123
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "tournament": {
@@ -1163,6 +1188,7 @@ GET /api/offline/tournament/uuid-123
 ```
 
 **Headers:**
+
 ```
 Cache-Control: max-age=300, stale-while-revalidate=600
 ETag: "abc123"
@@ -1177,6 +1203,7 @@ ETag: "abc123"
 **Goal:** Basic PWA infrastructure with manifest and service worker
 
 **Tasks:**
+
 - [x] Create web app manifest with tenant branding (Day 1)
 - [x] Generate PWA icons (72x72, 192x192, 512x512, maskable)
 - [x] Set up Workbox configuration for service worker
@@ -1189,6 +1216,7 @@ ETag: "abc123"
 **Estimated Effort:** 2 days
 
 **Deliverables:**
+
 - Working service worker with basic caching
 - Installable PWA on mobile devices
 - Lighthouse PWA score >70
@@ -1198,6 +1226,7 @@ ETag: "abc123"
 **Goal:** IndexedDB storage and offline data access
 
 **Tasks:**
+
 - [x] Set up Dexie.js with schema (Day 2)
 - [x] Implement tournament caching logic
 - [x] Create offline sync queue
@@ -1209,6 +1238,7 @@ ETag: "abc123"
 **Estimated Effort:** 1.5 days
 
 **Deliverables:**
+
 - Offline tournament viewing
 - Sync queue for offline actions
 - Auto-sync when connectivity returns
@@ -1218,6 +1248,7 @@ ETag: "abc123"
 **Goal:** Mobile-optimized UI with touch and gesture support
 
 **Tasks:**
+
 - [x] Build BottomNavigation component (Day 3)
 - [x] Implement SwipeableCard component
 - [x] Add pull-to-refresh gesture
@@ -1230,6 +1261,7 @@ ETag: "abc123"
 **Estimated Effort:** 1.5 days
 
 **Deliverables:**
+
 - Touch-optimized interface
 - Working gesture navigation
 - Haptic feedback on interactions
@@ -1239,6 +1271,7 @@ ETag: "abc123"
 **Goal:** Web push notifications for match updates
 
 **Tasks:**
+
 - [x] Set up Firebase Cloud Messaging
 - [x] Generate VAPID keys
 - [x] Implement NotificationManager class
@@ -1251,6 +1284,7 @@ ETag: "abc123"
 **Estimated Effort:** 1 day
 
 **Deliverables:**
+
 - Working push notifications
 - Notification preferences
 - Click-through to relevant pages
@@ -1260,6 +1294,7 @@ ETag: "abc123"
 **Goal:** Optimize performance and comprehensive testing
 
 **Tasks:**
+
 - [x] Implement code splitting by route
 - [x] Optimize images (WebP, responsive)
 - [x] Add lazy loading for below-fold content
@@ -1273,6 +1308,7 @@ ETag: "abc123"
 **Estimated Effort:** 1 day
 
 **Deliverables:**
+
 - Lighthouse PWA score >90
 - Load time <2s on 3G
 - Zero critical bugs
@@ -1284,18 +1320,21 @@ ETag: "abc123"
 ### Unit Tests
 
 **Service Worker Tests:**
+
 - Test cache strategies (cache-first, network-first)
 - Test background sync queue
 - Test push notification handling
 - Test offline detection
 
 **Component Tests:**
+
 - BottomNavigation: Active state, navigation
 - InstallPrompt: Show/hide logic, install flow
 - OfflineIndicator: Connection status changes
 - SwipeableCard: Gesture recognition
 
 **Utility Tests:**
+
 - Haptic feedback patterns
 - Gesture detection (swipe, long-press)
 - IndexedDB operations (CRUD)
@@ -1304,6 +1343,7 @@ ETag: "abc123"
 ### Integration Tests
 
 **Offline Flow:**
+
 1. User views tournament while online
 2. Tournament cached in IndexedDB
 3. User goes offline (network disconnected)
@@ -1314,6 +1354,7 @@ ETag: "abc123"
 8. Verify score persisted on server
 
 **Push Notification Flow:**
+
 1. User opts in to notifications
 2. Subscription saved to database
 3. Server sends push notification
@@ -1323,6 +1364,7 @@ ETag: "abc123"
 7. App opens to correct page
 
 **Install Flow:**
+
 1. User visits site 3 times
 2. Install prompt appears
 3. User clicks "Install"
@@ -1334,18 +1376,21 @@ ETag: "abc123"
 ### Performance Tests
 
 **Load Performance:**
+
 - Initial page load <2s on 3G
 - Time to Interactive <3s
 - First Contentful Paint <1s
 - Service worker registration <500ms
 
 **Runtime Performance:**
+
 - Smooth animations (60fps)
 - Gesture response <100ms
 - Haptic feedback immediate
 - No layout shift during load
 
 **Lighthouse Audits:**
+
 ```bash
 # Run Lighthouse CI
 npm run lighthouse:ci
@@ -1360,21 +1405,25 @@ npm run lighthouse:ci
 ### Security Considerations
 
 **Authentication:**
+
 - Push subscriptions require authentication
 - Sync endpoints validate user ownership
 - Offline data scoped to tenant
 
 **Authorization:**
+
 - Push notifications only for user's tournaments
 - Sync queue filtered by user/tenant
 - Cached data respects tenant isolation
 
 **Data Validation:**
+
 - Validate push subscription format
 - Sanitize sync queue payloads
 - Validate offline action permissions
 
 **Rate Limiting:**
+
 - Push subscriptions: 10 per user
 - Sync requests: 100 per hour per user
 - Notification sends: 50 per day per user
@@ -1386,6 +1435,7 @@ npm run lighthouse:ci
 ### Deployment Strategy
 
 **Phase 1: Internal Testing (Day 5)**
+
 - [x] Deploy to staging environment
 - [x] Internal team testing (5+ devices)
 - [x] Validate all PWA features
@@ -1393,6 +1443,7 @@ npm run lighthouse:ci
 - [x] Fix critical issues
 
 **Phase 2: Beta Launch (Week 5)**
+
 - [x] Deploy to production with feature flag
 - [x] Enable for 10% of mobile users
 - [x] Monitor metrics (load times, errors, installs)
@@ -1400,18 +1451,20 @@ npm run lighthouse:ci
 - [x] Iterate based on feedback
 
 **Phase 3: Gradual Rollout (Week 6)**
+
 - [x] Day 1-2: 25% of mobile users
 - [x] Day 3-4: 50% of mobile users
 - [x] Day 5-6: 75% of mobile users
 - [x] Day 7: 100% of mobile users
 
 **Feature Flag:**
+
 ```typescript
 // lib/feature-flags.ts
 export async function isPWAEnabled(userId: string): Promise<boolean> {
   const rolloutPercent = await getFeatureRollout('mobile-pwa');
   const userHash = hashCode(userId);
-  return (userHash % 100) < rolloutPercent;
+  return userHash % 100 < rolloutPercent;
 }
 ```
 
@@ -1420,6 +1473,7 @@ export async function isPWAEnabled(userId: string): Promise<boolean> {
 **Metrics to Track:**
 
 **Real User Monitoring (RUM):**
+
 ```typescript
 // app/lib/analytics/web-vitals.ts
 import { onCLS, onFCP, onLCP, onTTI, onFID } from 'web-vitals';
@@ -1442,6 +1496,7 @@ onFID(sendToAnalytics);
 ```
 
 **Dashboard Metrics:**
+
 - PWA install rate (daily)
 - Push notification opt-in rate (daily)
 - Offline usage sessions (daily)
@@ -1452,6 +1507,7 @@ onFID(sendToAnalytics);
 - Notification click-through rate
 
 **Alerts:**
+
 - Page load time >3s (p95) for 5 minutes → Slack alert
 - Service worker error rate >1% → Email on-call
 - Notification delivery failure >5% → Email on-call
@@ -1461,18 +1517,21 @@ onFID(sendToAnalytics);
 ### Rollback Plan
 
 **Immediate Rollback (Critical Issues):**
+
 1. Set feature flag to 0% (disable for all users)
 2. Service worker version rollback (skip-waiting: false)
 3. Clear problematic cache entries
 4. Notify users via in-app banner
 
 **Partial Rollback (Non-Critical Issues):**
+
 1. Reduce feature flag percentage (e.g., 50% → 10%)
 2. Monitor metrics for improvement
 3. Fix issues in staging
 4. Resume gradual rollout
 
 **Database Rollback:**
+
 - All migrations are backward-compatible
 - No destructive changes to existing data
 - Can disable push notifications without data loss
@@ -1484,6 +1543,7 @@ onFID(sendToAnalytics);
 ### External Dependencies
 
 **Required:**
+
 - **Workbox 7.x** - Service worker library
   - Version: 7.0.0
   - License: Apache 2.0
@@ -1510,6 +1570,7 @@ onFID(sendToAnalytics);
   - Why: Official Google library for Core Web Vitals
 
 **Optional:**
+
 - **Comlink** - Web Workers communication
   - Version: 4.4.1
   - For: Heavy computations in background thread
@@ -1521,16 +1582,19 @@ onFID(sendToAnalytics);
 ### Internal Dependencies
 
 **Must Be Completed First:**
+
 - Multi-tenant authentication system (existing)
 - PostgreSQL database with tenant isolation (existing)
 - Next.js 14 App Router setup (existing)
 - Redis for real-time features (existing)
 
 **Parallel Development:**
+
 - Can develop alongside other Sprint 10 features
 - No blocking dependencies on other teams
 
 **Future Enhancements:**
+
 - Geolocation feature (Sprint 11) will use PWA location API
 - QR code scanning (Sprint 11) will use PWA camera access
 
@@ -1541,11 +1605,13 @@ onFID(sendToAnalytics);
 ### Expected Load
 
 **User Traffic:**
+
 - 70% mobile users = ~7,000 daily mobile users
 - PWA install rate target: 30% = 2,100 installed PWAs
 - Push notification opt-in: 50% = 3,500 subscribers
 
 **Request Volume:**
+
 - Service worker registrations: ~7,000/day
 - Cache requests: ~100,000/day (mostly served from cache)
 - API requests: ~50,000/day (reduced by caching)
@@ -1553,6 +1619,7 @@ onFID(sendToAnalytics);
 - Sync requests: ~5,000/day
 
 **Data Storage:**
+
 - Client-side (IndexedDB): 50MB max per user
 - Server-side push subscriptions: 3,500 rows (~500KB)
 - Notification log: ~10,000 rows/day (~5MB/day)
@@ -1561,6 +1628,7 @@ onFID(sendToAnalytics);
 ### Performance Targets
 
 **Load Performance:**
+
 - Initial page load (3G): <2s
 - Time to Interactive: <3s
 - First Contentful Paint: <1s
@@ -1568,6 +1636,7 @@ onFID(sendToAnalytics);
 - Cumulative Layout Shift: <0.1
 
 **Runtime Performance:**
+
 - First Input Delay: <100ms
 - Animation frame rate: 60fps (16.67ms/frame)
 - Service worker activation: <500ms
@@ -1575,36 +1644,42 @@ onFID(sendToAnalytics);
 - IndexedDB query: <100ms
 
 **API Performance:**
+
 - Push subscription: <200ms
 - Sync queue process: <1s per action
 - Manifest generation: <100ms
 - Offline data fetch: <500ms
 
 **Push Notification:**
+
 - Delivery time: <10s from send
 - Click-through time: <2s to app load
 
 ### Scalability Considerations
 
 **Horizontal Scaling:**
+
 - Service workers run client-side (no server load)
 - Stateless API endpoints (easy to scale)
 - Push notifications via FCM (Google's infrastructure)
 - IndexedDB client-side (no database load)
 
 **Caching Strategy:**
+
 - Static assets cached at CDN (CloudFront)
 - API responses cached client-side (IndexedDB)
 - Manifest cached 1 hour (reduces generation)
 - Service worker cached until new version
 
 **Database Optimization:**
+
 - Partition `push_notifications` by month
 - Index on `user_id`, `sent_at`, `notification_type`
 - Auto-delete synced items after 7 days
 - Connection pooling for concurrent requests
 
 **Resource Limits:**
+
 - Max 50MB cache per user (auto-cleanup)
 - Max 100 queued actions per user
 - Max 10 push subscriptions per user
@@ -1614,20 +1689,20 @@ onFID(sendToAnalytics);
 
 ## Risks & Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **iOS Safari PWA limitations** (no background sync, limited push until iOS 16.4) | High | High | **Progressive enhancement:** Manual sync button always available, in-app notification fallback for iOS <16.4, educate users on iOS limitations in help docs |
-| **Offline sync conflicts** (two users edit same match offline) | High | Medium | **Last-write-wins with conflict UI:** Auto-resolve with timestamp, show "conflict detected" banner, allow manual resolution, log all conflicts for analysis |
-| **Large offline cache** (users with low storage) | Medium | Medium | **Cache size limits:** 50MB max, auto-clear old entries (7 days), prioritize recent tournaments only, allow manual cache clear in settings |
-| **Push notification spam** (too many notifications annoy users) | High | Medium | **Smart rate limiting:** Max 3 notifications/hour, granular preferences, quiet hours (22:00-08:00), instant disable option, A/B test frequency |
-| **Poor performance on low-end devices** (<2GB RAM) | High | Medium | **Performance budgets:** Enforce <300KB JS, test on Moto G4 (low-end), lazy load images, virtualized lists, reduce animations on low-end |
-| **Service worker bugs** (breaks entire site) | Critical | Low | **Thorough testing + rollback:** Version control, skip-waiting only after user confirmation, instant feature flag rollback, clear cache on errors |
-| **Cross-tenant data leakage in cache** | Critical | Low | **Tenant-scoped caching:** All cached data includes `tenant_id`, filter queries by tenant, clear cache on tenant switch, automated security tests |
-| **Users don't discover PWA install** | Medium | High | **Multiple touchpoints:** Banner after 3 visits, install button in profile, tutorial on first visit, highlight benefits clearly, A/B test messaging |
-| **Background sync queue grows too large** | Medium | Low | **Queue limits:** Max 100 actions per user, expire after 24 hours, manual clear option, retry with exponential backoff (1s, 2s, 4s, 8s) |
-| **Push notification token expiration** | Medium | Medium | **Auto-refresh:** Check token validity daily, re-prompt for permission if expired, graceful fallback to in-app notifications |
-| **Browser compatibility issues** | Medium | Low | **Progressive enhancement:** Feature detection before use, fallbacks for unsupported browsers, extensive cross-browser testing (Chrome, Safari, Firefox) |
-| **Increased server load from sync requests** | Medium | Medium | **Rate limiting + batching:** 100 requests/hour per user, batch sync endpoint, efficient queries with indexes, monitor server metrics |
+| Risk                                                                             | Impact   | Probability | Mitigation                                                                                                                                                  |
+| -------------------------------------------------------------------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **iOS Safari PWA limitations** (no background sync, limited push until iOS 16.4) | High     | High        | **Progressive enhancement:** Manual sync button always available, in-app notification fallback for iOS <16.4, educate users on iOS limitations in help docs |
+| **Offline sync conflicts** (two users edit same match offline)                   | High     | Medium      | **Last-write-wins with conflict UI:** Auto-resolve with timestamp, show "conflict detected" banner, allow manual resolution, log all conflicts for analysis |
+| **Large offline cache** (users with low storage)                                 | Medium   | Medium      | **Cache size limits:** 50MB max, auto-clear old entries (7 days), prioritize recent tournaments only, allow manual cache clear in settings                  |
+| **Push notification spam** (too many notifications annoy users)                  | High     | Medium      | **Smart rate limiting:** Max 3 notifications/hour, granular preferences, quiet hours (22:00-08:00), instant disable option, A/B test frequency              |
+| **Poor performance on low-end devices** (<2GB RAM)                               | High     | Medium      | **Performance budgets:** Enforce <300KB JS, test on Moto G4 (low-end), lazy load images, virtualized lists, reduce animations on low-end                    |
+| **Service worker bugs** (breaks entire site)                                     | Critical | Low         | **Thorough testing + rollback:** Version control, skip-waiting only after user confirmation, instant feature flag rollback, clear cache on errors           |
+| **Cross-tenant data leakage in cache**                                           | Critical | Low         | **Tenant-scoped caching:** All cached data includes `tenant_id`, filter queries by tenant, clear cache on tenant switch, automated security tests           |
+| **Users don't discover PWA install**                                             | Medium   | High        | **Multiple touchpoints:** Banner after 3 visits, install button in profile, tutorial on first visit, highlight benefits clearly, A/B test messaging         |
+| **Background sync queue grows too large**                                        | Medium   | Low         | **Queue limits:** Max 100 actions per user, expire after 24 hours, manual clear option, retry with exponential backoff (1s, 2s, 4s, 8s)                     |
+| **Push notification token expiration**                                           | Medium   | Medium      | **Auto-refresh:** Check token validity daily, re-prompt for permission if expired, graceful fallback to in-app notifications                                |
+| **Browser compatibility issues**                                                 | Medium   | Low         | **Progressive enhancement:** Feature detection before use, fallbacks for unsupported browsers, extensive cross-browser testing (Chrome, Safari, Firefox)    |
+| **Increased server load from sync requests**                                     | Medium   | Medium      | **Rate limiting + batching:** 100 requests/hour per user, batch sync endpoint, efficient queries with indexes, monitor server metrics                       |
 
 ---
 
@@ -1636,12 +1711,14 @@ onFID(sendToAnalytics);
 ### Alternative 1: Native Mobile Apps (iOS/Android)
 
 **Pros:**
+
 - Full platform API access (background sync, advanced notifications)
 - Better performance on low-end devices
 - App store presence and discovery
 - Richer offline capabilities
 
 **Cons:**
+
 - 3-6 months development time (vs 1 week for PWA)
 - Requires separate iOS and Android codebases (or React Native)
 - App store approval process (delays, rejections)
@@ -1649,6 +1726,7 @@ onFID(sendToAnalytics);
 - Higher development cost ($50k-$100k vs $10k for PWA)
 
 **Why not chosen:**
+
 - Timeline constraint (need solution in 1 week, not 3-6 months)
 - Budget constraint (no budget for native app development)
 - PWA covers 90% of use cases with 10% of effort
@@ -1657,12 +1735,14 @@ onFID(sendToAnalytics);
 ### Alternative 2: Hybrid Framework (Capacitor/Ionic)
 
 **Pros:**
+
 - Single codebase for web + mobile
 - Access to native APIs when needed
 - Can publish to app stores
 - Web-first approach (same as PWA)
 
 **Cons:**
+
 - Still requires app store submissions
 - Adds complexity (Capacitor plugins, native builds)
 - Larger bundle size than pure PWA
@@ -1670,6 +1750,7 @@ onFID(sendToAnalytics);
 - Not significantly faster than native
 
 **Why not chosen:**
+
 - Overkill for current needs (PWA sufficient)
 - Adds unnecessary complexity
 - Slower time-to-market than pure PWA
@@ -1678,17 +1759,20 @@ onFID(sendToAnalytics);
 ### Alternative 3: No Offline Support (Online-Only)
 
 **Pros:**
+
 - Simpler implementation (no service worker, IndexedDB)
 - No sync conflicts to handle
 - Smaller codebase
 
 **Cons:**
+
 - Doesn't solve core problem (unreliable venue Wi-Fi)
 - Poor user experience at tournaments
 - Competitive disadvantage (other platforms have offline)
 - High bounce rate on poor connections
 
 **Why not chosen:**
+
 - Doesn't address main user pain point
 - Critical requirement from user research
 - Tournament venues have notoriously bad connectivity
@@ -1697,17 +1781,20 @@ onFID(sendToAnalytics);
 ### Alternative 4: Electron Desktop App
 
 **Pros:**
+
 - Full offline capabilities
 - No browser limitations
 - Rich desktop experience
 
 **Cons:**
+
 - Doesn't solve mobile problem (70% of users)
 - Large download size (100MB+)
 - Platform-specific installers
 - Not suitable for on-the-go usage
 
 **Why not chosen:**
+
 - Wrong platform (users are mobile-first)
 - Doesn't address core use case
 - Adds complexity without mobile benefit
@@ -1765,6 +1852,7 @@ onFID(sendToAnalytics);
 ## References
 
 **Technical Research:**
+
 - [PWA Best Practices (web.dev)](https://web.dev/pwa-best-practices/)
 - [Workbox Caching Strategies](https://developer.chrome.com/docs/workbox/caching-strategies-overview/)
 - [Web Push Protocol RFC 8030](https://datatracker.ietf.org/doc/html/rfc8030)
@@ -1772,12 +1860,14 @@ onFID(sendToAnalytics);
 - [Lighthouse PWA Checklist](https://web.dev/pwa-checklist/)
 
 **Internal Documents:**
+
 - PRD: `product/PRDs/mobile-pwa-enhancements.md`
 - Sprint 10 Plan: `sprints/current/sprint-10-business-growth.md`
 - Multi-Tenant Architecture: `technical/multi-tenant-architecture.md`
 - Coding Standards: `C:\devop\coding_standards.md`
 
 **External Tools:**
+
 - [Workbox Documentation](https://developer.chrome.com/docs/workbox/)
 - [Dexie.js Documentation](https://dexie.org/)
 - [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)
@@ -1787,8 +1877,8 @@ onFID(sendToAnalytics);
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                    | Changes                                       |
+| ---------- | ------------------------- | --------------------------------------------- |
 | 2025-11-06 | Claude (Engineering Lead) | Initial comprehensive technical specification |
 
 ---
@@ -1796,6 +1886,7 @@ onFID(sendToAnalytics);
 ## Notes for Implementation Team
 
 **Priority Implementation Order:**
+
 1. **Day 1-2:** Service worker + manifest + basic caching
 2. **Day 2-3:** IndexedDB + offline viewing + sync queue
 3. **Day 3-4:** Touch optimizations + gestures + haptic feedback
@@ -1803,12 +1894,14 @@ onFID(sendToAnalytics);
 5. **Day 5:** Performance optimization + testing + Lighthouse audits
 
 **Critical Path Items:**
+
 - Service worker must work perfectly (can break entire site)
 - Multi-tenant data isolation in cache (security critical)
 - iOS Safari testing (different behavior than Chrome)
 - Performance budgets (enforce <300KB JS)
 
 **Testing Priorities:**
+
 1. Offline scenarios (airplane mode, slow 3G, intermittent connection)
 2. Cross-device (iOS Safari, Chrome Android, Firefox, low-end devices)
 3. Push notification delivery (<10s target)
@@ -1816,6 +1909,7 @@ onFID(sendToAnalytics);
 5. Cross-tenant isolation (security audit)
 
 **Performance Monitoring:**
+
 - Set up web-vitals tracking on Day 1
 - Dashboard for real-time metrics (Grafana)
 - Alerts for regressions >10%
@@ -1823,12 +1917,14 @@ onFID(sendToAnalytics);
 - Weekly performance review meetings
 
 **User Education:**
+
 - In-app tutorial on first PWA install
 - Tooltips for new gestures (swipe, pull-to-refresh)
 - Help center articles ("How to install", "Using offline mode")
 - Video demos (2-3 minutes each)
 
 **Post-Launch Optimization:**
+
 - A/B test install prompt timing (3 visits vs first action)
 - A/B test install prompt copy (3 variants)
 - A/B test notification frequency (3/day vs 5/day)
@@ -1836,6 +1932,7 @@ onFID(sendToAnalytics);
 - Monitor sync queue size, adjust retention policy
 
 **Security Checklist:**
+
 - [ ] All cached data includes `tenant_id`
 - [ ] Push subscriptions require authentication
 - [ ] Sync endpoints validate user ownership
@@ -1846,6 +1943,7 @@ onFID(sendToAnalytics);
 
 **Metrics Dashboard:**
 Track daily:
+
 - PWA install rate (% of mobile users)
 - Push opt-in rate (% of users)
 - Offline usage sessions (% of sessions)

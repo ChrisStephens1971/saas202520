@@ -11,10 +11,7 @@ import { prisma } from '@/lib/prisma';
 import type { ChipConfig } from '@/lib/chip-tracker';
 import { emitFinalsApplied, emitStandingsUpdate } from '@/lib/socket-server';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
 
@@ -24,26 +21,17 @@ export async function POST(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     if (tournament.format !== 'chip_format') {
-      return NextResponse.json(
-        { error: 'Tournament is not chip format' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Tournament is not chip format' }, { status: 400 });
     }
 
     const chipConfig = tournament.chipConfig as unknown as ChipConfig;
 
     if (!chipConfig) {
-      return NextResponse.json(
-        { error: 'Tournament missing chip configuration' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Tournament missing chip configuration' }, { status: 400 });
     }
 
     // Apply finals cutoff

@@ -36,7 +36,8 @@ export type OrganizationRole = z.infer<typeof OrganizationRoleEnum>;
 export const OrganizationSchema = z.object({
   id: z.string().cuid(),
   name: z.string().min(1).max(255),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1)
     .max(100)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens'),
@@ -86,12 +87,13 @@ export type OrganizationWithRole = z.infer<typeof OrganizationWithRoleSchema>;
  */
 export const CreateOrganizationRequestSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name too long'),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1, 'Slug is required')
     .max(100, 'Slug too long')
-    .transform(val => val.toLowerCase())
-    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val), {
-      message: 'Slug must be lowercase alphanumeric with hyphens'
+    .transform((val) => val.toLowerCase())
+    .refine((val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val), {
+      message: 'Slug must be lowercase alphanumeric with hyphens',
     }),
 });
 
@@ -106,11 +108,12 @@ export type CreateOrganizationRequest = z.infer<typeof CreateOrganizationRequest
  */
 export const UpdateOrganizationRequestSchema = z.object({
   name: z.string().min(1).max(255).optional(),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1)
     .max(100)
-    .transform(val => val.toLowerCase())
-    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
+    .transform((val) => val.toLowerCase())
+    .refine((val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
     .optional(),
 });
 
@@ -222,13 +225,15 @@ export type ListOrganizationsResponse = z.infer<typeof ListOrganizationsResponse
  * GET /api/organizations/:id/members
  */
 export const ListOrganizationMembersResponseSchema = z.object({
-  members: z.array(OrganizationMemberSchema.extend({
-    user: z.object({
-      id: z.string().cuid(),
-      name: z.string().nullable(),
-      email: z.string().email(),
-    }),
-  })),
+  members: z.array(
+    OrganizationMemberSchema.extend({
+      user: z.object({
+        id: z.string().cuid(),
+        name: z.string().nullable(),
+        email: z.string().email(),
+      }),
+    })
+  ),
   total: z.number().int().min(0),
 });
 

@@ -18,9 +18,7 @@ import type { SchedulingConfig, SchedulerStats } from '../scheduling-loop';
 // TEST FIXTURES
 // ============================================================================
 
-function createSchedulingConfig(
-  overrides: Partial<SchedulingConfig> = {}
-): SchedulingConfig {
+function createSchedulingConfig(overrides: Partial<SchedulingConfig> = {}): SchedulingConfig {
   return {
     pollIntervalMs: 30000,
     autoAssign: true,
@@ -186,9 +184,7 @@ describe('Scheduling Loop - Scheduling Cycle', () => {
     };
 
     const shouldAssign =
-      config.autoAssign &&
-      queueStatus.availableTables > 0 &&
-      queueStatus.readyMatches.length > 0;
+      config.autoAssign && queueStatus.availableTables > 0 && queueStatus.readyMatches.length > 0;
 
     expect(shouldAssign).toBe(true);
   });
@@ -209,9 +205,7 @@ describe('Scheduling Loop - Scheduling Cycle', () => {
     };
 
     const shouldAssign =
-      config.autoAssign &&
-      queueStatus.availableTables > 0 &&
-      queueStatus.readyMatches.length > 0;
+      config.autoAssign && queueStatus.availableTables > 0 && queueStatus.readyMatches.length > 0;
 
     expect(shouldAssign).toBe(false);
   });
@@ -224,9 +218,7 @@ describe('Scheduling Loop - Scheduling Cycle', () => {
     };
 
     const shouldAssign =
-      config.autoAssign &&
-      queueStatus.availableTables > 0 &&
-      queueStatus.readyMatches.length > 0;
+      config.autoAssign && queueStatus.availableTables > 0 && queueStatus.readyMatches.length > 0;
 
     expect(shouldAssign).toBe(false);
   });
@@ -297,8 +289,7 @@ describe('Scheduling Loop - Statistics', () => {
 
     const currentRunTime = 60;
     const newAverage =
-      (stats.averageRunTimeMs * stats.totalRuns + currentRunTime) /
-      (stats.totalRuns + 1);
+      (stats.averageRunTimeMs * stats.totalRuns + currentRunTime) / (stats.totalRuns + 1);
 
     expect(Math.round(newAverage)).toBe(51);
   });
@@ -496,10 +487,7 @@ describe('Scheduling Loop - Manual Triggers', () => {
   });
 
   it('should emit WebSocket events on manual trigger', () => {
-    const assignments = [
-      { matchId: 'match-1' },
-      { matchId: 'match-2' },
-    ];
+    const assignments = [{ matchId: 'match-1' }, { matchId: 'match-2' }];
 
     expect(assignments.length).toBeGreaterThan(0);
     // Should emit events
@@ -776,9 +764,7 @@ describe('Scheduling Loop - Edge Cases', () => {
   });
 
   it('should handle stats for stopped scheduler', () => {
-    const schedulerStats = new Map([
-      ['tournament-1', createSchedulerStats()],
-    ]);
+    const schedulerStats = new Map([['tournament-1', createSchedulerStats()]]);
 
     // Scheduler stopped but stats remain
     expect(schedulerStats.has('tournament-1')).toBe(true);
@@ -824,8 +810,10 @@ describe('Scheduling Loop - Edge Cases', () => {
     });
 
     const runTime = 50;
-    const newAverage = stats.totalRuns === 0 ? runTime :
-      (stats.averageRunTimeMs * stats.totalRuns + runTime) / (stats.totalRuns + 1);
+    const newAverage =
+      stats.totalRuns === 0
+        ? runTime
+        : (stats.averageRunTimeMs * stats.totalRuns + runTime) / (stats.totalRuns + 1);
 
     expect(isNaN(newAverage)).toBe(false);
   });

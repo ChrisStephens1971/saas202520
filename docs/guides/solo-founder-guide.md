@@ -30,6 +30,7 @@ A realistic, honest guide for building a multi-tenant SaaS as a solo founder. No
 Being a solo founder building a SaaS is **hard** but **absolutely possible**. Here's the honest truth:
 
 **You'll be doing:**
+
 - Product management
 - Front-end development
 - Back-end development
@@ -42,12 +43,14 @@ Being a solo founder building a SaaS is **hard** but **absolutely possible**. He
 - Everything else
 
 **Timeline Reality:**
+
 - **Average MVP:** 3-6 months (not the mythical 6 weeks)
 - **First paying customer:** 4-8 months
 - **Product-market fit:** 12-24 months
 - **Profitability:** 18-36+ months
 
 **Success Rates:**
+
 - ~90% of solo founder SaaS projects fail
 - But 10% succeed, some spectacularly
 - Difference: Realistic expectations, discipline, resilience
@@ -55,6 +58,7 @@ Being a solo founder building a SaaS is **hard** but **absolutely possible**. He
 ### Should You Do It Solo?
 
 **Good Reasons to Go Solo:**
+
 - ✅ You can't find the right cofounder
 - ✅ You prefer working alone
 - ✅ You want 100% ownership and control
@@ -63,12 +67,14 @@ Being a solo founder building a SaaS is **hard** but **absolutely possible**. He
 - ✅ You have strong self-discipline
 
 **Bad Reasons to Go Solo:**
+
 - ❌ "I don't want to share equity"
 - ❌ "I can't find anyone good enough"
 - ❌ "It'll be faster alone"
 - ❌ You're avoiding the hard work of collaboration
 
 **When NOT to Go Solo:**
+
 - You lack technical skills (can't code)
 - You have <6 months runway
 - You need rapid scale (highly competitive market)
@@ -82,26 +88,31 @@ Being a solo founder building a SaaS is **hard** but **absolutely possible**. He
 Despite the challenges, solo founders have real advantages:
 
 ### 1. Speed of Decision-Making
+
 - No need to convince anyone
 - Pivot instantly when needed
 - No cofounder conflicts
 
 ### 2. Lean Operations
+
 - Minimal burn rate
 - No salaries to pay
 - Can bootstrap longer
 
 ### 3. Deep Product Understanding
+
 - You've touched every line of code
 - You know every customer
 - No knowledge silos
 
 ### 4. Focus
+
 - No time wasted in meetings
 - No political distractions
 - Pure execution mode
 
 ### 5. Learning
+
 - You'll become a better developer, designer, marketer, seller
 - Generalist skills are valuable
 - Can command higher rates later if it doesn't work out
@@ -115,6 +126,7 @@ Despite the challenges, solo founders have real advantages:
 ### 1. Market Selection
 
 **Choose markets with:**
+
 - ✅ Self-service business model (no enterprise sales)
 - ✅ Individual or small team buyers (not committees)
 - ✅ Low compliance burden (avoid healthcare, fintech initially)
@@ -123,6 +135,7 @@ Despite the challenges, solo founders have real advantages:
 - ✅ Digital-first customers (comfortable with SaaS)
 
 **Avoid markets with:**
+
 - ❌ Long enterprise sales cycles
 - ❌ Heavy regulation and compliance
 - ❌ Intense competition requiring huge marketing budget
@@ -132,6 +145,7 @@ Despite the challenges, solo founders have real advantages:
 ### 2. Product Positioning
 
 **Sweet Spots for Solo Founders:**
+
 - Niche products for specific audiences
 - "Unbundling" features from bloated incumbents
 - Developer tools (devs self-serve and evangelize)
@@ -139,6 +153,7 @@ Despite the challenges, solo founders have real advantages:
 - Tools for creators, freelancers, small agencies
 
 **Example Good Niches:**
+
 - Scheduling tool for dentists
 - Invoice generator for freelance designers
 - Content calendar for TikTok creators
@@ -150,6 +165,7 @@ Despite the challenges, solo founders have real advantages:
 ### 3. Product Complexity
 
 **Keep It Simple:**
+
 - 3-5 core features for MVP (not 10+)
 - Single user persona initially
 - One integration maximum (if any)
@@ -158,6 +174,7 @@ Despite the challenges, solo founders have real advantages:
 
 **Complexity Kills Solo Projects:**
 Every feature added is:
+
 - More development time
 - More testing burden
 - More support complexity
@@ -183,23 +200,27 @@ If you know Django, use Django.
 ### Recommended Stacks for Solo Founders
 
 **Full-Stack JavaScript:**
+
 - **Frontend:** React, Next.js, Tailwind CSS
 - **Backend:** Node.js, Express or NestJS
 - **Database:** PostgreSQL (AWS RDS or Supabase)
 - **Why:** Single language, huge community, lots of resources
 
 **Python:**
+
 - **Frontend:** React or plain Jinja templates
 - **Backend:** Django or FastAPI
 - **Database:** PostgreSQL
 - **Why:** Fast to develop, great for data-heavy apps
 
 **Ruby:**
+
 - **Full-Stack:** Ruby on Rails with Hotwire
 - **Database:** PostgreSQL
 - **Why:** Fastest to MVP, mature ecosystem, conventions
 
 **"Serverless":**
+
 - **Frontend:** Next.js or SvelteKit
 - **Backend:** Supabase (database, auth, storage)
 - **Why:** Minimal DevOps, scales automatically, generous free tier
@@ -209,6 +230,7 @@ If you know Django, use Django.
 **For MVP, Prioritize Simplicity:**
 
 **Best Options:**
+
 - **Vercel:** Front-end + serverless functions (zero config)
 - **Railway:** Full-stack, simple deployment, affordable
 - **Fly.io:** Docker-based, multi-region, developer-friendly
@@ -216,6 +238,7 @@ If you know Django, use Django.
 - **Supabase:** Backend-as-a-service, PostgreSQL + auth
 
 **Avoid (For Now):**
+
 - ❌ Kubernetes (way overkill for solo MVP)
 - ❌ Microservices (monolith first)
 - ❌ Self-managed servers (too much ops work)
@@ -244,9 +267,11 @@ If you know Django, use Django.
 A simple framework for scoping as a solo founder:
 
 ### 3 Core Features
+
 Pick the **3 essential features** that solve the core problem. No more.
 
 **Example (Project Management SaaS):**
+
 1. Create and organize projects
 2. Add and assign tasks
 3. Comment and collaborate
@@ -254,6 +279,7 @@ Pick the **3 essential features** that solve the core problem. No more.
 **That's it for MVP.**
 
 ### 5 User Flows
+
 Design the **5 critical user flows** end-to-end.
 
 1. Sign up and create workspace
@@ -263,6 +289,7 @@ Design the **5 critical user flows** end-to-end.
 5. Subscribe and pay
 
 ### 10 Screens Maximum
+
 Your MVP should have ~10 key screens (including auth).
 
 1. Landing page
@@ -281,6 +308,7 @@ Your MVP should have ~10 key screens (including auth).
 ### Apply This Ruthlessly
 
 When tempted to add a feature, ask:
+
 - Is this top 3 most important?
 - Is this required for first 10 customers?
 - Can this wait until version 2?
@@ -296,6 +324,7 @@ You're not truly alone—you have AI assistants like Claude.
 ### What Claude Can Do Well
 
 **Code Generation:**
+
 - Scaffold boilerplate code
 - Generate CRUD endpoints
 - Write database migrations
@@ -303,24 +332,28 @@ You're not truly alone—you have AI assistants like Claude.
 - Write tests
 
 **Code Review:**
+
 - Spot bugs and security issues
 - Suggest optimizations
 - Refactoring advice
 - Best practices
 
 **Architecture Advice:**
+
 - Multi-tenancy strategies
 - Authentication approaches
 - Database schema design
 - API design
 
 **Problem Solving:**
+
 - Debug errors
 - Explain concepts
 - Research best practices
 - Compare approaches
 
 **Writing:**
+
 - Documentation
 - Email templates
 - Terms of service (draft)
@@ -334,22 +367,26 @@ You're not truly alone—you have AI assistants like Claude.
 ✅ "Generate a Node.js/Express authentication system using JWT, with registration, login, password reset, and email verification using SendGrid"
 
 **2. Iterate:**
+
 - Start with high-level architecture
 - Then dive into specific modules
 - Refine based on your context
 
 **3. Verify:**
+
 - Don't blindly copy-paste code
 - Understand what it does
 - Test thoroughly
 - Adapt to your specific needs
 
 **4. Use for Learning:**
+
 - Ask "why" questions
 - Request explanations
 - Learn patterns, don't just copy
 
 **5. Save Context:**
+
 - Keep conversation history
 - Reference previous decisions
 - Build on past conversations
@@ -373,18 +410,21 @@ You're not truly alone—you have AI assistants like Claude.
 **If Full-Time (40-50 hours/week):**
 
 **Monday (6-8h):**
+
 - Planning and prioritization
 - Review previous week
 - Set goals for current week
 - Admin tasks (email, support)
 
 **Tuesday-Thursday (8-10h/day):**
+
 - Deep work blocks (4 hours AM, 4 hours PM)
 - Coding, designing, building
 - Minimal distractions
 - Focus on shipping
 
 **Friday (6-8h):**
+
 - Testing and QA
 - Bug fixes
 - Documentation
@@ -393,6 +433,7 @@ You're not truly alone—you have AI assistants like Claude.
 - Customer support
 
 **Saturday-Sunday:**
+
 - **OFF** (seriously, take weekends off)
 - Exception: Critical production issues only
 - Mental health is not optional
@@ -400,6 +441,7 @@ You're not truly alone—you have AI assistants like Claude.
 ### Protecting Deep Work Time
 
 **Deep Work Blocks (4 hours):**
+
 - Phone on airplane mode
 - Close email and Slack
 - Instrumental music or silence
@@ -407,6 +449,7 @@ You're not truly alone—you have AI assistants like Claude.
 - Pomodoro technique if helpful (25 min focus, 5 min break)
 
 **Shallow Work Time (1-2 hours/day):**
+
 - Email and support
 - Admin tasks
 - Social media
@@ -420,6 +463,7 @@ You're not truly alone—you have AI assistants like Claude.
 **You have ~4-6 hours of high-quality coding time per day.**
 
 Use them wisely:
+
 - Hardest problems in the morning (when fresh)
 - Creative work (design, architecture) mid-morning
 - Routine coding afternoon
@@ -431,6 +475,7 @@ Use them wisely:
 ### Preventing Burnout
 
 **Warning Signs:**
+
 - Can't focus for more than 30 minutes
 - Dread opening your laptop
 - Sleeping poorly
@@ -439,6 +484,7 @@ Use them wisely:
 - Irritability
 
 **If You See These:**
+
 - Take a week off (minimum)
 - Talk to someone (therapist, friend, mentor)
 - Reassess timeline and scope
@@ -453,6 +499,7 @@ Use them wisely:
 As a solo founder, you can't do everything. Here's what to outsource:
 
 ### Always DIY (Core Competency)
+
 - ✅ Core product code
 - ✅ Database architecture
 - ✅ Key feature development
@@ -462,30 +509,35 @@ As a solo founder, you can't do everything. Here's what to outsource:
 ### Consider Paying For
 
 **Design ($500-$5K):**
+
 - Logo and branding
 - Landing page design
 - UI kit or design system
 - One-time investment, huge ROI
 
 **Legal ($500-$2K):**
+
 - Terms of Service review
 - Privacy Policy review
 - Contract templates
 - Use LegalZoom, Rocket Lawyer, or hire lawyer for review
 
 **Accounting ($100-$500/month):**
+
 - Bookkeeping once you have revenue
 - Tax filing
 - Financial statements
 - Worth it to avoid mistakes
 
 **Content/Copywriting ($500-$2K):**
+
 - Landing page copy
 - Email sequences
 - Help documentation
 - If writing isn't your strength
 
 **DevOps/Infrastructure ($1K-$5K one-time):**
+
 - CI/CD setup
 - Monitoring configuration
 - Infrastructure as code
@@ -493,6 +545,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 - If you're not strong here
 
 ### Never Pay For (At MVP Stage)
+
 - ❌ Expensive agencies ($50K-$200K)
 - ❌ Enterprise sales consultants
 - ❌ PR firms
@@ -505,6 +558,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 ### SaaS Tools Budget (Monthly)
 
 **Minimal ($50-$100/month):**
+
 - Hosting: $20-$50
 - Domain: $10
 - Email service: $10
@@ -512,6 +566,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 - Analytics: $0 (free tiers)
 
 **Comfortable ($200-$300/month):**
+
 - Above + Paid analytics
 - Above + Design tools (Figma)
 - Above + Premium monitoring
@@ -528,6 +583,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Spending 6 months building without talking to customers.
 
 **Fix:**
+
 - Talk to 20+ potential customers before writing code
 - Show mockups and wireframes early
 - Build in public (Twitter, blog)
@@ -538,6 +594,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** "Just one more feature" syndrome.
 
 **Fix:**
+
 - Define MVP scope, write it down, tape it to wall
 - Every new feature idea goes to "Post-Launch" list
 - Launch with fewer features than you think you need
@@ -548,6 +605,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Polishing endlessly, never shipping.
 
 **Fix:**
+
 - Set launch date and stick to it
 - "Good enough" is good enough for MVP
 - Bugs are okay (just not critical ones)
@@ -558,6 +616,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Building for 6 months, then trying to find customers.
 
 **Fix:**
+
 - Start marketing from Day 1
 - Build email list before launch
 - Tweet your progress
@@ -569,6 +628,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Charging $9/month because you're "just starting."
 
 **Fix:**
+
 - Price based on value, not your confidence
 - B2B SaaS: Start at $29-$99/month minimum
 - Can always lower prices (hard to raise)
@@ -579,6 +639,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** "I'll build a better Notion/Slack/Zoom."
 
 **Fix:**
+
 - Niche down 10x
 - Solve specific problem for specific audience
 - Compete on focus, not features
@@ -589,6 +650,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Microservices, Kubernetes, elaborate architecture for 0 users.
 
 **Fix:**
+
 - Monolith first
 - Simplest thing that works
 - Scale when you have the problem (not before)
@@ -599,6 +661,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** "I'll add security later."
 
 **Fix:**
+
 - Build auth right from the start
 - Encrypt sensitive data
 - Use HTTPS everywhere
@@ -610,6 +673,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** Not knowing CAC, LTV, margins.
 
 **Fix:**
+
 - Track customer acquisition cost
 - Know your margins
 - Understand if business is viable
@@ -620,6 +684,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 **Mistake:** No mentors, advisors, community.
 
 **Fix:**
+
 - Join founder communities (Indie Hackers, Twitter)
 - Find 1-2 advisors or mentors
 - Mastermind group with other founders
@@ -633,6 +698,7 @@ As a solo founder, you can't do everything. Here's what to outsource:
 See `12-week-mvp-sprint-plan.md` for detailed sprint plan, but here's the overview:
 
 ### Weeks 1-4: Foundation
+
 - Authentication and user management
 - Workspace/tenant management
 - First core feature
@@ -641,6 +707,7 @@ See `12-week-mvp-sprint-plan.md` for detailed sprint plan, but here's the overvi
 **Goal:** Can sign up, create workspace, use Feature #1
 
 ### Weeks 5-8: Core Product
+
 - Second and third core features
 - Collaboration/communication features
 - Billing and subscriptions
@@ -649,6 +716,7 @@ See `12-week-mvp-sprint-plan.md` for detailed sprint plan, but here's the overvi
 **Goal:** MVP feature-complete, can charge money
 
 ### Weeks 9-12: Launch Prep
+
 - Security and compliance
 - Onboarding and activation
 - Help docs and support
@@ -659,6 +727,7 @@ See `12-week-mvp-sprint-plan.md` for detailed sprint plan, but here's the overvi
 **Goal:** Live in production with first beta users
 
 ### Week 13+: Iterate
+
 - Support beta users
 - Fix bugs
 - Iterate based on feedback
@@ -674,6 +743,7 @@ Your first 10 customers won't come from ads or SEO. Here's how to find them:
 ### 1. Your Network (Customers 1-3)
 
 **Who You Know:**
+
 - Former colleagues
 - Friends in target industry
 - Twitter/LinkedIn connections
@@ -687,6 +757,7 @@ Your first 10 customers won't come from ads or SEO. Here's how to find them:
 ### 2. Direct Outreach (Customers 4-7)
 
 **Find Them:**
+
 - LinkedIn (search by job title)
 - Twitter (search keywords)
 - Reddit (relevant subreddits)
@@ -696,6 +767,7 @@ Your first 10 customers won't come from ads or SEO. Here's how to find them:
 
 **Approach:**
 Don't sell, start conversations:
+
 - Comment on their posts
 - Provide value first
 - Build relationship
@@ -707,11 +779,13 @@ Don't sell, start conversations:
 ### 3. Product Hunt, HN, Reddit (Customers 8-10)
 
 **Launch on:**
+
 - Product Hunt (once)
 - Hacker News Show HN (once)
 - Relevant subreddits (ongoing)
 
 **Tips:**
+
 - Be authentic, not salesy
 - Explain your journey as solo founder
 - Offer generous discounts for early adopters
@@ -720,6 +794,7 @@ Don't sell, start conversations:
 ### Pricing for First 10
 
 **Offer:**
+
 - Free for 3-6 months
 - Or 50% off for life
 - In exchange for:
@@ -747,17 +822,20 @@ You can go surprisingly far solo, but eventually you'll hit limits.
 ### Signs You're Ready to Hire
 
 **Revenue Indicators:**
+
 - ✅ $5K+ MRR (can afford contractor)
 - ✅ $10K+ MRR (can afford part-time)
 - ✅ $20K+ MRR (can afford full-time)
 
 **Work Indicators:**
+
 - ✅ Spending >10 hours/week on non-core tasks
 - ✅ Customer support eating into dev time
 - ✅ Clear, repetitive tasks to delegate
 - ✅ Bottleneck on specific skill (design, marketing)
 
 **Growth Indicators:**
+
 - ✅ Demand exceeds your capacity
 - ✅ Losing customers due to lack of support
 - ✅ Feature requests piling up
@@ -766,21 +844,25 @@ You can go surprisingly far solo, but eventually you'll hit limits.
 ### Who to Hire First
 
 **Option 1: Part-Time Developer (Contractor)**
+
 - **When:** You need more development capacity
 - **Cost:** $50-$150/hour, 10-20 hours/week
 - **Benefits:** Scale dev speed, reduce bus factor
 
 **Option 2: Designer (Contractor)**
+
 - **When:** Design is holding you back
 - **Cost:** $75-$150/hour, 5-10 hours/week
 - **Benefits:** Better UX = better conversion
 
 **Option 3: Customer Success/Support (Part-Time)**
+
 - **When:** Support eating all your time
 - **Cost:** $20-$35/hour, 20 hours/week
 - **Benefits:** You can focus on building
 
 **Option 4: Marketing/Content (Contractor)**
+
 - **When:** Need growth but don't have time
 - **Cost:** $50-$100/hour or $2K-$5K/month retainer
 - **Benefits:** Consistent content, SEO, growth
@@ -788,24 +870,28 @@ You can go surprisingly far solo, but eventually you'll hit limits.
 ### Hiring Tips for First Hire
 
 **Start Small:**
+
 - Contract initially, not full-time
 - 10-20 hours/week trial
 - Specific project-based work
 - Convert to permanent if working well
 
 **Where to Find:**
+
 - Upwork, Toptal for contractors
 - Twitter (best for technical hires)
 - Indie Hackers job board
 - Your network
 
 **What to Look For:**
+
 - Self-starters (you can't manage closely)
 - Solo-friendly (used to async work)
 - Generalists (can wear multiple hats)
 - Believers (excited about your product)
 
 **Don't hire until:**
+
 - ❌ Revenue consistently covers cost
 - ❌ You have clear, defined work for them
 - ❌ You've documented processes
@@ -820,6 +906,7 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### The Loneliness Problem
 
 **Strategies:**
+
 - Join mastermind group (3-5 other founders)
 - Weekly coworking sessions (even virtual)
 - Founder community (Indie Hackers, MegaMaker Club)
@@ -831,12 +918,14 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### Managing Uncertainty
 
 **The Fear:**
+
 - Will this work?
 - Am I wasting my time?
 - What if I fail?
 - Should I get a job?
 
 **Coping Strategies:**
+
 - Set small milestones (weekly wins)
 - Track progress (journal, metrics)
 - Celebrate small wins
@@ -848,6 +937,7 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### Work-Life Balance
 
 **You need:**
+
 - Exercise (3-4x/week minimum)
 - Sleep (7-8 hours)
 - Social life (see friends weekly)
@@ -859,6 +949,7 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### When to Quit
 
 **Consider stopping if:**
+
 - No traction after 12-18 months
 - Severe impact on mental health
 - Financial runway exhausted
@@ -876,21 +967,25 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### Communities
 
 **Indie Hackers:**
+
 - Forum for bootstrapped founders
 - Share progress, get feedback
 - [indiehackers.com](https://www.indiehackers.com)
 
 **Twitter/X:**
+
 - #BuildInPublic hashtag
 - Follow other solo founders
 - Share your journey
 
 **MegaMaker Club:**
+
 - Paid community ($100-$200/year)
 - Focused, serious founders
 - [megamaker.co/club](https://megamaker.co/club)
 
 **Reddit:**
+
 - r/SaaS
 - r/Entrepreneur
 - r/SideProject
@@ -905,6 +1000,7 @@ Solo founding is lonely and stressful. Take care of yourself.
 ### Books
 
 **Must-Reads:**
+
 - "The Mom Test" by Rob Fitzpatrick (customer conversations)
 - "The Lean Startup" by Eric Ries (building iteratively)
 - "Traction" by Gabriel Weinberg (marketing channels)
@@ -912,6 +1008,7 @@ Solo founding is lonely and stressful. Take care of yourself.
 - "The $100 Startup" by Chris Guillebeau (bootstrapping)
 
 **Also Great:**
+
 - "Zero to Sold" by Arvid Kahl
 - "Start Small, Stay Small" by Rob Walling
 - "Make" by Pieter Levels
@@ -935,18 +1032,21 @@ Solo founding is lonely and stressful. Take care of yourself.
 Building a SaaS solo is hard, but it's absolutely possible. Here's what you need:
 
 **Skills:**
+
 - ✓ Can code (full-stack or willing to learn)
 - ✓ Can talk to customers
 - ✓ Can make decisions
 - ✓ Can persist through difficulty
 
 **Resources:**
+
 - ✓ 6-12 months runway (savings or part-time income)
 - ✓ Computer and internet
 - ✓ AI assistant (Claude) for help
 - ✓ Community for support
 
 **Mindset:**
+
 - ✓ Comfortable with uncertainty
 - ✓ Willing to learn
 - ✓ Resilient and persistent
@@ -954,6 +1054,7 @@ Building a SaaS solo is hard, but it's absolutely possible. Here's what you need
 - ✓ Long-term thinking (2-3 year horizon)
 
 **That's it. You don't need:**
+
 - ✗ Perfect idea
 - ✗ Cofounder
 - ✗ VC funding
@@ -972,18 +1073,21 @@ Building a SaaS solo is hard, but it's absolutely possible. Here's what you need
 ### Success Looks Like
 
 **Year 1:**
+
 - Product launched
 - 10-50 paying customers
 - $1K-$10K MRR
 - Product-market fit emerging
 
 **Year 2:**
+
 - 50-200 customers
 - $10K-$50K MRR
 - Profitable or nearly
 - Maybe first hire
 
 **Year 3:**
+
 - 200-500 customers
 - $50K-$150K MRR
 - Small team (2-5 people)
@@ -1045,6 +1149,7 @@ Being a solo founder building a SaaS is one of the hardest, most rewarding thing
 - Both are normal
 
 **The founders who succeed are the ones who:**
+
 - Show up consistently
 - Ship regularly
 - Learn from mistakes
@@ -1059,7 +1164,7 @@ Now go build something people want.
 
 ---
 
-*This guide was written by Claude for solo founders like you. If it helps, pay it forward by helping another solo founder when you make it.*
+_This guide was written by Claude for solo founders like you. If it helps, pay it forward by helping another solo founder when you make it._
 
 ---
 

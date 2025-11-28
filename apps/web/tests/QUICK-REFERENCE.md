@@ -10,15 +10,15 @@ pnpm test:run
 
 ## Common Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm test` | Run tests in watch mode |
-| `pnpm test:run` | Run tests once (CI mode) |
-| `pnpm test:ui` | Launch interactive UI dashboard |
-| `pnpm test:coverage` | Generate coverage report |
-| `pnpm test stripe-payments` | Run specific test file |
-| `pnpm test -t "Complete Payment"` | Run specific test suite |
-| `pnpm test -t "should create payment"` | Run specific test |
+| Command                                | Description                     |
+| -------------------------------------- | ------------------------------- |
+| `pnpm test`                            | Run tests in watch mode         |
+| `pnpm test:run`                        | Run tests once (CI mode)        |
+| `pnpm test:ui`                         | Launch interactive UI dashboard |
+| `pnpm test:coverage`                   | Generate coverage report        |
+| `pnpm test stripe-payments`            | Run specific test file          |
+| `pnpm test -t "Complete Payment"`      | Run specific test suite         |
+| `pnpm test -t "should create payment"` | Run specific test               |
 
 ## Test Organization
 
@@ -62,6 +62,7 @@ Error Handling (6 tests)
 ## Mock Usage Examples
 
 ### Creating Mock Stripe Account
+
 ```typescript
 const mockAccount = createMockStripeAccount({
   id: 'acct_test_123',
@@ -73,6 +74,7 @@ mockStripe.accounts.create.mockResolvedValue(mockAccount);
 ```
 
 ### Creating Mock Payment
+
 ```typescript
 const mockPayment = createMockPaymentIntent({
   amount: 5000, // $50.00
@@ -87,6 +89,7 @@ mockStripe.paymentIntents.create.mockResolvedValue(mockPayment);
 ```
 
 ### Creating Mock Refund
+
 ```typescript
 const mockRefund = createMockRefund({
   amount: 2500, // $25.00 (partial)
@@ -98,15 +101,15 @@ mockStripe.refunds.create.mockResolvedValue(mockRefund);
 ```
 
 ### Simulating Errors
+
 ```typescript
-mockStripe.paymentIntents.create.mockRejectedValue(
-  stripeErrors.cardDeclined()
-);
+mockStripe.paymentIntents.create.mockRejectedValue(stripeErrors.cardDeclined());
 ```
 
 ## Test Data Examples
 
 ### Create Test Organization
+
 ```typescript
 const org = await prisma.organization.create({
   data: createTestOrganization(),
@@ -114,6 +117,7 @@ const org = await prisma.organization.create({
 ```
 
 ### Create Test Payment
+
 ```typescript
 const payment = await prisma.payment.create({
   data: createTestPayment(tournamentId, stripeAccountId, {
@@ -125,16 +129,18 @@ const payment = await prisma.payment.create({
 ```
 
 ### Prize Structures
+
 ```typescript
-prizeStructures.standard      // 50/30/20
-prizeStructures.twoPlace      // 60/40
-prizeStructures.winnerTakesAll // 100
-prizeStructures.fourPlace     // 40/25/20/15
+prizeStructures.standard; // 50/30/20
+prizeStructures.twoPlace; // 60/40
+prizeStructures.winnerTakesAll; // 100
+prizeStructures.fourPlace; // 40/25/20/15
 ```
 
 ## Common Assertions
 
 ### Verify Payment Created
+
 ```typescript
 expect(payment.status).toBe('succeeded');
 expect(payment.amount).toBe(5000);
@@ -142,6 +148,7 @@ expect(payment.receiptUrl).toBeDefined();
 ```
 
 ### Verify Refund
+
 ```typescript
 expect(refund.amount).toBe(2500);
 expect(payment.refundedAmount).toBe(2500);
@@ -149,6 +156,7 @@ expect(payment.status).toBe('partially_refunded');
 ```
 
 ### Verify Payout
+
 ```typescript
 expect(payout.amount).toBe(20000); // $200.00
 expect(payout.placement).toBe(1);
@@ -156,6 +164,7 @@ expect(payout.status).toBe('pending');
 ```
 
 ### Verify Tenant Isolation
+
 ```typescript
 const orgPayments = await prisma.payment.findMany({
   where: {
@@ -170,16 +179,19 @@ expect(orgPayments).toHaveLength(1);
 ## Debugging
 
 ### View Test Output
+
 ```bash
 pnpm test --reporter=verbose
 ```
 
 ### Run Single Test
+
 ```bash
 pnpm test -t "should create payment intent"
 ```
 
 ### Check Mock Calls
+
 ```typescript
 expect(mockStripe.paymentIntents.create).toHaveBeenCalledWith({
   amount: 5000,
@@ -189,6 +201,7 @@ expect(mockStripe.paymentIntents.create).toHaveBeenCalledWith({
 ```
 
 ### Inspect Database State
+
 ```typescript
 const payment = await prisma.payment.findUnique({
   where: { id: testPaymentId },
@@ -203,6 +216,7 @@ console.log(payment);
 ## Troubleshooting
 
 ### Database Connection Failed
+
 ```bash
 # Check PostgreSQL running
 pg_isready
@@ -215,13 +229,19 @@ pnpm db:migrate
 ```
 
 ### Tests Timing Out
+
 ```typescript
-test('slow test', async () => {
-  // test code
-}, { timeout: 10000 }); // 10s timeout
+test(
+  'slow test',
+  async () => {
+    // test code
+  },
+  { timeout: 10000 }
+); // 10s timeout
 ```
 
 ### Mock Not Working
+
 ```typescript
 // Ensure mock is in beforeAll()
 beforeAll(async () => {
@@ -233,6 +253,7 @@ beforeAll(async () => {
 ## Environment Setup
 
 ### .env.test
+
 ```env
 DATABASE_URL="postgresql://user:pass@localhost:5432/tournament_test"
 STRIPE_SECRET_KEY="sk_test_mock_key"
@@ -241,6 +262,7 @@ NEXTAUTH_URL="http://localhost:3000"
 ```
 
 ### Database Setup
+
 ```bash
 createdb tournament_test
 pnpm db:migrate
@@ -260,30 +282,35 @@ open coverage/index.html
 
 ## File Locations
 
-| File | Path |
-|------|------|
-| Tests | `apps/web/tests/integration/stripe-payments.test.ts` |
-| Mocks | `apps/web/tests/fixtures/stripe-mocks.ts` |
-| Fixtures | `apps/web/tests/fixtures/test-data.ts` |
-| Config | `apps/web/vitest.config.ts` |
-| Setup | `apps/web/tests/setup.ts` |
-| Docs | `apps/web/tests/README.md` |
+| File     | Path                                                 |
+| -------- | ---------------------------------------------------- |
+| Tests    | `apps/web/tests/integration/stripe-payments.test.ts` |
+| Mocks    | `apps/web/tests/fixtures/stripe-mocks.ts`            |
+| Fixtures | `apps/web/tests/fixtures/test-data.ts`               |
+| Config   | `apps/web/vitest.config.ts`                          |
+| Setup    | `apps/web/tests/setup.ts`                            |
+| Docs     | `apps/web/tests/README.md`                           |
 
 ## Test Scenarios at a Glance
 
 ### ✅ Payment Flow
+
 - Create account → Create intent → Confirm → Receipt
 
 ### ✅ Refund Flow
+
 - Full refund → Partial refund → Multiple refunds → Error handling
 
 ### ✅ Payout Flow
+
 - Calculate → Apply structure → Include side pots → Verify totals
 
 ### ✅ Account Status
+
 - Onboarding → Charges enabled → Payouts enabled → Refresh
 
 ### ✅ Errors
+
 - API errors → Card errors → Validation → Constraints
 
 ## Performance

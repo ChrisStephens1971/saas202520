@@ -86,12 +86,12 @@ How will we know this feature is successful?
 
 ## Timeline
 
-| Milestone | Date |
-|-----------|------|
-| Spec approved | [Date] |
+| Milestone         | Date   |
+| ----------------- | ------ |
+| Spec approved     | [Date] |
 | Development start | [Date] |
-| Testing complete | [Date] |
-| Launch | [Date] |
+| Testing complete  | [Date] |
+| Launch            | [Date] |
 
 ---
 

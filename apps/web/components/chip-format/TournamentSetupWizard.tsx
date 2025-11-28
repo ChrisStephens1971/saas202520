@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
+import { toast } from 'sonner';
+
 interface ChipFormatConfig {
   name: string;
   startDate: string;
@@ -48,7 +50,12 @@ export default function TournamentSetupWizard({ onClose }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<ChipFormatConfig>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ChipFormatConfig>({
     defaultValues,
   });
 
@@ -82,7 +89,7 @@ export default function TournamentSetupWizard({ onClose }: Props) {
       onClose();
     } catch (error) {
       console.error('Failed to create tournament:', error);
-      alert('Failed to create tournament. Please try again.');
+      toast.error('Failed to create tournament. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -101,10 +108,7 @@ export default function TournamentSetupWizard({ onClose }: Props) {
               <h2 className="text-2xl font-bold">Create Chip Format Tournament</h2>
               <p className="text-blue-100 mt-1">Step {currentStep} of 4</p>
             </div>
-            <button
-              onClick={onClose}
-              className="text-white hover:text-gray-200 text-2xl font-bold"
-            >
+            <button onClick={onClose} className="text-white hover:text-gray-200 text-2xl font-bold">
               ×
             </button>
           </div>
@@ -140,9 +144,7 @@ export default function TournamentSetupWizard({ onClose }: Props) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Start Date *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Start Date *</label>
                 <input
                   {...register('startDate', { required: true })}
                   type="date"
@@ -151,18 +153,14 @@ export default function TournamentSetupWizard({ onClose }: Props) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Game *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Game *</label>
                 <input
                   {...register('game', { required: true })}
                   type="text"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="e.g., Chess, Go, Poker"
                 />
-                {errors.game && (
-                  <p className="text-red-600 text-sm mt-1">Game is required</p>
-                )}
+                {errors.game && <p className="text-red-600 text-sm mt-1">Game is required</p>}
               </div>
 
               <div>
@@ -231,7 +229,11 @@ export default function TournamentSetupWizard({ onClose }: Props) {
                     Qualification Rounds *
                   </label>
                   <input
-                    {...register('qualificationRounds', { required: true, valueAsNumber: true, min: 1 })}
+                    {...register('qualificationRounds', {
+                      required: true,
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
                     type="number"
                     min="1"
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -255,9 +257,9 @@ export default function TournamentSetupWizard({ onClose }: Props) {
 
               <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
                 <p className="text-sm text-blue-700">
-                  <strong>Preview:</strong> Players will compete for {formData.qualificationRounds} rounds.
-                  Winners earn {formData.winnerChips} chips, losers earn {formData.loserChips} chips.
-                  Top {formData.finalsCount} players advance to finals.
+                  <strong>Preview:</strong> Players will compete for {formData.qualificationRounds}{' '}
+                  rounds. Winners earn {formData.winnerChips} chips, losers earn{' '}
+                  {formData.loserChips} chips. Top {formData.finalsCount} players advance to finals.
                 </p>
               </div>
             </div>
@@ -281,9 +283,12 @@ export default function TournamentSetupWizard({ onClose }: Props) {
                   <option value="chip_diff">Chip Difference Pairing</option>
                 </select>
                 <p className="text-xs text-gray-600 mt-1">
-                  {formData.pairingStrategy === 'random' && 'Players are paired randomly from the queue'}
-                  {formData.pairingStrategy === 'rating' && 'Players with similar ratings are paired together'}
-                  {formData.pairingStrategy === 'chip_diff' && 'Players with similar chip counts are paired'}
+                  {formData.pairingStrategy === 'random' &&
+                    'Players are paired randomly from the queue'}
+                  {formData.pairingStrategy === 'rating' &&
+                    'Players with similar ratings are paired together'}
+                  {formData.pairingStrategy === 'chip_diff' &&
+                    'Players with similar chip counts are paired'}
                 </p>
               </div>
 
@@ -332,7 +337,9 @@ export default function TournamentSetupWizard({ onClose }: Props) {
                     <dt className="text-gray-600">Game:</dt>
                     <dd className="font-medium">{formData.game}</dd>
                     <dt className="text-gray-600">Start Date:</dt>
-                    <dd className="font-medium">{new Date(formData.startDate).toLocaleDateString()}</dd>
+                    <dd className="font-medium">
+                      {new Date(formData.startDate).toLocaleDateString()}
+                    </dd>
                     {formData.maxPlayers && (
                       <>
                         <dt className="text-gray-600">Max Players:</dt>
@@ -360,11 +367,17 @@ export default function TournamentSetupWizard({ onClose }: Props) {
                   <h4 className="font-semibold text-gray-700 mb-2">Advanced Settings</h4>
                   <dl className="grid grid-cols-2 gap-2 text-sm">
                     <dt className="text-gray-600">Pairing Strategy:</dt>
-                    <dd className="font-medium capitalize">{formData.pairingStrategy.replace('_', ' ')}</dd>
+                    <dd className="font-medium capitalize">
+                      {formData.pairingStrategy.replace('_', ' ')}
+                    </dd>
                     <dt className="text-gray-600">Tiebreaker:</dt>
-                    <dd className="font-medium capitalize">{formData.tiebreaker.replace('_', ' ')}</dd>
+                    <dd className="font-medium capitalize">
+                      {formData.tiebreaker.replace('_', ' ')}
+                    </dd>
                     <dt className="text-gray-600">Duplicate Pairings:</dt>
-                    <dd className="font-medium">{formData.allowDuplicatePairings ? 'Allowed' : 'Not Allowed'}</dd>
+                    <dd className="font-medium">
+                      {formData.allowDuplicatePairings ? 'Allowed' : 'Not Allowed'}
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -372,7 +385,9 @@ export default function TournamentSetupWizard({ onClose }: Props) {
               {formData.description && (
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Description</h4>
-                  <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">{formData.description}</p>
+                  <p className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+                    {formData.description}
+                  </p>
                 </div>
               )}
             </div>
@@ -394,7 +409,11 @@ export default function TournamentSetupWizard({ onClose }: Props) {
                 <div
                   key={step}
                   className={`w-2 h-2 rounded-full ${
-                    step === currentStep ? 'bg-blue-600' : step < currentStep ? 'bg-green-500' : 'bg-gray-300'
+                    step === currentStep
+                      ? 'bg-blue-600'
+                      : step < currentStep
+                        ? 'bg-green-500'
+                        : 'bg-gray-300'
                   }`}
                 />
               ))}

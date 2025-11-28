@@ -5,17 +5,20 @@ Sprint 9 Phase 3 - Complete API compression and optimization utilities for Next.
 ## Features
 
 ### 1. Response Compression
+
 - **Automatic gzip/brotli compression** based on `Accept-Encoding` header
 - **Smart compression threshold** - skips compression for responses < 1KB
 - **Compression metrics** - tracks original size, compressed size, and ratio
 - **Beneficial compression check** - only uses compression if it reduces size by ≥5%
 
 ### 2. ETag Support
+
 - **Automatic ETag generation** using SHA-256 hash
 - **Conditional request handling** - returns 304 Not Modified when appropriate
 - **Cache validation** - supports If-None-Match header
 
 ### 3. Response Optimization
+
 - **Pagination** - offset-based and cursor-based pagination
 - **Field selection** - GraphQL-style field filtering (include/exclude)
 - **Sorting** - sort by any field with asc/desc direction
@@ -23,6 +26,7 @@ Sprint 9 Phase 3 - Complete API compression and optimization utilities for Next.
 - **Payload trimming** - remove null/empty values to reduce size
 
 ### 4. Performance Tracking
+
 - **Request ID tracking** - unique ID for each request
 - **Performance metrics** - duration, status, error tracking
 - **Integration with Sentry** - automatic error and performance tracking
@@ -137,20 +141,22 @@ export const GET = withOptimization(handler, {
 Create an optimized JSON response with compression and caching.
 
 **Parameters:**
+
 - `request: NextRequest` - Next.js request object
 - `data: any` - Response data (will be JSON stringified)
 - `options: OptimizedResponseOptions` - Response options
 
 **Options:**
+
 ```typescript
 interface OptimizedResponseOptions {
-  compress?: boolean;        // Enable compression (default: true)
-  etag?: boolean;           // Enable ETag generation (default: true)
-  paginate?: boolean;       // Enable pagination (default: false)
-  selectFields?: boolean;   // Enable field selection (default: false)
-  sort?: boolean;          // Enable sorting (default: false)
+  compress?: boolean; // Enable compression (default: true)
+  etag?: boolean; // Enable ETag generation (default: true)
+  paginate?: boolean; // Enable pagination (default: false)
+  selectFields?: boolean; // Enable field selection (default: false)
+  sort?: boolean; // Enable sorting (default: false)
   headers?: Record<string, string>; // Custom headers
-  status?: number;         // HTTP status code (default: 200)
+  status?: number; // HTTP status code (default: 200)
 }
 ```
 
@@ -165,6 +171,7 @@ Convenience wrapper for paginated responses. Same as `createOptimizedResponse` w
 Middleware wrapper for API routes with automatic compression and tracking.
 
 **Parameters:**
+
 - `handler: (request: NextRequest) => Promise<any>` - API route handler
 - `options: OptimizedResponseOptions` - Response options
 
@@ -175,6 +182,7 @@ Middleware wrapper for API routes with automatic compression and tracking.
 Create a standardized error response.
 
 **Parameters:**
+
 - `message: string` - Error message
 - `status?: number` - HTTP status code (default: 500)
 - `details?: Record<string, any>` - Additional error details
@@ -186,6 +194,7 @@ Create a standardized error response.
 Create a standardized success response.
 
 **Parameters:**
+
 - `message: string` - Success message
 - `data?: any` - Response data
 - `status?: number` - HTTP status code (default: 200)
@@ -218,9 +227,9 @@ import { DEFAULT_COMPRESSION_CONFIG } from '@/lib/api/compression';
 // Customize if needed
 const customConfig = {
   ...DEFAULT_COMPRESSION_CONFIG,
-  threshold: 2048,      // 2KB minimum
-  gzipLevel: 9,        // Maximum compression
-  brotliQuality: 11,   // Maximum compression
+  threshold: 2048, // 2KB minimum
+  gzipLevel: 9, // Maximum compression
+  brotliQuality: 11, // Maximum compression
 };
 ```
 
@@ -303,6 +312,7 @@ GET /api/users?fields=id,name,email
 ```
 
 Response includes only specified fields:
+
 ```json
 [
   { "id": 1, "name": "John", "email": "john@example.com" },
@@ -455,7 +465,7 @@ const users = await db.user.findMany({
     name: true,
     email: true,
     // password: false (not selected)
-  }
+  },
 });
 
 // Or use field selection
@@ -468,12 +478,12 @@ const users = await db.user.findMany({
 
 Real-world examples from testing:
 
-| Data Type | Original | Compressed | Ratio |
-|-----------|----------|------------|-------|
-| User list (100 items) | 45KB | 12KB | 73% |
-| Tournament data | 120KB | 28KB | 77% |
-| Match history | 250KB | 42KB | 83% |
-| JSON with text | 500KB | 85KB | 83% |
+| Data Type             | Original | Compressed | Ratio |
+| --------------------- | -------- | ---------- | ----- |
+| User list (100 items) | 45KB     | 12KB       | 73%   |
+| Tournament data       | 120KB    | 28KB       | 77%   |
+| Match history         | 250KB    | 42KB       | 83%   |
+| JSON with text        | 500KB    | 85KB       | 83%   |
 
 ### ETag Cache Hits
 
@@ -519,9 +529,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        headers: [
-          { key: 'Vary', value: 'Accept-Encoding' },
-        ],
+        headers: [{ key: 'Vary', value: 'Accept-Encoding' }],
       },
     ];
   },
@@ -619,6 +627,7 @@ export async function GET(request: NextRequest) {
 ## Support
 
 For issues or questions:
+
 - See example implementation: `app/api/example/optimized/route.ts`
 - Check Sentry for performance metrics
 - Review compression logs in development mode

@@ -196,9 +196,7 @@ export async function sendExportNotification(
   } catch (error) {
     console.error('[Email] Failed to send export notification:', error);
     throw new Error(
-      `Failed to send notification: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`
+      `Failed to send notification: ${error instanceof Error ? error.message : 'Unknown error'}`
     );
   }
 }

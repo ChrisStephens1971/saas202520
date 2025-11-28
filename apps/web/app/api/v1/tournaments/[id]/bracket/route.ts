@@ -31,10 +31,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/tournaments/clx1234/bracket
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -42,10 +39,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -68,10 +62,7 @@ export async function GET(
         id: true,
         format: true,
         matches: {
-          orderBy: [
-            { round: 'asc' },
-            { position: 'asc' },
-          ],
+          orderBy: [{ round: 'asc' }, { position: 'asc' }],
           select: {
             id: true,
             round: true,
@@ -114,40 +105,46 @@ export async function GET(
 
     // Group matches by bracket and round
     const winnerMatches = tournament.matches.filter(
-      m => m.bracket === 'winners' || m.bracket === null
+      (m) => m.bracket === 'winners' || m.bracket === null
     );
-    const loserMatches = tournament.matches.filter(
-      m => m.bracket === 'losers'
-    );
+    const loserMatches = tournament.matches.filter((m) => m.bracket === 'losers');
 
     // Helper to build bracket rounds
     const buildBracketRounds = (matches: typeof winnerMatches): BracketRound[] => {
       const roundsMap = new Map<number, BracketMatchNode[]>();
 
-      matches.forEach(match => {
+      matches.forEach((match) => {
         const score = match.score as unknown as { playerA?: number; playerB?: number };
         const winner = match.winnerId
-          ? (match.playerA?.id === match.winnerId ? match.playerA : match.playerB)
+          ? match.playerA?.id === match.winnerId
+            ? match.playerA
+            : match.playerB
           : null;
 
         const matchNode: BracketMatchNode = {
           matchId: match.id,
           round: match.round,
           position: match.position,
-          playerA: match.playerA ? {
-            id: match.playerA.id,
-            name: match.playerA.name,
-            seed: match.playerA.seed,
-          } : null,
-          playerB: match.playerB ? {
-            id: match.playerB.id,
-            name: match.playerB.name,
-            seed: match.playerB.seed,
-          } : null,
-          winner: winner ? {
-            id: winner.id,
-            name: winner.name,
-          } : null,
+          playerA: match.playerA
+            ? {
+                id: match.playerA.id,
+                name: match.playerA.name,
+                seed: match.playerA.seed,
+              }
+            : null,
+          playerB: match.playerB
+            ? {
+                id: match.playerB.id,
+                name: match.playerB.name,
+                seed: match.playerB.seed,
+              }
+            : null,
+          winner: winner
+            ? {
+                id: winner.id,
+                name: winner.name,
+              }
+            : null,
           score: {
             playerA: score?.playerA || 0,
             playerB: score?.playerB || 0,
@@ -192,7 +189,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 995, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/tournaments/${id}/bracket:`, error);

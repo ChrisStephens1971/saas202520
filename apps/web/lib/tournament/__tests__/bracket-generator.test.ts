@@ -133,7 +133,12 @@ describe('Bracket Generator - Seeding', () => {
       const seeded = seedPlayers(players, { type: 'manual', manualOrder });
 
       expect(seeded.slice(0, 2).map((p) => p.id)).toEqual(['player-3', 'player-1']);
-      expect(seeded.slice(2).map((p) => p.id).sort()).toEqual(['player-2', 'player-4']);
+      expect(
+        seeded
+          .slice(2)
+          .map((p) => p.id)
+          .sort()
+      ).toEqual(['player-2', 'player-4']);
     });
   });
 
@@ -263,9 +268,7 @@ describe('Bracket Generator - Double Elimination', () => {
     const players = createPlayers(8);
     const bracket = generateDoubleElimination(players);
 
-    const winnersRound1 = bracket.matches.filter(
-      (m) => m.bracket === 'winners' && m.round === 1
-    );
+    const winnersRound1 = bracket.matches.filter((m) => m.bracket === 'winners' && m.round === 1);
 
     // Each winners round 1 match should have a loserNextMatchId
     winnersRound1.forEach((match) => {
@@ -381,9 +384,7 @@ describe('Bracket Generator - Round Robin', () => {
   it('should throw error for less than 2 players', () => {
     const players = createPlayers(1);
 
-    expect(() => generateRoundRobin(players)).toThrow(
-      'Round robin requires at least 2 players'
-    );
+    expect(() => generateRoundRobin(players)).toThrow('Round robin requires at least 2 players');
   });
 });
 

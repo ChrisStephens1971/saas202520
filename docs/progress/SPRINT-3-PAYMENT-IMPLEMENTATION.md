@@ -23,6 +23,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/payments/stripe/onboarding/route.ts`
 
 **Functionality:**
+
 - Creates Stripe Connect accounts for organizations
 - Generates onboarding links for account setup
 - Verifies user permissions (owner/TD role required)
@@ -30,6 +31,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Tracks onboarding status in database
 
 **Key Features:**
+
 - Stripe Standard Connect account creation
 - Email and country-based account setup
 - Automatic capability requests (card_payments, transfers)
@@ -37,6 +39,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Return/refresh URL configuration
 
 **Request:**
+
 ```json
 {
   "orgId": "org_123",
@@ -45,6 +48,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 ```
 
 **Response:**
+
 ```json
 {
   "account": {
@@ -68,6 +72,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/payments/create-intent/route.ts`
 
 **Functionality:**
+
 - Creates payment intents for entry fees, side pots, and add-ons
 - Validates payment amounts and tournament access
 - Verifies Stripe account is enabled for charges
@@ -75,6 +80,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Returns client secret for frontend payment completion
 
 **Key Features:**
+
 - Amount validation (must be > 0)
 - Purpose tracking (entry_fee, side_pot, addon)
 - Metadata storage for payment context
@@ -82,6 +88,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Transaction-safe database creation
 
 **Request:**
+
 ```json
 {
   "tournamentId": "tourn_123",
@@ -94,6 +101,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 ```
 
 **Response:**
+
 ```json
 {
   "payment": {
@@ -116,6 +124,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/payments/[id]/confirm/route.ts`
 
 **Functionality:**
+
 - Confirms payment completion after frontend payment processing
 - Retrieves latest payment status from Stripe
 - Updates payment record with success/failure status
@@ -123,6 +132,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Verifies payment intent ID matches database record
 
 **Key Features:**
+
 - Stripe API status synchronization
 - Receipt URL generation from charge data
 - Status mapping (succeeded, failed, pending, canceled)
@@ -130,6 +140,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Transaction safety
 
 **Request:**
+
 ```json
 {
   "stripePaymentIntentId": "pi_123"
@@ -137,6 +148,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 ```
 
 **Response:**
+
 ```json
 {
   "payment": {
@@ -157,6 +169,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/payments/[id]/refund/route.ts`
 
 **Functionality:**
+
 - Processes full and partial refunds
 - Validates refund amounts against payment balance
 - Tracks refund reason (duplicate, fraudulent, requested_by_customer)
@@ -164,6 +177,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Updates payment status to "refunded" or "partially_refunded"
 
 **Key Features:**
+
 - Partial refund support with validation
 - Refund amount limits based on remaining balance
 - Reason tracking for dispute evidence
@@ -171,6 +185,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Refund history linked to payments
 
 **Request:**
+
 ```json
 {
   "amount": 1250,
@@ -179,6 +194,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 ```
 
 **Response:**
+
 ```json
 {
   "refund": {
@@ -205,6 +221,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/tournaments/[id]/payouts/calculate/route.ts`
 
 **Functionality:**
+
 - Calculates payouts based on tournament prize structure
 - Collects all entry fees and side pot contributions
 - Distributes prize pool according to placement percentages
@@ -212,6 +229,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Creates or updates payout records in database
 
 **Key Features:**
+
 - Dynamic prize structure support
 - Entry fee and side pot aggregation
 - Percentage-based payout calculation
@@ -220,6 +238,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Comprehensive financial summary
 
 **Request:**
+
 ```json
 {
   "prizeStructure": [
@@ -233,6 +252,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 ```
 
 **Response:**
+
 ```json
 {
   "payouts": [
@@ -264,18 +284,21 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **File:** `apps/web/app/api/tournaments/[id]/payouts/route.ts`
 
 **Functionality:**
+
 - Retrieves all payouts for a tournament
 - Returns payout summary (pending, paid, voided totals)
 - Lists payouts ordered by placement
 - Calculates aggregate statistics
 
 **Key Features:**
+
 - Complete payout ledger view
 - Status-based summary statistics
 - Placement ordering
 - Role-based access control
 
 **Response:**
+
 ```json
 {
   "payouts": [
@@ -297,12 +320,14 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **Endpoint:** `PUT /api/tournaments/[id]/payouts`
 
 **Functionality:**
+
 - Marks payouts as paid
 - Records who paid and when
 - Stores optional notes
 - Updates payout status
 
 **Request:**
+
 ```json
 {
   "payoutId": "payout_1",
@@ -321,12 +346,14 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 **Helper File:** `apps/web/lib/pdf-generator.ts`
 
 **Functionality:**
+
 - Generates professional PDF payout sheets
 - Includes tournament info, payouts, and financial summary
 - Downloads as attachment with tournament-specific filename
 - Displays placement with proper ordinals (1st, 2nd, 3rd, 4th)
 
 **PDF Contents:**
+
 - Tournament name, organization, and date
 - Payout table (placement, player, amount, status)
 - Financial summary (total collected, payouts, house take)
@@ -334,6 +361,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Timestamp for record-keeping
 
 **Key Features:**
+
 - PDFKit integration for generation
 - Proper currency formatting ($X.XX)
 - Status indicators (pending, paid, voided)
@@ -342,6 +370,7 @@ Implemented all payment processing API endpoints (PAY-001 through PAY-008) for t
 - Content-length headers for downloads
 
 **Response:**
+
 ```
 Content-Type: application/pdf
 Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
@@ -357,6 +386,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 **File:** `apps/web/app/api/payments/[id]/dispute-evidence/route.ts`
 
 **Functionality:**
+
 - Gathers comprehensive payment evidence for disputes
 - Includes payment details, all refunds, and complete audit trail
 - Generates readable dispute summary
@@ -364,6 +394,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 - Provides chronological timeline of all payment events
 
 **Key Features:**
+
 - Complete audit trail of payment lifecycle
 - Refund history with reasons and amounts
 - Tournament event integration
@@ -372,6 +403,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 - Role-based access (owner/TD only)
 
 **Audit Trail Includes:**
+
 - Payment creation events
 - Success/failure/refund events
 - Dispute events
@@ -379,6 +411,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 - Actor tracking (who performed each action)
 
 **Response:**
+
 ```json
 {
   "payment": {
@@ -412,12 +445,14 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 ## Data Models
 
 ### StripeAccount
+
 - Links organizations to Stripe Connect accounts
 - Tracks onboarding completion and capability status
 - Currency and country configuration
 - Enables/disables charges and payouts at platform level
 
 ### Payment
+
 - Records all payment transactions
 - Tracks purpose (entry_fee, side_pot, addon)
 - Refund amount tracking for partial refunds
@@ -425,6 +460,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 - Receipt URL storage for customer records
 
 ### Refund
+
 - Individual refund transaction record
 - Links to parent payment
 - Tracks refund reason and status
@@ -432,6 +468,7 @@ Content-Disposition: attachment; filename="payout-sheet-tournament-name.pdf"
 - Full audit trail capability
 
 ### Payout
+
 - Records prize pool distribution
 - Links payouts to placements
 - Tracks payment status per payout
@@ -446,6 +483,7 @@ All endpoints use type-safe request/response contracts defined in:
 **Location:** `packages/shared/types/payment.ts`
 
 Key types:
+
 - `CreateStripeAccountRequest/Response`
 - `CreatePaymentIntentRequest/Response`
 - `ConfirmPaymentRequest/Response`
@@ -461,31 +499,38 @@ Key types:
 ## Security & Permissions
 
 ### Authentication
+
 - All endpoints require valid NextAuth session
 - Session user ID is verified for all requests
 - Unauthorized access returns 401
 
 ### Authorization
+
 **Stripe Onboarding:**
+
 - Requires owner or TD role
 - Organization membership verified
 - Prevents unauthorized account creation
 
 **Payment Intent Creation:**
+
 - User must be member of tournament's organization
 - Owner/TD role for payment processing
 
 **Refund Processing:**
+
 - Owner/TD role required
 - Only applicable to succeeded payments
 - Tracks who processed refund
 
 **Payout Management:**
+
 - Owner/TD role required
 - Tournament organization ownership verified
 - Payout marking requires appropriate role
 
 **Dispute Evidence:**
+
 - Owner/TD role required
 - Prevents unauthorized access to payment details
 
@@ -507,11 +552,13 @@ All endpoints respect multi-tenant architecture:
 ## Dependencies
 
 ### Installed
+
 - **stripe** (v19.2.1) - Stripe SDK for payment processing
 - **pdfkit** (v0.17.2) - PDF generation for payout sheets
 - **@types/pdfkit** (v0.17.3) - TypeScript definitions for PDFKit
 
 ### Infrastructure
+
 - **Prisma Client** - Database ORM for data persistence
 - **NextAuth** - Authentication and session management
 - **Next.js 16** - Server-side API route handling
@@ -570,6 +617,7 @@ model Payout {
 ## Error Handling
 
 ### HTTP Status Codes
+
 - **400:** Invalid request (missing fields, invalid amounts, permission errors)
 - **401:** Unauthorized (missing session)
 - **403:** Forbidden (insufficient permissions)
@@ -577,6 +625,7 @@ model Payout {
 - **500:** Server error (Stripe API failures, database errors)
 
 ### Validation
+
 - Required field validation
 - Amount validation (must be positive)
 - Permission verification before operations
@@ -584,6 +633,7 @@ model Payout {
 - Refund amount limits based on payment balance
 
 ### Stripe Integration
+
 - Handles Stripe API errors gracefully
 - Connected account routing to avoid cross-account issues
 - Idempotency for payment intent creation
@@ -594,6 +644,7 @@ model Payout {
 ## Testing
 
 ### Test Coverage
+
 - Payment intent creation workflow
 - Refund processing (full and partial)
 - Payout calculation with various prize structures
@@ -602,10 +653,12 @@ model Payout {
 - PDF generation and download
 
 ### Test Files
+
 - `apps/web/app/api/payments/*.test.ts` (individual endpoint tests)
 - `apps/web/app/api/tournaments/[id]/payouts/*.test.ts` (payout tests)
 
 ### Stripe Test Mode
+
 - All endpoints use Stripe test keys (STRIPE_SECRET_KEY)
 - Test mode allows full payment flow without actual charges
 - Refunds and payouts can be tested safely
@@ -615,17 +668,20 @@ model Payout {
 ## Performance Considerations
 
 ### Database Queries
+
 - Indexed queries on `tournamentId`, `playerId`, `status`
 - Efficient relationship loading with `include`
 - Transaction safety for multi-step operations
 - Payout calculation optimized with single bulk operation
 
 ### Stripe API Calls
+
 - Connected account routing minimizes API calls
 - Client secret caching in browser for payment UI
 - Account status cached in database with update on refresh
 
 ### PDF Generation
+
 - Streamed to response to minimize memory usage
 - Asynchronous processing for large tournaments
 - Content-length header for accurate downloads
@@ -635,6 +691,7 @@ model Payout {
 ## Future Enhancements
 
 ### Suggested Improvements
+
 1. **Webhook Handlers:** Implement Stripe webhooks for real-time payment status updates
 2. **Idempotency Keys:** Add idempotency key generation for duplicate request protection
 3. **Batch Payouts:** Create batch payout feature for multiple players
@@ -649,6 +706,7 @@ model Payout {
 ## File Summary
 
 ### API Routes (8 endpoints)
+
 1. `apps/web/app/api/payments/stripe/onboarding/route.ts` - 120 lines
 2. `apps/web/app/api/payments/create-intent/route.ts` - 118 lines
 3. `apps/web/app/api/payments/[id]/confirm/route.ts` - 106 lines
@@ -659,11 +717,13 @@ model Payout {
 8. `apps/web/app/api/tournaments/[id]/payouts/sheet/route.ts` - 112 lines
 
 ### Library Files
+
 - `apps/web/lib/stripe.ts` - 115 lines (Stripe SDK wrapper)
 - `apps/web/lib/pdf-generator.ts` - 134 lines (PDF generation utility)
 - `apps/web/lib/permissions.ts` - Fixed typo in getScorekeepers function
 
 ### Total Implementation
+
 - **1,000+ lines** of production code
 - **8 complete endpoints** with full error handling
 - **4 data models** with proper relationships
@@ -676,6 +736,7 @@ model Payout {
 **Status:** COMPLETE ✓
 
 All PAY-001 through PAY-008 user stories completed:
+
 - [x] PAY-001: Stripe Connect onboarding
 - [x] PAY-002: Payment intent creation for entry fees
 - [x] PAY-003: Payment confirmation and receipts
@@ -686,6 +747,7 @@ All PAY-001 through PAY-008 user stories completed:
 - [x] PAY-008: Dispute evidence pack with audit trail
 
 **Acceptance Criteria:** All met
+
 - Venues can complete Stripe onboarding
 - Entry fees collected and receipts provided
 - Refunds processed successfully
@@ -697,6 +759,7 @@ All PAY-001 through PAY-008 user stories completed:
 ## Deployment Notes
 
 ### Environment Variables Required
+
 ```bash
 STRIPE_SECRET_KEY=sk_test_... # Stripe API key
 DATABASE_URL=postgresql://... # Postgres connection
@@ -704,12 +767,14 @@ NEXT_PUBLIC_APP_URL=http://localhost:3020 # Base URL
 ```
 
 ### Database Migration
+
 ```bash
 npm run db:migrate # Apply schema changes
 npm run db:generate # Regenerate Prisma client
 ```
 
 ### Build & Deploy
+
 ```bash
 npm run build # Compile Next.js app with all endpoints
 npm run start # Start production server

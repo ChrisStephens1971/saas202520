@@ -912,7 +912,7 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
 
       expect(payout1st.amount).toBe(20000); // $200.00
       expect(payout2nd.amount).toBe(12000); // $120.00
-      expect(payout3rd.amount).toBe(8000);  // $80.00
+      expect(payout3rd.amount).toBe(8000); // $80.00
 
       // Verify total payouts match collected
       const totalPayouts = payout1st.amount + payout2nd.amount + payout3rd.amount;
@@ -1018,8 +1018,8 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
 
       // Mock different queries
       prisma.payment.findMany
-        .mockResolvedValueOnce(entryFeePayments)  // First call for entry fees
-        .mockResolvedValueOnce(sidePotPayments);  // Second call for side pots
+        .mockResolvedValueOnce(entryFeePayments) // First call for entry fees
+        .mockResolvedValueOnce(sidePotPayments); // Second call for side pots
 
       // Calculate totals by purpose
       const entryFees = await prisma.payment.findMany({
@@ -1034,7 +1034,7 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
       const totalSidePots = sidePots.reduce((sum, p) => sum + p.amount, 0);
 
       expect(totalEntryFees).toBe(25000); // $250.00
-      expect(totalSidePots).toBe(6000);   // $60.00
+      expect(totalSidePots).toBe(6000); // $60.00
 
       // Create payouts from both sources
       const player1Data = {
@@ -1138,19 +1138,17 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
 
       const breakdown = {
         entryFees: payments
-          .filter(p => p.purpose === 'entry_fee')
+          .filter((p) => p.purpose === 'entry_fee')
           .reduce((sum, p) => sum + p.amount, 0),
         sidePots: payments
-          .filter(p => p.purpose === 'side_pot')
+          .filter((p) => p.purpose === 'side_pot')
           .reduce((sum, p) => sum + p.amount, 0),
-        addons: payments
-          .filter(p => p.purpose === 'addon')
-          .reduce((sum, p) => sum + p.amount, 0),
+        addons: payments.filter((p) => p.purpose === 'addon').reduce((sum, p) => sum + p.amount, 0),
       };
 
       expect(breakdown.entryFees).toBe(15000); // $150.00
-      expect(breakdown.sidePots).toBe(2000);   // $20.00
-      expect(breakdown.addons).toBe(1000);     // $10.00
+      expect(breakdown.sidePots).toBe(2000); // $20.00
+      expect(breakdown.addons).toBe(1000); // $10.00
 
       const totalCollected = breakdown.entryFees + breakdown.sidePots + breakdown.addons;
       expect(totalCollected).toBe(18000); // $180.00
@@ -1164,9 +1162,7 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
         ...createTestPlayer(testTournamentId, { id: 'player_2nd' }),
       };
 
-      prisma.player.create
-        .mockResolvedValueOnce(player1Data)
-        .mockResolvedValueOnce(player2Data);
+      prisma.player.create.mockResolvedValueOnce(player1Data).mockResolvedValueOnce(player2Data);
 
       const player1 = await prisma.player.create({ data: player1Data });
       const player2 = await prisma.player.create({ data: player2Data });
@@ -1187,9 +1183,7 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
         id: 'po_test_2',
       };
 
-      prisma.payout.create
-        .mockResolvedValueOnce(payout1Data)
-        .mockResolvedValueOnce(payout2Data);
+      prisma.payout.create.mockResolvedValueOnce(payout1Data).mockResolvedValueOnce(payout2Data);
 
       await prisma.payout.create({ data: payout1Data });
       await prisma.payout.create({ data: payout2Data });
@@ -1478,13 +1472,9 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
 
     test('should handle missing Stripe account', async () => {
       // Mock stripeLib function
-      stripeLib.getConnectAccount.mockRejectedValue(
-        new Error('No such account: acct_missing')
-      );
+      stripeLib.getConnectAccount.mockRejectedValue(new Error('No such account: acct_missing'));
 
-      await expect(
-        stripeLib.getConnectAccount('acct_missing')
-      ).rejects.toThrow('No such account');
+      await expect(stripeLib.getConnectAccount('acct_missing')).rejects.toThrow('No such account');
     });
 
     test('should handle card declined errors', async () => {
@@ -1505,13 +1495,11 @@ describe('Stripe Payment Unit Tests (Mocked)', () => {
     });
 
     test('should handle payment intent not found', async () => {
-      mockStripe.paymentIntents.retrieve.mockRejectedValue(
-        stripeErrors.paymentIntentNotFound()
-      );
+      mockStripe.paymentIntents.retrieve.mockRejectedValue(stripeErrors.paymentIntentNotFound());
 
-      await expect(
-        mockStripe.paymentIntents.retrieve('pi_nonexistent')
-      ).rejects.toThrow('No such payment_intent');
+      await expect(mockStripe.paymentIntents.retrieve('pi_nonexistent')).rejects.toThrow(
+        'No such payment_intent'
+      );
     });
   });
 });

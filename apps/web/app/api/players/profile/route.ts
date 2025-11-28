@@ -20,13 +20,15 @@ const UpdateProfileSchema = z.object({
   photoUrl: z.string().url().optional().nullable(),
   location: z.string().max(100).optional().nullable(),
   skillLevel: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT']).optional(),
-  socialLinks: z.object({
-    twitter: z.string().url().optional(),
-    facebook: z.string().url().optional(),
-    instagram: z.string().url().optional(),
-    website: z.string().url().optional(),
-    linkedin: z.string().url().optional(),
-  }).optional(),
+  socialLinks: z
+    .object({
+      twitter: z.string().url().optional(),
+      facebook: z.string().url().optional(),
+      instagram: z.string().url().optional(),
+      website: z.string().url().optional(),
+      linkedin: z.string().url().optional(),
+    })
+    .optional(),
 });
 
 /**
@@ -48,19 +50,13 @@ export async function PUT(request: NextRequest) {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get tenant ID from session (multi-tenant isolation)
     const tenantId = session.user.orgId;
     if (!tenantId) {
-      return NextResponse.json(
-        { error: 'No organization context' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No organization context' }, { status: 400 });
     }
 
     // Parse and validate request body
@@ -85,18 +81,16 @@ export async function PUT(request: NextRequest) {
     // Filter out null values and convert to UpdateProfileRequest type
     const profileData = {
       ...(updateData.bio !== undefined && { bio: updateData.bio }),
-      ...(updateData.photoUrl !== undefined && updateData.photoUrl !== null && { photoUrl: updateData.photoUrl }),
-      ...(updateData.location !== undefined && updateData.location !== null && { location: updateData.location }),
+      ...(updateData.photoUrl !== undefined &&
+        updateData.photoUrl !== null && { photoUrl: updateData.photoUrl }),
+      ...(updateData.location !== undefined &&
+        updateData.location !== null && { location: updateData.location }),
       ...(updateData.skillLevel !== undefined && { skillLevel: updateData.skillLevel }),
       ...(updateData.socialLinks !== undefined && { socialLinks: updateData.socialLinks }),
     };
 
     // Update profile using service layer
-    const updatedProfile = await updatePlayerProfile(
-      playerId,
-      tenantId,
-      profileData
-    );
+    const updatedProfile = await updatePlayerProfile(playerId, tenantId, profileData);
 
     // Return successful response
     return NextResponse.json(
@@ -123,10 +117,7 @@ export async function PUT(request: NextRequest) {
 
     // Handle unexpected errors
     console.error('[PUT /api/players/profile] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

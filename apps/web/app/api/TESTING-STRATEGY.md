@@ -11,6 +11,7 @@ This document outlines the testing approach for API routes in the tournament pla
 **Purpose:** Test route handlers in isolation
 
 **Characteristics:**
+
 - Call handler functions directly (e.g., `GET()`, `POST()`)
 - Mock dependencies (database, auth, external services)
 - Fast execution (< 100ms per test)
@@ -18,6 +19,7 @@ This document outlines the testing approach for API routes in the tournament pla
 - No HTTP server required
 
 **Example:**
+
 ```typescript
 // route.test.ts
 import { GET } from './route';
@@ -29,6 +31,7 @@ it('should return 200 OK', async () => {
 ```
 
 **Limitations:**
+
 - ⚠️ Bypasses middleware (auth, tenant context, etc.)
 - ⚠️ Doesn't test full request flow
 - ⚠️ Can miss integration issues
@@ -38,6 +41,7 @@ it('should return 200 OK', async () => {
 **Purpose:** Test complete request flow through middleware
 
 **Characteristics:**
+
 - Make actual HTTP requests
 - Test through full Next.js stack
 - Include middleware execution
@@ -45,11 +49,12 @@ it('should return 200 OK', async () => {
 - Slower execution (100-500ms per test)
 
 **Example:**
+
 ```typescript
 // route.integration.test.ts
 it('should redirect unauthenticated users', async () => {
   const response = await fetch('http://localhost:3000/api/tournaments', {
-    redirect: 'manual'
+    redirect: 'manual',
   });
   expect(response.status).toBe(302);
   expect(response.headers.get('location')).toBe('/login');
@@ -57,6 +62,7 @@ it('should redirect unauthenticated users', async () => {
 ```
 
 **Requirements:**
+
 - Next.js test server running
 - Test database available
 - Port isolation for parallel tests
@@ -66,12 +72,14 @@ it('should redirect unauthenticated users', async () => {
 **Purpose:** Verify API contracts match TypeScript definitions
 
 **Characteristics:**
+
 - Validate request/response schemas
 - Ensure Zod validation works
 - Test multi-tenant isolation
 - Verify error responses
 
 **Example:**
+
 ```typescript
 // route.contract.test.ts
 import { TournamentSchema } from '@tournament/api-contracts';
@@ -113,12 +121,14 @@ it('should return valid tournament schema', async () => {
 ### Multi-Tenant Isolation
 
 **Always test:**
+
 1. Tenant_id is required for protected endpoints
 2. Users cannot access other tenants' data
 3. List endpoints filter by tenant context
 4. Tenant context comes from auth headers
 
 **Example:**
+
 ```typescript
 it('should filter tournaments by tenant_id', async () => {
   // Create tournaments for tenant A
@@ -126,7 +136,7 @@ it('should filter tournaments by tenant_id', async () => {
 
   // Request as tenant B
   const response = await fetch('http://localhost:3000/api/tournaments', {
-    headers: { 'X-Tenant-ID': 'tenant-b' }
+    headers: { 'X-Tenant-ID': 'tenant-b' },
   });
   const data = await response.json();
 
@@ -138,12 +148,14 @@ it('should filter tournaments by tenant_id', async () => {
 ### Public Endpoints
 
 **Always test:**
+
 1. No authentication required
 2. No redirect to /login
 3. Returns 200 OK (not 302)
 4. Works without cookies/headers
 
 **Example:**
+
 ```typescript
 it('should allow public access', async () => {
   const response = await fetch('http://localhost:3000/api/health');
@@ -155,6 +167,7 @@ it('should allow public access', async () => {
 ### Error Handling
 
 **Always test:**
+
 1. Invalid input returns 400 Bad Request
 2. Missing auth returns 401 Unauthorized
 3. Insufficient permissions returns 403 Forbidden
@@ -162,11 +175,12 @@ it('should allow public access', async () => {
 5. Server errors return 500 with error schema
 
 **Example:**
+
 ```typescript
 it('should return 400 for invalid input', async () => {
   const response = await fetch('http://localhost:3000/api/tournaments', {
     method: 'POST',
-    body: JSON.stringify({ name: '' }) // Invalid: empty name
+    body: JSON.stringify({ name: '' }), // Invalid: empty name
   });
   expect(response.status).toBe(400);
 
@@ -174,8 +188,8 @@ it('should return 400 for invalid input', async () => {
   expect(error).toMatchObject({
     error: {
       code: expect.any(String),
-      message: expect.any(String)
-    }
+      message: expect.any(String),
+    },
   });
 });
 ```
@@ -231,16 +245,17 @@ pnpm test:coverage
 
 ## Coverage Goals
 
-| Type | Current | Sprint 1 Goal | Sprint 3 Goal |
-|------|---------|---------------|---------------|
-| **Unit Tests** | 5% | 60% | 80% |
-| **Integration Tests** | 0% | 30% | 60% |
-| **E2E Tests** | 0% | 10% | 30% |
-| **Overall Coverage** | 5% | 50% | 70% |
+| Type                  | Current | Sprint 1 Goal | Sprint 3 Goal |
+| --------------------- | ------- | ------------- | ------------- |
+| **Unit Tests**        | 5%      | 60%           | 80%           |
+| **Integration Tests** | 0%      | 30%           | 60%           |
+| **E2E Tests**         | 0%      | 10%           | 30%           |
+| **Overall Coverage**  | 5%      | 50%           | 70%           |
 
 ## Critical Paths to Test
 
 ### Authentication Flow
+
 1. Login with valid credentials → 200 OK
 2. Login with invalid credentials → 401
 3. Access protected route without auth → 302 /login
@@ -248,6 +263,7 @@ pnpm test:coverage
 5. Session expiry handling
 
 ### Multi-Tenant Isolation
+
 1. List resources → Only tenant's data
 2. Get resource by ID → 404 if wrong tenant
 3. Create resource → tenant_id from auth
@@ -255,6 +271,7 @@ pnpm test:coverage
 5. Delete resource → 403 if wrong tenant
 
 ### CRUD Operations
+
 1. Create valid resource → 201 Created
 2. Create invalid resource → 400 Bad Request
 3. Get existing resource → 200 OK

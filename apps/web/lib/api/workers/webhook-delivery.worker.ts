@@ -48,15 +48,11 @@ interface DeliveryResult {
  * @param job - Bull job containing webhook delivery data
  * @returns Delivery result
  */
-export async function processWebhookDelivery(
-  job: Job<WebhookJobData>
-): Promise<DeliveryResult> {
+export async function processWebhookDelivery(job: Job<WebhookJobData>): Promise<DeliveryResult> {
   const { webhookId, deliveryId, event, payload } = job.data;
   const attemptNumber = job.attemptsMade + 1;
 
-  console.log(
-    `[Webhook Worker] Processing delivery ${deliveryId} (attempt ${attemptNumber})`
-  );
+  console.log(`[Webhook Worker] Processing delivery ${deliveryId} (attempt ${attemptNumber})`);
 
   try {
     // Get webhook details from database
@@ -74,12 +70,7 @@ export async function processWebhookDelivery(
     }
 
     // Create request headers with HMAC signature
-    const headers = createWebhookHeaders(
-      payload,
-      webhook.secret,
-      event,
-      deliveryId
-    );
+    const headers = createWebhookHeaders(payload, webhook.secret, event, deliveryId);
 
     // Make HTTP POST request with timeout
     const controller = new AbortController();
@@ -124,9 +115,7 @@ export async function processWebhookDelivery(
           },
         });
 
-        console.log(
-          `[Webhook Worker] Delivery ${deliveryId} succeeded (${response.status})`
-        );
+        console.log(`[Webhook Worker] Delivery ${deliveryId} succeeded (${response.status})`);
 
         return {
           success: true,
@@ -173,9 +162,7 @@ export async function processWebhookDelivery(
           },
         });
 
-        console.warn(
-          `[Webhook Worker] Delivery ${deliveryId} failed, will retry: ${errorMessage}`
-        );
+        console.warn(`[Webhook Worker] Delivery ${deliveryId} failed, will retry: ${errorMessage}`);
 
         // Throw error to trigger retry
         throw new Error(errorMessage);
@@ -197,9 +184,7 @@ export async function processWebhookDelivery(
         },
       });
 
-      console.warn(
-        `[Webhook Worker] Delivery ${deliveryId} failed: ${errorMessage}`
-      );
+      console.warn(`[Webhook Worker] Delivery ${deliveryId} failed: ${errorMessage}`);
 
       // Retry on timeout/network errors
       throw new Error(errorMessage);

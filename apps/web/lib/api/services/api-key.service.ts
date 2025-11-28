@@ -8,11 +8,7 @@
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import type {
-  ApiKey,
-  ApiTier,
-  GeneratedApiKey,
-} from '../types/api';
+import type { ApiKey, ApiTier, GeneratedApiKey } from '../types/api';
 
 // Rate limits for each tier
 const TIER_RATE_LIMITS: Record<ApiTier, number> = {
@@ -94,19 +90,14 @@ export async function hashApiKey(key: string): Promise<string> {
  * @param key - Plaintext API key to validate
  * @returns API key object if valid, null otherwise
  */
-export async function validateApiKey(
-  key: string
-): Promise<ApiKey | null> {
+export async function validateApiKey(key: string): Promise<ApiKey | null> {
   try {
     // Get all active API keys (we need to check bcrypt hashes)
     // Note: In production, consider caching active keys in Redis
     const activeKeys = await prisma.apiKey.findMany({
       where: {
         isActive: true,
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gt: new Date() } },
-        ],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
     });
 
@@ -132,9 +123,7 @@ export async function validateApiKey(
  * @param keyHash - Bcrypt hash of the key
  * @returns API key object if found, null otherwise
  */
-export async function getApiKeyByHash(
-  keyHash: string
-): Promise<ApiKey | null> {
+export async function getApiKeyByHash(keyHash: string): Promise<ApiKey | null> {
   try {
     const apiKey = await prisma.apiKey.findUnique({
       where: { keyHash },
@@ -221,9 +210,7 @@ export function validateApiKeyFormat(key: string): boolean {
  * @param tenantId - Organization ID
  * @returns List of API keys
  */
-export async function getApiKeysByTenant(
-  tenantId: string
-): Promise<ApiKey[]> {
+export async function getApiKeysByTenant(tenantId: string): Promise<ApiKey[]> {
   return prisma.apiKey.findMany({
     where: { tenantId },
     orderBy: { createdAt: 'desc' },
@@ -236,9 +223,7 @@ export async function getApiKeysByTenant(
  * @param keyId - API key ID
  * @returns API key object if found, null otherwise
  */
-export async function getApiKeyById(
-  keyId: string
-): Promise<ApiKey | null> {
+export async function getApiKeyById(keyId: string): Promise<ApiKey | null> {
   return prisma.apiKey.findUnique({
     where: { id: keyId },
   }) as Promise<ApiKey | null>;

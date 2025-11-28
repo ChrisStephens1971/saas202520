@@ -9,10 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
 
@@ -45,11 +42,14 @@ export async function GET(
     });
 
     // Group by player and calculate running total
-    const playerProgressionMap = new Map<string, {
-      playerId: string;
-      playerName: string;
-      data: Array<{ timestamp: string; chips: number; matchNumber: number }>;
-    }>();
+    const playerProgressionMap = new Map<
+      string,
+      {
+        playerId: string;
+        playerName: string;
+        data: Array<{ timestamp: string; chips: number; matchNumber: number }>;
+      }
+    >();
 
     chipAwards.forEach((award, index) => {
       const playerId = award.playerId;

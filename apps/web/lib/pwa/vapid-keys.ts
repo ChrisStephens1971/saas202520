@@ -17,9 +17,9 @@ export const VAPID_CONFIG = {
   publicKey:
     process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
     'BEl62iUYgUivxIkv69yViEuiBIa-Ib27SzkkpGzEZ3lAGKv_U_8h1TFf9Kw3LQ6O4dFz5r1JxL5lKx1c9KqK2Zo', // Default for development
-  privateKey: process.env.VAPID_PRIVATE_KEY || 'dev-key-placeholder-for-build-only-do-not-use-in-production',
-  subject:
-    process.env.VAPID_SUBJECT || 'mailto:admin@tournamentplatform.com',
+  privateKey:
+    process.env.VAPID_PRIVATE_KEY || 'dev-key-placeholder-for-build-only-do-not-use-in-production',
+  subject: process.env.VAPID_SUBJECT || 'mailto:admin@tournamentplatform.com',
 };
 
 /**
@@ -34,9 +34,7 @@ export function getPublicVapidKey(): string {
  */
 export function validateVapidConfig(): boolean {
   if (!VAPID_CONFIG.publicKey || !VAPID_CONFIG.privateKey) {
-    console.warn(
-      'VAPID keys not configured. Push notifications will not work in production.'
-    );
+    console.warn('VAPID keys not configured. Push notifications will not work in production.');
     return false;
   }
   return true;
@@ -47,9 +45,7 @@ export function validateVapidConfig(): boolean {
  */
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, '+')
-    .replace(/_/g, '/');
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);

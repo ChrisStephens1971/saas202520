@@ -74,9 +74,7 @@ function createMockPlayer(id: string, name: string): Player {
   };
 }
 
-function createMatchWithRelations(
-  matchOverrides: Partial<Match> = {}
-): MatchWithRelations {
+function createMatchWithRelations(matchOverrides: Partial<Match> = {}): MatchWithRelations {
   return {
     ...createMockMatch(matchOverrides),
     tournament: createMockTournament(),
@@ -404,10 +402,7 @@ describe('Match State Machine - Forfeit Logic', () => {
     const forfeitingPlayerId = 'player-1';
     const expectedWinner = 'player-2';
 
-    const winnerId =
-      forfeitingPlayerId === match.playerAId
-        ? match.playerBId
-        : match.playerAId;
+    const winnerId = forfeitingPlayerId === match.playerAId ? match.playerBId : match.playerAId;
 
     expect(winnerId).toBe(expectedWinner);
   });
@@ -422,10 +417,7 @@ describe('Match State Machine - Forfeit Logic', () => {
     const forfeitingPlayerId = 'player-2';
     const expectedWinner = 'player-1';
 
-    const winnerId =
-      forfeitingPlayerId === match.playerAId
-        ? match.playerBId
-        : match.playerAId;
+    const winnerId = forfeitingPlayerId === match.playerAId ? match.playerBId : match.playerAId;
 
     expect(winnerId).toBe(expectedWinner);
   });

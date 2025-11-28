@@ -176,17 +176,13 @@ export async function GET(request: NextRequest) {
             role,
             count,
             percentage:
-              users.length > 0
-                ? parseFloat(((count / users.length) * 100).toFixed(2))
-                : 0,
+              users.length > 0 ? parseFloat(((count / users.length) * 100).toFixed(2)) : 0,
           })),
           activity: {
             totalUsers,
             activeUsersLast7Days: activeUserCount,
             activityRate:
-              totalUsers > 0
-                ? parseFloat(((activeUserCount / totalUsers) * 100).toFixed(2))
-                : 0,
+              totalUsers > 0 ? parseFloat(((activeUserCount / totalUsers) * 100).toFixed(2)) : 0,
           },
           engagement: {
             singleOrganization: usersByOrgCount.single,

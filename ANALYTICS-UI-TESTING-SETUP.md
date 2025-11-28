@@ -29,6 +29,7 @@ npx prisma generate
 ```
 
 **This creates the 5 analytics tables:**
+
 - analytics_events
 - revenue_aggregates
 - user_cohorts
@@ -48,6 +49,7 @@ tsx lib/analytics/services/seed-test-data.ts <your-tenant-id> 12
 **Replace `<your-tenant-id>` with an actual organization ID from your database.**
 
 To find a tenant ID:
+
 ```bash
 # Option 1: Check your database
 psql -U postgres -d tournament_db -c "SELECT id, name FROM organizations LIMIT 5;"
@@ -57,11 +59,13 @@ psql -U postgres -d tournament_db -c "SELECT id, name FROM organizations LIMIT 5
 ```
 
 **Example:**
+
 ```bash
 tsx lib/analytics/services/seed-test-data.ts org_abc123xyz 12
 ```
 
 **What this does:**
+
 - Creates 12 months of historical analytics events
 - Generates realistic patterns (growth, churn, seasonality)
 - Creates ~100 users, ~$5,000 monthly revenue, ~50 tournaments per month
@@ -83,6 +87,7 @@ npm run workers
 ```
 
 **What this does:**
+
 - Processes all analytics events
 - Populates revenue_aggregates, user_cohorts, tournament_aggregates tables
 - Takes ~10 seconds for 12 months of data
@@ -105,6 +110,7 @@ npm run dev
 Navigate to: **`http://localhost:3020/analytics`**
 
 **You should see:**
+
 - 4 KPI cards (MRR, ARR, Active Tournaments, Active Players)
 - Tab navigation (Overview, Revenue, Users, Tournaments)
 - 20+ interactive charts
@@ -147,28 +153,33 @@ npm run dev
 After setup, verify these work:
 
 **Dashboard Loads:**
+
 - [ ] Page loads without errors
 - [ ] 4 KPI cards display with numbers
 - [ ] Tab navigation works (Overview, Revenue, Users, Tournaments)
 
 **Revenue Tab:**
+
 - [ ] Revenue trend line chart displays
 - [ ] Revenue by payment type bar chart displays
 - [ ] Revenue by format pie chart displays
 - [ ] Payment success rate gauge displays
 
 **Users Tab:**
+
 - [ ] User growth area chart displays
 - [ ] Cohort retention heatmap (D3.js) displays with colors
 - [ ] LTV by cohort line chart displays
 
 **Tournaments Tab:**
+
 - [ ] Tournament KPI cards display
 - [ ] Attendance by format bar chart displays
 - [ ] Completion rate trend line chart displays
 - [ ] Activity heatmap (D3.js) displays day/time matrix
 
 **Interactions:**
+
 - [ ] Date range picker changes data
 - [ ] Hover tooltips show on charts
 - [ ] Charts are responsive (try resizing window)
@@ -181,12 +192,14 @@ After setup, verify these work:
 ### Issue: "No data available"
 
 **Solution:**
+
 1. Verify database migrations applied: `npx prisma migrate status`
 2. Verify test data was seeded: Check `analytics_events` table
 3. Verify aggregations ran: Check `revenue_aggregates`, `user_cohorts`, `tournament_aggregates` tables
 4. Check browser console for API errors
 
 **Check tables:**
+
 ```sql
 -- Check if data exists
 SELECT COUNT(*) FROM analytics_events;
@@ -222,6 +235,7 @@ Your user account must be a member of the organization (tenant) you're viewing a
 ### Issue: Charts not rendering
 
 **Solution:**
+
 1. Check browser console for JavaScript errors
 2. Verify `recharts` and `d3` packages installed: `npm list recharts d3`
 3. Clear browser cache and reload
@@ -232,6 +246,7 @@ Your user account must be a member of the organization (tenant) you're viewing a
 ### Issue: Background workers won't start
 
 **Solution:**
+
 1. Verify Redis is running: `redis-cli ping` (should return "PONG")
 2. Check Redis connection in `.env`: `REDIS_URL=redis://localhost:6379`
 3. Install Redis if not installed (Windows: use WSL or download from Redis website)
@@ -248,6 +263,7 @@ tsx lib/analytics/services/aggregation-service.ts <your-tenant-id>
 ```
 
 This will process:
+
 - Existing payments → revenue_aggregates
 - Existing users → user_cohorts
 - Existing tournaments → tournament_aggregates
@@ -277,6 +293,7 @@ EOF
 ```
 
 **Expected output:**
+
 - All counts should be > 0
 - If any are 0, re-run the seeder and aggregations
 
@@ -285,12 +302,14 @@ EOF
 ## Need Help?
 
 **Common Issues:**
+
 1. **Database not connected** - Check `DATABASE_URL` in `.env`
 2. **Redis not running** - Start Redis: `redis-server` or `brew services start redis`
 3. **Port already in use** - Change port in package.json or kill process on 3020
 4. **Prisma client out of sync** - Run `npx prisma generate`
 
 **For detailed troubleshooting, see:**
+
 - `apps/web/lib/analytics/README.md` - Complete analytics documentation
 - `apps/web/lib/analytics/DAY4-QUICK-REFERENCE.md` - Quick reference guide
 - `apps/web/components/analytics/README.md` - Component documentation
@@ -302,6 +321,7 @@ EOF
 **UI Status:** ✅ Complete and Ready
 
 **To test, you need to:**
+
 1. Apply database migrations (1 minute)
 2. Seed test data (30 seconds)
 3. Run aggregations (10 seconds)
@@ -315,6 +335,7 @@ EOF
 ---
 
 **Next Steps:**
+
 1. Follow the Quick Test Script above
 2. Verify all charts display correctly
 3. Test interactions (date range, hover, responsive)

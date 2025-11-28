@@ -76,18 +76,22 @@ export function LiveMatchCard({
         ...match,
         status: 'completed',
         completedAt: payload.completedAt,
-        player1: payload.player1 ? {
-          id: payload.player1.playerId,
-          name: payload.player1.playerName,
-          score: payload.player1.score,
-          isWinner: payload.player1.isWinner,
-        } : match.player1,
-        player2: payload.player2 ? {
-          id: payload.player2.playerId,
-          name: payload.player2.playerName,
-          score: payload.player2.score,
-          isWinner: payload.player2.isWinner,
-        } : match.player2,
+        player1: payload.player1
+          ? {
+              id: payload.player1.playerId,
+              name: payload.player1.playerName,
+              score: payload.player1.score,
+              isWinner: payload.player1.isWinner,
+            }
+          : match.player1,
+        player2: payload.player2
+          ? {
+              id: payload.player2.playerId,
+              name: payload.player2.playerName,
+              score: payload.player2.score,
+              isWinner: payload.player2.isWinner,
+            }
+          : match.player2,
       };
       setMatch(updatedMatch);
       setJustUpdated(true);
@@ -196,9 +200,10 @@ export function LiveMatchCard({
         <div
           className={`
             flex items-center justify-between p-3 rounded-lg
-            ${match.player1?.isWinner
-              ? 'bg-green-100 dark:bg-green-900 border-2 border-green-500'
-              : 'bg-gray-50 dark:bg-gray-800'
+            ${
+              match.player1?.isWinner
+                ? 'bg-green-100 dark:bg-green-900 border-2 border-green-500'
+                : 'bg-gray-50 dark:bg-gray-800'
             }
           `}
         >
@@ -210,17 +215,13 @@ export function LiveMatchCard({
               <div className="font-medium">
                 {match.player1?.name || 'TBD'}
                 {match.player1?.isWinner && (
-                  <span className="ml-2 text-green-600 dark:text-green-400">
-                    👑
-                  </span>
+                  <span className="ml-2 text-green-600 dark:text-green-400">👑</span>
                 )}
               </div>
             </div>
           </div>
           {match.player1?.score !== undefined && (
-            <div className="text-2xl font-bold">
-              {match.player1.score}
-            </div>
+            <div className="text-2xl font-bold">{match.player1.score}</div>
           )}
         </div>
 
@@ -235,9 +236,10 @@ export function LiveMatchCard({
         <div
           className={`
             flex items-center justify-between p-3 rounded-lg
-            ${match.player2?.isWinner
-              ? 'bg-green-100 dark:bg-green-900 border-2 border-green-500'
-              : 'bg-gray-50 dark:bg-gray-800'
+            ${
+              match.player2?.isWinner
+                ? 'bg-green-100 dark:bg-green-900 border-2 border-green-500'
+                : 'bg-gray-50 dark:bg-gray-800'
             }
           `}
         >
@@ -249,17 +251,13 @@ export function LiveMatchCard({
               <div className="font-medium">
                 {match.player2?.name || 'TBD'}
                 {match.player2?.isWinner && (
-                  <span className="ml-2 text-green-600 dark:text-green-400">
-                    👑
-                  </span>
+                  <span className="ml-2 text-green-600 dark:text-green-400">👑</span>
                 )}
               </div>
             </div>
           </div>
           {match.player2?.score !== undefined && (
-            <div className="text-2xl font-bold">
-              {match.player2.score}
-            </div>
+            <div className="text-2xl font-bold">{match.player2.score}</div>
           )}
         </div>
       </div>

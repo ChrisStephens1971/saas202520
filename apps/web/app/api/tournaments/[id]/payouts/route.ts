@@ -9,12 +9,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import type { GetPayoutsResponse, MarkPayoutPaidRequest, MarkPayoutPaidResponse } from '@tournament/shared/types/payment';
+import type {
+  GetPayoutsResponse,
+  MarkPayoutPaidRequest,
+  MarkPayoutPaidResponse,
+} from '@tournament/shared/types/payment';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -38,10 +39,7 @@ export async function GET(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     if (tournament.organization.members.length === 0) {
@@ -60,18 +58,18 @@ export async function GET(
     // Calculate summary
     const summary = {
       totalPending: payouts
-        .filter(p => p.status === 'pending')
+        .filter((p) => p.status === 'pending')
         .reduce((sum, p) => sum + p.amount.toNumber(), 0),
       totalPaid: payouts
-        .filter(p => p.status === 'paid')
+        .filter((p) => p.status === 'paid')
         .reduce((sum, p) => sum + p.amount.toNumber(), 0),
       totalVoided: payouts
-        .filter(p => p.status === 'voided')
+        .filter((p) => p.status === 'voided')
         .reduce((sum, p) => sum + p.amount.toNumber(), 0),
     };
 
     const response: GetPayoutsResponse = {
-      payouts: payouts.map(p => ({
+      payouts: payouts.map((p) => ({
         id: p.id,
         tournamentId: p.tournamentId,
         playerId: p.playerId,
@@ -92,17 +90,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Error fetching payouts:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -114,10 +106,7 @@ export async function PUT(
     const { payoutId, notes } = body;
 
     if (!payoutId) {
-      return NextResponse.json(
-        { error: 'Missing required field: payoutId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: payoutId' }, { status: 400 });
     }
 
     // Verify payout exists and belongs to this tournament
@@ -129,10 +118,7 @@ export async function PUT(
     });
 
     if (!payout) {
-      return NextResponse.json(
-        { error: 'Payout not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Payout not found' }, { status: 404 });
     }
 
     // Get tournament to verify permissions
@@ -142,10 +128,7 @@ export async function PUT(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     // Verify user has permission (must be owner or TD of the organization)
@@ -196,9 +179,6 @@ export async function PUT(
   } catch (error: unknown) {
     console.error('Error marking payout as paid:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

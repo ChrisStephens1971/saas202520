@@ -42,25 +42,16 @@ export async function GET(request: NextRequest) {
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
 
     // Validate query parameters
-    const validation = safeValidateQuery(
-      tournamentListQuerySchema,
-      request.nextUrl.searchParams
-    );
+    const validation = safeValidateQuery(tournamentListQuerySchema, request.nextUrl.searchParams);
 
     if (!validation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: validation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: validation.error.errors });
     }
 
     const { page, limit, status, format } = validation.data;
@@ -98,9 +89,7 @@ export async function GET(request: NextRequest) {
       where,
       skip: calculateSkip(page, limit),
       take: limit,
-      orderBy: [
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ createdAt: 'desc' }],
       select: {
         id: true,
         name: true,
@@ -135,7 +124,6 @@ export async function GET(request: NextRequest) {
     const rateLimitHeaders = getRateLimitHeaders(1000, 999, Date.now() + 3600000);
 
     return apiPaginated(data, pagination, rateLimitHeaders);
-
   } catch (error) {
     console.error('[API Error] GET /api/v1/tournaments:', error);
     return internalError(

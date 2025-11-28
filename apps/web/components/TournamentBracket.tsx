@@ -119,7 +119,8 @@ function BracketView({ rounds }: BracketViewProps) {
                   key={match.matchId}
                   className="relative"
                   style={{
-                    marginTop: matchIndex === 0 ? calculateMatchSpacing(roundIndex, matchIndex) : undefined,
+                    marginTop:
+                      matchIndex === 0 ? calculateMatchSpacing(roundIndex, matchIndex) : undefined,
                   }}
                 >
                   <MatchCard match={match} />
@@ -161,13 +162,13 @@ function MatchCard({ match }: MatchCardProps) {
   };
 
   return (
-    <div className={`w-64 rounded-lg border-2 bg-white shadow-md ${getMatchStatusColor(match.status)}`}>
+    <div
+      className={`w-64 rounded-lg border-2 bg-white shadow-md ${getMatchStatusColor(match.status)}`}
+    >
       {/* Player A */}
       <div
         className={`flex items-center justify-between border-b px-4 py-3 ${
-          match.playerA && isWinner(match.playerA.id)
-            ? 'bg-green-50 font-semibold'
-            : 'bg-white'
+          match.playerA && isWinner(match.playerA.id) ? 'bg-green-50 font-semibold' : 'bg-white'
         }`}
       >
         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -176,9 +177,7 @@ function MatchCard({ match }: MatchCardProps) {
               #{match.playerA.seed}
             </span>
           )}
-          <span className="truncate">
-            {match.playerA?.name || 'TBD'}
-          </span>
+          <span className="truncate">{match.playerA?.name || 'TBD'}</span>
           {match.playerA && isWinner(match.playerA.id) && (
             <span className="flex-shrink-0 text-green-600">✓</span>
           )}
@@ -191,9 +190,7 @@ function MatchCard({ match }: MatchCardProps) {
       {/* Player B */}
       <div
         className={`flex items-center justify-between px-4 py-3 ${
-          match.playerB && isWinner(match.playerB.id)
-            ? 'bg-green-50 font-semibold'
-            : 'bg-white'
+          match.playerB && isWinner(match.playerB.id) ? 'bg-green-50 font-semibold' : 'bg-white'
         }`}
       >
         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -202,9 +199,7 @@ function MatchCard({ match }: MatchCardProps) {
               #{match.playerB.seed}
             </span>
           )}
-          <span className="truncate">
-            {match.playerB?.name || 'TBD'}
-          </span>
+          <span className="truncate">{match.playerB?.name || 'TBD'}</span>
           {match.playerB && isWinner(match.playerB.id) && (
             <span className="flex-shrink-0 text-green-600">✓</span>
           )}

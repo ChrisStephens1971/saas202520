@@ -62,7 +62,7 @@ export function getAuthHeaders(token) {
   return {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
 }
@@ -145,8 +145,8 @@ export function checkResponse(response, checks) {
  */
 export function responseTimeThresholds(p95Threshold = 500, p99Threshold = 1000) {
   return {
-    'http_req_duration': [`p(95)<${p95Threshold}`, `p(99)<${p99Threshold}`],
-    'http_req_failed': ['rate<0.01'], // Less than 1% error rate
+    http_req_duration: [`p(95)<${p95Threshold}`, `p(99)<${p99Threshold}`],
+    http_req_failed: ['rate<0.01'], // Less than 1% error rate
   };
 }
 
@@ -253,38 +253,38 @@ export const testProfiles = {
     stages: [
       { duration: '2m', target: 100 }, // Ramp up to 100 users
       { duration: '5m', target: 100 }, // Stay at 100 users
-      { duration: '2m', target: 0 },   // Ramp down
+      { duration: '2m', target: 0 }, // Ramp down
     ],
   },
   stress: {
     stages: [
-      { duration: '2m', target: 100 },  // Below normal load
+      { duration: '2m', target: 100 }, // Below normal load
       { duration: '5m', target: 100 },
-      { duration: '2m', target: 200 },  // Normal load
+      { duration: '2m', target: 200 }, // Normal load
       { duration: '5m', target: 200 },
-      { duration: '2m', target: 300 },  // Around breaking point
+      { duration: '2m', target: 300 }, // Around breaking point
       { duration: '5m', target: 300 },
-      { duration: '2m', target: 400 },  // Beyond breaking point
+      { duration: '2m', target: 400 }, // Beyond breaking point
       { duration: '5m', target: 400 },
-      { duration: '10m', target: 0 },   // Scale down recovery
+      { duration: '10m', target: 0 }, // Scale down recovery
     ],
   },
   spike: {
     stages: [
-      { duration: '10s', target: 100 },  // Quick ramp to normal
+      { duration: '10s', target: 100 }, // Quick ramp to normal
       { duration: '1m', target: 100 },
       { duration: '10s', target: 1400 }, // Spike to extreme load
       { duration: '3m', target: 1400 },
-      { duration: '10s', target: 100 },  // Quick drop
+      { duration: '10s', target: 100 }, // Quick drop
       { duration: '3m', target: 100 },
       { duration: '10s', target: 0 },
     ],
   },
   soak: {
     stages: [
-      { duration: '2m', target: 400 },   // Ramp up
+      { duration: '2m', target: 400 }, // Ramp up
       { duration: '3h56m', target: 400 }, // Stay for ~4 hours total
-      { duration: '2m', target: 0 },     // Ramp down
+      { duration: '2m', target: 0 }, // Ramp down
     ],
   },
 };

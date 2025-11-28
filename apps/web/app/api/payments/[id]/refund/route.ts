@@ -9,10 +9,7 @@ import { prisma } from '@/lib/prisma';
 import { createRefund } from '@/lib/stripe';
 import type { CreateRefundRequest, CreateRefundResponse } from '@tournament/shared/types/payment';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -24,10 +21,7 @@ export async function POST(
     const { amount, reason } = body;
 
     if (!reason) {
-      return NextResponse.json(
-        { error: 'Missing required field: reason' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: reason' }, { status: 400 });
     }
 
     // Get payment with tournament
@@ -39,17 +33,11 @@ export async function POST(
     });
 
     if (!payment) {
-      return NextResponse.json(
-        { error: 'Payment not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
     }
 
     if (!payment.stripeAccount) {
-      return NextResponse.json(
-        { error: 'Stripe account not configured' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Stripe account not configured' }, { status: 400 });
     }
 
     // Verify user has permission (must be owner or TD of the organization)
@@ -70,10 +58,7 @@ export async function POST(
 
     // Verify payment is in refundable state
     if (payment.status !== 'succeeded') {
-      return NextResponse.json(
-        { error: 'Payment must be succeeded to refund' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Payment must be succeeded to refund' }, { status: 400 });
     }
 
     // Check refund amount (convert Decimal to number)
@@ -141,7 +126,12 @@ export async function POST(
         stripePaymentIntent: result.updatedPayment.stripePaymentIntent || '',
         amount: result.updatedPayment.amount.toNumber(),
         currency: result.updatedPayment.currency,
-        status: result.updatedPayment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        status: result.updatedPayment.status as
+          | 'pending'
+          | 'succeeded'
+          | 'failed'
+          | 'refunded'
+          | 'partially_refunded',
         purpose: result.updatedPayment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: result.updatedPayment.description ?? undefined,
         refundedAmount: result.updatedPayment.refundedAmount?.toNumber() || 0,
@@ -155,9 +145,6 @@ export async function POST(
   } catch (error: unknown) {
     console.error('Error creating refund:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

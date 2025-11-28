@@ -510,8 +510,7 @@ describe('Table Manager - Availability Checking', () => {
 
     const now = new Date();
     const isAvailable =
-      table.status === 'available' &&
-      (table.blockedUntil === null || table.blockedUntil <= now);
+      table.status === 'available' && (table.blockedUntil === null || table.blockedUntil <= now);
 
     expect(isAvailable).toBe(false);
   });
@@ -524,8 +523,7 @@ describe('Table Manager - Availability Checking', () => {
 
     const now = new Date();
     const isAvailable =
-      table.status === 'available' &&
-      (table.blockedUntil === null || table.blockedUntil <= now);
+      table.status === 'available' && (table.blockedUntil === null || table.blockedUntil <= now);
 
     expect(isAvailable).toBe(true);
   });
@@ -538,7 +536,9 @@ describe('Table Manager - Availability Checking', () => {
       createMockTable({ id: 'table-4', status: 'maintenance' }),
     ];
 
-    const availableTables = tables.filter((t) => t.status === 'available' && t.currentMatchId === null);
+    const availableTables = tables.filter(
+      (t) => t.status === 'available' && t.currentMatchId === null
+    );
 
     expect(availableTables).toHaveLength(2);
     expect(availableTables.map((t) => t.id)).toEqual(['table-1', 'table-3']);

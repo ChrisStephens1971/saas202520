@@ -292,9 +292,7 @@ export async function example5_PredictRevenue() {
     return predictions;
   } catch {
     console.error('❌ Revenue forecast failed');
-    console.log(
-      'Note: This requires historical revenue data. Run seed-test-data.ts first.\n'
-    );
+    console.log('Note: This requires historical revenue data. Run seed-test-data.ts first.\n');
     throw new Error('Revenue forecast failed - requires historical data');
   }
 }
@@ -328,9 +326,7 @@ export async function example6_PredictUserGrowth() {
     return predictions;
   } catch {
     console.error('❌ User growth forecast failed');
-    console.log(
-      'Note: This requires historical user data. Run seed-test-data.ts first.\n'
-    );
+    console.log('Note: This requires historical user data. Run seed-test-data.ts first.\n');
     throw new Error('User growth forecast failed - requires historical data');
   }
 }
@@ -343,8 +339,7 @@ export function example7_CalculateTrendline() {
 
   // Sample revenue data (12 months)
   const revenueData = [
-    10000, 10500, 11200, 11800, 12500, 13100, 13800, 14500, 15200, 15900, 16700,
-    17500,
+    10000, 10500, 11200, 11800, 12500, 13100, 13800, 14500, 15200, 15900, 16700, 17500,
   ];
 
   const trendline = PredictiveModels.calculateTrendline(revenueData);
@@ -405,7 +400,9 @@ export async function example8_CreateDailyReport() {
   console.log('Report created:');
   console.log(`  ID: ${report.id}`);
   console.log(`  Name: ${report.name}`);
-  console.log(`  Schedule: ${report.schedule.frequency} at ${report.schedule.hour}:${String(report.schedule.minute).padStart(2, '0')}`);
+  console.log(
+    `  Schedule: ${report.schedule.frequency} at ${report.schedule.hour}:${String(report.schedule.minute).padStart(2, '0')}`
+  );
   console.log(`  Next run: ${report.nextRunAt?.toISOString()}`);
   console.log('\n✓ Daily report created\n');
 
@@ -491,13 +488,10 @@ export async function example10_ListReports() {
 export async function example11_UpdateReport(reportId: string) {
   console.log('\n=== Example 11: Update Report ===\n');
 
-  const updatedReport = await ScheduledReportsService.updateScheduledReport(
-    reportId,
-    {
-      enabled: false,
-      description: 'Report temporarily disabled for testing',
-    }
-  );
+  const updatedReport = await ScheduledReportsService.updateScheduledReport(reportId, {
+    enabled: false,
+    description: 'Report temporarily disabled for testing',
+  });
 
   console.log('Report updated:');
   console.log(`  ID: ${updatedReport.id}`);
@@ -524,9 +518,7 @@ export async function example12_GetReportHistory(reportId: string) {
     console.log(`  ID: ${delivery.id}`);
     console.log(`  Format: ${delivery.format}`);
     console.log(`  Recipients: ${delivery.recipients.join(', ')}`);
-    console.log(
-      `  Delivered: ${delivery.deliveredAt?.toISOString() || 'Pending'}`
-    );
+    console.log(`  Delivered: ${delivery.deliveredAt?.toISOString() || 'Pending'}`);
     if (delivery.errorMessage) {
       console.log(`  Error: ${delivery.errorMessage}`);
     }
@@ -611,9 +603,7 @@ export async function runAllExamples() {
       await example5_PredictRevenue();
       await example6_PredictUserGrowth();
     } catch {
-      console.log(
-        'Skipping prediction examples (requires historical data)\n'
-      );
+      console.log('Skipping prediction examples (requires historical data)\n');
     }
     example7_CalculateTrendline();
 

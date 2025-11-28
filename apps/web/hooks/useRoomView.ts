@@ -102,11 +102,7 @@ export function useRoomView({
         const playerA = qm.playerNames.playerA?.toLowerCase() || '';
         const playerB = qm.playerNames.playerB?.toLowerCase() || '';
 
-        return (
-          matchNum.includes(query) ||
-          playerA.includes(query) ||
-          playerB.includes(query)
-        );
+        return matchNum.includes(query) || playerA.includes(query) || playerB.includes(query);
       });
     }
 
@@ -163,63 +159,75 @@ export function useRoomView({
   }, [fetchRoomData]);
 
   // Assign match to table
-  const assignMatch = useCallback(async (matchId: string, tableId?: string) => {
-    try {
-      const response = await fetch(`/api/tournaments/${tournamentId}/matches/${matchId}/assign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tableId }),
-      });
+  const assignMatch = useCallback(
+    async (matchId: string, tableId?: string) => {
+      try {
+        const response = await fetch(`/api/tournaments/${tournamentId}/matches/${matchId}/assign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tableId }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to assign match');
+        if (!response.ok) {
+          throw new Error('Failed to assign match');
+        }
+
+        // Refresh data after action
+        await fetchRoomData();
+      } catch (err) {
+        console.error('Error assigning match:', err);
+        throw err;
       }
-
-      // Refresh data after action
-      await fetchRoomData();
-    } catch (err) {
-      console.error('Error assigning match:', err);
-      throw err;
-    }
-  }, [tournamentId, fetchRoomData]);
+    },
+    [tournamentId, fetchRoomData]
+  );
 
   // Start match
-  const startMatch = useCallback(async (matchId: string) => {
-    try {
-      const response = await fetch(`/api/tournaments/${tournamentId}/matches/${matchId}/start`, {
-        method: 'POST',
-      });
+  const startMatch = useCallback(
+    async (matchId: string) => {
+      try {
+        const response = await fetch(`/api/tournaments/${tournamentId}/matches/${matchId}/start`, {
+          method: 'POST',
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to start match');
+        if (!response.ok) {
+          throw new Error('Failed to start match');
+        }
+
+        // Refresh data after action
+        await fetchRoomData();
+      } catch (err) {
+        console.error('Error starting match:', err);
+        throw err;
       }
-
-      // Refresh data after action
-      await fetchRoomData();
-    } catch (err) {
-      console.error('Error starting match:', err);
-      throw err;
-    }
-  }, [tournamentId, fetchRoomData]);
+    },
+    [tournamentId, fetchRoomData]
+  );
 
   // Complete match
-  const completeMatch = useCallback(async (matchId: string) => {
-    try {
-      const response = await fetch(`/api/tournaments/${tournamentId}/matches/${matchId}/complete`, {
-        method: 'POST',
-      });
+  const completeMatch = useCallback(
+    async (matchId: string) => {
+      try {
+        const response = await fetch(
+          `/api/tournaments/${tournamentId}/matches/${matchId}/complete`,
+          {
+            method: 'POST',
+          }
+        );
 
-      if (!response.ok) {
-        throw new Error('Failed to complete match');
+        if (!response.ok) {
+          throw new Error('Failed to complete match');
+        }
+
+        // Refresh data after action
+        await fetchRoomData();
+      } catch (err) {
+        console.error('Error completing match:', err);
+        throw err;
       }
-
-      // Refresh data after action
-      await fetchRoomData();
-    } catch (err) {
-      console.error('Error completing match:', err);
-      throw err;
-    }
-  }, [tournamentId, fetchRoomData]);
+    },
+    [tournamentId, fetchRoomData]
+  );
 
   return {
     data,

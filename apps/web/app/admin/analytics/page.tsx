@@ -86,7 +86,7 @@ export default function AdminAnalyticsPage() {
           <div className="animate-pulse space-y-8">
             <div className="h-8 bg-white/20 rounded w-1/4"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map(i => (
+              {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="h-32 bg-white/10 rounded-xl"></div>
               ))}
             </div>
@@ -110,14 +110,27 @@ export default function AdminAnalyticsPage() {
               disabled={refreshing}
               className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50"
             >
-              <svg className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg
+                className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
               {refreshing ? 'Refreshing...' : 'Refresh'}
             </button>
             {analytics && (
               <ExportButton
-                data={Object.entries(analytics.metrics).map(([key, value]) => ({ Metric: key, Value: value }))}
+                data={Object.entries(analytics.metrics).map(([key, value]) => ({
+                  Metric: key,
+                  Value: value,
+                }))}
                 filename={`analytics-overview-${new Date().toISOString().split('T')[0]}`}
                 formats={['csv', 'xlsx', 'pdf']}
               />
@@ -126,10 +139,30 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="flex gap-2 flex-wrap">
-          <Link href="/admin/analytics" className="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium">Overview</Link>
-          <Link href="/admin/analytics/users" className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors">Users</Link>
-          <Link href="/admin/analytics/tournaments" className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors">Tournaments</Link>
-          <Link href="/admin/analytics/performance" className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors">Performance</Link>
+          <Link
+            href="/admin/analytics"
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium"
+          >
+            Overview
+          </Link>
+          <Link
+            href="/admin/analytics/users"
+            className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors"
+          >
+            Users
+          </Link>
+          <Link
+            href="/admin/analytics/tournaments"
+            className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors"
+          >
+            Tournaments
+          </Link>
+          <Link
+            href="/admin/analytics/performance"
+            className="px-4 py-2 bg-white/10 text-gray-300 rounded-lg font-medium hover:bg-white/20 transition-colors"
+          >
+            Performance
+          </Link>
         </div>
 
         <DateRangePicker value={dateRange} onChange={setDateRange} allowComparison={true} />
@@ -144,22 +177,75 @@ export default function AdminAnalyticsPage() {
         {analytics && (
           <>
             <MetricsCardGroup columns={4}>
-              <MetricsCard title="Total Users" value={analytics.metrics.totalUsers} currentValue={analytics.metrics.totalUsers} previousValue={analytics.metrics.previousTotalUsers} format="number" />
-              <MetricsCard title="Active Users (DAU)" value={analytics.metrics.activeUsers} currentValue={analytics.metrics.activeUsers} previousValue={analytics.metrics.previousActiveUsers} format="number" variant="success" />
-              <MetricsCard title="Total Tournaments" value={analytics.metrics.totalTournaments} currentValue={analytics.metrics.totalTournaments} previousValue={analytics.metrics.previousTotalTournaments} format="number" description={`${analytics.metrics.activeTournaments} active`} />
-              <MetricsCard title="Matches Played" value={analytics.metrics.matchesPlayed} currentValue={analytics.metrics.matchesPlayed} previousValue={analytics.metrics.previousMatchesPlayed} format="number" />
+              <MetricsCard
+                title="Total Users"
+                value={analytics.metrics.totalUsers}
+                currentValue={analytics.metrics.totalUsers}
+                previousValue={analytics.metrics.previousTotalUsers}
+                format="number"
+              />
+              <MetricsCard
+                title="Active Users (DAU)"
+                value={analytics.metrics.activeUsers}
+                currentValue={analytics.metrics.activeUsers}
+                previousValue={analytics.metrics.previousActiveUsers}
+                format="number"
+                variant="success"
+              />
+              <MetricsCard
+                title="Total Tournaments"
+                value={analytics.metrics.totalTournaments}
+                currentValue={analytics.metrics.totalTournaments}
+                previousValue={analytics.metrics.previousTotalTournaments}
+                format="number"
+                description={`${analytics.metrics.activeTournaments} active`}
+              />
+              <MetricsCard
+                title="Matches Played"
+                value={analytics.metrics.matchesPlayed}
+                currentValue={analytics.metrics.matchesPlayed}
+                previousValue={analytics.metrics.previousMatchesPlayed}
+                format="number"
+              />
             </MetricsCardGroup>
 
             <MetricsCardGroup columns={3}>
-              <MetricsCard title="Revenue" value={analytics.metrics.revenue} currentValue={analytics.metrics.revenue} previousValue={analytics.metrics.previousRevenue} format="currency" variant="success" />
-              <MetricsCard title="System Uptime" value={analytics.metrics.systemUptime} format="percentage" variant={analytics.metrics.systemUptime >= 99.9 ? 'success' : 'warning'} />
-              <MetricsCard title="Error Rate" value={analytics.metrics.errorRate} format="percentage" variant={analytics.metrics.errorRate < 1 ? 'success' : 'danger'} />
+              <MetricsCard
+                title="Revenue"
+                value={analytics.metrics.revenue}
+                currentValue={analytics.metrics.revenue}
+                previousValue={analytics.metrics.previousRevenue}
+                format="currency"
+                variant="success"
+              />
+              <MetricsCard
+                title="System Uptime"
+                value={analytics.metrics.systemUptime}
+                format="percentage"
+                variant={analytics.metrics.systemUptime >= 99.9 ? 'success' : 'warning'}
+              />
+              <MetricsCard
+                title="Error Rate"
+                value={analytics.metrics.errorRate}
+                format="percentage"
+                variant={analytics.metrics.errorRate < 1 ? 'success' : 'danger'}
+              />
             </MetricsCardGroup>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <UserGrowthChart data={analytics.charts.userGrowth} title="User Growth Over Time" showActiveUsers={true} />
-              <TournamentActivityChart data={analytics.charts.tournamentActivity} title="Tournament Activity" />
-              <MatchCompletionChart data={analytics.charts.matchStatus} title="Match Status Distribution" />
+              <UserGrowthChart
+                data={analytics.charts.userGrowth}
+                title="User Growth Over Time"
+                showActiveUsers={true}
+              />
+              <TournamentActivityChart
+                data={analytics.charts.tournamentActivity}
+                title="Tournament Activity"
+              />
+              <MatchCompletionChart
+                data={analytics.charts.matchStatus}
+                title="Match Status Distribution"
+              />
               <RevenueTrendsChart data={analytics.charts.revenue} title="Revenue Trends" />
             </div>
           </>

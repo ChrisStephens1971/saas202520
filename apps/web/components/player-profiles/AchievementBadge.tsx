@@ -38,7 +38,12 @@ const sizeClasses = {
   lg: 'w-32 h-32',
 };
 
-export function AchievementBadge({ achievement, size = 'md', showDetails = true, className }: AchievementBadgeProps) {
+export function AchievementBadge({
+  achievement,
+  size = 'md',
+  showDetails = true,
+  className,
+}: AchievementBadgeProps) {
   const tier = achievement.achievement.tier;
   const tierColor = tierColors[tier as keyof typeof tierColors];
   const tierGradient = tierGradients[tier as keyof typeof tierGradients];
@@ -69,14 +74,27 @@ export function AchievementBadge({ achievement, size = 'md', showDetails = true,
             className="w-full h-full rounded-full object-cover"
           />
         ) : (
-          <Trophy className={cn('text-current', size === 'sm' ? 'h-6 w-6' : size === 'md' ? 'h-10 w-10' : 'h-14 w-14')} />
+          <Trophy
+            className={cn(
+              'text-current',
+              size === 'sm' ? 'h-6 w-6' : size === 'md' ? 'h-10 w-10' : 'h-14 w-14'
+            )}
+          />
         )}
       </div>
 
       {/* Progress Ring (for progressive achievements) */}
       {achievement.progress < 100 && (
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="4" opacity="0.2" />
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="4"
+            opacity="0.2"
+          />
           <circle
             cx="50"
             cy="50"
@@ -114,18 +132,34 @@ export function AchievementBadge({ achievement, size = 'md', showDetails = true,
             'pointer-events-none'
           )}
         >
-          <div className={cn('absolute -bottom-2 left-1/2 -translate-x-1/2', 'w-4 h-4 bg-popover border-r border-b', 'rotate-45')} />
+          <div
+            className={cn(
+              'absolute -bottom-2 left-1/2 -translate-x-1/2',
+              'w-4 h-4 bg-popover border-r border-b',
+              'rotate-45'
+            )}
+          />
 
           <div className="relative">
             <h3 className="font-bold text-lg mb-1">{achievement.achievement.name}</h3>
-            <p className="text-sm text-muted-foreground mb-3">{achievement.achievement.description}</p>
+            <p className="text-sm text-muted-foreground mb-3">
+              {achievement.achievement.description}
+            </p>
 
             <div className="flex items-center justify-between text-xs">
-              <div className={cn('px-2 py-1 rounded font-semibold', `bg-gradient-to-r ${tierGradient}`, 'text-white')}>
+              <div
+                className={cn(
+                  'px-2 py-1 rounded font-semibold',
+                  `bg-gradient-to-r ${tierGradient}`,
+                  'text-white'
+                )}
+              >
                 {tier} • {achievement.achievement.points} pts
               </div>
               <div className="text-muted-foreground">
-                {achievement.progress < 100 ? `${achievement.progress}% complete` : `Unlocked ${unlockedDate}`}
+                {achievement.progress < 100
+                  ? `${achievement.progress}% complete`
+                  : `Unlocked ${unlockedDate}`}
               </div>
             </div>
           </div>

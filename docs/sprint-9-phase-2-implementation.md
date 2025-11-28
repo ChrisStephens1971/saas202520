@@ -1,4 +1,5 @@
 # Sprint 9 Phase 2 Implementation Report
+
 ## Tournament Management UI - Admin Dashboard
 
 **Date:** 2025-11-06
@@ -18,12 +19,15 @@ Implemented a complete admin tournament management system with advanced data tab
 ### 1. Reusable Components (4 files, 1,259 lines)
 
 #### `/apps/web/components/admin/TournamentStatusBadge.tsx` (190 lines)
+
 **Purpose:** Reusable status badge component with multiple variants
+
 - `TournamentStatusBadge` - Full badge with icon and label
 - `TournamentStatusDot` - Minimal dot indicator
 - `StatusProgress` - Progress bar for tournament lifecycle
 
 **Features:**
+
 - Color-coded status indicators (draft, registration, active, paused, completed, cancelled)
 - Multiple sizes (sm, md, lg)
 - Optional icons
@@ -31,12 +35,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Tooltips with status descriptions
 
 #### `/apps/web/components/admin/TournamentForm.tsx` (381 lines)
+
 **Purpose:** Reusable form for creating and editing tournaments
+
 - React Hook Form integration
 - Zod schema validation
 - Auto-slug generation from tournament name
 
 **Features:**
+
 - Two modes: create and edit
 - Comprehensive validation (name, slug, format, race-to, max players)
 - Radio button grid for tournament formats
@@ -45,12 +52,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Dark mode styling
 
 #### `/apps/web/components/admin/TournamentTable.tsx` (424 lines)
+
 **Purpose:** Advanced data table with TanStack Table v8
+
 - Client-side sorting, filtering, pagination
 - Bulk operations support
 - Real-time data updates
 
 **Features:**
+
 - Column sorting (all columns except actions)
 - Global search filter
 - Checkbox selection for bulk operations
@@ -65,12 +75,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Loading skeleton
 
 #### `/apps/web/components/admin/TournamentListClient.tsx` (264 lines)
+
 **Purpose:** Client-side wrapper for tournament list with real-time updates
+
 - Socket.io integration for live updates
 - Status filtering
 - Stats cards
 
 **Features:**
+
 - Real-time tournament created/updated/deleted events
 - Status filter tabs with counts
 - Stats cards (all, draft, registration, active, paused, completed, cancelled)
@@ -83,12 +96,15 @@ Implemented a complete admin tournament management system with advanced data tab
 ### 2. Admin Pages (4 files, 1,218 lines)
 
 #### `/apps/web/app/admin/tournaments/page.tsx` (151 lines)
+
 **Purpose:** Main tournament list page (server-side rendered)
+
 - Displays all tournaments for organization
 - Server-side data fetching
 - Permission checks
 
 **Features:**
+
 - Prisma query with counts (players, matches)
 - Role-based access (owner, td)
 - Table view with status badges
@@ -96,12 +112,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Empty state
 
 #### `/apps/web/app/admin/tournaments/new/page.tsx` (552 lines)
+
 **Purpose:** Multi-step tournament creation wizard
+
 - 3-step form: Basic Info → Settings → Review
 - Comprehensive validation
 - Preview before creation
 
 **Features:**
+
 - **Step 1: Basic Info**
   - Tournament name (required)
   - URL slug (auto-generated, editable)
@@ -120,6 +139,7 @@ Implemented a complete admin tournament management system with advanced data tab
   - Final confirmation
 
 **UX Features:**
+
 - Visual progress indicator
 - Next/Previous navigation
 - Form validation per step
@@ -129,12 +149,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Loading states
 
 #### `/apps/web/app/admin/tournaments/[id]/page.tsx` (317 lines)
+
 **Purpose:** Tournament details view with real-time updates
+
 - Comprehensive tournament information display
 - Socket.io integration for live updates
 - Status progress indicator
 
 **Features:**
+
 - Tournament header with name, slug, status
 - Status badge and progress bar
 - Details grid (format, game type, race to, max players)
@@ -148,12 +171,15 @@ Implemented a complete admin tournament management system with advanced data tab
 - Error handling
 
 #### `/apps/web/app/admin/tournaments/[id]/edit/page.tsx` (198 lines)
+
 **Purpose:** Tournament edit page with validation
+
 - Uses TournamentForm component
 - Pre-fills existing data
 - Status management
 
 **Features:**
+
 - Form pre-population with existing data
 - Status dropdown (draft, registration, active, paused, cancelled)
 - Validation for status transitions
@@ -168,6 +194,7 @@ Implemented a complete admin tournament management system with advanced data tab
 ## Technical Implementation
 
 ### React Hook Form + Zod Validation
+
 ```typescript
 const tournamentFormSchema = z.object({
   name: z.string().min(1).max(255),
@@ -181,6 +208,7 @@ const tournamentFormSchema = z.object({
 ```
 
 ### TanStack Table Configuration
+
 ```typescript
 const table = useReactTable({
   data,
@@ -194,6 +222,7 @@ const table = useReactTable({
 ```
 
 ### Real-Time Updates (Socket.io)
+
 ```typescript
 useSocketEvent('tournament:created', (payload) => {
   // Add new tournament to list
@@ -213,6 +242,7 @@ useSocketEvent('tournament:deleted', (payload) => {
 ## API Endpoints Required
 
 ### ✅ Already Implemented (from API contracts)
+
 1. **GET /api/tournaments** - List tournaments
    - Query params: `limit`, `offset`, `status`, `format`
    - Returns: `{ tournaments: TournamentWithStats[], total, limit, offset }`
@@ -232,9 +262,11 @@ useSocketEvent('tournament:deleted', (payload) => {
    - Returns: `{ success: true }`
 
 ### 🔧 Backend Implementation Needed
+
 These endpoints are defined in contracts but need backend implementation:
 
 1. **POST /api/tournaments (Backend)**
+
    ```typescript
    // File: apps/web/app/api/tournaments/route.ts
    // Handler: POST
@@ -244,6 +276,7 @@ These endpoints are defined in contracts but need backend implementation:
    ```
 
 2. **PUT /api/tournaments/:id (Backend)**
+
    ```typescript
    // File: apps/web/app/api/tournaments/[id]/route.ts
    // Handler: PUT
@@ -267,6 +300,7 @@ These endpoints are defined in contracts but need backend implementation:
 ## Socket.io Events
 
 ### Server-Side Events (Emit)
+
 ```typescript
 // tournament:created
 interface TournamentCreatedPayload {
@@ -291,7 +325,9 @@ interface TournamentDeletedPayload {
 ```
 
 ### Client-Side Events (Listen)
+
 Already implemented in:
+
 - `TournamentListClient.tsx`
 - `AdminTournamentDetailsPage` (`[id]/page.tsx`)
 
@@ -300,6 +336,7 @@ Already implemented in:
 ## Database Schema
 
 ### ✅ Existing Schema (No Changes Required)
+
 ```prisma
 model Tournament {
   id              String            @id @default(cuid())
@@ -362,16 +399,18 @@ enum GameType {
 ## Role-Based Permissions
 
 ### Permission Matrix
-| Action | Owner | TD | Scorekeeper | Streamer |
-|--------|-------|----|----|----------|
-| View tournaments | ✅ | ✅ | ✅ | ✅ |
-| Create tournament | ✅ | ✅ | ❌ | ❌ |
-| Edit tournament | ✅ | ✅ | ❌ | ❌ |
-| Delete tournament | ✅ | ❌ | ❌ | ❌ |
-| Bulk delete | ✅ | ❌ | ❌ | ❌ |
-| Change status | ✅ | ✅ | ❌ | ❌ |
+
+| Action            | Owner | TD  | Scorekeeper | Streamer |
+| ----------------- | ----- | --- | ----------- | -------- |
+| View tournaments  | ✅    | ✅  | ✅          | ✅       |
+| Create tournament | ✅    | ✅  | ❌          | ❌       |
+| Edit tournament   | ✅    | ✅  | ❌          | ❌       |
+| Delete tournament | ✅    | ❌  | ❌          | ❌       |
+| Bulk delete       | ✅    | ❌  | ❌          | ❌       |
+| Change status     | ✅    | ✅  | ❌          | ❌       |
 
 ### Implementation
+
 ```typescript
 const canEdit = session?.user?.role === 'owner' || session?.user?.role === 'td';
 const canDelete = session?.user?.role === 'owner';
@@ -382,12 +421,14 @@ const canDelete = session?.user?.role === 'owner';
 ## Features Implemented
 
 ### ✅ Core CRUD Operations
+
 - [x] Create tournament (multi-step wizard)
 - [x] Read tournament (list view, details view)
 - [x] Update tournament (edit form with validation)
 - [x] Delete tournament (single and bulk)
 
 ### ✅ Advanced Table Features
+
 - [x] Client-side sorting (all columns)
 - [x] Search/filter by name
 - [x] Status filtering (tabs + dropdown)
@@ -397,6 +438,7 @@ const canDelete = session?.user?.role === 'owner';
 - [x] Row hover effects
 
 ### ✅ Real-Time Features
+
 - [x] Socket.io integration
 - [x] Live tournament created events
 - [x] Live tournament updated events
@@ -404,6 +446,7 @@ const canDelete = session?.user?.role === 'owner';
 - [x] Tournament room subscription
 
 ### ✅ UX/UI Features
+
 - [x] Multi-step creation wizard
 - [x] Progress indicators
 - [x] Status badges (6 states)
@@ -416,6 +459,7 @@ const canDelete = session?.user?.role === 'owner';
 - [x] Responsive design
 
 ### ✅ Form Validation
+
 - [x] Required field validation
 - [x] Format validation (slug regex)
 - [x] Range validation (race-to: 1-21, max players: 8-128)
@@ -427,22 +471,26 @@ const canDelete = session?.user?.role === 'owner';
 ## Integration Points
 
 ### 1. Existing Socket Infrastructure
+
 - Uses existing `useSocket`, `useSocketEvent`, `useTournamentRoom` hooks
 - Connects to existing Socket.io server
 - No additional socket setup required
 
 ### 2. Existing Auth System
+
 - Uses `next-auth` session
 - Role-based permissions via `session.user.role`
 - Org context via `session.user.orgId`
 
 ### 3. Existing API Contracts
+
 - Uses `@tournament/api-contracts` package
 - All types imported from shared package
 - Zod schemas for validation
 - TypeScript types for type safety
 
 ### 4. Existing UI Components
+
 - Extends admin dashboard layout
 - Uses Tailwind CSS classes
 - Follows existing design patterns
@@ -453,6 +501,7 @@ const canDelete = session?.user?.role === 'owner';
 ## Testing Requirements
 
 ### Unit Tests Needed
+
 1. **TournamentStatusBadge.test.tsx**
    - Badge rendering for all statuses
    - Icon display toggle
@@ -473,6 +522,7 @@ const canDelete = session?.user?.role === 'owner';
    - Bulk operations
 
 ### Integration Tests Needed
+
 1. **Admin Tournament Flow**
    - Create tournament (full wizard)
    - Edit tournament
@@ -485,6 +535,7 @@ const canDelete = session?.user?.role === 'owner';
    - Room subscription
 
 ### E2E Tests Needed
+
 1. **Tournament Management Workflow**
    ```typescript
    test('Create, edit, and delete tournament', async ({ page }) => {
@@ -502,12 +553,14 @@ const canDelete = session?.user?.role === 'owner';
 ## Performance Considerations
 
 ### Client-Side Optimizations
+
 1. **Table Pagination** - Only render visible rows
 2. **Socket Event Debouncing** - Avoid rapid re-renders
 3. **Memoization** - React.useMemo for column definitions
 4. **Lazy Loading** - Dynamic imports for large components
 
 ### Server-Side Optimizations
+
 1. **Database Indexes** - `@@index([orgId, status])` on Tournament table
 2. **Select Optimization** - Only fetch required fields
 3. **Pagination** - Limit query results (default: 50)
@@ -528,6 +581,7 @@ const canDelete = session?.user?.role === 'owner';
 ## Future Enhancements
 
 ### Phase 3 Additions
+
 1. **Advanced Filters**
    - Date range picker
    - Multiple status selection
@@ -559,32 +613,36 @@ const canDelete = session?.user?.role === 'owner';
 
 ## Line Count Summary
 
-| Component Type | Files | Lines | Purpose |
-|---|---|---|---|
-| Reusable Components | 4 | 1,259 | StatusBadge, Form, Table, ListClient |
-| Admin Pages | 4 | 1,218 | List, Create, Details, Edit |
-| **Total** | **8** | **2,477** | **Complete tournament management UI** |
+| Component Type      | Files | Lines     | Purpose                               |
+| ------------------- | ----- | --------- | ------------------------------------- |
+| Reusable Components | 4     | 1,259     | StatusBadge, Form, Table, ListClient  |
+| Admin Pages         | 4     | 1,218     | List, Create, Details, Edit           |
+| **Total**           | **8** | **2,477** | **Complete tournament management UI** |
 
 ---
 
 ## Backend Work Required
 
 ### Priority 1: API Route Handlers (Required for functionality)
+
 1. **POST /api/tournaments** - Create tournament endpoint
 2. **PUT /api/tournaments/:id** - Update tournament endpoint
 3. **DELETE /api/tournaments/:id** - Delete tournament endpoint
 
 ### Priority 2: Socket.io Events (Required for real-time updates)
+
 1. Emit `tournament:created` after successful create
 2. Emit `tournament:updated` after successful update
 3. Emit `tournament:deleted` after successful delete
 
 ### Priority 3: Validation (Required for data integrity)
+
 1. Status transition validation (use `VALID_STATUS_TRANSITIONS`)
 2. Role permission checks (owner/td for create/edit, owner for delete)
 3. Org context validation (ensure tournament belongs to user's org)
 
 ### Estimated Backend Work
+
 - **API Handlers:** 2-3 hours
 - **Socket Events:** 1 hour
 - **Testing:** 2 hours
@@ -595,6 +653,7 @@ const canDelete = session?.user?.role === 'owner';
 ## Deployment Checklist
 
 ### Frontend (Completed ✅)
+
 - [x] Components created and tested locally
 - [x] Pages created and tested locally
 - [x] TypeScript compilation successful
@@ -602,6 +661,7 @@ const canDelete = session?.user?.role === 'owner';
 - [x] Dark mode support verified
 
 ### Backend (Pending ⏳)
+
 - [ ] API route handlers implemented
 - [ ] Socket.io events integrated
 - [ ] Validation logic added
@@ -609,12 +669,14 @@ const canDelete = session?.user?.role === 'owner';
 - [ ] Permission checks added
 
 ### Testing (Pending ⏳)
+
 - [ ] Unit tests written
 - [ ] Integration tests written
 - [ ] E2E tests written
 - [ ] Manual QA completed
 
 ### Documentation (Completed ✅)
+
 - [x] Implementation report created
 - [x] API endpoints documented
 - [x] Integration points identified
@@ -627,6 +689,7 @@ const canDelete = session?.user?.role === 'owner';
 Sprint 9 Phase 2 successfully delivers a comprehensive tournament management UI for the admin dashboard. All frontend components are complete and production-ready. The implementation follows best practices for React, TypeScript, and TanStack Table.
 
 **Next Steps:**
+
 1. Backend developer to implement API route handlers
 2. QA team to test CRUD operations
 3. Add E2E tests for tournament workflows

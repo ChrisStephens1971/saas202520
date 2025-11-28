@@ -5,7 +5,13 @@ import { VALIDATION } from '@tournament/shared';
 // Tournament validation
 export const createTournamentSchema = z.object({
   name: z.string().min(1).max(VALIDATION.MAX_NAME_LENGTH),
-  format: z.enum(['single_elimination', 'double_elimination', 'round_robin', 'modified_single', 'chip_format']),
+  format: z.enum([
+    'single_elimination',
+    'double_elimination',
+    'round_robin',
+    'modified_single',
+    'chip_format',
+  ]),
   sportConfigId: z.string().uuid(),
 });
 
@@ -14,10 +20,12 @@ export const createPlayerSchema = z.object({
   name: z.string().min(1).max(VALIDATION.MAX_NAME_LENGTH),
   email: z.string().email().max(VALIDATION.MAX_EMAIL_LENGTH).optional(),
   phone: z.string().max(VALIDATION.MAX_PHONE_LENGTH).optional(),
-  rating: z.object({
-    system: z.enum(['apa', 'fargo', 'bca', 'manual']),
-    value: z.union([z.number(), z.string()]),
-  }).optional(),
+  rating: z
+    .object({
+      system: z.enum(['apa', 'fargo', 'bca', 'manual']),
+      value: z.union([z.number(), z.string()]),
+    })
+    .optional(),
 });
 
 // Score validation

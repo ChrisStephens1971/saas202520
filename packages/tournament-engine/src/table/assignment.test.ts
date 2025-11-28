@@ -123,18 +123,14 @@ describe('Table Assignment', () => {
       const match = createMatch({ state: 'pending' });
       const table = createTable();
 
-      expect(() => validateTableAssignment(match, table, 1)).toThrow(
-        "must be in 'ready' state"
-      );
+      expect(() => validateTableAssignment(match, table, 1)).toThrow("must be in 'ready' state");
     });
 
     it('should reject match already assigned', () => {
       const match = createMatch({ tableId: 'table-2' });
       const table = createTable();
 
-      expect(() => validateTableAssignment(match, table, 1)).toThrow(
-        'already assigned to table'
-      );
+      expect(() => validateTableAssignment(match, table, 1)).toThrow('already assigned to table');
     });
   });
 
@@ -198,9 +194,7 @@ describe('Table Assignment', () => {
       const match = createMatch({ tableId: 'table-2', rev: 1 });
       const table = createTable({ id: 'table-1' });
 
-      expect(() => createUnassignmentMutation(match, table, 1)).toThrow(
-        'not assigned to table'
-      );
+      expect(() => createUnassignmentMutation(match, table, 1)).toThrow('not assigned to table');
     });
   });
 

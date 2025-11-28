@@ -43,21 +43,20 @@ export default function AuditLogsPage() {
     let filtered = [...logs];
 
     if (userFilter) {
-      filtered = filtered.filter((log) =>
-        log.userName.toLowerCase().includes(userFilter.toLowerCase()) ||
-        log.userId.toLowerCase().includes(userFilter.toLowerCase())
+      filtered = filtered.filter(
+        (log) =>
+          log.userName.toLowerCase().includes(userFilter.toLowerCase()) ||
+          log.userId.toLowerCase().includes(userFilter.toLowerCase())
       );
     }
 
     if (actionFilter) {
-      filtered = filtered.filter((log) =>
-        log.action.toLowerCase() === actionFilter.toLowerCase()
-      );
+      filtered = filtered.filter((log) => log.action.toLowerCase() === actionFilter.toLowerCase());
     }
 
     if (resourceFilter) {
-      filtered = filtered.filter((log) =>
-        log.resource.toLowerCase() === resourceFilter.toLowerCase()
+      filtered = filtered.filter(
+        (log) => log.resource.toLowerCase() === resourceFilter.toLowerCase()
       );
     }
 
@@ -83,7 +82,15 @@ export default function AuditLogsPage() {
 
   // Export to CSV
   const handleExportCSV = () => {
-    const headers = ['Timestamp', 'User', 'User ID', 'Action', 'Resource', 'Resource ID', 'IP Address'];
+    const headers = [
+      'Timestamp',
+      'User',
+      'User ID',
+      'Action',
+      'Resource',
+      'Resource ID',
+      'IP Address',
+    ];
     const csvData = filteredLogs.map((log) => {
       const timestamp = typeof log.timestamp === 'string' ? new Date(log.timestamp) : log.timestamp;
       return [
@@ -161,9 +168,7 @@ export default function AuditLogsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* User Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                User
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">User</label>
               <input
                 type="text"
                 value={userFilter}
@@ -175,9 +180,7 @@ export default function AuditLogsPage() {
 
             {/* Action Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Action
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Action</label>
               <select
                 value={actionFilter}
                 onChange={(e) => setActionFilter(e.target.value)}
@@ -194,9 +197,7 @@ export default function AuditLogsPage() {
 
             {/* Resource Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Resource
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Resource</label>
               <select
                 value={resourceFilter}
                 onChange={(e) => setResourceFilter(e.target.value)}
@@ -213,9 +214,7 @@ export default function AuditLogsPage() {
 
             {/* Date Range Start */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
               <input
                 type="date"
                 value={dateRangeStart}
@@ -226,9 +225,7 @@ export default function AuditLogsPage() {
 
             {/* Date Range End */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Date
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
               <input
                 type="date"
                 value={dateRangeEnd}
@@ -249,17 +246,11 @@ export default function AuditLogsPage() {
 
         {/* Audit Log Table */}
         <div className="bg-white rounded-lg shadow-sm">
-          <AuditLogViewer
-            logs={filteredLogs}
-            onRowClick={setSelectedLog}
-            isLoading={isLoading}
-          />
+          <AuditLogViewer logs={filteredLogs} onRowClick={setSelectedLog} isLoading={isLoading} />
         </div>
 
         {/* Detail Modal */}
-        {selectedLog && (
-          <AuditLogDetail log={selectedLog} onClose={() => setSelectedLog(null)} />
-        )}
+        {selectedLog && <AuditLogDetail log={selectedLog} onClose={() => setSelectedLog(null)} />}
       </div>
     </div>
   );

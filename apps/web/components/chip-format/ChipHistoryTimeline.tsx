@@ -32,9 +32,7 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
 
   // Pre-calculate running totals for each award
   const historyWithTotals = history.map((award, index) => {
-    const runningTotal = history
-      .slice(0, index + 1)
-      .reduce((sum, a) => sum + a.chipsEarned, 0);
+    const runningTotal = history.slice(0, index + 1).reduce((sum, a) => sum + a.chipsEarned, 0);
     return { ...award, runningTotal };
   });
 
@@ -42,9 +40,7 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Chip History: {playerName}</h3>
-        <div className="text-2xl font-bold text-blue-600">
-          🔷 {currentChips} chips
-        </div>
+        <div className="text-2xl font-bold text-blue-600">🔷 {currentChips} chips</div>
       </div>
 
       <div className="relative">
@@ -62,11 +58,7 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
                 {/* Timeline Dot */}
                 <div
                   className={`absolute left-4 w-4 h-4 rounded-full border-2 border-white ${
-                    isManual
-                      ? 'bg-purple-500'
-                      : isPositive
-                      ? 'bg-green-500'
-                      : 'bg-blue-500'
+                    isManual ? 'bg-purple-500' : isPositive ? 'bg-green-500' : 'bg-blue-500'
                   }`}
                 />
 
@@ -77,9 +69,7 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
                       <div className="flex items-center gap-2 mb-1">
                         <span
                           className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
-                            isManual
-                              ? 'bg-purple-100 text-purple-800'
-                              : 'bg-blue-100 text-blue-800'
+                            isManual ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
                           }`}
                         >
                           {isManual ? 'Manual Adjustment' : 'Match'}
@@ -105,9 +95,7 @@ export default function ChipHistoryTimeline({ history, playerName, currentChips 
                         {isPositive ? '+' : ''}
                         {item.chipsEarned}
                       </div>
-                      <div className="text-xs text-gray-500">
-                        Total: {item.runningTotal}
-                      </div>
+                      <div className="text-xs text-gray-500">Total: {item.runningTotal}</div>
                     </div>
                   </div>
                 </div>

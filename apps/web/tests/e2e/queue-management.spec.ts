@@ -77,7 +77,7 @@ test.describe('Queue Management', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId,
@@ -109,7 +109,7 @@ test.describe('Queue Management', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId,
@@ -163,7 +163,7 @@ test.describe('Queue Management', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId,
@@ -370,7 +370,7 @@ test.describe('Queue Management', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId,
@@ -395,7 +395,10 @@ test.describe('Queue Management', () => {
     const recordButton = matchSection.getByRole('button', { name: /record.*result/i });
     await recordButton.click();
 
-    await page.getByLabel(/winner/i).first().check();
+    await page
+      .getByLabel(/winner/i)
+      .first()
+      .check();
     await page.getByRole('button', { name: /submit/i }).click();
     await page.waitForTimeout(500);
 

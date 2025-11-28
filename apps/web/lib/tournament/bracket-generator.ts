@@ -636,9 +636,7 @@ export function generateModifiedSingleElimination(
   if (includeConsolation) {
     // Add consolation match (3rd/4th place)
     // Losers of semi-finals play for 3rd place
-    const semiFinals = bracket.matches.filter(
-      (m) => m.round === bracket.rounds - 1
-    );
+    const semiFinals = bracket.matches.filter((m) => m.round === bracket.rounds - 1);
 
     if (semiFinals.length === 2) {
       const consolationMatch: BracketMatch = {
@@ -723,10 +721,7 @@ export function validateBracket(bracket: BracketStructure): {
 /**
  * Get matches by round
  */
-export function getMatchesByRound(
-  bracket: BracketStructure,
-  round: number
-): BracketMatch[] {
+export function getMatchesByRound(bracket: BracketStructure, round: number): BracketMatch[] {
   return bracket.matches.filter((m) => m.round === round);
 }
 
@@ -735,11 +730,7 @@ export function getMatchesByRound(
  */
 export function getReadyMatches(matches: BracketMatch[]): BracketMatch[] {
   return matches.filter(
-    (m) =>
-      m.state === 'ready' &&
-      m.playerAId !== null &&
-      m.playerBId !== null &&
-      !m.isBye
+    (m) => m.state === 'ready' && m.playerAId !== null && m.playerBId !== null && !m.isBye
   );
 }
 
@@ -773,10 +764,4 @@ export function calculateTotalRounds(
 // EXPORTS
 // ============================================================================
 
-export {
-  seedRandom,
-  seedBySkill,
-  seedManual,
-  extractRatingValue,
-  calculateByePositions,
-};
+export { seedRandom, seedBySkill, seedManual, extractRatingValue, calculateByePositions };

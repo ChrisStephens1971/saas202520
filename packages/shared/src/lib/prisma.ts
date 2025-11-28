@@ -51,10 +51,7 @@ export async function clearTenantContext(): Promise<void> {
  * });
  * ```
  */
-export async function withTenantContext<T>(
-  orgId: string,
-  fn: () => Promise<T>
-): Promise<T> {
+export async function withTenantContext<T>(orgId: string, fn: () => Promise<T>): Promise<T> {
   await setTenantContext(orgId);
   try {
     return await fn();

@@ -51,7 +51,7 @@ export function TouchFeedback({
   pressScale = 0.95,
   showRipple = true,
   longPressDuration = 500,
-  preventDefault = true
+  preventDefault = true,
 }: TouchFeedbackProps) {
   const [isPressed, setIsPressed] = useState(false);
   const [ripples, setRipples] = useState<RippleEffect[]>();
@@ -73,17 +73,13 @@ export function TouchFeedback({
       // Create ripple effect
       if (showRipple) {
         const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-        const x = 'touches' in e
-          ? e.touches[0].clientX - rect.left
-          : e.clientX - rect.left;
-        const y = 'touches' in e
-          ? e.touches[0].clientY - rect.top
-          : e.clientY - rect.top;
+        const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
+        const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
 
         const newRipple: RippleEffect = {
           id: Date.now(),
           x,
-          y
+          y,
         };
 
         setRipples((prev) => [...(prev || []), newRipple]);
@@ -164,15 +160,15 @@ export function TouchFeedback({
       style={{
         minWidth: '44px',
         minHeight: '44px',
-        WebkitTapHighlightColor: 'transparent' // Remove default tap highlight
+        WebkitTapHighlightColor: 'transparent', // Remove default tap highlight
       }}
       animate={{
-        scale: isPressed ? pressScale : 1
+        scale: isPressed ? pressScale : 1,
       }}
       transition={{
         type: 'spring',
         stiffness: 500,
-        damping: 30
+        damping: 30,
       }}
       onMouseDown={handlePressStart}
       onMouseUp={handlePressEnd}
@@ -197,26 +193,26 @@ export function TouchFeedback({
               className="absolute pointer-events-none rounded-full bg-white/30"
               style={{
                 left: ripple.x,
-                top: ripple.y
+                top: ripple.y,
               }}
               initial={{
                 width: 0,
                 height: 0,
                 x: 0,
                 y: 0,
-                opacity: 1
+                opacity: 1,
               }}
               animate={{
                 width: 200,
                 height: 200,
                 x: -100,
                 y: -100,
-                opacity: 0
+                opacity: 0,
               }}
               exit={{ opacity: 0 }}
               transition={{
                 duration: 0.6,
-                ease: 'easeOut'
+                ease: 'easeOut',
               }}
             />
           ))}

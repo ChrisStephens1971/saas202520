@@ -1,506 +1,415 @@
-# Planning Template Repository
+# Tournament Platform
 
-A comprehensive planning and documentation template for SaaS projects, especially designed for solo founders and small teams. This repository provides structure, templates, and best practices for every stage of product planning and development.
+A modern tournament management platform for Pool, Billiards, and similar competitive events. Built for Tournament Directors to run seamless events with real-time scoring, table management, and live standings.
 
----
-
-## 🎯 What This Is
-
-This is a **ready-to-use folder structure and template library** for planning and building SaaS products. It includes:
-
-- **Product planning templates** (PRDs, roadmaps, feature specs)
-- **Sprint planning workflows** (user stories, retrospectives)
-- **Technical documentation** (architecture decisions, tech specs, API docs)
-- **Business planning** (OKRs, metrics, goals)
-- **Meeting templates** (customer interviews, brainstorms)
-- **Process documentation** (runbooks, workflows, SOPs)
-
-**Perfect for:** Solo founders, small teams, and anyone who wants organized, professional planning without starting from scratch.
+**V1 Status:** Online-only platform. Offline/sync features designed but deferred to V2.
 
 ---
 
-## 📁 Repository Structure
+## 🎯 What is This?
 
-```
-.
-├── product/              # Product requirements, roadmaps, features
-│   ├── PRDs/            # Product Requirements Documents
-│   ├── roadmap/         # Product roadmap planning
-│   ├── features/        # Feature specifications
-│   ├── strategy/        # Product strategy docs
-│   └── examples/        # Example: User onboarding PRD
-│
-├── sprints/             # Sprint planning and agile workflows
-│   ├── current/         # Active sprint
-│   ├── archive/         # Past sprints
-│   ├── user-stories/    # User story backlog
-│   ├── retrospectives/  # Sprint retrospectives
-│   └── examples/        # Example: Completed Sprint 1
-│
-├── technical/           # Technical specs and architecture
-│   ├── architecture/    # System design docs
-│   ├── specs/           # Technical specifications
-│   ├── adr/             # Architecture Decision Records
-│   ├── infrastructure/  # DevOps and infrastructure
-│   ├── api/             # API documentation
-│   └── examples/        # Example: PostgreSQL ADR
-│
-├── business/            # Business planning and metrics
-│   ├── okrs/            # Objectives and Key Results
-│   ├── goals/           # Annual/quarterly goals
-│   ├── metrics/         # KPI tracking
-│   ├── milestones/      # Launch planning
-│   └── strategy/        # Business strategy
-│
-├── meetings/            # Meeting notes and conversations
-│   ├── customer-calls/  # Customer interviews
-│   ├── advisor-meetings/ # Advisor/investor meetings
-│   ├── team/            # Team meetings
-│   ├── brainstorms/     # Brainstorming sessions
-│   └── general/         # Other meetings
-│
-├── workflows/           # Process documentation
-│   ├── development/     # Dev workflows
-│   ├── operations/      # Operational runbooks
-│   ├── business/        # Business processes
-│   └── examples/        # Example: Deployment workflow
-│
-├── scripts/             # Utility scripts
-│   ├── install-pandoc.ps1  # Install Pandoc for document conversion
-│   ├── convert-to-docx.bat # Convert markdown to Word documents
-│   └── README.md        # Scripts documentation
-│
-├── .github/             # GitHub templates
-│   ├── ISSUE_TEMPLATE/  # Feature, bug, task templates
-│   └── PULL_REQUEST_TEMPLATE.md
-│
-├── .gitignore           # Comprehensive exclusions
-├── .editorconfig        # Editor configuration
-├── CLAUDE.md            # Guidance for Claude Code
-└── README.md            # This file
-```
+**Tournament Platform** is a comprehensive SaaS solution that enables tournament organizers to:
+
+- **Manage Tournaments:** Create single/double elimination, round-robin, and custom format tournaments
+- **Live Scoring:** Real-time match scoring via Tournament Director console
+- **Table Management:** Assign matches to tables, track availability, optimize floor usage
+- **Player Profiles:** Player statistics, ratings, history, and leaderboards
+- **Payments:** Integrated Stripe support for entry fees and automated payout calculations
+- **Notifications:** Email, SMS, and push notifications for players and staff
+- **Analytics:** Detailed tournament analytics, performance tracking, and reporting
+- **Multi-Tenant:** Fully isolated organization-level data and settings
+
+**Perfect for:** Pool leagues, billiard halls, tournament organizers, competitive gaming venues
+
+---
+
+## 🏗️ Tech Stack
+
+**Frontend:**
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Tailwind CSS
+- Socket.IO (real-time updates)
+- SWR (data fetching)
+
+**Backend:**
+
+- Next.js API Routes
+- Prisma ORM
+- PostgreSQL
+- NextAuth v5 (authentication)
+- BullMQ (job queues)
+
+**Infrastructure:**
+
+- Turborepo (monorepo)
+- pnpm (package manager)
+- Bicep/Terraform (IaC)
+- GitHub Actions (CI/CD)
+
+**Integrations:**
+
+- Stripe (payments)
+- Twilio (SMS)
+- Nodemailer (email)
+- Sentry (error tracking)
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Use This Template
+### Prerequisites
 
-**Option A: Clone for your project**
-```bash
-git clone <this-repo-url> your-project-name
-cd your-project-name
-rm -rf .git
-git init
+- **Node.js** 20+ ([Download](https://nodejs.org/))
+- **pnpm** 10+ (`npm install -g pnpm`)
+- **PostgreSQL** 16+ ([Download](https://www.postgresql.org/download/))
+- **Git**
+
+### Installation (5 minutes)
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd tournament-platform
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+
+   ```bash
+   # Copy the example file
+   cp .env.example .env.local
+
+   # Edit .env.local and set:
+   # - DATABASE_URL (your PostgreSQL connection string)
+   # - AUTH_SECRET (generate with: openssl rand -base64 32)
+   # - NEXTAUTH_URL (http://localhost:3000)
+   ```
+
+4. **Create database**
+
+   ```bash
+   # Using psql:
+   createdb tournament_platform
+
+   # Or manually create a database named 'tournament_platform'
+   ```
+
+5. **Run database migrations**
+
+   ```bash
+   pnpm db:generate
+   pnpm db:migrate
+   ```
+
+6. **Seed sample data**
+
+   ```bash
+   pnpm db:seed
+   ```
+
+   This creates:
+   - Organization: "Phoenix Pool League"
+   - User: `mike@phoenixpool.com` / `password123`
+   - Sample tournaments, tables, and players
+
+7. **Start the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+8. **Open your browser**
+
+   ```
+   http://localhost:3000
+   ```
+
+   Login with: `mike@phoenixpool.com` / `password123`
+
+---
+
+## 📚 Documentation
+
+- **[Local Development Guide](docs/LOCAL_DEV.md)** - Detailed setup, troubleshooting, and tips
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and data models
+- **[API Documentation](docs/api/)** - API routes and contracts
+- **[Project Log](docs/PROJECT_LOG.md)** - Development history and decisions
+- **[TODO](docs/TODO.md)** - Project roadmap and task tracking
+
+---
+
+## 🎮 Key Features
+
+### For Tournament Directors
+
+- **TD Console:** Real-time view of all tables, matches, and queues
+- **Quick Scoring:** Click-to-score interface for fast match updates
+- **Table Assignment:** Drag-and-drop match assignment to tables
+- **Bracket Management:** Auto-generate brackets, handle byes, manage advancement
+- **Live Updates:** Players see their matches instantly via Socket.IO
+
+### For Players
+
+- **Live Standings:** Real-time tournament standings and brackets
+- **Match Queue:** See upcoming matches and table assignments
+- **Notifications:** Get notified when your match is called
+- **Player Profiles:** Track your stats, rating, and tournament history
+- **Leaderboards:** Global and organization-level rankings
+
+### For Organizers
+
+- **Multi-Venue Support:** Manage multiple locations
+- **Payment Processing:** Stripe integration for entry fees
+- **Payout Calculations:** Automated prize pool distribution
+- **Analytics Dashboard:** Tournament performance metrics
+- **User Management:** Role-based access (TD, Scorekeeper, Admin)
+
+---
+
+## 🗂️ Repository Structure
+
+```
+tournament-platform/
+├── apps/
+│   ├── web/                    # Next.js frontend + API routes
+│   │   ├── app/               # Next.js app router pages
+│   │   ├── components/        # React components
+│   │   ├── lib/               # Utilities, services, helpers
+│   │   └── auth.ts            # NextAuth configuration
+│   └── sync-service/          # WebSocket sync service (deferred to V2)
+├── packages/
+│   ├── tournament-engine/     # Core tournament logic
+│   ├── shared/                # Shared Prisma client, types
+│   ├── api-contracts/         # API type definitions
+│   ├── crdt/                  # CRDT for offline sync
+│   ├── events/                # Event system
+│   └── validation/            # Zod validation schemas
+├── prisma/
+│   ├── schema.prisma          # Database schema
+│   ├── migrations/            # Database migrations
+│   └── seed.ts                # Sample data seeder
+├── infrastructure/
+│   ├── bicep/                 # Azure Bicep templates
+│   └── terraform/             # Terraform templates
+├── docs/                      # Documentation
+├── .github/workflows/         # CI/CD pipelines
+└── README.md                  # This file
 ```
 
-**Option B: Fork on GitHub**
-- Click "Use this template" or "Fork"
-- Clone your fork
-- Customize for your needs
+---
 
-### 2. Remove What You Don't Need
+## 🔧 Development Commands
 
-**For solo founders (minimal setup):**
-- Keep: `product/`, `sprints/`, `business/metrics/`
-- Optional: `technical/`, `meetings/`, `workflows/`
-- Can remove: Other subdirectories
+```bash
+# Install dependencies
+pnpm install
 
-**For small teams:**
-- Keep most folders
-- Customize templates to match your workflow
+# Database
+pnpm db:generate              # Generate Prisma Client
+pnpm db:migrate               # Run migrations
+pnpm db:seed                  # Seed sample data
+pnpm db:studio                # Open Prisma Studio (DB GUI)
 
-**For enterprise:**
-- Use everything
-- Add company-specific sections
+# Development
+pnpm dev                      # Start dev server (all apps)
+pnpm dev --filter web         # Start only web app
+pnpm dev --filter sync-service # Start only sync service
 
-### 3. Start Planning
+# Build
+pnpm build                    # Build all apps for production
 
-**Day 1:**
-- [ ] Create your first roadmap (`product/roadmap-template.md`)
-- [ ] Set up Sprint 1 (`sprints/sprint-plan-template.md`)
-- [ ] Define initial OKRs (`business/okr-template.md`)
+# Testing
+pnpm test                     # Run tests (watch mode)
+pnpm test:run                 # Run tests (CI mode)
+pnpm test:coverage            # Run tests with coverage
 
-**Week 1:**
-- [ ] Write PRD for first feature
-- [ ] Break down into user stories
-- [ ] Start tracking metrics
+# Linting & Formatting
+pnpm lint                     # Run ESLint
+pnpm format                   # Format code with Prettier
 
-**Ongoing:**
-- [ ] Weekly sprint planning and retrospectives
-- [ ] Monthly roadmap updates
-- [ ] Quarterly OKR reviews
+# Load Testing
+pnpm load-test                # Run k6 load tests
+```
 
 ---
 
-## 📝 Available Templates
+## 🔐 Multi-Tenant Architecture
 
-### Product Planning (product/)
-- **prd-template.md** - Comprehensive Product Requirements Document
-- **roadmap-template.md** - Product roadmap planning (Now/Next/Later)
-- **feature-spec-template.md** - Lightweight feature specification
-- **user-research-template.md** - User research and feedback documentation
+This platform is **multi-tenant by design**:
 
-### Sprint Planning (sprints/)
-- **sprint-plan-template.md** - Sprint planning with daily progress tracking
-- **user-story-template.md** - Individual user story format
-- **retrospective-template.md** - Sprint retrospective structure
-- **daily-standup-template.md** - Daily standup notes (optional)
+- Each organization has isolated data (tournaments, players, tables, etc.)
+- Users can belong to multiple organizations
+- Organization context is stored in the session (JWT)
+- All database queries are automatically filtered by `orgId`
+- Users can switch organizations via `/select-organization`
 
-### Technical (technical/)
-- **tech-spec-template.md** - Detailed technical specification
-- **adr-template.md** - Architecture Decision Record (ADR)
-- **api-spec-template.md** - API endpoint documentation
-- **incident-postmortem-template.md** - Postmortem analysis
-- **system-design-template.md** - High-level system design
-
-### Business (business/)
-- **okr-template.md** - Quarterly OKR planning
-- **metrics-dashboard-template.md** - KPI tracking dashboard
-- **weekly-review-template.md** - Weekly business review
-- **annual-goals-template.md** - Yearly goal setting
-- **milestone-plan-template.md** - Launch and milestone planning
-
-### Meetings (meetings/)
-- **meeting-notes-template.md** - General meeting notes
-- **customer-interview-template.md** - Customer discovery calls
-- **1-on-1-template.md** - One-on-one meeting format
-- **brainstorm-template.md** - Structured brainstorming
-- **decision-meeting-template.md** - Decision-making meetings
-
-### Workflows (workflows/)
-- **process-documentation-template.md** - Document any process
-- **runbook-template.md** - Operational runbook for systems
-- **checklist-template.md** - Reusable checklists
-- **sop-template.md** - Standard Operating Procedure
+**Security:** Tenant isolation is enforced at the application level via Prisma queries and auth middleware.
 
 ---
 
-## 💡 How to Use These Templates
+## 🌐 Environment Variables
 
-### For Solo Founders
+**Required for local development:**
 
-**Essential Workflow:**
-1. **Product:** Write simple PRDs or feature specs
-2. **Sprints:** Track work in 1-2 week sprints
-3. **Business:** Weekly reviews + quarterly OKRs
-4. **Technical:** Document major decisions (ADRs)
+- `DATABASE_URL` - PostgreSQL connection string
+- `AUTH_SECRET` - NextAuth secret (generate with `openssl rand -base64 32`)
+- `NEXTAUTH_URL` - App URL (e.g., `http://localhost:3000`)
 
-**Time Investment:**
-- Planning: 2-4 hours/week
-- Retrospectives: 1 hour/week
-- Reviews: 30 min/week
+**Optional (for full features):**
 
-**You don't need to use everything!** Start with 20% of the templates and add more as needed.
+- `SMTP_*` - Email notifications
+- `REDIS_*` - Caching and performance
+- `STRIPE_*` - Payment processing
+- `TWILIO_*` - SMS notifications
+- `SENTRY_*` - Error tracking
 
-### For Small Teams (2-5 people)
+**Offline/Sync (V2):**
 
-**Team Workflow:**
-1. **Weekly:** Sprint planning, retrospectives
-2. **Bi-weekly:** Roadmap reviews
-3. **Monthly:** OKR check-ins
-4. **Quarterly:** Goal setting, strategy reviews
+- `OFFLINE_SYNC_ENABLED` - Set to `false` for V1 (default)
+- Offline features are designed but deferred to a future release
 
-**Collaboration:**
-- Share templates via GitHub/Notion/Confluence
-- Assign owners to each document
-- Review together during meetings
-
-### For Larger Teams
-
-**Full Implementation:**
-- Use all folders and templates
-- Integrate with tools (Jira, Linear, Notion)
-- Establish review processes
-- Create team-specific variations
+See `.env.example` for the complete list with descriptions.
 
 ---
 
-## ✨ Key Features
+## 🧪 Testing
 
-### 1. Complete Examples
-Every major template has a filled-in example:
-- `product/examples/example-prd-user-onboarding.md`
-- `sprints/examples/example-sprint-1.md`
-- `technical/examples/example-adr-use-postgresql.md`
-- `workflows/examples/example-deployment-workflow.md`
+**Unit Tests:**
 
-### 2. GitHub Integration
-Ready-to-use GitHub templates:
-- Feature request template
-- Bug report template
-- Task template
-- Pull request template
+```bash
+pnpm test:run
+```
 
-### 3. Best Practices Built-In
-Templates include:
-- Section prompts and examples
-- Decision frameworks
-- Common pitfalls to avoid
-- Metrics and success criteria
+**E2E Tests** (Playwright):
 
-### 4. Customizable
-Every template can be:
-- Simplified (remove sections)
-- Expanded (add fields)
-- Adapted (industry-specific)
-- Integrated (link to external tools)
+```bash
+pnpm --filter web test
+```
+
+**Test Database:**
+
+- Use a separate database for testing (e.g., `tournament_platform_test`)
+- Set `DATABASE_URL` in `.env.test`
 
 ---
 
-## 🎯 Best Practices
+## 🚢 Deployment
 
-### Documentation
+### Azure (Recommended)
 
-**✅ Do:**
-- Update docs as you go (not after)
-- Document "why" not just "what"
-- Link related documents
-- Use examples to clarify
-- Keep it scannable (headings, bullets, tables)
+This project includes Bicep and Terraform templates for Azure:
 
-**❌ Don't:**
-- Over-document (80% done > perfect)
-- Let docs go stale
-- Write docs no one reads
-- Copy-paste without customizing
+1. **Review infrastructure templates:** `infrastructure/bicep/`
+2. **Configure parameters:** Set organization, environment, region
+3. **Deploy:**
+   ```bash
+   az deployment sub create \
+     --location eastus2 \
+     --template-file infrastructure/bicep/main.bicep \
+     --parameters @infrastructure/bicep/environments/prod.parameters.json
+   ```
 
-### Planning
+See `infrastructure/README.md` for detailed deployment instructions.
 
-**✅ Do:**
-- Start simple, add complexity as needed
-- Review retrospectives and adjust
-- Be honest about timelines
-- Celebrate wins
-- Keep the customer at the center
+### Other Platforms
 
-**❌ Don't:**
-- Overthink (paralysis by analysis)
-- Ignore retrospective insights
-- Commit to unrealistic deadlines
-- Plan in isolation
+The app can be deployed to:
 
-### Process
+- Vercel (Next.js native)
+- AWS (ECS, Fargate, or Amplify)
+- Google Cloud (Cloud Run)
+- Docker/Kubernetes
 
-**✅ Do:**
-- Document processes you repeat
-- Automate where possible
-- Review quarterly
-- Make it easy to follow
+Requirements:
 
-**❌ Don't:**
-- Create unnecessary bureaucracy
-- Make processes too rigid
-- Skip retrospectives
-- Ignore pain points
+- PostgreSQL database
+- Environment variables configured
+- Redis (optional, for caching)
 
 ---
 
-## 🔧 Customization Guide
+## 📊 Database Schema
 
-### Simplify for MVPs
-1. Remove folders you don't need
-2. Use "lite" versions of templates
-3. Combine similar documents
-4. Focus on essentials only
+**Core Models:**
 
-### Expand for Enterprise
-1. Add compliance sections (SOC 2, HIPAA, etc.)
-2. Include approval workflows
-3. Add company-specific fields
-4. Create detailed runbooks
+- `Organization` - Multi-tenant isolation
+- `User` - Authentication and profiles
+- `Tournament` - Event management
+- `Player` - Participant profiles
+- `Match` - Game state and scoring
+- `Table` - Physical resource management
+- `Venue` - Location management
+- `Payment` - Stripe integration
+- `Notification` - Email/SMS/Push
+- `AnalyticsEvent` - Event tracking
 
-### Industry-Specific Additions
-
-**Healthcare/Medical:**
-- HIPAA compliance checkboxes
-- PHI handling sections
-- Audit trail requirements
-- Clinical validation docs
-
-**Fintech:**
-- PCI-DSS requirements
-- AML/KYC procedures
-- Regulatory filing tracking
-- Risk assessment templates
-
-**EdTech:**
-- FERPA compliance
-- COPPA considerations
-- Accessibility (WCAG) checklist
-- Pedagogical approach docs
-
----
-
-## 📚 Real-World Examples
-
-### Example 1: Solo Founder Journey
-
-**Week 1:**
-- Created initial roadmap with 3 features
-- Defined Q1 OKRs
-- Set up Sprint 1
-
-**Week 4:**
-- Completed Sprint 1, held retrospective
-- Updated roadmap based on learnings
-- Wrote PRD for feature 2
-
-**Month 3:**
-- Launched MVP
-- Started tracking metrics
-- Customer interview notes in `meetings/`
-
-**Result:** Organized planning led to faster shipping and better focus.
-
-### Example 2: 3-Person Team
-
-**Initial Setup:**
-- Customized templates for team workflow
-- Set up 2-week sprint cadence
-- Integrated with Linear for task tracking
-
-**Ongoing:**
-- Weekly sprint planning (1 hour)
-- Daily async updates in sprint doc
-- Bi-weekly retrospectives
-- Monthly roadmap reviews
-
-**Result:** Clear communication, less confusion, better alignment.
+See `prisma/schema.prisma` for the complete schema.
 
 ---
 
 ## 🤝 Contributing
 
-Have improvements? Found a better template format? Want to add examples?
+This is a private/commercial project. If you have access:
 
-**Welcome contributions:**
-- Additional templates
-- Industry-specific variations
-- Better examples
-- Clarifications and improvements
-
-**How to contribute:**
-1. Fork this repository
+1. Create a feature branch: `git checkout -b feature/your-feature`
 2. Make your changes
-3. Submit a pull request
-4. Explain the value
+3. Run tests: `pnpm test:run`
+4. Ensure lint passes: `pnpm lint`
+5. Commit: `git commit -m "feat: your feature"`
+6. Push and create a PR
 
 ---
 
-## 📖 Recommended Resources
+## 🐛 Troubleshooting
 
-### Product Management
-- [The Mom Test](http://momtestbook.com/) - Rob Fitzpatrick
-- [Inspired](https://svpg.com/inspired-how-to-create-products-customers-love/) - Marty Cagan
-- [Shape Up](https://basecamp.com/shapeup) - Basecamp
+**Database connection fails:**
 
-### Agile & Sprint Planning
-- [Scrum Guide](https://scrumguides.org/)
-- [User Story Mapping](https://www.jpattonassociates.com/user-story-mapping/) - Jeff Patton
+- Verify PostgreSQL is running: `pg_isready`
+- Check `DATABASE_URL` in `.env.local`
+- Ensure database exists: `createdb tournament_platform`
 
-### Technical Documentation
-- [Architecture Decision Records](https://adr.github.io/)
-- [Google SRE Books](https://sre.google/books/)
-- [Documenting APIs](https://swagger.io/resources/articles/documenting-apis/)
+**Auth errors:**
 
-### For Solo Founders
-- [Indie Hackers](https://www.indiehackers.com/)
-- [MicroConf](https://microconf.com/)
-- [Zero to Sold](https://thebootstrappedfounder.com/zero-to-sold/) - Arvid Kahl
+- Verify `AUTH_SECRET` is set and not the default
+- Check `NEXTAUTH_URL` matches your app URL
+- Clear browser cookies and try again
 
----
+**Build fails:**
 
-## 🏗️ Solo Founder Essentials
+- Run `pnpm db:generate` to generate Prisma Client
+- Clear `.next` folder: `rm -rf apps/web/.next`
+- Reinstall dependencies: `rm -rf node_modules && pnpm install`
 
-**You're building alone? Here's what to focus on:**
+**Port already in use:**
 
-### Must Have (Start here)
-1. ✅ Basic roadmap (`product/roadmap-template.md`)
-2. ✅ Sprint tracking (`sprints/sprint-plan-template.md`)
-3. ✅ Weekly review habit (`business/weekly-review-template.md`)
-4. ✅ Metrics dashboard (`business/metrics-dashboard-template.md`)
+- Change `PORT` in `.env.local`
+- Or kill the process using port 3000: `lsof -ti:3000 | xargs kill`
 
-### Should Have (Add soon)
-5. ⚡ Retrospectives (learn & improve)
-6. ⚡ PRDs for major features
-7. ⚡ ADRs for big decisions
-8. ⚡ Customer interview notes
-
-### Nice to Have (Eventually)
-9. 💎 Detailed tech specs
-10. 💎 Comprehensive runbooks
-11. 💎 Full OKR system
-
-**Remember:**
-- Shipping > Perfect planning
-- Document enough to stay organized
-- Simplicity > comprehensiveness
-- Progress > perfection
-
-**You've got this!** 🚀
+See [docs/LOCAL_DEV.md](docs/LOCAL_DEV.md) for more troubleshooting tips.
 
 ---
 
-## ⚖️ License
+## 📝 License
 
-This template is released under the **MIT License**. Use it however you want for your projects!
-
----
-
-## 💬 Support
-
-**Questions or Issues?**
-- Open an issue in this repository
-- Submit improvements via PR
-- Share how you're using these templates
+Proprietary - All rights reserved
 
 ---
 
-## 🎉 Acknowledgments
+## 📧 Support
 
-**Created by:** Claude Code (claude.ai/code)
-
-**Inspired by:**
-- Basecamp's Shape Up methodology
-- Amazon's PR/FAQ process
-- Google's Design Doc template
-- Architecture Decision Records (ADRs)
-- Agile/Scrum best practices
-- Indie Hacker community
-
-**Built for:** Solo founders and small teams who want to build great products with professional planning—without the overhead.
+- **Issues:** Create an issue in this repository
+- **Documentation:** See `docs/` directory
+- **Questions:** Contact the development team
 
 ---
 
-## 📊 Quick Reference
-
-### Time Estimates (Solo Founder)
-
-| Activity | Weekly | Monthly | Quarterly |
-|----------|--------|---------|-----------|
-| Sprint Planning | 1-2 hrs | - | - |
-| Retrospective | 1 hr | - | - |
-| Weekly Review | 30 min | - | - |
-| Roadmap Update | - | 2 hrs | - |
-| OKR Planning | - | - | 4 hrs |
-| Metrics Review | 15 min | 30 min | 1 hr |
-
-**Total:** ~3-4 hours/week for organized planning
-
-### Template Popularity (Most Used)
-
-1. ⭐⭐⭐⭐⭐ Sprint plan
-2. ⭐⭐⭐⭐⭐ Weekly review
-3. ⭐⭐⭐⭐ Roadmap
-4. ⭐⭐⭐⭐ User story
-5. ⭐⭐⭐⭐ Retrospective
-6. ⭐⭐⭐ PRD
-7. ⭐⭐⭐ Metrics dashboard
-8. ⭐⭐⭐ OKRs
-
----
-
-**Happy Planning! 🎯**
-
-*Now go build something amazing.*
+**Built with ❤️ for tournament organizers everywhere**

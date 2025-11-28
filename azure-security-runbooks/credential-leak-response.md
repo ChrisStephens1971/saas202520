@@ -10,6 +10,7 @@
 ## Overview
 
 This runbook covers the response to compromised credentials including:
+
 - Azure service principal secrets exposed in code repositories
 - Access keys (storage, database, etc.) leaked in logs or public
 - SSH keys or certificates exposed
@@ -20,6 +21,7 @@ This runbook covers the response to compromised credentials including:
 ## Detection Indicators
 
 ### Automated Alerts (Sentinel)
+
 - Secret scanning alerts from GitHub/GitLab
 - Unusual authentication from new locations
 - Mass resource creation or deletion
@@ -27,6 +29,7 @@ This runbook covers the response to compromised credentials including:
 - Service principal used outside normal hours
 
 ### Manual Discovery
+
 - Accidental commit of `.env` file
 - Keys posted in public Slack/Teams channels
 - Secret sent via email
@@ -277,6 +280,7 @@ az ad sp update \
 ### Root Cause Analysis
 
 **Questions to Answer:**
+
 1. How was the secret exposed?
    - Committed to Git?
    - Logged in plain text?

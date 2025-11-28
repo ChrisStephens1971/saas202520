@@ -27,10 +27,7 @@ export async function POST(request: NextRequest) {
     const { tournamentId, permissions } = await request.json();
 
     if (!tournamentId) {
-      return NextResponse.json(
-        { error: 'Tournament ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Tournament ID is required' }, { status: 400 });
     }
 
     // Verify the tournament exists and belongs to the user's organization
@@ -44,10 +41,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found or access denied' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found or access denied' }, { status: 404 });
     }
 
     // Determine permissions based on user role
@@ -79,9 +73,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('[API] Room token generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate room token' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate room token' }, { status: 500 });
   }
 }

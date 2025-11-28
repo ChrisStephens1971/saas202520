@@ -38,10 +38,7 @@ export async function GET(request: NextRequest) {
 
     // Validate months
     if (months < 1 || months > 12) {
-      return NextResponse.json(
-        { error: 'Months must be between 1 and 12' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Months must be between 1 and 12' }, { status: 400 });
     }
 
     // Get predictions based on type

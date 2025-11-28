@@ -33,10 +33,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/tournaments/clx1234/players?status=checked_in
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -44,10 +41,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -80,10 +74,7 @@ export async function GET(
     );
 
     if (!queryValidation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: queryValidation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: queryValidation.error.errors });
     }
 
     const { status } = queryValidation.data;
@@ -138,8 +129,8 @@ export async function GET(
       const matchesAsB = p.matchesAsPlayerB;
 
       const wins = [
-        ...matchesAsA.filter(m => m.winnerId === p.id),
-        ...matchesAsB.filter(m => m.winnerId === p.id),
+        ...matchesAsA.filter((m) => m.winnerId === p.id),
+        ...matchesAsB.filter((m) => m.winnerId === p.id),
       ].length;
 
       const totalMatches = matchesAsA.length + matchesAsB.length;
@@ -160,7 +151,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 996, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/tournaments/${id}/players:`, error);

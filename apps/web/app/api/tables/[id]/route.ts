@@ -43,10 +43,7 @@ const UpdateTableSchema = z.object({
  * @param {string} id - Table ID
  * @returns {TableResource} Table details
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -142,10 +139,7 @@ export async function GET(
  * @param {string} id - Table ID
  * @returns {TableResource} Updated table
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();

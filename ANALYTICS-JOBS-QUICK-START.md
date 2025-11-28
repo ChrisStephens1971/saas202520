@@ -5,6 +5,7 @@
 ## What Was Built
 
 A complete background job system for aggregating analytics data:
+
 - ✅ BullMQ job queue infrastructure
 - ✅ node-cron scheduled task system
 - ✅ Revenue aggregation service
@@ -53,26 +54,29 @@ apps/web/
 
 ## Scheduled Tasks
 
-| Task | Frequency | Description |
-|------|-----------|-------------|
-| Hourly Aggregation | Every hour | All metrics for all tenants |
-| Daily Revenue | Daily at midnight | Revenue aggregation |
-| Monthly Cohorts | 1st of month at 1 AM | User retention analysis |
-| Weekly Tournaments | Monday at 2 AM | Tournament metrics |
+| Task               | Frequency            | Description                 |
+| ------------------ | -------------------- | --------------------------- |
+| Hourly Aggregation | Every hour           | All metrics for all tenants |
+| Daily Revenue      | Daily at midnight    | Revenue aggregation         |
+| Monthly Cohorts    | 1st of month at 1 AM | User retention analysis     |
+| Weekly Tournaments | Monday at 2 AM       | Tournament metrics          |
 
 ## Database Tables Populated
 
 ### `revenue_aggregates`
+
 - Total revenue, MRR, ARR
 - Payment counts and success rates
 - Refund statistics
 
 ### `user_cohorts`
+
 - Cohort size and retention
 - Monthly retention rates
 - User activity tracking
 
 ### `tournament_aggregates`
+
 - Tournament counts and completion rates
 - Player statistics
 - Average duration and popular formats
@@ -147,26 +151,31 @@ console.log(metrics);
 ## Key Features
 
 ### Multi-Tenant Support
+
 - Process all tenants or specific tenant
 - Tenant-isolated data aggregation
 - Error isolation (one tenant failure doesn't affect others)
 
 ### Automatic Retries
+
 - Failed jobs retry 3 times
 - Exponential backoff (5s → 10s → 20s)
 - Failed jobs kept for 7 days for debugging
 
 ### Graceful Shutdown
+
 - Press CTRL+C to shutdown
 - Waits for active jobs to complete
 - Closes all connections cleanly
 
 ### Health Monitoring
+
 - Periodic health checks (every 60s)
 - Queue metrics (waiting, active, completed, failed)
 - Scheduler status (enabled/disabled tasks)
 
 ### Performance
+
 - 5 concurrent workers
 - 10 jobs per second rate limit
 - Automatic job cleanup (24 hours for completed, 7 days for failed)
@@ -276,22 +285,26 @@ WantedBy=multi-user.target
 ## Troubleshooting
 
 ### Workers won't start
+
 1. Check Redis: `redis-cli ping`
 2. Check environment variables
 3. Check logs for errors
 
 ### Jobs not processing
+
 1. Verify workers are running
 2. Check queue metrics: `getQueueMetrics()`
 3. Look for stalled jobs in logs
 
 ### Aggregation errors
+
 1. Check database connectivity
 2. Verify Prisma schema
 3. Check tenant data exists
 4. Review error logs
 
 ### Scheduler not triggering
+
 1. Check status: `getSchedulerStatus()`
 2. Verify timezone: `TZ` environment variable
 3. Check system clock
@@ -383,6 +396,7 @@ export async function POST(request: Request) {
 ## Full Documentation
 
 See `apps/web/lib/analytics/README.md` for complete documentation including:
+
 - Architecture diagrams
 - Detailed API reference
 - Performance tuning

@@ -91,16 +91,19 @@ function ActionButton({ action, onClick, processing }: ActionButtonProps) {
         relative group overflow-hidden
         backdrop-blur-lg rounded-lg border
         p-4 transition-all duration-200
-        ${action.disabled
-          ? 'bg-gray-500/20 border-gray-500/30 cursor-not-allowed opacity-50'
-          : `${config.bg} ${config.border} hover:scale-105 active:scale-95 cursor-pointer`
+        ${
+          action.disabled
+            ? 'bg-gray-500/20 border-gray-500/30 cursor-not-allowed opacity-50'
+            : `${config.bg} ${config.border} hover:scale-105 active:scale-95 cursor-pointer`
         }
       `}
       title={action.disabled ? action.disabledReason : action.label}
     >
       {/* Background Gradient Effect */}
       {!action.disabled && (
-        <div className={`absolute inset-0 ${config.gradient} opacity-0 group-hover:opacity-100 transition-opacity`} />
+        <div
+          className={`absolute inset-0 ${config.gradient} opacity-0 group-hover:opacity-100 transition-opacity`}
+        />
       )}
 
       {/* Content */}

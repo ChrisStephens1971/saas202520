@@ -20,9 +20,7 @@ const PRESETS = [
   { label: 'Custom', value: 'custom' as const },
 ];
 
-function getPresetDates(
-  preset: 'last7days' | 'last30days' | 'last90days'
-): DateRange {
+function getPresetDates(preset: 'last7days' | 'last30days' | 'last90days'): DateRange {
   const endDate = new Date();
   const startDate = new Date();
 
@@ -43,16 +41,10 @@ function getPresetDates(
 
 export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [customStart, setCustomStart] = useState(
-    value.startDate.toISOString().split('T')[0]
-  );
-  const [customEnd, setCustomEnd] = useState(
-    value.endDate.toISOString().split('T')[0]
-  );
+  const [customStart, setCustomStart] = useState(value.startDate.toISOString().split('T')[0]);
+  const [customEnd, setCustomEnd] = useState(value.endDate.toISOString().split('T')[0]);
 
-  const handlePresetClick = (
-    preset: 'last7days' | 'last30days' | 'last90days' | 'custom'
-  ) => {
+  const handlePresetClick = (preset: 'last7days' | 'last30days' | 'last90days' | 'custom') => {
     if (preset === 'custom') {
       onChange({
         startDate: new Date(customStart),
@@ -119,21 +111,13 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {isOpen && (
         <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsOpen(false)}
-          />
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-20 p-4">
             <div className="space-y-2 mb-4">
               {PRESETS.map((preset) => (

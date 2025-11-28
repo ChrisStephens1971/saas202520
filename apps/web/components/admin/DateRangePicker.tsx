@@ -12,7 +12,16 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { format, subDays, startOfDay, endOfDay, startOfWeek, startOfMonth, subMonths } from 'date-fns';
+import { toast } from 'sonner';
+import {
+  format,
+  subDays,
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  startOfMonth,
+  subMonths,
+} from 'date-fns';
 
 export type DateRangePreset =
   | 'today'
@@ -118,7 +127,7 @@ export function DateRangePicker({
     const end = endOfDay(new Date(customEnd));
 
     if (start > end) {
-      alert('Start date must be before end date');
+      toast.error('Start date must be before end date');
       return;
     }
 
@@ -142,7 +151,7 @@ export function DateRangePicker({
   // Format display
   const displayText = useMemo(() => {
     if (value.preset && value.preset !== 'custom') {
-      const preset = presets.find(p => p.value === value.preset);
+      const preset = presets.find((p) => p.value === value.preset);
       return preset?.label || 'Select Range';
     }
     return `${format(value.start, 'MMM d, yyyy')} - ${format(value.end, 'MMM d, yyyy')}`;
@@ -152,7 +161,7 @@ export function DateRangePicker({
     <div className={`flex flex-col gap-4 ${className}`}>
       {/* Preset Buttons */}
       <div className="flex flex-wrap gap-2">
-        {presets.map(preset => (
+        {presets.map((preset) => (
           <button
             key={preset.value}
             onClick={() => handlePresetChange(preset.value)}
@@ -182,9 +191,7 @@ export function DateRangePicker({
         <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Start Date
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Start Date</label>
               <input
                 type="date"
                 value={customStart}
@@ -194,9 +201,7 @@ export function DateRangePicker({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                End Date
-              </label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">End Date</label>
               <input
                 type="date"
                 value={customEnd}
@@ -227,8 +232,18 @@ export function DateRangePicker({
       {/* Display Selected Range */}
       <div className="flex items-center justify-between bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20">
         <div className="flex items-center gap-3">
-          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <svg
+            className="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
           </svg>
           <span className="text-white font-medium">{displayText}</span>
         </div>

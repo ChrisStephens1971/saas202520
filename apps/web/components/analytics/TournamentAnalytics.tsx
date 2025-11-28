@@ -60,21 +60,15 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
           <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
             {data?.activeTournaments || 0}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Currently in progress
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Currently in progress</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
-          <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-            Completed
-          </h4>
+          <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Completed</h4>
           <p className="text-3xl font-bold text-green-600 dark:text-green-400">
             {data?.completedTournaments || 0}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            In selected period
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">In selected period</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
@@ -84,9 +78,7 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
           <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
             {(data?.averageAttendance || 0).toFixed(1)}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Players per tournament
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Players per tournament</p>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
@@ -107,9 +99,7 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
               {(data?.completionRateTrend || 0) >= 0 ? '+' : ''}
               {(data?.completionRateTrend || 0).toFixed(1)}%
             </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              vs previous
-            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">vs previous</span>
           </div>
         </div>
       </div>
@@ -215,11 +205,7 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
                     style={{
                       width: `${
                         (format.attendance /
-                          Math.max(
-                            ...(data?.attendanceByFormat || []).map(
-                              (f) => f.attendance
-                            )
-                          )) *
+                          Math.max(...(data?.attendanceByFormat || []).map((f) => f.attendance))) *
                         100
                       }%`,
                       backgroundColor: COLORS[index % COLORS.length],
@@ -270,9 +256,8 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
                 Most popular format:{' '}
                 <strong>
                   {
-                    (data?.attendanceByFormat || []).sort(
-                      (a, b) => b.attendance - a.attendance
-                    )[0]?.format
+                    (data?.attendanceByFormat || []).sort((a, b) => b.attendance - a.attendance)[0]
+                      ?.format
                   }
                 </strong>
               </span>
@@ -286,8 +271,7 @@ export function TournamentAnalytics({ dateRange }: TournamentAnalyticsProps) {
                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
               </svg>
               <span className="text-sm text-gray-700 dark:text-gray-300">
-                Average {(data?.averageAttendance || 0).toFixed(0)} players per
-                tournament
+                Average {(data?.averageAttendance || 0).toFixed(0)} players per tournament
               </span>
             </li>
           </ul>

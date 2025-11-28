@@ -87,8 +87,7 @@ registerRoute(
 // 4. Google Fonts - Cache First
 registerRoute(
   ({ url }) =>
-    url.origin === 'https://fonts.googleapis.com' ||
-    url.origin === 'https://fonts.gstatic.com',
+    url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
   new CacheFirst({
     cacheName: `google-fonts-${CACHE_VERSION}`,
     plugins: [
@@ -188,10 +187,7 @@ self.addEventListener('install', (event) => {
 
   event.waitUntil(
     caches.open(`offline-${CACHE_VERSION}`).then((cache) => {
-      return cache.addAll([
-        OFFLINE_PAGE,
-        OFFLINE_IMAGE,
-      ]);
+      return cache.addAll([OFFLINE_PAGE, OFFLINE_IMAGE]);
     })
   );
 
@@ -269,9 +265,12 @@ async function checkCacheSize() {
 }
 
 // Check cache size periodically
-setInterval(() => {
-  checkCacheSize();
-}, 60 * 60 * 1000); // Every hour
+setInterval(
+  () => {
+    checkCacheSize();
+  },
+  60 * 60 * 1000
+); // Every hour
 
 // =============================================================================
 // MESSAGE HANDLING
@@ -297,15 +296,16 @@ self.addEventListener('message', (event) => {
         break;
 
       case 'CLEAR_CACHE':
-        caches.keys().then((cacheNames) => {
-          return Promise.all(
-            cacheNames.map((cacheName) => caches.delete(cacheName))
-          );
-        }).then(() => {
-          event.ports[0].postMessage({
-            type: 'CACHE_CLEARED',
+        caches
+          .keys()
+          .then((cacheNames) => {
+            return Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
+          })
+          .then(() => {
+            event.ports[0].postMessage({
+              type: 'CACHE_CLEARED',
+            });
           });
-        });
         break;
 
       case 'SYNC_STATUS':
@@ -362,9 +362,7 @@ self.addEventListener('push', (event) => {
     actions: notificationData.actions || [],
   };
 
-  event.waitUntil(
-    self.registration.showNotification(notificationData.title, options)
-  );
+  event.waitUntil(self.registration.showNotification(notificationData.title, options));
 });
 
 self.addEventListener('notificationclick', (event) => {
@@ -381,19 +379,18 @@ self.addEventListener('notificationclick', (event) => {
   const urlToOpen = event.notification.data?.url || '/';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then((clientList) => {
-        // Check if there's already a window open
-        for (const client of clientList) {
-          if (client.url === urlToOpen && 'focus' in client) {
-            return client.focus();
-          }
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Check if there's already a window open
+      for (const client of clientList) {
+        if (client.url === urlToOpen && 'focus' in client) {
+          return client.focus();
         }
-        // Open new window
-        if (clients.openWindow) {
-          return clients.openWindow(urlToOpen);
-        }
-      })
+      }
+      // Open new window
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
   );
 });
 

@@ -173,8 +173,7 @@ export async function POST(request: NextRequest) {
         {
           error: {
             code: 'INVALID_EVENT_TYPE',
-            message:
-              'eventType must be alphanumeric with underscores/dots and max 100 characters',
+            message: 'eventType must be alphanumeric with underscores/dots and max 100 characters',
           },
         },
         { status: 400 }

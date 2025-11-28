@@ -36,11 +36,11 @@ Business context, market opportunity, or strategic importance.
 
 ### Key Metrics
 
-| Metric | Baseline | Target | Timeline |
-|--------|----------|--------|----------|
-| [Metric 1] | [Current value] | [Goal] | [When] |
-| [Metric 2] | [Current value] | [Goal] | [When] |
-| [Metric 3] | [Current value] | [Goal] | [When] |
+| Metric     | Baseline        | Target | Timeline |
+| ---------- | --------------- | ------ | -------- |
+| [Metric 1] | [Current value] | [Goal] | [When]   |
+| [Metric 2] | [Current value] | [Goal] | [When]   |
+| [Metric 3] | [Current value] | [Goal] | [When]   |
 
 ## 4. User Stories
 
@@ -49,6 +49,7 @@ Business context, market opportunity, or strategic importance.
 **So that** [benefit/value]
 
 ### Acceptance Criteria
+
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
@@ -56,14 +57,17 @@ Business context, market opportunity, or strategic importance.
 ## 5. Requirements
 
 ### Must Have (P0)
+
 - Requirement 1
 - Requirement 2
 
 ### Should Have (P1)
+
 - Requirement 1
 - Requirement 2
 
 ### Nice to Have (P2)
+
 - Requirement 1
 - Requirement 2
 
@@ -126,20 +130,20 @@ How will we announce this? Internal comms? Customer comms?
 
 ## 9. Risks and Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| Risk 1 | High/Med/Low | High/Med/Low | Strategy |
-| Risk 2 | High/Med/Low | High/Med/Low | Strategy |
+| Risk   | Impact       | Probability  | Mitigation |
+| ------ | ------------ | ------------ | ---------- |
+| Risk 1 | High/Med/Low | High/Med/Low | Strategy   |
+| Risk 2 | High/Med/Low | High/Med/Low | Strategy   |
 
 ## 10. Timeline and Milestones
 
-| Milestone | Target Date | Status |
-|-----------|-------------|--------|
-| PRD Approved | [Date] | ⏳ |
-| Design Complete | [Date] | ⏳ |
-| Development Complete | [Date] | ⏳ |
-| Testing Complete | [Date] | ⏳ |
-| Launch | [Date] | ⏳ |
+| Milestone            | Target Date | Status |
+| -------------------- | ----------- | ------ |
+| PRD Approved         | [Date]      | ⏳     |
+| Design Complete      | [Date]      | ⏳     |
+| Development Complete | [Date]      | ⏳     |
+| Testing Complete     | [Date]      | ⏳     |
+| Launch               | [Date]      | ⏳     |
 
 ## 11. Open Questions
 
@@ -165,6 +169,6 @@ How will we announce this? Internal comms? Customer comms?
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date   | Author | Changes       |
+| ------ | ------ | ------------- |
 | [Date] | [Name] | Initial draft |

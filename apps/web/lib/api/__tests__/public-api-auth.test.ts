@@ -344,7 +344,9 @@ describe('Public API Authentication Middleware', () => {
         },
       });
 
-      vi.mocked(prisma.apiKey.findMany).mockRejectedValueOnce(new Error('Database connection error'));
+      vi.mocked(prisma.apiKey.findMany).mockRejectedValueOnce(
+        new Error('Database connection error')
+      );
 
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 

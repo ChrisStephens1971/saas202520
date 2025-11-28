@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
-  Info
+  Info,
 } from 'lucide-react';
 import SwipeableCard from '@/components/mobile/SwipeableCard';
 import BottomSheet from '@/components/mobile/BottomSheet';
@@ -74,10 +74,7 @@ interface MobileTournamentViewProps {
  * - Keyboard navigation
  * - Clear visual hierarchy
  */
-export function MobileTournamentView({
-  tournament,
-  onRefresh
-}: MobileTournamentViewProps) {
+export function MobileTournamentView({ tournament, onRefresh }: MobileTournamentViewProps) {
   const [currentRound, setCurrentRound] = useState(0);
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -221,11 +218,7 @@ export function MobileTournamentView({
             className="space-y-3"
           >
             {round?.matches.map((match) => (
-              <SwipeableCard
-                key={match.id}
-                onSwipeDown={handleRefresh}
-                enableVerticalSwipe={true}
-              >
+              <SwipeableCard key={match.id} onSwipeDown={handleRefresh} enableVerticalSwipe={true}>
                 <div
                   onClick={() => handleMatchPress(match)}
                   className={cn(
@@ -248,9 +241,12 @@ export function MobileTournamentView({
                     <span
                       className={cn(
                         'text-xs font-medium px-2 py-1 rounded-full',
-                        match.status === 'completed' && 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-                        match.status === 'in-progress' && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-                        match.status === 'pending' && 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
+                        match.status === 'completed' &&
+                          'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+                        match.status === 'in-progress' &&
+                          'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                        match.status === 'pending' &&
+                          'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-400'
                       )}
                     >
                       {match.status}
@@ -279,9 +275,7 @@ export function MobileTournamentView({
                     </div>
 
                     {/* VS Divider */}
-                    <div className="text-center text-xs text-gray-400 dark:text-gray-600">
-                      vs
-                    </div>
+                    <div className="text-center text-xs text-gray-400 dark:text-gray-600">vs</div>
 
                     {/* Player 2 */}
                     <div className="flex items-center justify-between">
@@ -328,7 +322,9 @@ export function MobileTournamentView({
       <BottomSheet
         isOpen={showDetails && selectedMatch !== null}
         onClose={() => setShowDetails(false)}
-        title={selectedMatch ? `${selectedMatch.player1.name} vs ${selectedMatch.player2.name}` : ''}
+        title={
+          selectedMatch ? `${selectedMatch.player1.name} vs ${selectedMatch.player2.name}` : ''
+        }
         height={60}
       >
         {selectedMatch && (

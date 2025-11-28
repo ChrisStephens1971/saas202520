@@ -43,9 +43,7 @@ describe('ConfirmDialog', () => {
 
     it('should display description', () => {
       render(<ConfirmDialog {...defaultProps} />);
-      expect(
-        screen.getByText('Are you sure you want to proceed?')
-      ).toBeInTheDocument();
+      expect(screen.getByText('Are you sure you want to proceed?')).toBeInTheDocument();
     });
 
     it('should display default button texts', () => {
@@ -55,13 +53,7 @@ describe('ConfirmDialog', () => {
     });
 
     it('should display custom button texts', () => {
-      render(
-        <ConfirmDialog
-          {...defaultProps}
-          confirmText="Delete"
-          cancelText="Go Back"
-        />
-      );
+      render(<ConfirmDialog {...defaultProps} confirmText="Delete" cancelText="Go Back" />);
       expect(screen.getByText('Delete')).toBeInTheDocument();
       expect(screen.getByText('Go Back')).toBeInTheDocument();
     });
@@ -79,17 +71,15 @@ describe('ConfirmDialog', () => {
 
     it('should have accessible title', () => {
       render(<ConfirmDialog {...defaultProps} />);
-      expect(screen.getByText('Confirm Action')).toHaveAttribute(
-        'id',
-        'dialog-title'
-      );
+      expect(screen.getByText('Confirm Action')).toHaveAttribute('id', 'dialog-title');
     });
 
     it('should have accessible description', () => {
       render(<ConfirmDialog {...defaultProps} />);
-      expect(
-        screen.getByText('Are you sure you want to proceed?')
-      ).toHaveAttribute('id', 'dialog-description');
+      expect(screen.getByText('Are you sure you want to proceed?')).toHaveAttribute(
+        'id',
+        'dialog-description'
+      );
     });
 
     it('should mark icon as decorative', () => {
@@ -192,27 +182,21 @@ describe('ConfirmDialog', () => {
 
   describe('Variants', () => {
     it('should render danger variant with correct styling', () => {
-      const { container } = render(
-        <ConfirmDialog {...defaultProps} variant="danger" />
-      );
+      const { container } = render(<ConfirmDialog {...defaultProps} variant="danger" />);
 
       const confirmButton = screen.getByText('Confirm');
       expect(confirmButton.className).toContain('bg-red-600');
     });
 
     it('should render warning variant with correct styling', () => {
-      const { container } = render(
-        <ConfirmDialog {...defaultProps} variant="warning" />
-      );
+      const { container } = render(<ConfirmDialog {...defaultProps} variant="warning" />);
 
       const confirmButton = screen.getByText('Confirm');
       expect(confirmButton.className).toContain('bg-yellow-600');
     });
 
     it('should render info variant with correct styling', () => {
-      const { container } = render(
-        <ConfirmDialog {...defaultProps} variant="info" />
-      );
+      const { container } = render(<ConfirmDialog {...defaultProps} variant="info" />);
 
       const confirmButton = screen.getByText('Confirm');
       expect(confirmButton.className).toContain('bg-blue-600');
@@ -230,9 +214,7 @@ describe('ConfirmDialog', () => {
     it('should handle async onConfirm', async () => {
       const asyncOnConfirm = jest.fn().mockResolvedValue(undefined);
 
-      render(
-        <ConfirmDialog {...defaultProps} onConfirm={asyncOnConfirm} />
-      );
+      render(<ConfirmDialog {...defaultProps} onConfirm={asyncOnConfirm} />);
 
       const confirmButton = screen.getByText('Confirm');
       await userEvent.click(confirmButton);
@@ -245,9 +227,7 @@ describe('ConfirmDialog', () => {
     it('should handle rejected async onConfirm', async () => {
       const asyncOnConfirm = jest.fn().mockRejectedValue(new Error('Failed'));
 
-      render(
-        <ConfirmDialog {...defaultProps} onConfirm={asyncOnConfirm} />
-      );
+      render(<ConfirmDialog {...defaultProps} onConfirm={asyncOnConfirm} />);
 
       const confirmButton = screen.getByText('Confirm');
       await userEvent.click(confirmButton);

@@ -17,12 +17,14 @@
 These are **ALWAYS** available in every Claude Code session:
 
 **Core Operations:**
+
 - Read, Write, Edit - File operations
 - Glob, Grep - Search and find files
 - Bash - Execute commands
 - WebSearch, WebFetch - Research capabilities
 
 **Specialized Task Agents (Built-in!):**
+
 - **Task tool with subagent_type** - Launches specialized agents
   - `Explore` - Fast codebase exploration
   - `Plan` - Fast planning and analysis
@@ -35,14 +37,17 @@ These are **ALWAYS** available in every Claude Code session:
 Install these **ONLY when needed**:
 
 **Claude Skills** - Document processing
+
 - xlsx, docx, pdf, skill-creator
 - Install: `/plugin add xlsx`
 
 **WSHobson Agents** - Framework specialists
+
 - python-development, react-typescript, full-stack-orchestration
 - Install: `/plugin install full-stack-orchestration`
 
 **Claude Code Templates** - Role-based workflows
+
 - frontend-developer, backend-architect, test-engineer
 - Install: `npx claude-code-templates@latest --agent [name]`
 
@@ -57,12 +62,13 @@ Install these **ONLY when needed**:
 This is an **Azure-specific SaaS project** using the Verdaio Azure naming standard v1.2.
 
 **Azure Configuration:**
+
 - **Organization:** vrd
 - **Project Code:** 202520
 - **Primary Region:** eus2
-- **Secondary Region:** 
-- **Multi-Tenant:** 
-- **Tenant Model:** 
+- **Secondary Region:**
+- **Multi-Tenant:**
+- **Tenant Model:**
 
 ---
 
@@ -73,6 +79,7 @@ This project follows the **Verdaio Azure Naming & Tagging Standard v1.2** with p
 **Pattern:** `{type}-{org}-{proj}-{env}-{region}-{slice}-{seq}`
 
 **Example Resources:**
+
 ```
 # Resource Groups
 rg-vrd-202520-prd-eus2-app
@@ -101,6 +108,7 @@ kv-vrd-202520-prd-eus2-01
 Located in `C:\devop\.template-system\scripts\`:
 
 ### Generate Resource Names
+
 ```bash
 python C:/devop/.template-system/scripts/azure-name-generator.py \
   --type app \
@@ -112,12 +120,14 @@ python C:/devop/.template-system/scripts/azure-name-generator.py \
 ```
 
 ### Validate Resource Names
+
 ```bash
 python C:/devop/.template-system/scripts/azure-name-validator.py \
   --name "app-vrd-202520-prd-eus2-01"
 ```
 
 ### Generate Tags
+
 ```bash
 python C:/devop/.template-system/scripts/azure-tag-generator.py \
   --org vrd \
@@ -138,10 +148,12 @@ This project includes the **Azure Security Playbook v2.0** - a comprehensive zer
 ### Security Resources
 
 **📘 Core Documentation:**
+
 - `technical/azure-security-zero-to-prod-v2.md` - Complete security playbook (Days 0-9)
 - `azure-security-baseline-checklist.csv` - 151-task tracking checklist
 
 **🚨 Incident Response Runbooks:**
+
 - `azure-security-runbooks/` - 5 detailed incident response procedures
   - credential-leak-response.md (MTTR: 15 min)
   - exposed-storage-response.md (MTTR: 30 min)
@@ -150,6 +162,7 @@ This project includes the **Azure Security Playbook v2.0** - a comprehensive zer
   - privilege-escalation-response.md (MTTR: 30 min)
 
 **🏗️ Security Baseline IaC:**
+
 - `infrastructure/azure-security-bicep/` - Production-ready Bicep modules (Recommended)
   - Management groups, hub network, spoke network, policies, Defender, logging
   - Deploy complete baseline: `az deployment sub create --template-file azure-security-bicep/main.bicep`
@@ -174,6 +187,7 @@ az deployment sub create \
 ```
 
 **What gets deployed:**
+
 - ✅ Hub network (Firewall Premium + DDoS + Bastion)
 - ✅ Spoke network with NSGs and private subnets
 - ✅ Log Analytics + Azure Sentinel
@@ -207,6 +221,7 @@ terraform apply -var-file="environments/dev.tfvars"
 ```
 
 **Key Files:**
+
 - `main.tf` - Main infrastructure
 - `variables.tf` - Variable definitions
 - `outputs.tf` - Output values
@@ -228,6 +243,7 @@ az deployment group create \
 ```
 
 **Key Files:**
+
 - `main.bicep` - Main infrastructure
 - `modules/naming.bicep` - Naming convention module
 - `environments/*.parameters.json` - Environment-specific parameters
@@ -260,6 +276,7 @@ Pipeline templates in `infrastructure/pipelines/`:
 All Azure resources must have these tags:
 
 **Core Tags (Required):**
+
 - `Org`: vrd
 - `Project`: 202520
 - `Environment`: prd|stg|dev|tst|sbx
@@ -268,6 +285,7 @@ All Azure resources must have these tags:
 - `CostCenter`: 202520-llc
 
 **Recommended Tags:**
+
 - `DataSensitivity`: public|internal|confidential|regulated
 - `Compliance`: none|pci|hipaa|sox|gdpr
 - `DRTier`: rpo15m-rto4h
@@ -291,6 +309,7 @@ kv-vrd-202520-{env}-eus2-01
 Format: `{service}-{purpose}-{env}`
 
 Examples:
+
 ```
 sqlsvr-connection-string-prd
 storage-access-key-prd
@@ -301,6 +320,7 @@ cosmos-primary-key-prd
 ### Accessing Secrets in IaC
 
 **Terraform:**
+
 ```hcl
 data "azurerm_key_vault_secret" "db_connection" {
   name         = "sqlsvr-connection-string-prd"
@@ -309,6 +329,7 @@ data "azurerm_key_vault_secret" "db_connection" {
 ```
 
 **Bicep:**
+
 ```bicep
 resource kv 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
   name: 'kv-vrd-202520-prd-eus2-01'
@@ -322,11 +343,12 @@ output connectionString string = kv.getSecret('sqlsvr-connection-string-prd')
 ## 🌍 Multi-Region Architecture
 
 **Primary Region:** eus2
-**Secondary Region:** 
+**Secondary Region:**
 
 ### DR Strategy
 
 **Active-Passive (Recommended):**
+
 ```
 # Primary
 app-vrd-202520-prd-eus2-primary-01
@@ -338,6 +360,7 @@ sqlsvr-vrd-202520-prd--secondary
 ```
 
 **Active-Active (Advanced):**
+
 ```
 # Region 1
 app-vrd-202520-prd-eus2-01
@@ -349,8 +372,9 @@ app-vrd-202520-prd--01
 ### Multi-Region Tags
 
 Add these tags to multi-region resources:
+
 - `RegionRole`: primary|secondary|dr|active
-- `PairedRegion`: 
+- `PairedRegion`:
 
 ---
 
@@ -359,6 +383,7 @@ Add these tags to multi-region resources:
 Azure Policies are deployed via IaC to enforce naming and tagging standards.
 
 **Policies Included:**
+
 1. **Resource Group Naming** - Denies RGs that don't match pattern
 2. **Required Tags** - Denies resources without core tags
 3. **Tag Inheritance** - Auto-inherits tags from RG to resources
@@ -367,6 +392,7 @@ Azure Policies are deployed via IaC to enforce naming and tagging standards.
 **Policy Location:** `infrastructure/policies/`
 
 **Deploy Policies:**
+
 ```bash
 # Terraform
 cd infrastructure/terraform/policies
@@ -385,6 +411,7 @@ az policy assignment create --policy "rg-naming" --scope /subscriptions/{sub-id}
 ### Cost Allocation
 
 Resources are tagged with:
+
 - `CostCenter`: 202520-llc
 - `BusinessUnit`: (optional, set per resource)
 - `Application`: saas202520
@@ -392,6 +419,7 @@ Resources are tagged with:
 ### Azure Cost Analysis Queries
 
 **Cost by Environment:**
+
 ```kusto
 Resources
 | where tags['Project'] == '202520'
@@ -400,6 +428,7 @@ Resources
 ```
 
 **Cost by Resource Type:**
+
 ```kusto
 Resources
 | where tags['Project'] == '202520'
@@ -437,6 +466,7 @@ python azure-cost-dashboard.py
 ```
 
 **Features:**
+
 - ✅ Automatic VM deallocation after 8pm weekdays, restart at 6am
 - ✅ Full weekend shutdown (Friday 8pm → Monday 6am)
 - ✅ Production protection (never touches production resources)
@@ -446,11 +476,13 @@ python azure-cost-dashboard.py
 - ✅ Windows Task Scheduler integration
 
 **Expected Savings:**
+
 - ~$47/month per project (60-70% reduction on dev/staging)
 - ~$235/month for 5 dev projects
 - ~$2,820/year savings
 
 **Cost Dashboard:**
+
 ```bash
 # Summary view
 python azure-cost-dashboard.py
@@ -464,6 +496,7 @@ python azure-cost-dashboard.py --export costs.csv
 
 **Configuration:**
 The auto-deallocation system uses `azure-auto-deallocate-config.json` which specifies:
+
 - Subscription ID
 - Resource groups to manage
 - Deallocation schedule
@@ -573,7 +606,6 @@ az policy state list \
 
 ---
 
-
 ## ⚡ CRITICAL: GitHub Health Monitoring
 
 **MANDATORY PRACTICE:** Fix GitHub errors and warnings **immediately**, not when they block something.
@@ -581,7 +613,7 @@ az policy state list \
 ### 🎯 Zero-Tolerance Policy
 
 - ❌ **NEVER** ignore failing GitHub Actions
-- ❌ **NEVER** push code while workflows are failing  
+- ❌ **NEVER** push code while workflows are failing
 - ❌ **NEVER** let warnings accumulate
 - ✅ **ALWAYS** fix errors before next commit
 - ✅ **ALWAYS** investigate warnings same day
@@ -589,6 +621,7 @@ az policy state list \
 ### 🔧 How to Monitor
 
 **Before every commit:**
+
 ```bash
 # Check GitHub Actions health
 bash scripts/check-github-health.sh
@@ -601,6 +634,7 @@ gh run view --log
 ```
 
 **Automated checking** - Pre-push hook:
+
 - Git hook prevents pushing if latest workflow failed
 - Located: `.githooks/pre-push`
 - Enable: `git config core.hooksPath .githooks`
@@ -608,6 +642,7 @@ gh run view --log
 ### 📋 Daily Health Check
 
 **Every morning:**
+
 1. Run `bash scripts/check-github-health.sh`
 2. If failures found → Fix immediately
 3. If warnings found → Investigate and fix
@@ -616,6 +651,7 @@ gh run view --log
 ### 🚨 When Workflows Fail
 
 **Immediate actions:**
+
 1. **Stop new work** - Don't commit until fixed
 2. **View logs:** `gh run view --log`
 3. **Fix the error** - Not just the symptom
@@ -623,6 +659,7 @@ gh run view --log
 5. **Update if needed** - Dependencies, configs, etc.
 
 **Common failure types:**
+
 - Test failures → Fix tests or code
 - Build errors → Fix dependencies, config
 - Linting errors → Fix code style
@@ -632,12 +669,14 @@ gh run view --log
 ### 🎯 AI Assistant Instructions
 
 **When user commits code:**
+
 1. **ALWAYS** check GitHub Actions status first
 2. **BLOCK** if latest workflow failed
 3. **REQUIRE** user to fix errors before proceeding
 4. **SUGGEST** running `check-github-health.sh`
 
 **Proactive monitoring:**
+
 - Check workflow status at session start
 - Remind user if workflows failing
 - Offer to investigate and fix errors
@@ -646,6 +685,7 @@ gh run view --log
 ### 🔒 Enforcement
 
 **Git hooks enabled:**
+
 ```bash
 # Enable automatic checking
 git config core.hooksPath .githooks
@@ -658,6 +698,7 @@ git config core.hooksPath .githooks
 ```
 
 **To bypass (EMERGENCY ONLY):**
+
 ```bash
 # NOT RECOMMENDED - Only for emergency fixes
 git push --no-verify
@@ -672,6 +713,7 @@ git push --no-verify
 ### Quick Start
 
 **Check current workflow status:**
+
 ```bash
 # View current phase
 cat .project-state.json | jq '.workflow.currentPhase'
@@ -684,12 +726,14 @@ cat .project-workflow.json | jq '.phases[.currentPhase].completionPercent'
 ```
 
 **Daily workflow:**
+
 1. **Morning:** Run `bash scripts/check-github-health.sh`
 2. **Work:** Complete tasks from current phase checklist
 3. **Evening:** Update `.project-workflow.json` with progress
 4. **Always:** Fix GitHub Actions failures immediately
 
 **Full guides:**
+
 - `PROJECT-WORKFLOW.md` - Complete lifecycle workflow
 - `workflows/DAILY-PRACTICES.md` - Daily and weekly practices
 
@@ -706,6 +750,7 @@ cat .project-workflow.json | jq '.phases[.currentPhase].completionPercent'
 **Trigger:** Session start, "what's next", "check progress", "update workflow"
 
 **Behavior:**
+
 1. Read `.project-state.json` → get current phase
 2. Read `.project-workflow.json` → get current checklist
 3. Show current phase and pending tasks
@@ -715,6 +760,7 @@ cat .project-workflow.json | jq '.phases[.currentPhase].completionPercent'
 7. Offer to update task status when work completed
 
 **Example interaction:**
+
 ```
 User: "what's next"
 
@@ -737,6 +783,7 @@ Shall I check GitHub Actions status first?
 ### Phase-Specific AI Assistant Behavior
 
 **Planning Phase:**
+
 - Guide through discovery questions
 - Help create roadmap using `product/roadmap-template.md`
 - Create ADRs for architectural decisions
@@ -744,6 +791,7 @@ Shall I check GitHub Actions status first?
 - Update `.project-workflow.json` planning checklist
 
 **Foundation Phase:**
+
 - Help with project scaffolding
 - Guide database schema design
 - Set up authentication
@@ -751,6 +799,7 @@ Shall I check GitHub Actions status first?
 - Ensure GitHub Actions green before proceeding
 
 **Development Phase:**
+
 - Sprint planning assistance
 - Code review & quality gates
 - Test writing reminders
@@ -758,12 +807,14 @@ Shall I check GitHub Actions status first?
 - Update sprint progress in workflow
 
 **Testing Phase:**
+
 - Test coverage tracking
 - Performance optimization suggestions
 - Security checklist validation
 - Bug triage and prioritization
 
 **Launch Phase:**
+
 - Deployment checklist verification
 - Monitoring setup validation
 - Documentation completion check
@@ -772,6 +823,7 @@ Shall I check GitHub Actions status first?
 ### Workflow State Management
 
 **Update workflow progress:**
+
 ```javascript
 // When user completes a task
 // 1. Read .project-workflow.json
@@ -782,16 +834,17 @@ Shall I check GitHub Actions status first?
 // 6. Write back to file
 
 // Example
-const task = phases[currentPhase].checklist.find(t => t.id === 'plan-02')
-task.status = 'completed'
-task.completedDate = '2025-11-09'
+const task = phases[currentPhase].checklist.find((t) => t.id === 'plan-02');
+task.status = 'completed';
+task.completedDate = '2025-11-09';
 
-const completed = checklist.filter(t => t.status === 'completed').length
-const total = checklist.length
-phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
+const completed = checklist.filter((t) => t.status === 'completed').length;
+const total = checklist.length;
+phases[currentPhase].completionPercent = Math.round((completed / total) * 100);
 ```
 
 **Phase transitions:**
+
 ```javascript
 // When all tasks in phase complete
 // 1. Ask user: "Ready to move to [next phase]?"
@@ -804,6 +857,7 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 ```
 
 **Phase transition criteria (recommended):**
+
 - Planning → Foundation: Roadmap complete, architecture decided
 - Foundation → Development: Infrastructure green, tests passing
 - Development → Testing: Core features complete, 60%+ coverage
@@ -813,24 +867,28 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 ### Integration with Existing Systems
 
 **GitHub Health Monitoring:**
+
 - Daily practices include `check-github-health.sh`
 - Pre-push hook enforces zero-tolerance policy
 - Part of every phase's daily routine
 - See `GITHUB-HEALTH-MONITORING.md`
 
 **Sprint Planning:**
+
 - Development phase uses sprint structure
 - Templates in `sprints/` directory
 - Weekly planning/review/retrospective
 - Velocity tracking
 
 **Documentation Automation:**
+
 - ADRs for architecture decisions
 - Session docs from commits
 - Changelog generation
 - Automated through git hooks
 
 **Verdaio Dashboard:**
+
 - `.project-state.json` syncs to database
 - Workflow progress visible across projects
 - Phase completion tracked
@@ -838,17 +896,20 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 ### Daily Practices Enforcement
 
 **Morning:**
+
 - Check GitHub Actions health (mandatory)
 - Review yesterday's work
 - Plan today's tasks (1-3 from checklist)
 
 **During Work:**
+
 - Commit frequently (min once/day)
 - Update `.project-workflow.json` progress
 - Document decisions (ADRs)
 - Fix errors immediately
 
 **End of Day:**
+
 - Push all code
 - Update workflow state
 - Verify GitHub Actions green
@@ -859,6 +920,7 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 ### Build Approach Adaptation
 
 **MVP-First:**
+
 - Planning: 3-5 days
 - Foundation: 1 week
 - Development: 2-4 weeks (1-2 sprints)
@@ -866,6 +928,7 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 - Launch: 3-5 days
 
 **Complete Build:**
+
 - Planning: 2 weeks
 - Foundation: 2 weeks
 - Development: 6-8 weeks (3-4 sprints)
@@ -873,6 +936,7 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 - Launch: 2 weeks
 
 **Growth-Stage:**
+
 - Continuous development/testing
 - Feature-based launches
 - Existing infrastructure
@@ -884,6 +948,7 @@ phases[currentPhase].completionPercent = Math.round((completed / total) * 100)
 **CRITICAL:** Workflow is STRICT by default. Phase transitions and daily practices are MANDATORY unless user explicitly disables.
 
 **Check strict mode status:**
+
 ```bash
 cat .workflow-config.json | python3 -m json.tool
 ```
@@ -893,6 +958,7 @@ cat .workflow-config.json | python3 -m json.tool
 #### Phase Transition Validation (MANDATORY)
 
 When user requests phase change, you MUST:
+
 1. Read current and target phase
 2. Check .project-workflow.json → phaseTransitions.<current>_to_<target>.mandatory
 3. If mandatory: true → VALIDATE CRITERIA FIRST
@@ -904,11 +970,13 @@ When user requests phase change, you MUST:
 #### Daily Practices Validation (MANDATORY)
 
 At session start:
+
 - Check if GitHub health check ran today
 - Run: bash scripts/validate-daily-practices.sh
 - If fails → Remind user to complete before proceeding
 
 Before commit:
+
 - Pre-commit hook runs validation
 - If fails → Blocks commit
 - User must complete practices or use --no-verify
@@ -916,16 +984,20 @@ Before commit:
 #### Override Process
 
 Users can override strict rules:
+
 1. Temporary override: override
+
 ## 🔗 Related Resources
 
 **Azure Naming Tool:** `C:\devop\.template-system\scripts\azure-name-*.py`
 
 **Terraform Registry:**
+
 - [azurerm provider](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs)
 - [Naming module](https://registry.terraform.io/modules/Azure/naming/azurerm/latest)
 
 **Microsoft Docs:**
+
 - [Azure naming conventions](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/naming-and-tagging)
 - [Azure Policy](https://learn.microsoft.com/en-us/azure/governance/policy/)
 - [Bicep documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)

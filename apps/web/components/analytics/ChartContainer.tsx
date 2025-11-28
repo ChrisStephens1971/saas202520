@@ -22,13 +22,9 @@ export function ChartContainer({
     return (
       <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {description}
-            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{description}</p>
           )}
         </div>
         <ChartSkeleton />
@@ -40,9 +36,7 @@ export function ChartContainer({
     return (
       <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
         </div>
         <ErrorState error={error} onRetry={onRefresh} />
       </div>
@@ -53,13 +47,9 @@ export function ChartContainer({
     <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            {title}
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           {description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {description}
-            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{description}</p>
           )}
         </div>
 
@@ -70,12 +60,7 @@ export function ChartContainer({
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               title="Refresh data"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -92,12 +77,7 @@ export function ChartContainer({
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               title="Export data"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

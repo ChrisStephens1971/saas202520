@@ -43,29 +43,29 @@ The coordinator workflow needs to poll the GitHub Project board for new tickets.
 2. Click "Generate new token" (fine-grained)
 3. Fill in the form:
 
-| Field | Value |
-|-------|-------|
-| **Token name** | `saas202520-coordinator` |
-| **Expiration** | 90 days (or custom) |
-| **Description** | Coordinator access for Multi-AI Swarm |
-| **Resource owner** | ChrisStephens1971 |
-| **Repository access** | Only select repositories |
-| **Selected repository** | ChrisStephens1971/saas202520 |
+| Field                   | Value                                 |
+| ----------------------- | ------------------------------------- |
+| **Token name**          | `saas202520-coordinator`              |
+| **Expiration**          | 90 days (or custom)                   |
+| **Description**         | Coordinator access for Multi-AI Swarm |
+| **Resource owner**      | ChrisStephens1971                     |
+| **Repository access**   | Only select repositories              |
+| **Selected repository** | ChrisStephens1971/saas202520          |
 
 4. Set **Repository permissions:**
 
-| Permission | Access |
-|------------|--------|
-| Contents | Read and write |
-| Issues | Read and write |
-| Metadata | Read-only (automatic) |
-| Pull requests | Read and write |
-| Workflows | Read and write |
+| Permission    | Access                |
+| ------------- | --------------------- |
+| Contents      | Read and write        |
+| Issues        | Read and write        |
+| Metadata      | Read-only (automatic) |
+| Pull requests | Read and write        |
+| Workflows     | Read and write        |
 
 5. Set **Account permissions:**
 
-| Permission | Access |
-|------------|--------|
+| Permission   | Access                          |
+| ------------ | ------------------------------- |
 | **Projects** | **Read and write** ⚠️ IMPORTANT |
 
 6. Click "Generate token"
@@ -117,12 +117,14 @@ gh run view <RUN_ID> --log
 **2.3 Verify Success**
 
 Look for these in the logs:
+
 - ✅ "Polling project board..."
 - ✅ "Found X tickets in 'Todo' column"
 - ✅ No authentication errors
 - ✅ Successfully accessed project board
 
 **If you see errors:**
+
 - Check PAT has `project` permission (account-level)
 - Verify PAT is added as `COORDINATOR_PAT` secret
 - Check token hasn't expired
@@ -145,7 +147,7 @@ name: Coordinator
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Every 30 minutes
+    - cron: '*/30 * * * *' # Every 30 minutes
   workflow_dispatch: # Keep manual trigger for testing
 
 # ... rest of file unchanged
@@ -199,6 +201,7 @@ gh issue list --label "priority:high"
 ```
 
 **Expected Issues:**
+
 - [x] #15: Add organization CRUD endpoints (backend)
 - [x] #16: Define organization API contracts (contracts)
 - [x] #17: Add organization selector component (frontend)
@@ -213,6 +216,7 @@ gh issue list --label "priority:high"
 **4.3 Review Dependencies**
 
 Recommended order:
+
 1. **#16 first** (Contracts) - Defines types for #15
 2. **#15 second** (Backend) - Implements CRUD using contracts
 3. **#18 third** (Backend) - Enhances middleware for #15
@@ -241,6 +245,7 @@ git checkout -b feat/contracts/16-organization-api-contracts
 **5.2 Use AI for Implementation**
 
 **Prompt for Claude Code:**
+
 ```
 I need to implement organization API contracts for Issue #16.
 
@@ -274,6 +279,7 @@ Follow the same structure and quality as tournament contracts.
 **5.3 Review AI-Generated Code**
 
 **Security Checklist:**
+
 - [ ] No SQL injection vulnerabilities
 - [ ] Proper input validation with Zod
 - [ ] Slug validation (URL-safe)
@@ -281,12 +287,14 @@ Follow the same structure and quality as tournament contracts.
 - [ ] No secrets or credentials
 
 **Code Quality Checklist:**
+
 - [ ] Follows tournament contracts pattern
 - [ ] TypeScript types correct
 - [ ] Comments explain complex logic
 - [ ] Proper exports
 
 **Testing Checklist:**
+
 - [ ] Unit tests for all schemas
 - [ ] Tests validate required fields
 - [ ] Tests check enum constraints
@@ -450,6 +458,7 @@ gh pr list --limit 5
 **6.3 Plan Tomorrow (Day 2)**
 
 **Recommended tickets for Day 2:**
+
 - Issue #15: Organization CRUD endpoints (uses #16 contracts)
 - Issue #18: Enhanced tenant context middleware
 
@@ -458,6 +467,7 @@ gh pr list --limit 5
 **6.4 Cost Check**
 
 If you processed ticket #16 with AI assistance:
+
 - Estimated cost: $2-5 (for AI code generation)
 - Still well within budget
 
@@ -487,6 +497,7 @@ Day 1 is successful if:
 **Symptom:** "GraphQL: Could not resolve to a ProjectV2" error
 
 **Solutions:**
+
 1. Verify PAT has account-level `project` permission (not just repository)
 2. Check PAT is added as `COORDINATOR_PAT` secret (exact name)
 3. Ensure project URL in `config.json` uses `/users/` not `/repos/`
@@ -497,6 +508,7 @@ Day 1 is successful if:
 **Symptom:** PR eligible but not merging
 
 **Solutions:**
+
 1. Check PR size: <10 files, <800 lines
 2. Verify no breaking-change or security-alert labels
 3. Check CI status (may need to wait for completion)
@@ -507,6 +519,7 @@ Day 1 is successful if:
 **Symptom:** AI-generated code needs heavy rework
 
 **Solutions:**
+
 1. Improve prompt with more context and examples
 2. Reference existing similar code (like tournament contracts)
 3. Break ticket into smaller pieces
@@ -517,6 +530,7 @@ Day 1 is successful if:
 **Symptom:** CI test failures
 
 **Solutions:**
+
 1. Run tests locally first: `pnpm test`
 2. Check for missing dependencies
 3. Verify test file naming: `*.test.ts` or `*.spec.ts`
@@ -527,17 +541,20 @@ Day 1 is successful if:
 ## 📚 Resources
 
 **Documentation:**
+
 - `WEEK-2-PREPARATION.md` - Full Week 2 guide
 - `WEEK-1-COMPLETE.md` - Week 1 results and patterns
 - `apps/web/app/api/TESTING-STRATEGY.md` - Testing guide
 - `CLAUDE.md` - Multi-tenant architecture patterns
 
 **Examples:**
+
 - PR #10: Tournament API contracts (contracts lane)
 - PR #8: Landing page hero (frontend lane)
 - PR #3: Middleware enhancement (backend lane)
 
 **Tools:**
+
 - GitHub CLI: `gh` commands
 - Claude Code: AI implementation assistance
 - Prisma: Database ORM and migrations
@@ -559,6 +576,7 @@ If you've completed this checklist, you've successfully:
 ---
 
 **Next Steps:**
+
 - Day 2: Process tickets #15 and #18 with AI assistance
 - Day 3: Add frontend component (#17)
 - Days 4-7: Ramp up to 2-3 tickets/day
@@ -567,6 +585,6 @@ If you've completed this checklist, you've successfully:
 
 ---
 
-*Created by: Claude Code (AI Assistant)*
-*Date: 2025-11-04*
-*Status: Ready for Week 2 Day 1*
+_Created by: Claude Code (AI Assistant)_
+_Date: 2025-11-04_
+_Status: Ready for Week 2 Day 1_

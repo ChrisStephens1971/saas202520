@@ -14,10 +14,7 @@ import {
   canManageTournament,
 } from '@/lib/permissions';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -41,17 +38,11 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Error fetching scorekeepers:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -77,10 +68,7 @@ export async function POST(
         where: { email: userEmail },
       });
       if (!user) {
-        return NextResponse.json(
-          { error: 'User not found with that email' },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: 'User not found with that email' }, { status: 404 });
       }
       targetUserId = user.id;
     }
@@ -95,10 +83,7 @@ export async function POST(
   } catch (error: unknown) {
     console.error('Error assigning scorekeeper role:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -117,25 +102,16 @@ export async function DELETE(
     const userId = searchParams.get('userId');
 
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: userId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: userId' }, { status: 400 });
     }
 
     // Remove scorekeeper role
     await removeScorekeeperRole(userId, orgId, session.user.id);
 
-    return NextResponse.json(
-      { message: 'Scorekeeper role removed successfully' },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'Scorekeeper role removed successfully' }, { status: 200 });
   } catch (error: unknown) {
     console.error('Error removing scorekeeper role:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

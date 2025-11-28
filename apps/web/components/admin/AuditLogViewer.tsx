@@ -87,9 +87,7 @@ export function AuditLogViewer({ logs, onRowClick, isLoading }: AuditLogViewerPr
               <div className="text-sm font-medium text-gray-900">
                 {format(date, 'MMM dd, yyyy')}
               </div>
-              <div className="text-xs text-gray-500">
-                {format(date, 'HH:mm:ss')}
-              </div>
+              <div className="text-xs text-gray-500">{format(date, 'HH:mm:ss')}</div>
             </div>
           );
         },
@@ -110,7 +108,10 @@ export function AuditLogViewer({ logs, onRowClick, isLoading }: AuditLogViewerPr
               </div>
               <div>
                 <div className="text-sm font-medium text-gray-900">{userName}</div>
-                <div className="text-xs text-gray-500 truncate max-w-[150px]" title={row.original.userId}>
+                <div
+                  className="text-xs text-gray-500 truncate max-w-[150px]"
+                  title={row.original.userId}
+                >
                   {row.original.userId.slice(0, 8)}...
                 </div>
               </div>
@@ -145,7 +146,10 @@ export function AuditLogViewer({ logs, onRowClick, isLoading }: AuditLogViewerPr
             <div className="space-y-1">
               <div className="text-sm font-medium text-gray-900 capitalize">{resource}</div>
               {resourceId && (
-                <div className="text-xs text-gray-500 font-mono truncate max-w-[120px]" title={resourceId}>
+                <div
+                  className="text-xs text-gray-500 font-mono truncate max-w-[120px]"
+                  title={resourceId}
+                >
                   {resourceId}
                 </div>
               )}

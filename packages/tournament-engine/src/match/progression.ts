@@ -54,9 +54,7 @@ export function completeMatch(
   );
 
   if (!match) {
-    throw new Error(
-      `Match not found for players ${completion.winnerId} vs ${completion.loserId}`
-    );
+    throw new Error(`Match not found for players ${completion.winnerId} vs ${completion.loserId}`);
   }
 
   // Mark match as completed
@@ -107,9 +105,7 @@ export function completeMatch(
  * @returns Array of ready matches
  */
 export function getReadyMatches(bracket: BracketResult): BracketMatch[] {
-  return bracket.matches.filter(
-    (m) => m.state === 'ready' && m.playerAId && m.playerBId
-  );
+  return bracket.matches.filter((m) => m.state === 'ready' && m.playerAId && m.playerBId);
 }
 
 /**
@@ -184,9 +180,7 @@ export function getCurrentRound(bracket: BracketResult): number | null {
  * @returns true if all matches are completed or cancelled
  */
 export function isTournamentComplete(bracket: BracketResult): boolean {
-  return bracket.matches.every(
-    (m) => m.state === 'completed' || m.state === 'cancelled'
-  );
+  return bracket.matches.every((m) => m.state === 'completed' || m.state === 'cancelled');
 }
 
 /**
@@ -237,9 +231,8 @@ export function validateMatchCompletion(
   }
 
   // Loser must be the other player
-  const expectedLoserId = match.playerAId === completion.winnerId
-    ? match.playerBId
-    : match.playerAId;
+  const expectedLoserId =
+    match.playerAId === completion.winnerId ? match.playerBId : match.playerAId;
 
   if (expectedLoserId !== completion.loserId) {
     throw new Error(`Loser ${completion.loserId} does not match expected loser ${expectedLoserId}`);
@@ -251,12 +244,10 @@ export function validateMatchCompletion(
   }
 
   // Winner's score must be higher than loser's
-  const winnerScore = match.playerAId === completion.winnerId
-    ? completion.score.playerA
-    : completion.score.playerB;
-  const loserScore = match.playerAId === completion.loserId
-    ? completion.score.playerA
-    : completion.score.playerB;
+  const winnerScore =
+    match.playerAId === completion.winnerId ? completion.score.playerA : completion.score.playerB;
+  const loserScore =
+    match.playerAId === completion.loserId ? completion.score.playerA : completion.score.playerB;
 
   if (winnerScore <= loserScore) {
     throw new Error('Winner must have higher score than loser');

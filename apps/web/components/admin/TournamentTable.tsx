@@ -24,6 +24,7 @@ import {
 import type { TournamentWithStats } from '@tournament/api-contracts';
 import { TournamentStatusBadge } from './TournamentStatusBadge';
 import { useRouter } from 'next/navigation';
+import { useConfirm } from '@/hooks/use-confirm';
 
 interface TournamentTableProps {
   data: TournamentWithStats[];
@@ -59,6 +60,7 @@ export function TournamentTable({
   });
   const [rowSelection, setRowSelection] = useState({});
   const [bulkDeleteLoading, setBulkDeleteLoading] = useState(false);
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Define columns
   const columns = useMemo<ColumnDef<TournamentWithStats>[]>(
@@ -66,27 +68,27 @@ export function TournamentTable({
       // Checkbox column for bulk operations
       ...(canDelete
         ? [
-            {
-              id: 'select',
-              header: ({ table }) => (
-                <input
-                  type="checkbox"
-                  checked={table.getIsAllRowsSelected()}
-                  onChange={table.getToggleAllRowsSelectedHandler()}
-                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                />
-              ),
-              cell: ({ row }) => (
-                <input
-                  type="checkbox"
-                  checked={row.getIsSelected()}
-                  onChange={row.getToggleSelectedHandler()}
-                  className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                />
-              ),
-              enableSorting: false,
-            } as ColumnDef<TournamentWithStats>,
-          ]
+          {
+            id: 'select',
+            header: ({ table }) => (
+              <input
+                type="checkbox"
+                checked={table.getIsAllRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
+                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              />
+            ),
+            cell: ({ row }) => (
+              <input
+                type="checkbox"
+                checked={row.getIsSelected()}
+                onChange={row.getToggleSelectedHandler()}
+                className="w-4 h-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              />
+            ),
+            enableSorting: false,
+          } as ColumnDef<TournamentWithStats>,
+        ]
         : []),
 
       // Name
@@ -161,8 +163,8 @@ export function TournamentTable({
             <div className="text-xs text-gray-500 dark:text-gray-400">
               {row.original.matchCount > 0
                 ? `${Math.round(
-                    (row.original.completedMatchCount / row.original.matchCount) * 100
-                  )}% complete`
+                  (row.original.completedMatchCount / row.original.matchCount) * 100
+                )}% complete`
                 : 'No matches'}
             </div>
           </div>
@@ -243,11 +245,14 @@ export function TournamentTable({
   const handleBulkDelete = async () => {
     if (!onBulkDelete || selectedCount === 0) return;
 
-    const confirmed = confirm(
-      `Are you sure you want to delete ${selectedCount} tournament(s)? This action cannot be undone.`
-    );
+    const ok = await confirm({
+      title: 'Delete Tournaments',
+      description: `Are you sure you want to delete ${selectedCount} tournament(s)? This action cannot be undone.`,
+      actionLabel: 'Delete Selected',
+      cancelLabel: 'Cancel',
+    });
 
-    if (!confirmed) return;
+    if (!ok) return;
 
     setBulkDeleteLoading(true);
     try {
@@ -420,5 +425,7 @@ export function TournamentTable({
         </div>
       </div>
     </div>
+      { ConfirmDialog }
+    </div >
   );
 }

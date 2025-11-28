@@ -374,10 +374,9 @@ async function seedAchievementDefinitions() {
 }
 
 // Run the seed function
-seedAchievementDefinitions()
-  .catch((error) => {
-    console.error('Fatal error during seeding:', error);
-    process.exit(1);
-  });
+seedAchievementDefinitions().catch((error) => {
+  console.error('Fatal error during seeding:', error);
+  process.exit(1);
+});
 
 export { achievementDefinitions, seedAchievementDefinitions };

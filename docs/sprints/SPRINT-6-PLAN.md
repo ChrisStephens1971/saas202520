@@ -11,6 +11,7 @@
 **Focus:** Enhance chip format UI with real-time updates via WebSockets, complete the deferred tournament setup UI, add comprehensive unit tests, and optimize performance.
 
 **Success Criteria:**
+
 - WebSocket real-time updates working for standings and queue
 - Tournament setup form (UI-001) completed
 - Unit tests for all chip format UI components (>80% coverage)
@@ -22,17 +23,20 @@
 ## Sprint Goals
 
 ### Primary Goals (Must Have)
+
 1. **WebSocket Integration** - Real-time updates without polling
 2. **Tournament Setup UI** - Complete UI-001 (deferred from Sprint 5)
 3. **Unit Testing Suite** - Test all chip format components
 4. **Performance Optimization** - Improve load times and bundle size
 
 ### Secondary Goals (Should Have)
+
 5. **E2E Testing** - Playwright tests for critical user flows
 6. **Error Boundaries** - Graceful error handling in React
 7. **Accessibility Audit** - WCAG compliance improvements
 
 ### Stretch Goals (Nice to Have)
+
 8. **Chip Progression Charts** - Use recharts for visualizations
 9. **Dark Mode** - Theme switcher
 10. **Mobile PWA** - Progressive Web App features
@@ -48,6 +52,7 @@
 **So that** I don't have to wait for polling intervals
 
 **Acceptance Criteria:**
+
 - [ ] Socket.io server integration
 - [ ] Client-side socket connection management
 - [ ] Real-time chip standings updates
@@ -58,6 +63,7 @@
 - [ ] Fallback to polling if WebSockets unavailable
 
 **Technical Requirements:**
+
 ```typescript
 // Server-side events to emit
 - 'standings:updated' - When chip counts change
@@ -68,6 +74,7 @@
 ```
 
 **Implementation:**
+
 1. Add Socket.io to backend
 2. Create socket event emitters in chip format APIs
 3. Create React hook for socket connection
@@ -83,6 +90,7 @@
 **So that** I can configure all settings without using the API directly
 
 **Acceptance Criteria:**
+
 - [ ] Multi-step wizard interface
 - [ ] Step 1: Basic tournament info (name, date, game)
 - [ ] Step 2: Chip format configuration
@@ -95,6 +103,7 @@
 - [ ] Save as template option
 
 **Form Fields:**
+
 ```typescript
 interface ChipFormatTournamentForm {
   // Basic Info
@@ -122,6 +131,7 @@ interface ChipFormatTournamentForm {
 ```
 
 **Components:**
+
 - TournamentSetupWizard
 - BasicInfoStep
 - ChipConfigStep
@@ -138,8 +148,9 @@ interface ChipFormatTournamentForm {
 **So that** I can refactor and add features with confidence
 
 **Acceptance Criteria:**
+
 - [ ] Test all 7 chip format components
-- [ ] >80% code coverage for components
+- [ ] > 80% code coverage for components
 - [ ] Test user interactions (button clicks, form inputs)
 - [ ] Test loading and error states
 - [ ] Mock SWR data fetching
@@ -148,6 +159,7 @@ interface ChipFormatTournamentForm {
 - [ ] Snapshot tests for UI consistency
 
 **Test Files to Create:**
+
 1. `ChipStandingsTable.test.tsx`
 2. `QueueDashboard.test.tsx`
 3. `MatchAssignmentButton.test.tsx`
@@ -157,6 +169,7 @@ interface ChipFormatTournamentForm {
 7. `ChipHistoryTimeline.test.tsx`
 
 **Testing Tools:**
+
 - Vitest (already configured)
 - React Testing Library
 - @testing-library/user-event
@@ -171,6 +184,7 @@ interface ChipFormatTournamentForm {
 **So that** I have a great user experience
 
 **Acceptance Criteria:**
+
 - [ ] Code splitting for chip format routes
 - [ ] Image optimization (if any added)
 - [ ] Bundle size analysis and reduction
@@ -182,6 +196,7 @@ interface ChipFormatTournamentForm {
 - [ ] Time to Interactive <3.5s
 
 **Optimizations to Apply:**
+
 1. Dynamic imports for modals
 2. Virtual scrolling for long standings tables
 3. Debounce search/filter inputs
@@ -196,6 +211,7 @@ interface ChipFormatTournamentForm {
 ### WebSocket Architecture
 
 **Server Setup (Socket.io):**
+
 ```typescript
 // apps/web/lib/socket-server.ts
 import { Server } from 'socket.io';
@@ -223,6 +239,7 @@ export function initializeSocket(httpServer) {
 ```
 
 **Client Hook:**
+
 ```typescript
 // apps/web/hooks/useSocket.ts
 import { useEffect, useState } from 'react';
@@ -259,6 +276,7 @@ export function useSocket(tournamentId: string) {
 ```
 
 **Component Integration:**
+
 ```typescript
 // Update ChipStandingsTable to use WebSocket
 export default function ChipStandingsTable({ tournamentId, finalsCount }: Props) {
@@ -370,12 +388,14 @@ test.describe('Chip Format Tournament Flow', () => {
 ### Phase 1: WebSocket Integration (Days 1-4)
 
 **Day 1-2: Server Setup**
+
 - [ ] Install Socket.io dependencies
 - [ ] Create socket server initialization
 - [ ] Add socket events to chip format APIs
 - [ ] Test socket connection
 
 **Day 3-4: Client Integration**
+
 - [ ] Create useSocket hook
 - [ ] Update ChipStandingsTable
 - [ ] Update QueueDashboard
@@ -387,12 +407,14 @@ test.describe('Chip Format Tournament Flow', () => {
 ### Phase 2: Tournament Setup UI (Days 5-8)
 
 **Day 5-6: Wizard Structure**
+
 - [ ] Create wizard component
 - [ ] Implement step navigation
 - [ ] Add form validation with Zod
 - [ ] Integrate React Hook Form
 
 **Day 7-8: Configuration Steps**
+
 - [ ] Build all form steps
 - [ ] Add template selector
 - [ ] Implement review step
@@ -404,12 +426,14 @@ test.describe('Chip Format Tournament Flow', () => {
 ### Phase 3: Testing & Quality (Days 9-12)
 
 **Day 9-10: Unit Tests**
+
 - [ ] Set up React Testing Library
 - [ ] Write component tests
 - [ ] Achieve 80% coverage
 - [ ] Fix any bugs found
 
 **Day 11-12: E2E & Performance**
+
 - [ ] Set up Playwright
 - [ ] Write E2E tests for critical flows
 - [ ] Run Lighthouse audits
@@ -421,12 +445,14 @@ test.describe('Chip Format Tournament Flow', () => {
 ### Phase 4: Polish & Deploy (Days 13-14)
 
 **Day 13: Final Polish**
+
 - [ ] Error boundaries
 - [ ] Accessibility improvements
 - [ ] Mobile responsiveness check
 - [ ] Documentation updates
 
 **Day 14: Deployment**
+
 - [ ] Deploy to staging
 - [ ] Run smoke tests
 - [ ] Performance verification
@@ -455,6 +481,7 @@ pnpm add -D @playwright/test
 ## Success Metrics
 
 ### Quantitative
+
 - [ ] WebSocket latency <100ms
 - [ ] Unit test coverage >80%
 - [ ] E2E tests covering 3 critical flows
@@ -463,6 +490,7 @@ pnpm add -D @playwright/test
 - [ ] Bundle size <500KB (gzipped)
 
 ### Qualitative
+
 - [ ] Real-time updates feel instant
 - [ ] Tournament setup is intuitive
 - [ ] No regressions in existing features
@@ -473,12 +501,15 @@ pnpm add -D @playwright/test
 ## Risks & Mitigation
 
 ### Risk 1: WebSocket Complexity
+
 **Mitigation:** Start with simple pub/sub, add complexity incrementally
 
 ### Risk 2: Test Coverage Time
+
 **Mitigation:** Prioritize critical components, defer nice-to-have tests
 
 ### Risk 3: Performance Regressions
+
 **Mitigation:** Continuous monitoring, benchmark before/after changes
 
 ---
@@ -486,6 +517,7 @@ pnpm add -D @playwright/test
 ## Definition of Done
 
 A user story is "Done" when:
+
 - [ ] Code implemented and tested
 - [ ] Unit tests passing (>80% coverage)
 - [ ] E2E tests passing (if applicable)
@@ -500,6 +532,7 @@ A user story is "Done" when:
 ## Next Sprint Preview (Sprint 7)
 
 **Potential Focus Areas:**
+
 - Analytics & reporting dashboard
 - Advanced tournament features (multi-day, progressive structures)
 - Admin panel for system management

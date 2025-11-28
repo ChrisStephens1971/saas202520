@@ -68,6 +68,7 @@ This will run the tournament load test scenario against your local environment.
 **Purpose**: Tests tournament management features under various load conditions.
 
 **What it tests**:
+
 - List tournaments
 - View tournament details
 - Create tournaments
@@ -77,13 +78,14 @@ This will run the tournament load test scenario against your local environment.
 
 **Test profiles**:
 
-| Profile | Users | Duration | Req/sec | Purpose |
-|---------|-------|----------|---------|---------|
-| Normal Load | 100 | 5 min | 10 | Baseline performance |
-| Peak Load | 500 | 10 min | 50 | High traffic periods |
-| Stress Test | 1000 | 20 min | Variable | Find breaking points |
+| Profile     | Users | Duration | Req/sec  | Purpose              |
+| ----------- | ----- | -------- | -------- | -------------------- |
+| Normal Load | 100   | 5 min    | 10       | Baseline performance |
+| Peak Load   | 500   | 10 min   | 50       | High traffic periods |
+| Stress Test | 1000  | 20 min   | Variable | Find breaking points |
 
 **Run**:
+
 ```bash
 pnpm load-test
 # or
@@ -95,6 +97,7 @@ k6 run load-tests/scenarios/tournament-load.js
 **Purpose**: Comprehensive testing of all API endpoints.
 
 **What it tests**:
+
 - Authentication flows (login, register, token refresh)
 - CRUD operations (Create, Read, Update, Delete)
 - List and filter operations
@@ -104,13 +107,14 @@ k6 run load-tests/scenarios/tournament-load.js
 
 **Test profiles**:
 
-| Profile | Users | Duration | Purpose |
-|---------|-------|----------|---------|
-| Smoke | 1 | 1 min | Basic functionality check |
-| Load | 100 | 9 min | Normal API usage |
-| Stress | 500 | 24 min | API limits |
+| Profile | Users | Duration | Purpose                   |
+| ------- | ----- | -------- | ------------------------- |
+| Smoke   | 1     | 1 min    | Basic functionality check |
+| Load    | 100   | 9 min    | Normal API usage          |
+| Stress  | 500   | 24 min   | API limits                |
 
 **Run**:
+
 ```bash
 pnpm load-test:api
 # or
@@ -122,6 +126,7 @@ k6 run load-tests/scenarios/api-load.js
 **Purpose**: Tests real-time features and WebSocket connections.
 
 **What it tests**:
+
 - Connection stability
 - Message throughput
 - Message latency
@@ -131,13 +136,14 @@ k6 run load-tests/scenarios/api-load.js
 
 **Test profiles**:
 
-| Profile | Connections | Duration | Purpose |
-|---------|-------------|----------|---------|
-| Normal | 100 | 7 min | Regular WebSocket usage |
-| Peak | 500 | 9 min | High concurrency |
-| Stress | 1000 | 11 min | Connection limits |
+| Profile | Connections | Duration | Purpose                 |
+| ------- | ----------- | -------- | ----------------------- |
+| Normal  | 100         | 7 min    | Regular WebSocket usage |
+| Peak    | 500         | 9 min    | High concurrency        |
+| Stress  | 1000        | 11 min   | Connection limits       |
 
 **Run**:
+
 ```bash
 pnpm load-test:ws
 # or
@@ -231,6 +237,7 @@ k6 run --scenario normal_load load-tests/scenarios/tournament-load.js
 #### Custom Metrics
 
 **Tournament Load Test**:
+
 - `tournament_creation_time`: Time to create a tournament
 - `tournament_list_time`: Time to list tournaments
 - `tournament_details_time`: Time to fetch tournament details
@@ -238,6 +245,7 @@ k6 run --scenario normal_load load-tests/scenarios/tournament-load.js
 - `bracket_view_time`: Time to view tournament bracket
 
 **API Load Test**:
+
 - `auth_time`: Authentication duration
 - `create_time`: Resource creation time
 - `read_time`: Resource read time
@@ -247,6 +255,7 @@ k6 run --scenario normal_load load-tests/scenarios/tournament-load.js
 - `filter_time`: Filtered list operation time
 
 **WebSocket Load Test**:
+
 - `ws_connection_time`: WebSocket connection establishment time
 - `ws_message_latency`: Message round-trip time
 - `ws_connection_success`: Connection success rate
@@ -282,6 +291,7 @@ k6 run --scenario normal_load load-tests/scenarios/tournament-load.js
 - Thresholds failing (✗)
 
 **Actions to take**:
+
 1. Check database query performance
 2. Review application logs for errors
 3. Check resource utilization (CPU, memory, database connections)
@@ -301,6 +311,7 @@ k6 run --scenario normal_load load-tests/scenarios/tournament-load.js
 - Many failed requests
 
 **Actions to take**:
+
 1. Reduce load immediately
 2. Check for resource exhaustion (memory, CPU, connections)
 3. Review error logs
@@ -337,32 +348,32 @@ scenarios: (100.00%) 1 scenario, 100 max VUs, 7m30s max duration
 
 ### Target Performance (Production Ready)
 
-| Metric | Target | Critical Threshold |
-|--------|--------|-------------------|
-| **Response Time (P95)** | < 500ms | < 1000ms |
-| **Response Time (P99)** | < 1000ms | < 2000ms |
-| **Error Rate** | < 1% | < 5% |
-| **Throughput** | > 100 req/s | > 50 req/s |
-| **WS Connection Time** | < 500ms | < 1000ms |
-| **WS Message Latency** | < 100ms | < 200ms |
+| Metric                  | Target      | Critical Threshold |
+| ----------------------- | ----------- | ------------------ |
+| **Response Time (P95)** | < 500ms     | < 1000ms           |
+| **Response Time (P99)** | < 1000ms    | < 2000ms           |
+| **Error Rate**          | < 1%        | < 5%               |
+| **Throughput**          | > 100 req/s | > 50 req/s         |
+| **WS Connection Time**  | < 500ms     | < 1000ms           |
+| **WS Message Latency**  | < 100ms     | < 200ms            |
 
 ### Expected Load Profiles
 
-| Profile | Concurrent Users | Requests/sec | Use Case |
-|---------|-----------------|--------------|----------|
-| **Low** | 1-50 | 1-10 | Off-peak hours |
-| **Normal** | 50-200 | 10-50 | Regular business hours |
-| **Peak** | 200-500 | 50-100 | Tournament registration, live events |
-| **Stress** | 500-1000+ | 100+ | Finding system limits |
+| Profile    | Concurrent Users | Requests/sec | Use Case                             |
+| ---------- | ---------------- | ------------ | ------------------------------------ |
+| **Low**    | 1-50             | 1-10         | Off-peak hours                       |
+| **Normal** | 50-200           | 10-50        | Regular business hours               |
+| **Peak**   | 200-500          | 50-100       | Tournament registration, live events |
+| **Stress** | 500-1000+        | 100+         | Finding system limits                |
 
 ### Database Considerations
 
-| Operation | Expected Time | Optimization |
-|-----------|--------------|--------------|
-| **Simple Read** | < 50ms | Add indexes, use caching |
-| **Complex Query** | < 200ms | Optimize joins, add indexes |
-| **Write** | < 100ms | Batch operations, use transactions |
-| **Transaction** | < 150ms | Keep transactions short |
+| Operation         | Expected Time | Optimization                       |
+| ----------------- | ------------- | ---------------------------------- |
+| **Simple Read**   | < 50ms        | Add indexes, use caching           |
+| **Complex Query** | < 200ms       | Optimize joins, add indexes        |
+| **Write**         | < 100ms       | Batch operations, use transactions |
+| **Transaction**   | < 150ms       | Keep transactions short            |
 
 ## Troubleshooting
 
@@ -373,6 +384,7 @@ scenarios: (100.00%) 1 scenario, 100 max VUs, 7m30s max duration
 **Symptom**: `Connection refused` errors
 
 **Solution**:
+
 ```bash
 # Check if API is running
 curl http://localhost:3001/api/health
@@ -386,6 +398,7 @@ k6 run --env API_URL=http://localhost:3001 load-tests/scenarios/api-load.js
 **Symptom**: 401 Unauthorized errors
 
 **Solution**:
+
 - Verify test user credentials in helpers.js
 - Check authentication endpoint
 - Ensure database has test users
@@ -402,6 +415,7 @@ curl -X POST http://localhost:3001/api/auth/register \
 **Symptom**: > 5% error rate during tests
 
 **Solution**:
+
 - Check application logs for errors
 - Verify database connections
 - Check resource limits (file descriptors, connections)
@@ -420,6 +434,7 @@ docker exec -it postgres psql -U postgres -c "SELECT count(*) FROM pg_stat_activ
 **Symptom**: Request timeout errors
 
 **Solution**:
+
 - Increase timeout in test scenario
 - Check for slow database queries
 - Verify network connectivity
@@ -430,6 +445,7 @@ docker exec -it postgres psql -U postgres -c "SELECT count(*) FROM pg_stat_activ
 **Symptom**: WebSocket connections fail or drop
 
 **Solution**:
+
 - Check WebSocket server is running
 - Verify WebSocket URL (ws:// or wss://)
 - Check for connection limits
@@ -446,26 +462,31 @@ netstat -an | grep :3001 | grep ESTABLISHED
 ### Debugging Tips
 
 1. **Run with verbose logging**:
+
    ```bash
    k6 run --http-debug load-tests/scenarios/api-load.js
    ```
 
 2. **Run smoke test first**:
+
    ```bash
    k6 run --scenario smoke_test load-tests/scenarios/api-load.js
    ```
 
 3. **Start with low load**:
+
    ```bash
    k6 run --vus 1 --duration 1m load-tests/scenarios/api-load.js
    ```
 
 4. **Check individual endpoints**:
+
    ```bash
    curl -i http://localhost:3001/api/tournaments
    ```
 
 5. **Monitor system resources**:
+
    ```bash
    # CPU and memory
    docker stats
@@ -536,10 +557,10 @@ jobs:
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `API_URL` | `http://localhost:3001` | API base URL |
-| `WS_URL` | `ws://localhost:3001` | WebSocket URL |
+| Variable  | Default                 | Description   |
+| --------- | ----------------------- | ------------- |
+| `API_URL` | `http://localhost:3001` | API base URL  |
+| `WS_URL`  | `ws://localhost:3001`   | WebSocket URL |
 
 ## Additional Resources
 
@@ -551,6 +572,7 @@ jobs:
 ## Support
 
 For issues or questions:
+
 1. Check this documentation
 2. Review k6 documentation
 3. Check application logs

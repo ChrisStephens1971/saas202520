@@ -103,9 +103,7 @@ export function createMockRedisClient(): Partial<Redis> {
       return deleted;
     }),
     keys: vi.fn(async (pattern: string) => {
-      const regex = new RegExp(
-        '^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.') + '$'
-      );
+      const regex = new RegExp('^' + pattern.replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
       return Array.from(store.keys()).filter((key) => regex.test(key));
     }),
     flushdb: vi.fn(async () => {
@@ -362,8 +360,7 @@ export const dateHelpers = {
 /**
  * Wait helper for async tests
  */
-export const wait = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+export const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Reset all mocks

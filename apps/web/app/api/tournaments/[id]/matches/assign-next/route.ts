@@ -10,10 +10,7 @@ import { assignNextMatch, assignMatchBatch } from '@/lib/chip-format-engine';
 import type { ChipConfig } from '@/lib/chip-tracker';
 import { emitMatchAssigned, emitQueueUpdate } from '@/lib/socket-server';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
     const body = await request.json();

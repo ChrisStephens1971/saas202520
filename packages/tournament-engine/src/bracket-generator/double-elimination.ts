@@ -369,11 +369,7 @@ export function advanceWinner(
 
   // Advance loser to feedsLoserInto (if in winners bracket)
   if (match.feedsLoserInto) {
-    const loserMatch = getMatch(
-      bracket,
-      match.feedsLoserInto.round,
-      match.feedsLoserInto.position
-    );
+    const loserMatch = getMatch(bracket, match.feedsLoserInto.round, match.feedsLoserInto.position);
     if (loserMatch) {
       if (match.feedsLoserInto.slot === 'A') {
         loserMatch.playerAId = loserId;

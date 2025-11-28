@@ -47,7 +47,10 @@ class DatabaseWebhookQueue {
   /**
    * Enqueue a webhook job for delivery
    */
-  async add(data: WebhookJobData, options?: { jobId?: string; attempts?: number }): Promise<{ id: string }> {
+  async add(
+    data: WebhookJobData,
+    options?: { jobId?: string; attempts?: number }
+  ): Promise<{ id: string }> {
     try {
       // Check if job already exists (idempotency)
       if (options?.jobId) {
@@ -152,9 +155,7 @@ class DatabaseWebhookQueue {
         console.log(`[Webhook Queue] Processing ${pendingJobs.length} pending jobs`);
 
         // Process jobs in parallel
-        await Promise.allSettled(
-          pendingJobs.map((job) => this.processJob(job))
-        );
+        await Promise.allSettled(pendingJobs.map((job) => this.processJob(job)));
       }
     } catch (error) {
       console.error('[Webhook Queue] Error processing jobs:', error);

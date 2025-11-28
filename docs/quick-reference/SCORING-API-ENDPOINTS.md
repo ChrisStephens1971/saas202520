@@ -9,6 +9,7 @@
 ## Quick Start
 
 ### Increment Score (Most Common)
+
 ```bash
 curl -X POST http://localhost:3000/api/matches/match-123/score/increment \
   -H "Content-Type: application/json" \
@@ -20,6 +21,7 @@ curl -X POST http://localhost:3000/api/matches/match-123/score/increment \
 ```
 
 ### Undo Last Action
+
 ```bash
 curl -X POST http://localhost:3000/api/matches/match-123/score/undo \
   -H "Content-Type: application/json" \
@@ -30,6 +32,7 @@ curl -X POST http://localhost:3000/api/matches/match-123/score/undo \
 ```
 
 ### Get Score History
+
 ```bash
 curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ```
@@ -42,14 +45,15 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 
 **Increment score for a player with validation**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| id | string | path | Match ID |
-| player | string | body | "A" or "B" |
-| device | string | body | Device UUID for sync |
-| rev | number | body | Current match revision (optimistic lock) |
+| Parameter | Type   | Required | Description                              |
+| --------- | ------ | -------- | ---------------------------------------- |
+| id        | string | path     | Match ID                                 |
+| player    | string | body     | "A" or "B"                               |
+| device    | string | body     | Device UUID for sync                     |
+| rev       | number | body     | Current match revision (optimistic lock) |
 
 **Success Response (200):**
+
 ```json
 {
   "match": {
@@ -92,6 +96,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ```
 
 **Error Response (400 - Invalid Score):**
+
 ```json
 {
   "error": "Invalid score",
@@ -104,6 +109,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ```
 
 **Error Response (409 - Optimistic Lock Collision):**
+
 ```json
 {
   "error": "Match was updated by another user. Please refresh.",
@@ -127,13 +133,14 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 
 **Undo the last score action**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| id | string | path | Match ID |
-| device | string | body | Device UUID for sync |
-| rev | number | body | Current match revision (optimistic lock) |
+| Parameter | Type   | Required | Description                              |
+| --------- | ------ | -------- | ---------------------------------------- |
+| id        | string | path     | Match ID                                 |
+| device    | string | body     | Device UUID for sync                     |
+| rev       | number | body     | Current match revision (optimistic lock) |
 
 **Success Response (200):**
+
 ```json
 {
   "match": {
@@ -174,6 +181,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ```
 
 **Error Response (400 - No Undo Available):**
+
 ```json
 {
   "error": "No actions available to undo"
@@ -196,12 +204,13 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 
 **Get complete score history with audit trail**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| id | string | path | Match ID |
-| limit | number | query | Max results (default: 50) |
+| Parameter | Type   | Required | Description               |
+| --------- | ------ | -------- | ------------------------- |
+| id        | string | path     | Match ID                  |
+| limit     | number | query    | Max results (default: 50) |
 
 **Success Response (200):**
+
 ```json
 {
   "updates": [
@@ -263,6 +272,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 **List all scorekeepers in an organization**
 
 **Success Response (200):**
+
 ```json
 {
   "scorekeepers": [
@@ -301,6 +311,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 **Assign scorekeeper role to a user**
 
 **Request Body:**
+
 ```json
 {
   "userId": "user-456",
@@ -309,6 +320,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ```
 
 **Success Response (200):**
+
 ```json
 {
   "message": "Scorekeeper role assigned successfully"
@@ -327,6 +339,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 | userId | string | yes | User ID to remove |
 
 **Success Response (200):**
+
 ```json
 {
   "message": "Scorekeeper role removed successfully"
@@ -338,6 +351,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=20
 ## Validation Rules (SCORE-002, SCORE-003, SCORE-004)
 
 ### Race-To Validation
+
 ```
 Race-to-9 match:
 ✅ VALID:   (5, 3) -> (6, 3)
@@ -347,6 +361,7 @@ Race-to-9 match:
 ```
 
 ### Hill-Hill Detection (SCORE-004)
+
 ```
 Race-to-9 match:
 (8, 8) = Hill-hill ✓
@@ -355,6 +370,7 @@ Race-to-9 match:
 ```
 
 ### Illegal Score Guards (SCORE-003)
+
 ```
 ❌ Cannot exceed race-to
 ❌ Both players cannot be at race-to simultaneously
@@ -367,41 +383,42 @@ Race-to-9 match:
 ## Client Integration Examples
 
 ### React Hook
+
 ```typescript
 const { data, mutate, isPending } = useMutation({
   mutationFn: async (payload) => {
-    const res = await fetch(
-      `/api/matches/${matchId}/score/increment`,
-      { method: 'POST', body: JSON.stringify(payload) }
-    );
+    const res = await fetch(`/api/matches/${matchId}/score/increment`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
     if (!res.ok) throw new Error(await res.text());
     return res.json();
-  }
+  },
 });
 
 // Call it
 mutate({
   player: 'A',
   device: getDeviceId(),
-  rev: match.rev
+  rev: match.rev,
 });
 ```
 
 ### Handling Hill-Hill
+
 ```typescript
-if (response.validation.warnings.some(w =>
-  w.includes('Hill-hill')
-)) {
+if (response.validation.warnings.some((w) => w.includes('Hill-hill'))) {
   // Show confirmation modal
   showHillHillConfirmation({
     onConfirm: () => {
       // User confirmed, update UI
-    }
+    },
   });
 }
 ```
 
 ### Error Handling
+
 ```typescript
 if (error.status === 409) {
   // Optimistic lock collision
@@ -418,28 +435,32 @@ if (error.status === 409) {
 
 ## Performance Notes
 
-| Operation | Time | Notes |
-|-----------|------|-------|
-| Increment Score | ~50ms | Includes DB transaction |
-| Undo Action | ~40ms | Reverts score + creates audit |
-| Get History | ~30ms + 5ms per record | Indexed query |
-| Permission Check | <5ms | Cached role lookup |
+| Operation        | Time                   | Notes                         |
+| ---------------- | ---------------------- | ----------------------------- |
+| Increment Score  | ~50ms                  | Includes DB transaction       |
+| Undo Action      | ~40ms                  | Reverts score + creates audit |
+| Get History      | ~30ms + 5ms per record | Indexed query                 |
+| Permission Check | <5ms                   | Cached role lookup            |
 
 ---
 
 ## Common Issues & Solutions
 
 ### 409 Conflict (Optimistic Lock)
+
 **Problem:** "Match was updated by another user"
 **Solution:** Fetch fresh match data and retry with new rev number
+
 ```typescript
 const match = await getMatch(matchId);
 mutate({ ...payload, rev: match.rev });
 ```
 
 ### 400 Invalid Score
+
 **Problem:** Score exceeds race-to
 **Solution:** Check validation errors and display to user
+
 ```json
 {
   "error": "Invalid score",
@@ -450,8 +471,10 @@ mutate({ ...payload, rev: match.rev });
 ```
 
 ### 403 Forbidden
+
 **Problem:** User doesn't have scorekeeper role
 **Solution:** Assign scorekeeper role via admin panel
+
 ```bash
 POST /api/organizations/org-123/scorekeepers
 { "userId": "user-456" }
@@ -462,6 +485,7 @@ POST /api/organizations/org-123/scorekeepers
 ## Testing Endpoints
 
 ### Using curl
+
 ```bash
 # Score increment
 curl -X POST http://localhost:3000/api/matches/match-123/score/increment \
@@ -475,19 +499,20 @@ curl http://localhost:3000/api/matches/match-123/score/history \
 ```
 
 ### Using TypeScript Client
+
 ```typescript
 import { fetchApi } from '@/lib/api-client';
 
 // Increment
 const result = await fetchApi(`/api/matches/${id}/score/increment`, {
   method: 'POST',
-  body: { player: 'A', device: 'dev-id', rev: 0 }
+  body: { player: 'A', device: 'dev-id', rev: 0 },
 });
 
 // Undo
 const result = await fetchApi(`/api/matches/${id}/score/undo`, {
   method: 'POST',
-  body: { device: 'dev-id', rev: 1 }
+  body: { device: 'dev-id', rev: 1 },
 });
 
 // History

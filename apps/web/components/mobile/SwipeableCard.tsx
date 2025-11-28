@@ -51,7 +51,7 @@ export function SwipeableCard({
   threshold = 0.3,
   disabled = false,
   className,
-  enableVerticalSwipe = false
+  enableVerticalSwipe = false,
 }: SwipeableCardProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [actionTriggered, setActionTriggered] = useState(false);
@@ -134,7 +134,7 @@ export function SwipeableCard({
       ref={cardRef}
       className={cn('relative overflow-hidden', className)}
       style={{
-        touchAction: enableVerticalSwipe ? 'pan-y' : 'pan-x'
+        touchAction: enableVerticalSwipe ? 'pan-y' : 'pan-x',
       }}
     >
       {/* Left Action Indicator */}
@@ -146,7 +146,7 @@ export function SwipeableCard({
           )}
           style={{
             opacity: leftActionOpacity,
-            backgroundColor: leftAction.color
+            backgroundColor: leftAction.color,
           }}
         >
           <div className="flex items-center gap-2 text-white">
@@ -165,7 +165,7 @@ export function SwipeableCard({
           )}
           style={{
             opacity: rightActionOpacity,
-            backgroundColor: rightAction.color
+            backgroundColor: rightAction.color,
           }}
         >
           <div className="flex items-center gap-2 text-white">
@@ -189,7 +189,7 @@ export function SwipeableCard({
           left: rightAction ? 0.2 : 0,
           right: leftAction ? 0.2 : 0,
           top: onSwipeUp ? 0.1 : 0,
-          bottom: onSwipeDown ? 0.1 : 0
+          bottom: onSwipeDown ? 0.1 : 0,
         }}
         dragMomentum={false}
         onDragStart={handleDragStart}
@@ -198,7 +198,7 @@ export function SwipeableCard({
         transition={{
           type: 'spring',
           stiffness: 500,
-          damping: 30
+          damping: 30,
         }}
       >
         {children}
@@ -207,18 +207,12 @@ export function SwipeableCard({
       {/* Screen Reader Actions */}
       <div className="sr-only">
         {leftAction && (
-          <button
-            onClick={leftAction.onAction}
-            aria-label={leftAction.label}
-          >
+          <button onClick={leftAction.onAction} aria-label={leftAction.label}>
             {leftAction.label}
           </button>
         )}
         {rightAction && (
-          <button
-            onClick={rightAction.onAction}
-            aria-label={rightAction.label}
-          >
+          <button onClick={rightAction.onAction} aria-label={rightAction.label}>
             {rightAction.label}
           </button>
         )}

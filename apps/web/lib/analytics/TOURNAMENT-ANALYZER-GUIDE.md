@@ -45,15 +45,15 @@ tournament-analyzer.ts
 
 ### Caching Strategy
 
-| Function | Cache TTL | Reasoning |
-|----------|-----------|-----------|
-| `analyzeTournamentPerformance` | 5 minutes | Real-time performance data |
-| `analyzeFormatPopularity` | 15 minutes | Moderately stable data |
-| `analyzeTournamentTrends` | 15 minutes | Historical trends change slowly |
-| `calculateTournamentMetrics` | 5 minutes | Current operational metrics |
-| `predictTournamentAttendance` | 15 minutes | Predictions valid for planning window |
-| `analyzePlayerEngagement` | 15 minutes | Player patterns evolve gradually |
-| `getTournamentBenchmarks` | 1 hour | Industry benchmarks are stable |
+| Function                       | Cache TTL  | Reasoning                             |
+| ------------------------------ | ---------- | ------------------------------------- |
+| `analyzeTournamentPerformance` | 5 minutes  | Real-time performance data            |
+| `analyzeFormatPopularity`      | 15 minutes | Moderately stable data                |
+| `analyzeTournamentTrends`      | 15 minutes | Historical trends change slowly       |
+| `calculateTournamentMetrics`   | 5 minutes  | Current operational metrics           |
+| `predictTournamentAttendance`  | 15 minutes | Predictions valid for planning window |
+| `analyzePlayerEngagement`      | 15 minutes | Player patterns evolve gradually      |
+| `getTournamentBenchmarks`      | 1 hour     | Industry benchmarks are stable        |
 
 ## API Reference
 
@@ -160,7 +160,7 @@ import { analyzeTournamentTrends } from '@/lib/analytics/services/tournament-ana
 const trends = await analyzeTournamentTrends(
   tenantId,
   'week', // period type: 'day', 'week', or 'month'
-  12      // number of periods
+  12 // number of periods
 );
 
 trends.forEach((trend) => {
@@ -741,9 +741,7 @@ describe('Tournament Analyzer', () => {
       );
 
       if (result.length > 1) {
-        expect(result[0].tournamentCount).toBeGreaterThanOrEqual(
-          result[1].tournamentCount
-        );
+        expect(result[0].tournamentCount).toBeGreaterThanOrEqual(result[1].tournamentCount);
       }
     });
   });
@@ -770,12 +768,8 @@ describe('Tournament Analyzer', () => {
         new Date('2025-02-14')
       );
 
-      expect(result.confidenceInterval.low).toBeLessThanOrEqual(
-        result.predictedAttendance
-      );
-      expect(result.confidenceInterval.high).toBeGreaterThanOrEqual(
-        result.predictedAttendance
-      );
+      expect(result.confidenceInterval.low).toBeLessThanOrEqual(result.predictedAttendance);
+      expect(result.confidenceInterval.high).toBeGreaterThanOrEqual(result.predictedAttendance);
     });
   });
 
@@ -912,11 +906,7 @@ if (performance.comparison?.revenue.trend === 'up') {
 ```typescript
 // Predict attendance 2 weeks in advance
 const upcomingDate = addWeeks(new Date(), 2);
-const prediction = await predictTournamentAttendance(
-  tenantId,
-  plannedFormat,
-  upcomingDate
-);
+const prediction = await predictTournamentAttendance(tenantId, plannedFormat, upcomingDate);
 
 // Use prediction to plan resources
 if (prediction.predictedAttendance > 20) {
@@ -1009,21 +999,16 @@ Suggest optimal dates and formats:
 
 ```typescript
 // Check multiple upcoming dates
-const dates = [
-  addWeeks(now, 1),
-  addWeeks(now, 2),
-  addWeeks(now, 3),
-];
+const dates = [addWeeks(now, 1), addWeeks(now, 2), addWeeks(now, 3)];
 
 const predictions = await Promise.all(
-  dates.map((date) =>
-    predictTournamentAttendance(tenantId, preferredFormat, date)
-  )
+  dates.map((date) => predictTournamentAttendance(tenantId, preferredFormat, date))
 );
 
 // Find date with highest predicted attendance
-const bestDate = predictions.reduce((best, pred, idx) =>
-  pred.predictedAttendance > predictions[best].predictedAttendance ? idx : best,
+const bestDate = predictions.reduce(
+  (best, pred, idx) =>
+    pred.predictedAttendance > predictions[best].predictedAttendance ? idx : best,
   0
 );
 
@@ -1088,11 +1073,13 @@ if (benchmarks.benchmarks.completionRate.status === 'below') {
 ### Issue: Predictions are inaccurate
 
 **Causes:**
+
 - Insufficient historical data
 - Data quality issues
 - Seasonal changes
 
 **Solutions:**
+
 ```typescript
 const prediction = await predictTournamentAttendance(tenantId, format, date);
 
@@ -1114,11 +1101,13 @@ if (!formatData || formatData.tournamentCount < 5) {
 ### Issue: Slow query performance
 
 **Causes:**
+
 - Missing aggregates
 - Cache not being used
 - Large date ranges
 
 **Solutions:**
+
 ```typescript
 // Check if aggregates exist
 const aggregates = await prisma.tournamentAggregate.findMany({
@@ -1145,11 +1134,13 @@ const threeMonths = await analyzeFormatPopularity(
 ### Issue: Metrics don't match expectations
 
 **Causes:**
+
 - Data inconsistencies
 - Timezone issues
 - Status field mismatches
 
 **Solutions:**
+
 ```typescript
 // Validate data quality
 const metrics = await calculateTournamentMetrics(tenantId);

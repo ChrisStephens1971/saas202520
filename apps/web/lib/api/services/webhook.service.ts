@@ -67,9 +67,7 @@ export interface WebhookWithStats {
  *   events: [WebhookEvent.TOURNAMENT_STARTED, WebhookEvent.MATCH_COMPLETED]
  * });
  */
-export async function createWebhook(
-  input: CreateWebhookInput
-): Promise<WebhookWithStats> {
+export async function createWebhook(input: CreateWebhookInput): Promise<WebhookWithStats> {
   // Validate URL format
   try {
     const url = new URL(input.url);
@@ -149,12 +147,9 @@ export async function listWebhooks(
 
   // Calculate statistics for each webhook
   return webhooks.map((webhook) => {
-    const totalDeliveries =
-      webhook.deliverySuccessCount + webhook.deliveryFailureCount;
+    const totalDeliveries = webhook.deliverySuccessCount + webhook.deliveryFailureCount;
     const successRate =
-      totalDeliveries > 0
-        ? (webhook.deliverySuccessCount / totalDeliveries) * 100
-        : 0;
+      totalDeliveries > 0 ? (webhook.deliverySuccessCount / totalDeliveries) * 100 : 0;
 
     return {
       ...webhook,
@@ -189,12 +184,9 @@ export async function getWebhook(
     return null;
   }
 
-  const totalDeliveries =
-    webhook.deliverySuccessCount + webhook.deliveryFailureCount;
+  const totalDeliveries = webhook.deliverySuccessCount + webhook.deliveryFailureCount;
   const successRate =
-    totalDeliveries > 0
-      ? (webhook.deliverySuccessCount / totalDeliveries) * 100
-      : 0;
+    totalDeliveries > 0 ? (webhook.deliverySuccessCount / totalDeliveries) * 100 : 0;
 
   return {
     ...webhook,
@@ -259,12 +251,9 @@ export async function updateWebhook(
     data,
   });
 
-  const totalDeliveries =
-    webhook.deliverySuccessCount + webhook.deliveryFailureCount;
+  const totalDeliveries = webhook.deliverySuccessCount + webhook.deliveryFailureCount;
   const successRate =
-    totalDeliveries > 0
-      ? (webhook.deliverySuccessCount / totalDeliveries) * 100
-      : 0;
+    totalDeliveries > 0 ? (webhook.deliverySuccessCount / totalDeliveries) * 100 : 0;
 
   return {
     ...webhook,
@@ -283,10 +272,7 @@ export async function updateWebhook(
  * @example
  * await deleteWebhook('wh_123', 'org_456');
  */
-export async function deleteWebhook(
-  webhookId: string,
-  tenantId: string
-): Promise<boolean> {
+export async function deleteWebhook(webhookId: string, tenantId: string): Promise<boolean> {
   // Verify webhook exists and belongs to tenant
   const existing = await getWebhook(webhookId, tenantId);
   if (!existing) {
@@ -313,10 +299,7 @@ export async function deleteWebhook(
  * @example
  * await pauseWebhook('wh_123', 'org_456');
  */
-export async function pauseWebhook(
-  webhookId: string,
-  tenantId: string
-): Promise<WebhookWithStats> {
+export async function pauseWebhook(webhookId: string, tenantId: string): Promise<WebhookWithStats> {
   return updateWebhook(webhookId, tenantId, { status: 'paused' });
 }
 
@@ -460,12 +443,9 @@ export async function getWebhooksForEvent(
   });
 
   return webhooks.map((webhook) => {
-    const totalDeliveries =
-      webhook.deliverySuccessCount + webhook.deliveryFailureCount;
+    const totalDeliveries = webhook.deliverySuccessCount + webhook.deliveryFailureCount;
     const successRate =
-      totalDeliveries > 0
-        ? (webhook.deliverySuccessCount / totalDeliveries) * 100
-        : 0;
+      totalDeliveries > 0 ? (webhook.deliverySuccessCount / totalDeliveries) * 100 : 0;
 
     return {
       ...webhook,

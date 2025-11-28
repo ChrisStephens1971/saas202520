@@ -9,20 +9,21 @@ Complete reference of all templates available in this project.
 
 ## 📋 Template Categories
 
-| Category | Templates | When to Use |
-|----------|-----------|-------------|
-| **Product** | 5 templates | Planning features and roadmaps |
-| **Sprints** | 3 templates | Agile sprint planning |
+| Category      | Templates   | When to Use                     |
+| ------------- | ----------- | ------------------------------- |
+| **Product**   | 5 templates | Planning features and roadmaps  |
+| **Sprints**   | 3 templates | Agile sprint planning           |
 | **Technical** | 4 templates | Architecture and tech decisions |
-| **Business** | 6 templates | Goals, metrics, strategy |
-| **Meetings** | 4 templates | Meeting notes and interviews |
-| **Workflows** | 3 templates | Process documentation |
+| **Business**  | 6 templates | Goals, metrics, strategy        |
+| **Meetings**  | 4 templates | Meeting notes and interviews    |
+| **Workflows** | 3 templates | Process documentation           |
 
 ---
 
 ## 🎯 Product Templates
 
 ### Roadmap Template
+
 - **File:** `product/roadmap-template.md`
 - **Purpose:** High-level product strategy and feature prioritization
 - **When:** Start of project, quarterly reviews
@@ -30,6 +31,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### PRD Template (Product Requirements Document)
+
 - **File:** `product/prd-template.md`
 - **Purpose:** Detailed feature specifications
 - **When:** Before building any feature
@@ -37,6 +39,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Feature Spec Template
+
 - **File:** `product/feature-spec-template.md`
 - **Purpose:** Quick feature definitions
 - **When:** Smaller features that don't need full PRD
@@ -44,6 +47,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team
 
 ### User Research Template
+
 - **File:** `product/user-research-template.md`
 - **Purpose:** Document customer interviews and feedback
 - **When:** Discovery phase, validation
@@ -51,6 +55,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Product Strategy Template
+
 - **File:** `product/product-strategy-template.md`
 - **Purpose:** Long-term product vision and positioning
 - **When:** Quarterly or annually
@@ -62,6 +67,7 @@ Complete reference of all templates available in this project.
 ## 🏃 Sprint Templates
 
 ### Sprint Plan Template
+
 - **File:** `sprints/sprint-plan-template.md`
 - **Purpose:** Plan 1-2 week sprints
 - **When:** Start of every sprint
@@ -69,6 +75,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### User Story Template
+
 - **File:** `sprints/user-story-template.md`
 - **Purpose:** Define user-facing features
 - **When:** Breaking down features into tasks
@@ -76,6 +83,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Sprint Retrospective Template
+
 - **File:** `sprints/retrospective-template.md`
 - **Purpose:** Review what went well/poorly
 - **When:** End of each sprint
@@ -87,6 +95,7 @@ Complete reference of all templates available in this project.
 ## 🔧 Technical Templates
 
 ### ADR Template (Architecture Decision Record)
+
 - **File:** `technical/adr-template.md`
 - **Purpose:** Document important technical decisions
 - **When:** Choosing tech stack, architecture patterns
@@ -94,6 +103,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### API Spec Template
+
 - **File:** `technical/api-spec-template.md`
 - **Purpose:** Design API endpoints
 - **When:** Before building APIs
@@ -101,6 +111,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Tech Spec Template
+
 - **File:** `technical/tech-spec-template.md`
 - **Purpose:** Detailed technical implementation plans
 - **When:** Complex features needing design work
@@ -108,6 +119,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Runbook Template
+
 - **File:** `technical/runbook-template.md`
 - **Purpose:** Operational procedures
 - **When:** Production deployments
@@ -119,6 +131,7 @@ Complete reference of all templates available in this project.
 ## 💼 Business Templates
 
 ### OKR Template (Objectives & Key Results)
+
 - **File:** `business/okr-template.md`
 - **Purpose:** Set quarterly goals
 - **When:** Start of each quarter
@@ -126,6 +139,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Weekly Review Template
+
 - **File:** `business/weekly-review-template.md`
 - **Purpose:** Track weekly progress
 - **When:** End of each week
@@ -133,6 +147,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Metrics Dashboard Template
+
 - **File:** `business/metrics-dashboard-template.md`
 - **Purpose:** Define KPIs to track
 - **When:** After MVP launch
@@ -140,6 +155,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Milestone Tracker Template
+
 - **File:** `business/milestone-tracker-template.md`
 - **Purpose:** Track major project milestones
 - **When:** Ongoing throughout project
@@ -147,6 +163,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Business Model Template
+
 - **File:** `business/business-model-template.md`
 - **Purpose:** Define revenue model and costs
 - **When:** Early planning phase
@@ -154,6 +171,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Investor Update Template
+
 - **File:** `business/investor-update-template.md`
 - **Purpose:** Regular updates for stakeholders
 - **When:** Monthly or quarterly (if funded)
@@ -165,6 +183,7 @@ Complete reference of all templates available in this project.
 ## 👥 Meeting Templates
 
 ### General Meeting Notes
+
 - **File:** `meetings/meeting-notes-template.md`
 - **Purpose:** Standard meeting documentation
 - **When:** Any meeting
@@ -172,6 +191,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Customer Interview Template
+
 - **File:** `meetings/customer-interview-template.md`
 - **Purpose:** Structure customer conversations
 - **When:** User research, validation
@@ -179,6 +199,7 @@ Complete reference of all templates available in this project.
 - **For:** Solo, Team, Enterprise
 
 ### Team Standup Template
+
 - **File:** `meetings/standup-template.md`
 - **Purpose:** Daily/weekly team syncs
 - **When:** Regular team meetings
@@ -186,6 +207,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Advisor Meeting Template
+
 - **File:** `meetings/advisor-meeting-template.md`
 - **Purpose:** Track advisor conversations
 - **When:** Meeting with advisors/mentors
@@ -197,6 +219,7 @@ Complete reference of all templates available in this project.
 ## 🔄 Workflow Templates
 
 ### Deployment Workflow
+
 - **File:** `workflows/deployment-workflow-template.md`
 - **Purpose:** Document deployment process
 - **When:** Setting up CI/CD
@@ -204,6 +227,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Code Review Workflow
+
 - **File:** `workflows/code-review-workflow-template.md`
 - **Purpose:** Establish PR review process
 - **When:** Multiple developers
@@ -211,6 +235,7 @@ Complete reference of all templates available in this project.
 - **For:** Team, Enterprise
 
 ### Incident Response Workflow
+
 - **File:** `workflows/incident-response-template.md`
 - **Purpose:** Handle production issues
 - **When:** After launch
@@ -221,9 +246,10 @@ Complete reference of all templates available in this project.
 
 ## 🏢 Enterprise-Only Templates
 
-*(Available in enterprise template only)*
+_(Available in enterprise template only)_
 
 ### Compliance Checklist
+
 - **File:** `compliance/compliance-checklist-template.md`
 - **Purpose:** Track compliance requirements (GDPR, SOC2, HIPAA)
 - **When:** Regulated industries
@@ -231,6 +257,7 @@ Complete reference of all templates available in this project.
 - **For:** Enterprise
 
 ### Incident Response
+
 - **File:** `security/incidents/incident-response-template.md`
 - **Purpose:** Document security incidents
 - **When:** Security event occurs
@@ -238,6 +265,7 @@ Complete reference of all templates available in this project.
 - **For:** Enterprise
 
 ### Architecture Review
+
 - **File:** `governance/architecture-review-template.md`
 - **Purpose:** Formal architecture review process
 - **When:** Major technical decisions
@@ -249,6 +277,7 @@ Complete reference of all templates available in this project.
 ## 🎯 Quick Reference: First 5 Templates to Use
 
 ### For Solo Founders (MVP):
+
 1. **Project Brief** (`project-brief.md`) - Your vision
 2. **Roadmap** (`product/roadmap-template.md`) - What to build
 3. **Sprint Plan** (`sprints/sprint-plan-template.md`) - This week's work
@@ -256,6 +285,7 @@ Complete reference of all templates available in this project.
 5. **ADR** (`technical/adr-template.md`) - Tech decisions
 
 ### For Teams:
+
 1. **Project Brief** (`project-brief.md`) - Shared vision
 2. **Roadmap** (`product/roadmap-template.md`) - Product direction
 3. **Sprint Plan** (`sprints/sprint-plan-template.md`) - Sprint goals
@@ -267,16 +297,19 @@ Complete reference of all templates available in this project.
 ## 📝 Template Usage Tips
 
 ### Start Simple
+
 - Don't use all templates at once
 - Start with 3-5 core templates
 - Add more as you need them
 
 ### Keep Updated
+
 - Review and update templates quarterly
 - Remove templates you're not using
 - Customize templates for your workflow
 
 ### Templates ≠ Bureaucracy
+
 - Templates save time, not add work
 - Skip sections that don't apply
 - Adapt templates to your needs
@@ -286,11 +319,13 @@ Complete reference of all templates available in this project.
 ## ❓ Questions?
 
 **Finding templates:**
+
 - Use file search in your editor
 - Check `docs/quick-reference/` for guides
 - Ask Claude: "Which template should I use for X?"
 
 **Creating custom templates:**
+
 - Copy an existing template
 - Add `-template.md` suffix
 - Document it here for team reference

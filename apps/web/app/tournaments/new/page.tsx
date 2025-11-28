@@ -61,7 +61,7 @@ export default function NewTournamentPage() {
         .replace(/[^a-z0-9-]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
-      setFormData(prev => ({ ...prev, slug: generatedSlug }));
+      setFormData((prev) => ({ ...prev, slug: generatedSlug }));
     }
   }, [formData.name, slugTouched]);
 
@@ -104,7 +104,7 @@ export default function NewTournamentPage() {
       setSlugTouched(true);
     }
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]:
         name === 'raceToWins' || name === 'maxPlayers'
@@ -162,7 +162,7 @@ export default function NewTournamentPage() {
     {
       value: 'single_elimination',
       label: 'Single Elimination',
-      description: 'Traditional bracket - lose once and you\'re out',
+      description: "Traditional bracket - lose once and you're out",
     },
     {
       value: 'double_elimination',
@@ -209,7 +209,9 @@ export default function NewTournamentPage() {
           >
             ← Back to Tournaments
           </button>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Create Tournament</h1>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+            Create Tournament
+          </h1>
           <p className="text-gray-700 dark:text-gray-300">
             Set up a new tournament for your organization
           </p>
@@ -262,8 +264,8 @@ export default function NewTournamentPage() {
                   slugAvailable === false
                     ? 'border-red-500'
                     : slugAvailable === true
-                    ? 'border-green-500'
-                    : 'border-white/20'
+                      ? 'border-green-500'
+                      : 'border-white/20'
                 }`}
                 placeholder="summer-championship-2024"
               />
@@ -305,7 +307,7 @@ export default function NewTournamentPage() {
               placeholder="Tell players about this tournament..."
             />
             <p className="text-sm text-gray-400 mt-1">
-              {((formData.description as string | undefined)?.length || 0)} / 2000 characters
+              {(formData.description as string | undefined)?.length || 0} / 2000 characters
             </p>
           </div>
 
@@ -322,14 +324,14 @@ export default function NewTournamentPage() {
               required
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {formatOptions.map(option => (
+              {formatOptions.map((option) => (
                 <option key={option.value} value={option.value} className="bg-slate-800">
                   {option.label}
                 </option>
               ))}
             </select>
             <p className="text-sm text-gray-400 mt-1">
-              {formatOptions.find(o => o.value === formData.format)?.description}
+              {formatOptions.find((o) => o.value === formData.format)?.description}
             </p>
           </div>
 
@@ -346,7 +348,7 @@ export default function NewTournamentPage() {
               required
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
-              {gameTypeOptions.map(option => (
+              {gameTypeOptions.map((option) => (
                 <option key={option.value} value={option.value} className="bg-slate-800">
                   {option.label}
                 </option>

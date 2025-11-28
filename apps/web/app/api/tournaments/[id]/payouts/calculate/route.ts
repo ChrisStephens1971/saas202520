@@ -6,12 +6,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import type { CalculatePayoutsRequest, CalculatePayoutsResponse } from '@tournament/shared/types/payment';
+import type {
+  CalculatePayoutsRequest,
+  CalculatePayoutsResponse,
+} from '@tournament/shared/types/payment';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -52,10 +52,7 @@ export async function POST(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     if (tournament.organization.members.length === 0) {
@@ -76,7 +73,7 @@ export async function POST(
     let entryFeesTotal = 0;
     let sidePotsTotal = 0;
 
-    payments.forEach(payment => {
+    payments.forEach((payment) => {
       if (payment.purpose === 'entry_fee' && includeEntryFees) {
         entryFeesTotal += payment.amount.toNumber();
       }
@@ -101,7 +98,7 @@ export async function POST(
     // In a real implementation, this would come from tournament results
 
     // Calculate payout amounts
-    const payouts = prizeStructure.map(prize => {
+    const payouts = prizeStructure.map((prize) => {
       const amount = Math.floor((totalCollected * prize.percentage) / 100);
 
       return {
@@ -152,7 +149,7 @@ export async function POST(
     const houseTake = totalCollected - totalPayouts;
 
     const response: CalculatePayoutsResponse = {
-      payouts: createdPayouts.map(p => ({
+      payouts: createdPayouts.map((p) => ({
         id: p.id,
         tournamentId: p.tournamentId,
         playerId: p.playerId,
@@ -181,9 +178,6 @@ export async function POST(
   } catch (error: unknown) {
     console.error('Error calculating payouts:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -12,12 +12,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import {
-  startOfMonth,
-  subMonths,
-  addMonths,
-  format,
-} from 'date-fns';
+import { startOfMonth, subMonths, addMonths, format } from 'date-fns';
 import * as RevenueCalculator from './revenue-calculator';
 import * as CacheManager from './cache-manager';
 
@@ -120,11 +115,7 @@ export async function predictRevenue(
   }
 
   // Check cache
-  const cacheKey = CacheManager.getCacheKey(
-    'predictive:revenue',
-    tenantId,
-    months.toString()
-  );
+  const cacheKey = CacheManager.getCacheKey('predictive:revenue', tenantId, months.toString());
 
   const cached = await CacheManager.get<RevenuePrediction[]>(cacheKey);
   if (cached) {
@@ -192,11 +183,7 @@ export async function predictRevenue(
     const predictedMRR = Math.max(0, trendValue * seasonalFactor);
 
     // Calculate confidence interval
-    const interval = calculateConfidenceInterval(
-      predictedMRR,
-      values,
-      0.95
-    );
+    const interval = calculateConfidenceInterval(predictedMRR, values, 0.95);
 
     predictions.push({
       month: futureMonth,
@@ -216,9 +203,9 @@ export async function predictRevenue(
   await CacheManager.set(cacheKey, predictions, 3600);
 
   console.log(
-    `[Predictive] Revenue forecast complete: ${predictions.length} months (R²: ${
-      trendline.rSquared.toFixed(2)
-    })`
+    `[Predictive] Revenue forecast complete: ${predictions.length} months (R²: ${trendline.rSquared.toFixed(
+      2
+    )})`
   );
 
   return predictions;
@@ -249,11 +236,7 @@ export async function predictUserGrowth(
   }
 
   // Check cache
-  const cacheKey = CacheManager.getCacheKey(
-    'predictive:users',
-    tenantId,
-    months.toString()
-  );
+  const cacheKey = CacheManager.getCacheKey('predictive:users', tenantId, months.toString());
 
   const cached = await CacheManager.get<UserGrowthPrediction[]>(cacheKey);
   if (cached) {
@@ -316,9 +299,7 @@ export async function predictUserGrowth(
   }
 
   const avgChurnRate =
-    churnRates.length > 0
-      ? churnRates.reduce((a, b) => a + b, 0) / churnRates.length
-      : 20; // Default 20% churn
+    churnRates.length > 0 ? churnRates.reduce((a, b) => a + b, 0) / churnRates.length : 20; // Default 20% churn
 
   // Get latest user count
   const latestMonth = historicalMonths[historicalMonths.length - 1];
@@ -365,9 +346,9 @@ export async function predictUserGrowth(
   await CacheManager.set(cacheKey, predictions, 3600);
 
   console.log(
-    `[Predictive] User growth forecast complete: ${predictions.length} months (avg growth: ${
-      (avgGrowthRate * 100).toFixed(1)
-    }%)`
+    `[Predictive] User growth forecast complete: ${predictions.length} months (avg growth: ${(
+      avgGrowthRate * 100
+    ).toFixed(1)}%)`
   );
 
   return predictions;
@@ -454,8 +435,7 @@ export function calculateConfidenceInterval(
   // Calculate standard deviation
   const mean = historicalData.reduce((a, b) => a + b, 0) / historicalData.length;
   const variance =
-    historicalData.reduce((sum, val) => sum + (val - mean) ** 2, 0) /
-    historicalData.length;
+    historicalData.reduce((sum, val) => sum + (val - mean) ** 2, 0) / historicalData.length;
   const stdDev = Math.sqrt(variance);
 
   // Z-score for 95% confidence ≈ 1.96
@@ -502,8 +482,7 @@ export function detectSeasonality(data: TimeSeriesData[]): SeasonalityFactors {
   }
 
   // Calculate average for each month
-  const overallAvg =
-    data.reduce((sum, point) => sum + point.value, 0) / data.length;
+  const overallAvg = data.reduce((sum, point) => sum + point.value, 0) / data.length;
 
   const factors: SeasonalityFactors = {};
 
@@ -527,8 +506,7 @@ function calculateStdDev(values: number[]): number {
   if (values.length === 0) return 0;
 
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
-  const variance =
-    values.reduce((sum, val) => sum + (val - mean) ** 2, 0) / values.length;
+  const variance = values.reduce((sum, val) => sum + (val - mean) ** 2, 0) / values.length;
 
   return Math.sqrt(variance);
 }

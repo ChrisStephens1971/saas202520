@@ -84,10 +84,7 @@ export {
 } from './services/rate-limiter.service';
 
 // API Authentication Middleware
-export {
-  withApiAuth,
-  withApiAuthCustomError,
-} from './middleware/api-auth.middleware';
+export { withApiAuth, withApiAuthCustomError } from './middleware/api-auth.middleware';
 
 // API Response Utilities
 export {

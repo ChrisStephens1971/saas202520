@@ -24,16 +24,35 @@ import { useEffect } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used for type inference on line 39
 const tournamentFormSchema = z.object({
   name: z.string().min(1, 'Tournament name is required').max(255, 'Name too long'),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1, 'Slug is required')
     .max(100, 'Slug too long')
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens'),
   description: z.string().max(2000, 'Description too long').optional(),
-  format: z.enum(['single_elimination', 'double_elimination', 'round_robin', 'modified_single', 'chip_format']),
+  format: z.enum([
+    'single_elimination',
+    'double_elimination',
+    'round_robin',
+    'modified_single',
+    'chip_format',
+  ]),
   gameType: z.enum(['eight-ball', 'nine-ball', 'ten-ball', 'straight-pool']),
-  raceToWins: z.number().int().min(1, 'Race to wins must be at least 1').max(21, 'Cannot exceed 21'),
-  maxPlayers: z.number().int().min(8, 'Minimum 8 players').max(128, 'Maximum 128 players').optional().nullable(),
-  status: z.enum(['draft', 'registration', 'active', 'paused', 'completed', 'cancelled']).optional(),
+  raceToWins: z
+    .number()
+    .int()
+    .min(1, 'Race to wins must be at least 1')
+    .max(21, 'Cannot exceed 21'),
+  maxPlayers: z
+    .number()
+    .int()
+    .min(8, 'Minimum 8 players')
+    .max(128, 'Maximum 128 players')
+    .optional()
+    .nullable(),
+  status: z
+    .enum(['draft', 'registration', 'active', 'paused', 'completed', 'cancelled'])
+    .optional(),
   startDate: z.string().datetime().optional().nullable(),
 });
 
@@ -142,13 +161,14 @@ export function TournamentForm({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* Basic Information */}
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Basic Information
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
 
         {/* Tournament Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Tournament Name *
           </label>
           <input
@@ -159,15 +179,16 @@ export function TournamentForm({
             placeholder="e.g., Summer Pool Championship"
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.name.message}
-            </p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
           )}
         </div>
 
         {/* Slug */}
         <div>
-          <label htmlFor="slug" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="slug"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             URL Slug *
           </label>
           <div className="flex items-center gap-2">
@@ -181,15 +202,16 @@ export function TournamentForm({
             />
           </div>
           {errors.slug && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.slug.message}
-            </p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.slug.message}</p>
           )}
         </div>
 
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Description
           </label>
           <textarea
@@ -215,7 +237,10 @@ export function TournamentForm({
 
         {/* Format */}
         <div>
-          <label htmlFor="format" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            htmlFor="format"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             Tournament Format *
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -231,9 +256,7 @@ export function TournamentForm({
                   className="mt-1 mr-3"
                 />
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900 dark:text-white">
-                    {option.label}
-                  </div>
+                  <div className="font-medium text-gray-900 dark:text-white">{option.label}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {option.description}
                   </div>
@@ -242,15 +265,16 @@ export function TournamentForm({
             ))}
           </div>
           {errors.format && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.format.message}
-            </p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.format.message}</p>
           )}
         </div>
 
         {/* Game Type */}
         <div>
-          <label htmlFor="gameType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="gameType"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Game Type *
           </label>
           <select
@@ -265,15 +289,16 @@ export function TournamentForm({
             ))}
           </select>
           {errors.gameType && (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-              {errors.gameType.message}
-            </p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.gameType.message}</p>
           )}
         </div>
 
         {/* Race To Wins */}
         <div>
-          <label htmlFor="raceToWins" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="raceToWins"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Race To *
           </label>
           <input
@@ -296,13 +321,16 @@ export function TournamentForm({
 
         {/* Max Players */}
         <div>
-          <label htmlFor="maxPlayers" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label
+            htmlFor="maxPlayers"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
             Maximum Players
           </label>
           <input
             {...register('maxPlayers', {
               valueAsNumber: true,
-              setValueAs: (v) => v === '' ? null : Number(v),
+              setValueAs: (v) => (v === '' ? null : Number(v)),
             })}
             type="number"
             id="maxPlayers"
@@ -325,12 +353,13 @@ export function TournamentForm({
       {/* Status (Edit mode only) */}
       {mode === 'edit' && (
         <div className="bg-white dark:bg-gray-800 rounded-lg p-6 space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            Tournament Status
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Tournament Status</h3>
 
           <div>
-            <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Status
             </label>
             <select
@@ -339,19 +368,13 @@ export function TournamentForm({
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500"
             >
               {STATUS_OPTIONS.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  disabled={option.disabled}
-                >
+                <option key={option.value} value={option.value} disabled={option.disabled}>
                   {option.label}
                 </option>
               ))}
             </select>
             {errors.status && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                {errors.status.message}
-              </p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.status.message}</p>
             )}
           </div>
         </div>

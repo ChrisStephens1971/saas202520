@@ -13,6 +13,7 @@
 ### Problem
 
 Tournament platform stakeholders need performant, comprehensive analytics to make data-driven decisions, but lack:
+
 - Fast access to revenue metrics (MRR, ARR, churn) without manual calculation
 - Visual representation of user cohort retention and LTV
 - Tournament performance insights and forecasting capabilities
@@ -22,6 +23,7 @@ Tournament platform stakeholders need performant, comprehensive analytics to mak
 Current state: Manual data extraction from PostgreSQL, Excel-based analysis taking 2-4 hours, no predictive capabilities, no automated reporting.
 
 **Technical challenges:**
+
 - Dashboard must load <500ms with 20+ visualizations
 - Support 100+ concurrent users without performance degradation
 - Handle 10K+ analytics events per hour
@@ -32,6 +34,7 @@ Current state: Manual data extraction from PostgreSQL, Excel-based analysis taki
 ### Solution Summary
 
 Build a high-performance analytics platform using:
+
 - **Frontend:** React + Recharts (12 charts) + D3.js (8 advanced visualizations)
 - **Backend:** Next.js tRPC API + PostgreSQL aggregation tables + Redis caching
 - **Data Pipeline:** Event tracking → Hourly aggregation jobs → 5-minute cache TTL
@@ -39,6 +42,7 @@ Build a high-performance analytics platform using:
 - **Predictive Models:** Simple linear regression for revenue/user forecasting (>80% accuracy target)
 
 **Architecture strategy:**
+
 - Pre-compute metrics in aggregation tables (updated hourly via cron jobs)
 - Cache computed results in Redis (5-min TTL for real-time, 1-hour for historical)
 - Progressive dashboard loading (KPIs first, then charts)
@@ -69,12 +73,14 @@ Build a high-performance analytics platform using:
 ### Current State
 
 **Existing Infrastructure:**
+
 - PostgreSQL database with transactional data (payments, users, tournaments, registrations)
 - Redis cache for session management and application state
 - Next.js 14+ application with tRPC API layer
 - Multi-tenant architecture with `tenant_id` on all tables
 
 **Current Analytics Approach:**
+
 - Ad-hoc SQL queries run manually by admins
 - Excel-based analysis taking 2-4 hours per report
 - No automated reporting or scheduled delivery
@@ -82,6 +88,7 @@ Build a high-performance analytics platform using:
 - No predictive capabilities or forecasting
 
 **Pain Points:**
+
 - Time-consuming manual data extraction
 - No self-service analytics for venue owners
 - Delayed insights (reports generated weekly at best)
@@ -91,6 +98,7 @@ Build a high-performance analytics platform using:
 ### Constraints
 
 **Technical Constraints:**
+
 - Must maintain existing PostgreSQL schema (no breaking changes)
 - Redis instance shared with application cache (budget for memory limits)
 - Next.js API routes must remain stateless (no in-memory aggregation)
@@ -98,12 +106,14 @@ Build a high-performance analytics platform using:
 - Frontend bundle size: analytics code should be code-split (<500KB chunk)
 
 **Business Constraints:**
+
 - 5-day development timeline (Sprint 10 Week 1)
 - Must work with existing tech stack (no new databases or services)
 - Export file storage in existing S3 bucket (no new cloud services)
 - Must not impact existing application performance
 
 **Timeline Constraints:**
+
 - Day 1: Database schema + API structure
 - Day 2: Core analytics calculations + frontend shell
 - Day 3: Visualizations (20 charts)
@@ -213,6 +223,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/AnalyticsDashboard.tsx`
 
 **Key Features:**
+
 - Tab navigation (Overview, Revenue, Users, Tournaments, Reports)
 - Global date range picker (Last 7/30/90 days, MTD, QTD, YTD, Custom)
 - Export button (CSV/Excel/PDF)
@@ -220,6 +231,7 @@ Build a high-performance analytics platform using:
 - Responsive layout (desktop/tablet/mobile)
 
 **Interfaces:**
+
 - Consumes: tRPC analytics router
 - Emits: Date range changes (context provider)
 - Props: `tenantId: string`, `initialTab?: string`
@@ -231,6 +243,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/RevenueAnalytics.tsx`
 
 **Key Features:**
+
 - KPI cards (MRR, ARR, Churn Rate, Avg Revenue/Tournament)
 - Revenue trend line chart (12 months) with projections
 - Revenue breakdown by type (bar chart) and payment method (pie chart)
@@ -238,6 +251,7 @@ Build a high-performance analytics platform using:
 - Transaction detail table (sortable, filterable, paginated)
 
 **Interfaces:**
+
 - Consumes: `analytics.getRevenue` tRPC endpoint
 - Props: `dateRange: { start: Date, end: Date }`, `tenantId: string`
 
@@ -248,6 +262,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/UserAnalytics.tsx`
 
 **Key Features:**
+
 - Cohort retention table with heatmap coloring (D3.js)
 - User growth area chart (DAU, WAU, MAU)
 - LTV trend line by cohort
@@ -255,6 +270,7 @@ Build a high-performance analytics platform using:
 - Retention funnel visualization
 
 **Interfaces:**
+
 - Consumes: `analytics.getCohorts`, `analytics.getUserGrowth` tRPC endpoints
 - Props: `dateRange: { start: Date, end: Date }`, `tenantId: string`
 
@@ -265,6 +281,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/TournamentAnalytics.tsx`
 
 **Key Features:**
+
 - Tournament completion rate trend
 - Average attendance bar chart by format
 - Tournament duration analysis
@@ -272,6 +289,7 @@ Build a high-performance analytics platform using:
 - Tournament activity heatmap (day/time patterns) using D3.js
 
 **Interfaces:**
+
 - Consumes: `analytics.getTournaments` tRPC endpoint
 - Props: `dateRange: { start: Date, end: Date }`, `tenantId: string`, `venueId?: string`
 
@@ -282,12 +300,14 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/PredictiveModels.tsx`
 
 **Key Features:**
+
 - Revenue forecast line chart (3, 6, 12 months)
 - User growth forecast with confidence bands
 - Tournament attendance prediction
 - Forecast accuracy metrics display (MAPE, RMSE)
 
 **Interfaces:**
+
 - Consumes: `analytics.forecast` tRPC endpoint
 - Props: `metric: 'revenue' | 'users' | 'tournaments'`, `months: number`, `tenantId: string`
 
@@ -298,6 +318,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/ExportControls.tsx`
 
 **Key Features:**
+
 - Format selection (CSV, Excel, PDF)
 - Date range override
 - Progress indicator for background exports
@@ -305,6 +326,7 @@ Build a high-performance analytics platform using:
 - Export history list
 
 **Interfaces:**
+
 - Consumes: `analytics.export` tRPC mutation
 - Props: `reportType: string`, `defaultDateRange: { start: Date, end: Date }`, `tenantId: string`
 
@@ -315,6 +337,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/components/analytics/ScheduledReports.tsx`
 
 **Key Features:**
+
 - Report configuration form (type, frequency, recipients, format)
 - Scheduled reports list with status indicators
 - Preview report functionality
@@ -322,6 +345,7 @@ Build a high-performance analytics platform using:
 - Delivery history log
 
 **Interfaces:**
+
 - Consumes: `analytics.scheduleReport`, `analytics.getScheduledReports` tRPC endpoints
 - Props: `tenantId: string`
 
@@ -332,6 +356,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/AnalyticsService.ts`
 
 **Key Features:**
+
 - Aggregate data from source tables
 - Calculate derived metrics (MRR, ARR, LTV)
 - Cache management (Redis get/set/invalidate)
@@ -339,6 +364,7 @@ Build a high-performance analytics platform using:
 - Multi-tenant query scoping
 
 **Interfaces:**
+
 - Used by: tRPC analytics router
 - Depends on: Prisma client, Redis client
 - Methods: `getRevenue()`, `getCohorts()`, `getTournaments()`, `forecast()`
@@ -350,13 +376,15 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/calculators/RevenueCalculator.ts`
 
 **Key Features:**
+
 - MRR calculation (sum of recurring revenue for the month)
-- ARR calculation (MRR * 12)
+- ARR calculation (MRR \* 12)
 - Churn rate calculation (churned revenue / total revenue)
 - Revenue projections using linear regression
 - Payment success rate analysis
 
 **Interfaces:**
+
 - Used by: AnalyticsService
 - Methods: `calculateMRR()`, `calculateARR()`, `calculateChurnRate()`, `projectRevenue()`
 
@@ -367,12 +395,14 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/calculators/CohortAnalyzer.ts`
 
 **Key Features:**
+
 - Build cohort retention tables
 - Calculate LTV by cohort
 - Churn prediction (simple model based on activity decay)
 - Cohort comparison (retention rates across cohorts)
 
 **Interfaces:**
+
 - Used by: AnalyticsService
 - Methods: `buildCohortTable()`, `calculateLTV()`, `predictChurn()`
 
@@ -383,12 +413,14 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/PredictiveEngine.ts`
 
 **Key Features:**
+
 - Linear regression for trend forecasting
 - Confidence interval calculation (95%)
 - Forecast accuracy metrics (MAPE, RMSE)
 - Seasonality adjustment (simple moving average)
 
 **Interfaces:**
+
 - Used by: AnalyticsService
 - Methods: `forecastRevenue()`, `forecastUsers()`, `forecastTournaments()`, `calculateAccuracy()`
 
@@ -399,6 +431,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/ExportService.ts`
 
 **Key Features:**
+
 - CSV generation (streaming for large datasets)
 - Excel generation with formatting and embedded charts (ExcelJS)
 - PDF generation with professional layout (jsPDF + jspdf-autotable)
@@ -406,6 +439,7 @@ Build a high-performance analytics platform using:
 - Signed URL generation for secure downloads
 
 **Interfaces:**
+
 - Used by: tRPC export endpoint, background jobs
 - Methods: `generateCSV()`, `generateExcel()`, `generatePDF()`, `uploadToS3()`
 
@@ -416,6 +450,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/CacheManager.ts`
 
 **Key Features:**
+
 - Cache key generation (namespaced by tenant + query params)
 - TTL management (5 min for real-time, 1 hour for historical)
 - Cache invalidation on data updates
@@ -423,6 +458,7 @@ Build a high-performance analytics platform using:
 - Memory limit enforcement (eviction policies)
 
 **Interfaces:**
+
 - Used by: AnalyticsService
 - Methods: `get()`, `set()`, `invalidate()`, `getHitRate()`
 
@@ -433,6 +469,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/jobs/AggregationJob.ts`
 
 **Key Features:**
+
 - Hourly aggregation from `analytics_events` table
 - Update `revenue_aggregates`, `user_cohorts`, `tournament_aggregates`
 - Incremental updates (process only new events since last run)
@@ -440,6 +477,7 @@ Build a high-performance analytics platform using:
 - Job status monitoring and alerting
 
 **Interfaces:**
+
 - Triggered by: Cron schedule (every hour)
 - Updates: Aggregation tables
 - Logging: Job execution time, rows processed, errors
@@ -451,6 +489,7 @@ Build a high-performance analytics platform using:
 **Location:** `apps/web/lib/analytics/jobs/ScheduledReportJob.ts`
 
 **Key Features:**
+
 - Check `scheduled_reports` table for due reports
 - Generate report using ExportService
 - Email delivery with attachment
@@ -458,6 +497,7 @@ Build a high-performance analytics platform using:
 - Retry logic for failed deliveries (3 attempts)
 
 **Interfaces:**
+
 - Triggered by: Cron schedule (every 15 minutes check)
 - Uses: ExportService, Nodemailer
 - Updates: `scheduled_reports.last_run_at`, `scheduled_reports.next_run_at`
@@ -495,14 +535,17 @@ CREATE INDEX idx_analytics_events_timestamp ON analytics_events(timestamp DESC);
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant)
 - Foreign key to `users(id)` (nullable - some events not user-specific)
 
 **Data Retention:**
+
 - Raw events retained for 13 months (rolling deletion)
 - Partition by month for efficient deletion
 
 **Example event_data formats:**
+
 ```json
 // payment_completed
 {
@@ -571,9 +614,11 @@ CREATE INDEX idx_revenue_agg_tenant_date ON revenue_aggregates(tenant_id, period
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant)
 
 **Update Strategy:**
+
 - Hourly cron job aggregates new `analytics_events` data
 - Upsert (INSERT ... ON CONFLICT UPDATE) for idempotency
 - Historical periods locked after month-end close
@@ -609,14 +654,17 @@ CREATE INDEX idx_cohorts_tenant_cohort ON user_cohorts(tenant_id, cohort_month D
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant)
 
 **Update Strategy:**
+
 - Daily cron job recalculates retention for recent cohorts (last 3 months)
 - Historical cohorts updated monthly
 - Active user defined as: login or tournament participation in the month
 
 **Retention Calculation Logic:**
+
 ```typescript
 // Pseudocode
 for each cohort_month:
@@ -674,9 +722,11 @@ CREATE INDEX idx_tournament_agg_tenant_date ON tournament_aggregates(tenant_id, 
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant)
 
 **Update Strategy:**
+
 - Hourly cron job aggregates completed tournaments
 - Calculate most_popular_format using window function (RANK)
 
@@ -722,10 +772,12 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Relationships:**
+
 - Foreign key to `organizations(id)` (tenant)
 - Foreign key to `users(id)` (creator)
 
 **Scheduling Logic:**
+
 - Cron job runs every 15 minutes
 - Query: `WHERE is_active = true AND next_run_at <= NOW()`
 - After successful delivery, calculate next_run_at based on frequency:
@@ -746,6 +798,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Retrieve revenue metrics (MRR, ARR, trends, projections)
 
 **Input:**
+
 ```typescript
 {
   startDate: Date,
@@ -756,6 +809,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   current: {
@@ -788,10 +842,12 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Caching:**
+
 - Cache key: `analytics:revenue:${tenantId}:${startDate}:${endDate}:${period}`
 - TTL: 5 minutes (real-time), 1 hour (historical)
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid date range (start > end)
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant
@@ -801,6 +857,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Retrieve user cohort retention data
 
 **Input:**
+
 ```typescript
 {
   startMonth: Date, // YYYY-MM-01
@@ -810,6 +867,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   cohorts: Array<{
@@ -838,10 +896,12 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Caching:**
+
 - Cache key: `analytics:cohorts:${tenantId}:${startMonth}:${endMonth}`
 - TTL: 1 hour (cohort data changes slowly)
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid month range
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant
@@ -851,6 +911,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Retrieve tournament performance metrics
 
 **Input:**
+
 ```typescript
 {
   startDate: Date,
@@ -861,6 +922,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   summary: {
@@ -895,10 +957,12 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Caching:**
+
 - Cache key: `analytics:tournaments:${tenantId}:${startDate}:${endDate}:${period}:${venueId || 'all'}`
 - TTL: 5 minutes
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid date range
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant/venue
@@ -908,6 +972,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Generate predictive forecasts
 
 **Input:**
+
 ```typescript
 {
   metric: 'revenue' | 'users' | 'tournaments',
@@ -917,6 +982,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   forecast: Array<{
@@ -936,10 +1002,12 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Caching:**
+
 - Cache key: `analytics:forecast:${tenantId}:${metric}:${months}`
 - TTL: 1 day (forecasts don't change frequently)
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid parameters (months < 1 or > 12)
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant
@@ -950,6 +1018,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Generate and download analytics export
 
 **Input:**
+
 ```typescript
 {
   reportType: 'revenue' | 'users' | 'tournaments' | 'comprehensive',
@@ -961,6 +1030,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   jobId: string, // Background job ID for tracking
@@ -971,11 +1041,13 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Background Processing:**
+
 - Export queued immediately (BullMQ)
 - Client polls `/analytics/export/status/${jobId}` for updates
 - When completed, downloadUrl provided (expires in 24 hours)
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid parameters
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant
@@ -986,6 +1058,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** Create a scheduled report
 
 **Input:**
+
 ```typescript
 {
   name: string,
@@ -1001,6 +1074,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   id: string,
@@ -1012,6 +1086,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid recipients or parameters
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have permission to schedule reports
@@ -1022,6 +1097,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Purpose:** List all scheduled reports for a tenant
 
 **Input:**
+
 ```typescript
 {
   // No input - uses tenant from auth context
@@ -1029,24 +1105,26 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ```
 
 **Response (200 OK):**
+
 ```typescript
 {
   reports: Array<{
-    id: string,
-    name: string,
-    reportType: string,
-    frequency: string,
-    recipients: string[],
-    format: string,
-    isActive: boolean,
-    lastRunAt: Date | null,
-    nextRunAt: Date,
-    createdBy: { id: string, name: string }
-  }>
+    id: string;
+    name: string;
+    reportType: string;
+    frequency: string;
+    recipients: string[];
+    format: string;
+    isActive: boolean;
+    lastRunAt: Date | null;
+    nextRunAt: Date;
+    createdBy: { id: string; name: string };
+  }>;
 }
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: User doesn't have access to this tenant
 
@@ -1059,6 +1137,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Goal:** Database schema, aggregation tables, API structure
 
 **Tasks:**
+
 - [x] Create database migration for 4 new tables (analytics_events, revenue_aggregates, user_cohorts, tournament_aggregates, scheduled_reports)
 - [x] Add indexes and constraints
 - [x] Implement Row-Level Security (RLS) policies for tenant isolation
@@ -1071,6 +1150,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Estimated Effort:** 1 day
 
 **Validation:**
+
 - Migration runs successfully on local and staging databases
 - RLS policies prevent cross-tenant data access (automated test)
 - tRPC router endpoints return 501 Not Implemented (structure in place)
@@ -1080,6 +1160,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Goal:** Implement core analytics calculations and APIs
 
 **Tasks:**
+
 - [x] Implement RevenueCalculator service (MRR, ARR, churn)
 - [x] Implement CohortAnalyzer service (retention tables, LTV)
 - [x] Implement AnalyticsService (orchestrates calculators, caching)
@@ -1093,6 +1174,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Estimated Effort:** 1 day
 
 **Validation:**
+
 - Revenue calculations match manual Excel calculations (spot check)
 - Cohort retention table displays correct percentages
 - Redis cache hit rate >50% after 10 minutes of usage
@@ -1103,6 +1185,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Goal:** Tournament metrics and all 20 dashboard visualizations
 
 **Tasks:**
+
 - [x] Implement tournament analytics calculations
 - [x] Complete tournament API endpoints (getTournaments)
 - [x] Create frontend dashboard shell (AnalyticsDashboard component)
@@ -1127,6 +1210,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Estimated Effort:** 1 day
 
 **Validation:**
+
 - All 20 visualizations render without errors
 - Dashboard loads in <500ms (measure with Chrome DevTools)
 - Charts are responsive and interactive (hover tooltips, legend toggle)
@@ -1137,6 +1221,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Goal:** Export functionality and forecasting
 
 **Tasks:**
+
 - [x] Implement ExportService (CSV, Excel, PDF generation)
 - [x] Integrate ExcelJS for formatted Excel exports with embedded charts
 - [x] Integrate jsPDF for PDF reports
@@ -1154,6 +1239,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Estimated Effort:** 1 day
 
 **Validation:**
+
 - CSV export completes in <5 seconds for 10K rows
 - Excel export includes formatting and charts (verify manually)
 - PDF export renders professional layout (verify manually)
@@ -1165,6 +1251,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Goal:** Comprehensive testing, performance tuning, deploy to beta
 
 **Tasks:**
+
 - [x] Unit tests for all calculators (>80% coverage target)
 - [x] Integration tests for full analytics pipeline (event → aggregation → API → cache)
 - [x] Performance testing with 100K events and 100 concurrent users (Artillery or k6)
@@ -1184,6 +1271,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Estimated Effort:** 1 day
 
 **Validation:**
+
 - Test suite passes with >80% coverage
 - Dashboard loads <500ms (p95) under 100 concurrent users
 - No data leakage in multi-tenant tests
@@ -1201,22 +1289,26 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Key Test Cases:**
 
 **RevenueCalculator:**
+
 - `calculateMRR()` returns correct monthly recurring revenue
-- `calculateARR()` returns MRR * 12
+- `calculateARR()` returns MRR \* 12
 - `calculateChurnRate()` handles zero revenue edge case
 - `projectRevenue()` generates forecasts within confidence interval
 
 **CohortAnalyzer:**
+
 - `buildCohortTable()` correctly calculates retention percentages
 - `calculateLTV()` sums all revenue from cohort users
 - `predictChurn()` identifies users with declining activity
 
 **PredictiveEngine:**
+
 - `forecastRevenue()` uses linear regression correctly
 - `calculateAccuracy()` computes MAPE and RMSE
 - Handles insufficient data gracefully (< 3 months)
 
 **CacheManager:**
+
 - `get()` returns cached value if present
 - `set()` stores value with correct TTL
 - `invalidate()` removes cached value
@@ -1229,6 +1321,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Test Scenarios:**
 
 **Full Analytics Pipeline:**
+
 1. Insert analytics_events into database
 2. Run aggregation job
 3. Query API endpoint
@@ -1238,6 +1331,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 7. Verify third request re-queries database
 
 **Multi-Tenant Isolation:**
+
 1. Create events for Tenant A and Tenant B
 2. Query as Tenant A user
 3. Verify only Tenant A data returned
@@ -1247,6 +1341,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 7. Verify aggregate data (anonymized) returned
 
 **Export Pipeline:**
+
 1. Request CSV export
 2. Verify job queued in BullMQ
 3. Wait for job completion (or mock)
@@ -1254,6 +1349,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 5. Verify signed URL is valid and downloadable
 
 **Scheduled Reports:**
+
 1. Create scheduled report with "daily" frequency
 2. Manually trigger scheduled report job
 3. Verify report generated and emailed
@@ -1266,23 +1362,27 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Load Testing Scenarios:**
 
 **Dashboard Concurrent Load:**
+
 - Simulate 100 concurrent users loading dashboard
 - Measure: Average response time, p95, p99
 - Target: p95 <500ms, p99 <1000ms
 - Tool: Artillery or k6
 
 **High Event Volume:**
+
 - Insert 10K analytics events per hour (simulated)
 - Run aggregation job
 - Measure: Job completion time
 - Target: <2 minutes
 
 **Cache Performance:**
+
 - 1000 requests over 5 minutes (same queries)
 - Measure: Cache hit rate
 - Target: >80%
 
 **Export Stress Test:**
+
 - Generate 10 concurrent export requests (10K rows each)
 - Measure: Time to completion
 - Target: All complete within 1 minute
@@ -1292,36 +1392,43 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Security Considerations
 
 **Authentication:**
+
 - All API endpoints require valid JWT token
 - Token includes tenantId claim
 - Expired tokens rejected with 401
 
 **Authorization:**
+
 - User must belong to tenant to access tenant data
 - Platform admins have special role for cross-tenant access
 - Venue owners cannot access other venues' data (unless multi-venue org)
 
 **Data Validation:**
+
 - Input validation using Zod schemas (date ranges, email formats)
 - SQL injection prevented by Prisma parameterized queries
 - JSONB event_data sanitized (no code execution)
 
 **Rate Limiting:**
+
 - Export endpoints: 5 requests per hour per user (using Redis counter)
 - API endpoints: 100 requests per minute per user (general limit)
 - Scheduled reports: Maximum 50 active reports per tenant
 
 **Tenant Isolation:**
+
 - Row-Level Security (RLS) policies enforce tenantId filtering
 - Automated tests verify cross-tenant queries return empty results
 - Cache keys include tenantId to prevent leakage
 
 **Export Security:**
+
 - Export files stored in tenant-specific S3 paths: `s3://bucket/{tenantId}/analytics-exports/`
 - Signed URLs expire after 24 hours
 - Files deleted from S3 after 30 days (automated cleanup job)
 
 **Audit Logging:**
+
 - All export requests logged (who, what, when)
 - Scheduled report deliveries logged
 - Failed authentication attempts logged
@@ -1333,6 +1440,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Deployment Strategy
 
 **Phase 1: Staging Deployment**
+
 - [x] Deploy database migrations to staging
 - [x] Deploy backend code (analytics services, API routes, background jobs)
 - [x] Deploy frontend code (dashboard components)
@@ -1340,6 +1448,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - [x] Manual QA testing (all features)
 
 **Phase 2: Beta Deployment (10% rollout)**
+
 - [x] Deploy to production with feature flag disabled
 - [x] Enable feature flag for beta users (5-10 venues)
 - [x] Monitor error rates, performance metrics
@@ -1347,6 +1456,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - [x] Bug fixes and iteration (1-2 days)
 
 **Phase 3: Gradual Rollout**
+
 - [ ] Enable for 25% of users (highest activity venues first)
 - [ ] Monitor for 24 hours (no critical issues)
 - [ ] Enable for 50% of users
@@ -1354,6 +1464,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - [ ] Enable for 100% of users (full launch)
 
 **Phase 4: Post-Launch Monitoring (Weeks 2-4)**
+
 - [ ] Track adoption metrics (dashboard usage, export requests)
 - [ ] Monitor performance (dashboard load time, API response time)
 - [ ] Collect user feedback (NPS survey)
@@ -1364,6 +1475,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Metrics to Track:**
 
 **Performance Metrics:**
+
 - Dashboard load time (p50, p95, p99)
 - API response time by endpoint (p50, p95, p99)
 - Redis cache hit rate
@@ -1371,12 +1483,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - Export generation time
 
 **Business Metrics:**
+
 - Dashboard active users (daily, weekly, monthly)
 - Export requests per day
 - Scheduled reports sent per day
 - User engagement (time spent on analytics pages)
 
 **System Health Metrics:**
+
 - API error rate (5xx errors)
 - Background job failure rate
 - Database query duration (slow query log)
@@ -1384,6 +1498,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - S3 storage usage (export files)
 
 **Monitoring Tools:**
+
 - Next.js built-in analytics (Vercel Analytics or similar)
 - Custom metrics endpoint (`/api/metrics`) exposing Prometheus format
 - Grafana dashboards for visualization
@@ -1391,30 +1506,33 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 
 **Alerts:**
 
-| Condition | Threshold | Action | Priority |
-|-----------|-----------|--------|----------|
-| Dashboard load time p95 >1s | Sustained for 5 min | Alert engineering team | High |
-| API error rate >5% | Any 5-minute window | Page on-call engineer | Critical |
-| Background job failures >10% | Over 1 hour | Alert engineering team | High |
-| Redis cache hit rate <50% | Sustained for 15 min | Alert engineering team | Medium |
-| Export queue depth >50 | Any time | Alert engineering team | Medium |
-| Scheduled report delivery failures >20% | Over 1 day | Alert engineering team | High |
+| Condition                               | Threshold            | Action                 | Priority |
+| --------------------------------------- | -------------------- | ---------------------- | -------- |
+| Dashboard load time p95 >1s             | Sustained for 5 min  | Alert engineering team | High     |
+| API error rate >5%                      | Any 5-minute window  | Page on-call engineer  | Critical |
+| Background job failures >10%            | Over 1 hour          | Alert engineering team | High     |
+| Redis cache hit rate <50%               | Sustained for 15 min | Alert engineering team | Medium   |
+| Export queue depth >50                  | Any time             | Alert engineering team | Medium   |
+| Scheduled report delivery failures >20% | Over 1 day           | Alert engineering team | High     |
 
 ### Rollback Plan
 
 **Scenario 1: Critical Bug Found**
+
 1. Disable feature flag immediately (all users)
 2. Investigate and fix bug
 3. Deploy fix to staging and test
 4. Re-enable feature flag gradually
 
 **Scenario 2: Performance Degradation**
+
 1. Disable feature flag for 75% of users (keep 25% active)
 2. Analyze slow queries and bottlenecks
 3. Optimize and deploy fix
 4. Gradually re-enable for all users
 
 **Scenario 3: Data Corruption or Leakage**
+
 1. Disable feature flag immediately (all users)
 2. Audit affected data and users
 3. Restore from backup if necessary
@@ -1423,11 +1541,13 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 6. Re-enable only after thorough security audit
 
 **Database Rollback:**
+
 - Database migrations are reversible (DOWN migrations included)
 - Aggregation tables can be dropped without affecting source data
 - Analytics events have 13-month retention (safe to delete if needed)
 
 **Code Rollback:**
+
 - Git revert to previous working commit
 - Redeploy previous version
 - Feature flag ensures frontend doesn't call non-existent endpoints
@@ -1439,6 +1559,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### External Dependencies
 
 **Frontend Libraries:**
+
 - **recharts** (v2.10.0+): Primary charting library
   - Why: React-friendly, declarative API, covers 60% of chart types
   - Risk: Limited customization for complex charts (mitigated by D3.js)
@@ -1462,6 +1583,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
   - Risk: Requires custom styling (acceptable)
 
 **Backend Libraries:**
+
 - **simple-statistics** (v7.8.0+): Statistical calculations (linear regression)
   - Why: Lightweight, pure JavaScript, no dependencies
   - Risk: Limited ML capabilities (acceptable for MVP)
@@ -1479,6 +1601,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
   - Risk: Email deliverability depends on provider (use Mailgun or Postmark)
 
 **Database Extensions:**
+
 - **TimescaleDB** (optional, recommended for production):
   - Why: Optimizes time-series queries, automatic partitioning
   - Risk: Adds complexity, requires PostgreSQL extension installation
@@ -1487,6 +1610,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Internal Dependencies
 
 **Must Be Completed First:**
+
 - Multi-tenant authentication and authorization (existing)
 - PostgreSQL database with existing tables (transactions, users, tournaments)
 - Redis cache infrastructure (existing)
@@ -1494,12 +1618,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - Email service configuration (Nodemailer setup with SMTP credentials)
 
 **Shared Services:**
+
 - tRPC router configuration (existing)
 - Prisma schema and client (existing)
 - Authentication middleware (existing)
 - Error logging service (Sentry or similar, existing)
 
 **Blocking Issues:**
+
 - If Redis memory limit reached, analytics caching will fail
   - Mitigation: Monitor memory usage, implement LRU eviction policy
 - If S3 bucket quota exceeded, export files cannot be stored
@@ -1512,6 +1638,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Expected Load
 
 **Current State (Launch):**
+
 - 50-100 active venues
 - 5,000 total users
 - 10-20 dashboard users concurrently (peak times)
@@ -1520,6 +1647,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - 20 scheduled reports per day
 
 **12-Month Projection:**
+
 - 500 active venues
 - 50,000 total users
 - 100-200 dashboard users concurrently
@@ -1528,6 +1656,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - 200 scheduled reports per day
 
 **Storage Estimates:**
+
 - analytics_events: ~1KB per event → 100K events/day = 100MB/day = 3.6GB/year (with 13-month retention: ~4GB)
 - Aggregation tables: ~100 rows per tenant per table → 500 tenants = 50K rows total = ~10MB (negligible)
 - Export files: ~5MB per file → 500 files/day = 2.5GB/day → 30-day retention = 75GB (S3 cost: ~$1.80/month)
@@ -1535,18 +1664,21 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Performance Targets
 
 **Dashboard Performance:**
+
 - Initial load: <500ms (p95), <1000ms (p99)
 - Tab switching: <200ms
 - Date range change: <500ms
 - Filter application: <300ms
 
 **API Performance:**
+
 - Simple aggregates (MRR, ARR): <100ms (p95)
 - Complex cohort queries: <1000ms (p95)
 - Tournament analytics: <500ms (p95)
 - Forecast generation: <2000ms (p95)
 
 **Background Job Performance:**
+
 - Aggregation job (hourly): <5 minutes for 10K events
 - Export generation:
   - CSV (10K rows): <5 seconds
@@ -1555,6 +1687,7 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - Scheduled report delivery: <30 seconds (generation + email)
 
 **Cache Performance:**
+
 - Cache hit rate: >80% (target)
 - Cache lookup time: <10ms (p95)
 - Redis memory usage: <500MB for 1000 active users
@@ -1562,35 +1695,41 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Scalability Considerations
 
 **Database Scalability:**
+
 - **Aggregation tables:** Pre-computed metrics reduce query complexity from O(n) to O(1)
 - **Indexing:** Compound indexes on (tenant_id, period_type, period_start) enable fast lookups
 - **Partitioning:** analytics_events table partitioned by month (optional, for >1M events/day)
 - **Read replicas:** Analytics queries use read replica to offload primary database (production)
 
 **Cache Scalability:**
+
 - **TTL strategy:** Short TTL (5 min) for recent data, long TTL (1 hour) for historical (reduce cache churn)
 - **Eviction policy:** LRU (Least Recently Used) ensures most-accessed data stays cached
 - **Cache warming:** Pre-populate cache for common queries (e.g., "Last 30 Days" revenue)
 - **Sharding:** If Redis memory exceeds limits, shard by tenant_id (large tenants get dedicated Redis instance)
 
 **API Scalability:**
+
 - **Horizontal scaling:** Stateless Next.js API routes scale horizontally (add more instances)
 - **Rate limiting:** Prevent individual users from overwhelming API (100 req/min per user)
 - **Query pagination:** Limit result size to 1000 rows per request (use offset/limit)
 - **Background processing:** Offload expensive operations (exports, forecasts) to job queue
 
 **Frontend Scalability:**
+
 - **Code splitting:** Lazy load analytics dashboard (reduces initial bundle)
 - **Virtual scrolling:** For long tables (e.g., cohort retention with 24+ months)
 - **Debouncing:** Debounce filter changes (300ms) to reduce API calls
 - **Progressive loading:** Load KPIs first, then charts (perceived performance)
 
 **Storage Scalability:**
+
 - **S3 lifecycle policies:** Auto-delete export files after 30 days
 - **Event retention:** Auto-delete analytics_events older than 13 months (cron job)
 - **Compression:** Gzip compress export files before S3 upload (reduce storage costs)
 
 **Cost Projections (12-month):**
+
 - PostgreSQL: ~$200/month (existing, shared)
 - Redis: ~$100/month (existing, shared)
 - S3 storage: ~$5/month (export files)
@@ -1601,20 +1740,20 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 
 ## Risks & Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **Slow query performance on large datasets** | High - Poor UX, user frustration, dashboard timeouts | Medium | Pre-compute metrics in aggregation tables (hourly cron job), add composite indexes on (tenant_id, date, type), use Redis caching with 5-min TTL, implement query pagination (max 1000 rows), load test with 1M+ events before launch |
-| **Data privacy concerns or cross-tenant leakage** | Critical - Legal/compliance issues, loss of trust, GDPR violations | Low | Implement PostgreSQL Row-Level Security (RLS) policies on all analytics tables, automated integration tests verify tenant isolation (run on every deploy), third-party security audit before full launch, code review checklist includes RLS verification |
-| **Complex UI overwhelming non-technical users** | Medium - Low adoption, high support burden, poor NPS | Medium | Progressive disclosure (show simple KPIs first, then charts), guided onboarding tour (Intro.js or similar), video tutorials (Loom), simplified "Essentials" dashboard view for non-technical users, user testing with 5 non-technical venue owners before launch |
-| **Inaccurate predictions/forecasts** | Medium - Loss of credibility, poor business decisions, user distrust | Medium | Display confidence intervals (e.g., ±20%), clearly label as "Projected Estimates", validate model accuracy monthly (compare predictions to actuals), allow user feedback on prediction quality ("Was this forecast accurate?"), start with simple linear regression (>80% accuracy achievable) |
-| **Export generation causes performance issues** | Medium - Slow dashboard for all users, API timeouts | Low | Background job processing using BullMQ (offload from API), queue management with priority (interactive requests > exports), rate limiting (5 exports/hour per user), show progress indicator ("Export in progress, estimated 30 seconds"), separate Redis queue for exports |
-| **Scheduled reports fail to deliver** | Medium - User dissatisfaction, missed insights, support tickets | Low | Retry logic (3 attempts with exponential backoff), failure notifications to report creator ("Your weekly report failed to send"), delivery confirmation tracking (log all successful deliveries), monitoring and alerting (alert if >10% failure rate), use reliable email service (Mailgun, Postmark, AWS SES) |
-| **High Redis/database costs at scale** | Medium - Budget overruns, need for infrastructure changes | Medium | Implement cache eviction policies (LRU), optimize aggregation schedules (hourly vs real-time), use read replicas for analytics queries (offload primary DB), monitor costs weekly (alert if >$500/month), implement query result pagination (reduce memory usage) |
-| **Users expect real-time data but cache introduces delay** | Low - Confusion about data freshness, support questions | Medium | Display "Last updated X minutes ago" timestamp on dashboards, explain caching in help docs ("Data refreshes every 5 minutes"), offer manual "Refresh Now" button (invalidates cache), set expectations during onboarding ("Analytics data is near real-time, updated every 5 minutes") |
-| **Excel/PDF generation compatibility issues** | Low - Export failures for some users, support tickets | Low | Test exports on multiple platforms (Windows/Mac, Excel 2016/2019/365), provide CSV fallback (always works), document system requirements (e.g., "Excel 2016 or newer"), use ExcelJS Open XML format (maximum compatibility), include troubleshooting guide in help docs |
-| **Third-party charting library bugs or limitations** | Medium - Broken visualizations, degraded UX, blockers | Low | Thoroughly evaluate libraries before selection (POC with 10 sample charts), maintain fallback rendering (show table if chart fails), monitor error logs for chart rendering issues (Sentry), have escape hatch to D3.js for complex charts, lock library versions (avoid breaking changes) |
-| **Insufficient historical data for meaningful analytics** | Medium - Poor forecasts, incomplete cohorts, user disappointment | Low | Backfill historical data from existing tables (transactions, users, tournaments) going back 12 months, populate analytics_events table retroactively (one-time migration script), set expectations ("Cohort analysis requires 3+ months of data"), display messaging when insufficient data ("More data needed for this analysis") |
-| **Aggregation job fails or falls behind** | High - Stale data in dashboards, incorrect metrics | Low | Job monitoring and alerting (alert if job hasn't run in 2 hours), automatic retry on failure (3 attempts), manual job trigger endpoint for admins (`/admin/trigger-aggregation`), incremental updates (process only new events since last run), job execution timeout (kill if >10 minutes) |
+| Risk                                                       | Impact                                                               | Probability | Mitigation                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------------------------------------- | -------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Slow query performance on large datasets**               | High - Poor UX, user frustration, dashboard timeouts                 | Medium      | Pre-compute metrics in aggregation tables (hourly cron job), add composite indexes on (tenant_id, date, type), use Redis caching with 5-min TTL, implement query pagination (max 1000 rows), load test with 1M+ events before launch                                                                                               |
+| **Data privacy concerns or cross-tenant leakage**          | Critical - Legal/compliance issues, loss of trust, GDPR violations   | Low         | Implement PostgreSQL Row-Level Security (RLS) policies on all analytics tables, automated integration tests verify tenant isolation (run on every deploy), third-party security audit before full launch, code review checklist includes RLS verification                                                                          |
+| **Complex UI overwhelming non-technical users**            | Medium - Low adoption, high support burden, poor NPS                 | Medium      | Progressive disclosure (show simple KPIs first, then charts), guided onboarding tour (Intro.js or similar), video tutorials (Loom), simplified "Essentials" dashboard view for non-technical users, user testing with 5 non-technical venue owners before launch                                                                   |
+| **Inaccurate predictions/forecasts**                       | Medium - Loss of credibility, poor business decisions, user distrust | Medium      | Display confidence intervals (e.g., ±20%), clearly label as "Projected Estimates", validate model accuracy monthly (compare predictions to actuals), allow user feedback on prediction quality ("Was this forecast accurate?"), start with simple linear regression (>80% accuracy achievable)                                     |
+| **Export generation causes performance issues**            | Medium - Slow dashboard for all users, API timeouts                  | Low         | Background job processing using BullMQ (offload from API), queue management with priority (interactive requests > exports), rate limiting (5 exports/hour per user), show progress indicator ("Export in progress, estimated 30 seconds"), separate Redis queue for exports                                                        |
+| **Scheduled reports fail to deliver**                      | Medium - User dissatisfaction, missed insights, support tickets      | Low         | Retry logic (3 attempts with exponential backoff), failure notifications to report creator ("Your weekly report failed to send"), delivery confirmation tracking (log all successful deliveries), monitoring and alerting (alert if >10% failure rate), use reliable email service (Mailgun, Postmark, AWS SES)                    |
+| **High Redis/database costs at scale**                     | Medium - Budget overruns, need for infrastructure changes            | Medium      | Implement cache eviction policies (LRU), optimize aggregation schedules (hourly vs real-time), use read replicas for analytics queries (offload primary DB), monitor costs weekly (alert if >$500/month), implement query result pagination (reduce memory usage)                                                                  |
+| **Users expect real-time data but cache introduces delay** | Low - Confusion about data freshness, support questions              | Medium      | Display "Last updated X minutes ago" timestamp on dashboards, explain caching in help docs ("Data refreshes every 5 minutes"), offer manual "Refresh Now" button (invalidates cache), set expectations during onboarding ("Analytics data is near real-time, updated every 5 minutes")                                             |
+| **Excel/PDF generation compatibility issues**              | Low - Export failures for some users, support tickets                | Low         | Test exports on multiple platforms (Windows/Mac, Excel 2016/2019/365), provide CSV fallback (always works), document system requirements (e.g., "Excel 2016 or newer"), use ExcelJS Open XML format (maximum compatibility), include troubleshooting guide in help docs                                                            |
+| **Third-party charting library bugs or limitations**       | Medium - Broken visualizations, degraded UX, blockers                | Low         | Thoroughly evaluate libraries before selection (POC with 10 sample charts), maintain fallback rendering (show table if chart fails), monitor error logs for chart rendering issues (Sentry), have escape hatch to D3.js for complex charts, lock library versions (avoid breaking changes)                                         |
+| **Insufficient historical data for meaningful analytics**  | Medium - Poor forecasts, incomplete cohorts, user disappointment     | Low         | Backfill historical data from existing tables (transactions, users, tournaments) going back 12 months, populate analytics_events table retroactively (one-time migration script), set expectations ("Cohort analysis requires 3+ months of data"), display messaging when insufficient data ("More data needed for this analysis") |
+| **Aggregation job fails or falls behind**                  | High - Stale data in dashboards, incorrect metrics                   | Low         | Job monitoring and alerting (alert if job hasn't run in 2 hours), automatic retry on failure (3 attempts), manual job trigger endpoint for admins (`/admin/trigger-aggregation`), incremental updates (process only new events since last run), job execution timeout (kill if >10 minutes)                                        |
 
 ---
 
@@ -1625,11 +1764,13 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Approach:** Query source tables (transactions, users, tournaments) directly on every dashboard load. No pre-computed aggregation tables, no Redis caching.
 
 **Pros:**
+
 - Always up-to-date data (no cache delay)
 - Simpler architecture (no aggregation jobs or cache layer)
 - No additional storage costs (no aggregation tables)
 
 **Cons:**
+
 - Slow query performance (complex JOINs and aggregations on large datasets)
 - High database load (every dashboard load hits database hard)
 - Cannot achieve <500ms load time target
@@ -1642,11 +1783,13 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Approach:** Embed third-party open-source BI tool (Metabase, Apache Superset) instead of building custom dashboard.
 
 **Pros:**
+
 - Faster initial development (no custom charting code)
 - Advanced features out-of-the-box (drill-down, custom dashboards, SQL queries)
 - Mature, battle-tested codebase
 
 **Cons:**
+
 - Less control over UX (embedded iframe or redirect to external tool)
 - Multi-tenancy requires complex configuration (RLS in external tool)
 - Difficult to integrate with existing authentication/authorization
@@ -1661,12 +1804,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Approach:** Export data to AWS Quicksight or Google BigQuery for analytics, embed visualizations in our app.
 
 **Pros:**
+
 - Handles massive scale (petabytes of data)
 - Pay-per-query pricing (cost-efficient at low volume)
 - Advanced analytics capabilities (ML models, predictive analytics)
 - No infrastructure management (fully managed)
 
 **Cons:**
+
 - High latency (data must be exported to external service)
 - Cost uncertainty (pricing can be complex, expensive at scale)
 - Vendor lock-in (difficult to migrate off)
@@ -1681,12 +1826,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Approach:** Require TimescaleDB PostgreSQL extension for all analytics queries.
 
 **Pros:**
+
 - Optimized for time-series queries (10x faster for certain queries)
 - Automatic partitioning (no manual maintenance)
 - Continuous aggregates (like materialized views but smarter)
 - Compression (reduce storage costs)
 
 **Cons:**
+
 - Increases deployment complexity (not all PostgreSQL providers support extensions)
 - Requires database migration (install extension)
 - Learning curve for TimescaleDB-specific features
@@ -1699,11 +1846,13 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 **Approach:** API returns raw event data, frontend calculates MRR, cohorts, etc. in JavaScript.
 
 **Pros:**
+
 - Simpler backend (just return raw data)
 - Maximum flexibility for frontend (can compute any metric)
 - No aggregation job needed
 
 **Cons:**
+
 - Extremely slow for large datasets (10K+ rows)
 - High bandwidth usage (send all data to client)
 - Client-side performance issues (browser crashes)
@@ -1763,12 +1912,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 ### Research and References
 
 **Competitive Analysis:**
+
 - **Stripe Dashboard:** Gold standard for revenue analytics, clean KPI presentation, excellent export functionality
 - **Mixpanel:** Strong cohort analysis and retention tracking, inspiration for user analytics
 - **Amplitude:** Advanced funnel analysis and user segmentation
 - **ChartMogul:** SaaS-specific analytics (MRR, ARR, churn), strong revenue focus
 
 **Technical References:**
+
 - [Recharts Documentation](https://recharts.org/) - Primary charting library
 - [D3.js Gallery](https://observablehq.com/@d3/gallery) - Advanced visualization examples
 - [ExcelJS Documentation](https://github.com/exceljs/exceljs) - Excel generation
@@ -1777,34 +1928,41 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 - [TimescaleDB Documentation](https://docs.timescale.com/) - Time-series optimization (optional)
 
 **Performance Best Practices:**
+
 - [PostgreSQL Query Optimization](https://www.postgresql.org/docs/current/performance-tips.html)
 - [Redis Caching Strategies](https://redis.io/docs/manual/patterns/caching/)
 - [React Performance Optimization](https://react.dev/learn/render-and-commit)
 
 **Multi-Tenant Architecture:**
+
 - [PostgreSQL Row-Level Security](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
 - [Multi-Tenant Data Isolation Best Practices](https://aws.amazon.com/blogs/database/multi-tenant-data-isolation-with-postgresql-row-level-security/)
 
 ### Related Documents
 
 **Product Documents:**
+
 - PRD: `product/PRDs/advanced-analytics-business-intelligence.md` (this spec is based on)
 - Sprint Plan: `sprints/current/sprint-10-business-growth-advanced-features.md`
 - Product Roadmap: `product/roadmap/2025-Q4-roadmap.md`
 
 **Technical Documentation (To Be Created):**
+
 - API Specification: `technical/api-specs/analytics-api.md` (detailed API reference)
 - Database Migration Scripts: `prisma/migrations/YYYYMMDD_create_analytics_tables.sql`
 
 **Design Documentation (To Be Created):**
+
 - Figma Mockups: [Link TBD after design complete]
 - Component Storybook: Analytics dashboard components (for frontend reference)
 
 **Related Technical Specs:**
+
 - Multi-Tenant Architecture: `technical/multi-tenant-architecture.md` (existing)
 - Admin Dashboard: `technical/specs/admin-dashboard-technical-spec.md` (Sprint 9)
 
 **Future Specs (Depends on This):**
+
 - Custom Dashboard Builder (P2 - Future Sprint)
 - AI-Powered Insights Engine (P2 - Future Sprint)
 - API Access for Third-Party BI Tools (P2 - Future Sprint)
@@ -1813,13 +1971,14 @@ CREATE INDEX idx_scheduled_reports_tenant_active ON scheduled_reports(tenant_id,
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                          | Changes                                                                                                                        |
+| ---------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | 2025-11-06 | Claude (AI Technical Assistant) | Initial draft - Comprehensive technical specification for Advanced Analytics & Business Intelligence feature, Sprint 10 Week 1 |
 
 ---
 
 **Next Steps:**
+
 1. Review and approve technical spec with engineering team
 2. Create database migration scripts (Day 1)
 3. Set up tRPC analytics router structure (Day 1)

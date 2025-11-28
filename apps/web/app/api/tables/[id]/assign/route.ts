@@ -43,10 +43,7 @@ const AssignTableSchema = z.object({
  * @param {string} id - Table ID
  * @returns {TableAssignmentResponse} Assignment result
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();

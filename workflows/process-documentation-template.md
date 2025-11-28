@@ -14,6 +14,7 @@
 [Explain the goal and value of this process]
 
 **Success criteria:**
+
 - [Criterion 1]
 - [Criterion 2]
 
@@ -22,11 +23,13 @@
 ## When to Use This Process
 
 **Triggers:**
+
 - [When situation X occurs]
 - [When event Y happens]
 - [On schedule: every Z days/weeks]
 
 **Who uses it:**
+
 - [Role or person]
 
 ---
@@ -34,13 +37,16 @@
 ## Prerequisites
 
 **Required access/permissions:**
+
 - [ ] Access to [system/tool]
 - [ ] Permission to [action]
 
 **Required knowledge:**
+
 - [Skill or context needed]
 
 **Tools needed:**
+
 - [Tool 1]
 - [Tool 2]
 
@@ -54,6 +60,7 @@
 [Detailed description of the step]
 
 **How to do it:**
+
 1. Sub-step 1
 2. Sub-step 2
 3. Sub-step 3
@@ -62,6 +69,7 @@
 [What you should see after completing this step]
 
 **Troubleshooting:**
+
 - If [problem X], then [solution Y]
 
 ---
@@ -72,6 +80,7 @@
 [Detailed description]
 
 **How to do it:**
+
 1. Sub-step 1
 2. Sub-step 2
 
@@ -79,6 +88,7 @@
 [What you should see]
 
 **Troubleshooting:**
+
 - If [problem X], then [solution Y]
 
 ---
@@ -89,6 +99,7 @@
 [Detailed description]
 
 **How to do it:**
+
 1. Sub-step 1
 2. Sub-step 2
 
@@ -100,6 +111,7 @@
 ## Verification
 
 **How to verify success:**
+
 - [ ] Check 1: [Verification step]
 - [ ] Check 2: [Verification step]
 - [ ] Check 3: [Verification step]
@@ -108,8 +120,8 @@
 
 ## Common Issues & Solutions
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
+| Issue       | Cause            | Solution     |
+| ----------- | ---------------- | ------------ |
 | [Problem 1] | [Why it happens] | [How to fix] |
 | [Problem 2] | [Why it happens] | [How to fix] |
 
@@ -118,6 +130,7 @@
 ## Rollback / Undo
 
 **If something goes wrong:**
+
 1. [Rollback step 1]
 2. [Rollback step 2]
 
@@ -128,6 +141,7 @@
 ## Metrics & Success Tracking
 
 **Key metrics:**
+
 - [Metric 1]: Target [X]
 - [Metric 2]: Target [Y]
 
@@ -139,14 +153,17 @@
 ## Process Improvement Notes
 
 ### What Works Well
+
 - [Thing 1]
 - [Thing 2]
 
 ### Pain Points
+
 - [Pain point 1]
 - [Pain point 2]
 
 ### Future Improvements
+
 - [ ] Improvement idea 1
 - [ ] Improvement idea 2
 - [ ] Automation opportunity
@@ -162,10 +179,10 @@
 
 ## Change Log
 
-| Date | Change | Updated By |
-|------|--------|------------|
-| [YYYY-MM-DD] | Initial version | [Name] |
-| [YYYY-MM-DD] | Updated step 3 | [Name] |
+| Date         | Change          | Updated By |
+| ------------ | --------------- | ---------- |
+| [YYYY-MM-DD] | Initial version | [Name]     |
+| [YYYY-MM-DD] | Updated step 3  | [Name]     |
 
 ---
 

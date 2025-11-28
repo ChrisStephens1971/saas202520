@@ -42,12 +42,7 @@ describe('Organization Contracts', () => {
     });
 
     it('should validate slug format (lowercase with hyphens)', () => {
-      const validSlugs = [
-        'test-org',
-        'billiards-league-2024',
-        'my-organization-123',
-        'abc',
-      ];
+      const validSlugs = ['test-org', 'billiards-league-2024', 'my-organization-123', 'abc'];
 
       validSlugs.forEach((slug) => {
         const org = {

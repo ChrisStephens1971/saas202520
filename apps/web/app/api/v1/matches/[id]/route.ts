@@ -25,12 +25,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  */
 function parseScore(score: unknown): { playerA: number; playerB: number } {
   // If already an object with playerA/playerB, return it
-  if (
-    typeof score === 'object' &&
-    score !== null &&
-    'playerA' in score &&
-    'playerB' in score
-  ) {
+  if (typeof score === 'object' && score !== null && 'playerA' in score && 'playerB' in score) {
     return score as { playerA: number; playerB: number };
   }
 
@@ -59,10 +54,7 @@ function parseScore(score: unknown): { playerA: number; playerB: number } {
  * @example
  * GET /api/v1/matches/clx1234567890
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -70,10 +62,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -158,7 +147,9 @@ export async function GET(
 
     // Determine winner
     const winner = match.winnerId
-      ? (match.playerA?.id === match.winnerId ? match.playerA : match.playerB)
+      ? match.playerA?.id === match.winnerId
+        ? match.playerA
+        : match.playerB
       : null;
 
     // Transform to API response format
@@ -172,16 +163,20 @@ export async function GET(
       round: match.round,
       bracket: match.bracket,
       position: match.position,
-      playerA: match.playerA ? {
-        id: match.playerA.id,
-        name: match.playerA.name,
-        seed: match.playerA.seed,
-      } : null,
-      playerB: match.playerB ? {
-        id: match.playerB.id,
-        name: match.playerB.name,
-        seed: match.playerB.seed,
-      } : null,
+      playerA: match.playerA
+        ? {
+            id: match.playerA.id,
+            name: match.playerA.name,
+            seed: match.playerA.seed,
+          }
+        : null,
+      playerB: match.playerB
+        ? {
+            id: match.playerB.id,
+            name: match.playerB.name,
+            seed: match.playerB.seed,
+          }
+        : null,
       status: match.state,
       score: {
         playerA: scoreData?.playerA || 0,
@@ -189,10 +184,12 @@ export async function GET(
         raceTo: scoreData?.raceTo,
         games,
       },
-      winner: winner ? {
-        id: winner.id,
-        name: winner.name,
-      } : null,
+      winner: winner
+        ? {
+            id: winner.id,
+            name: winner.name,
+          }
+        : null,
       table: match.table?.label || null,
       startedAt: match.startedAt?.toISOString() || null,
       completedAt: match.completedAt?.toISOString() || null,
@@ -201,7 +198,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 989, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/matches/${id}:`, error);

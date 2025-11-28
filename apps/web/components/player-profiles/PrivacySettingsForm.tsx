@@ -58,7 +58,9 @@ export function PrivacySettingsForm({ settings, playerId: _playerId }: PrivacySe
         <div className="flex items-center justify-between p-4 border rounded-lg">
           <div className="space-y-0.5">
             <Label htmlFor="profilePublic">Public Profile</Label>
-            <p className="text-sm text-muted-foreground">Make your profile visible to all players</p>
+            <p className="text-sm text-muted-foreground">
+              Make your profile visible to all players
+            </p>
           </div>
           <Switch
             id="profilePublic"
@@ -71,7 +73,9 @@ export function PrivacySettingsForm({ settings, playerId: _playerId }: PrivacySe
         <div className="flex items-center justify-between p-4 border rounded-lg">
           <div className="space-y-0.5">
             <Label htmlFor="showStats">Show Statistics</Label>
-            <p className="text-sm text-muted-foreground">Display your win rate and performance metrics</p>
+            <p className="text-sm text-muted-foreground">
+              Display your win rate and performance metrics
+            </p>
           </div>
           <Switch
             id="showStats"
@@ -126,8 +130,9 @@ export function PrivacySettingsForm({ settings, playerId: _playerId }: PrivacySe
 
       <div className="bg-muted p-4 rounded-lg">
         <p className="text-sm text-muted-foreground">
-          <strong>Note:</strong> When your profile is private, only you can see your statistics, match history, and achievements.
-          Tournament organizers can always see your registration and match information.
+          <strong>Note:</strong> When your profile is private, only you can see your statistics,
+          match history, and achievements. Tournament organizers can always see your registration
+          and match information.
         </p>
       </div>
 

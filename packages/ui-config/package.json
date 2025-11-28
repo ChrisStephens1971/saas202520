@@ -1,0 +1,19 @@
+{
+  "name": "@tournament/ui-config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tournament": "./dist/tournament.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext .ts",
+    "dev": "tsc -w"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

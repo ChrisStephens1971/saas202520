@@ -10,6 +10,7 @@
 ## Sprint Goal
 
 Enable real-time match scoring and payment processing. By the end of this sprint:
+
 - Scorekeepers can enter scores on mobile devices with validation
 - Illegal scores are prevented (race-to logic, hill-hill checks)
 - Undo functionality preserves audit trail
@@ -33,41 +34,43 @@ Success means tournaments can handle money transparently and scores are entered 
 
 ### High Priority (Must Complete)
 
-| Story | Description | Estimate | Assignee | Status |
-|-------|-------------|----------|----------|--------|
-| **SCORE-001** | Mobile-first scoring card UI | L | Claude | ✅ Done |
-| **SCORE-002** | Race-to validation logic | M | Claude | ✅ Done |
-| **SCORE-003** | Illegal score guards | M | Claude | ✅ Done |
-| **SCORE-004** | Hill-hill sanity checks | S | Claude | ✅ Done |
-| **SCORE-005** | Undo functionality (last 3 actions) | M | Claude | ✅ Done |
-| **SCORE-006** | Scoring audit trail integration | M | Claude | ✅ Done |
-| **PAY-001** | Stripe Connect onboarding flow | L | Claude | ✅ Done |
-| **PAY-002** | Entry fee collection | M | Claude | ✅ Done |
-| **PAY-003** | Payment receipt generation | M | Claude | ✅ Done |
-| **PAY-004** | Refund workflow | M | Claude | ✅ Done |
-| **PAY-005** | Payout calculator (prizes, side pots) | L | Claude | ✅ Done |
-| **PAY-006** | Payout ledger model | M | Claude | ✅ Done |
-| **PAY-007** | Printable payout sheet (PDF) | M | Claude | ✅ Done |
+| Story         | Description                           | Estimate | Assignee | Status  |
+| ------------- | ------------------------------------- | -------- | -------- | ------- |
+| **SCORE-001** | Mobile-first scoring card UI          | L        | Claude   | ✅ Done |
+| **SCORE-002** | Race-to validation logic              | M        | Claude   | ✅ Done |
+| **SCORE-003** | Illegal score guards                  | M        | Claude   | ✅ Done |
+| **SCORE-004** | Hill-hill sanity checks               | S        | Claude   | ✅ Done |
+| **SCORE-005** | Undo functionality (last 3 actions)   | M        | Claude   | ✅ Done |
+| **SCORE-006** | Scoring audit trail integration       | M        | Claude   | ✅ Done |
+| **PAY-001**   | Stripe Connect onboarding flow        | L        | Claude   | ✅ Done |
+| **PAY-002**   | Entry fee collection                  | M        | Claude   | ✅ Done |
+| **PAY-003**   | Payment receipt generation            | M        | Claude   | ✅ Done |
+| **PAY-004**   | Refund workflow                       | M        | Claude   | ✅ Done |
+| **PAY-005**   | Payout calculator (prizes, side pots) | L        | Claude   | ✅ Done |
+| **PAY-006**   | Payout ledger model                   | M        | Claude   | ✅ Done |
+| **PAY-007**   | Printable payout sheet (PDF)          | M        | Claude   | ✅ Done |
 
 ### Medium Priority (Should Complete)
 
-| Story | Description | Estimate | Assignee | Status |
-|-------|-------------|----------|----------|--------|
-| **SCORE-007** | Scorekeeper role & permissions | S | Claude | ✅ Done |
-| **PAY-008** | Dispute evidence pack (from audit log) | M | Claude | ✅ Done |
-| **TEST-004** | Payment workflow tests (Stripe test mode) | M | Claude | ✅ Done |
+| Story         | Description                               | Estimate | Assignee | Status  |
+| ------------- | ----------------------------------------- | -------- | -------- | ------- |
+| **SCORE-007** | Scorekeeper role & permissions            | S        | Claude   | ✅ Done |
+| **PAY-008**   | Dispute evidence pack (from audit log)    | M        | Claude   | ✅ Done |
+| **TEST-004**  | Payment workflow tests (Stripe test mode) | M        | Claude   | ✅ Done |
 
 ---
 
 ## Acceptance Criteria
 
 **Scoring:**
+
 - ✅ Score entered in <15 seconds per game
 - ✅ Illegal scores blocked (e.g., 10-9 in race-to-9)
 - ✅ Hill-hill confirmation prompt works
 - ✅ Undo reverts last action, preserves audit trail
 
 **Payments:**
+
 - ✅ Venue completes Stripe onboarding
 - ✅ Entry fees collected, receipts sent
 - ✅ Refunds processed successfully

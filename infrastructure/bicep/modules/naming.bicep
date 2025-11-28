@@ -4,12 +4,12 @@
 @description('Organization code (2-4 chars)')
 @minLength(2)
 @maxLength(4)
-param org string = '{{AZURE_ORG}}'
+param org string = 'vrd'
 
 @description('Project code (2-5 chars)')
 @minLength(2)
 @maxLength(5)
-param project string = '{{AZURE_PROJECT}}'
+param project string = '202520'
 
 @description('Environment')
 @allowed([

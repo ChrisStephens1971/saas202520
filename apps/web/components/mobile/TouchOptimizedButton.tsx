@@ -30,16 +30,17 @@ interface RippleEffect {
 
 const variantStyles = {
   primary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-md active:shadow-lg',
-  secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
+  secondary:
+    'bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
   success: 'bg-green-600 hover:bg-green-700 text-white shadow-md active:shadow-lg',
   danger: 'bg-red-600 hover:bg-red-700 text-white shadow-md active:shadow-lg',
-  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+  ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300',
 };
 
 const sizeStyles = {
   sm: 'px-4 py-2 text-sm min-h-[44px]',
   md: 'px-6 py-3 text-base min-h-[48px]',
-  lg: 'px-8 py-4 text-lg min-h-[56px]'
+  lg: 'px-8 py-4 text-lg min-h-[56px]',
 };
 
 /**
@@ -74,7 +75,7 @@ export function TouchOptimizedButton({
   icon,
   iconPosition = 'left',
   ariaLabel,
-  type = 'button'
+  type = 'button',
 }: TouchOptimizedButtonProps) {
   const isDisabled = disabled || loading;
   const [isPressed, setIsPressed] = useState(false);
@@ -90,17 +91,13 @@ export function TouchOptimizedButton({
       // Create ripple effect
       const button = e.currentTarget;
       const rect = button.getBoundingClientRect();
-      const x = 'touches' in e
-        ? e.touches[0].clientX - rect.left
-        : e.clientX - rect.left;
-      const y = 'touches' in e
-        ? e.touches[0].clientY - rect.top
-        : e.clientY - rect.top;
+      const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
+      const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
 
       const newRipple: RippleEffect = {
         id: Date.now(),
         x,
-        y
+        y,
       };
 
       setRipples((prev) => [...prev, newRipple]);
@@ -144,12 +141,12 @@ export function TouchOptimizedButton({
       onTouchEnd={() => setIsPressed(false)}
       onTouchCancel={() => setIsPressed(false)}
       animate={{
-        scale: isPressed ? 0.95 : 1
+        scale: isPressed ? 0.95 : 1,
       }}
       transition={{
         type: 'spring',
         stiffness: 500,
-        damping: 30
+        damping: 30,
       }}
       className={cn(
         'relative inline-flex items-center justify-center gap-2 overflow-hidden',
@@ -166,25 +163,19 @@ export function TouchOptimizedButton({
       style={{
         minWidth: '44px',
         minHeight: '44px',
-        WebkitTapHighlightColor: 'transparent'
+        WebkitTapHighlightColor: 'transparent',
       }}
       aria-label={ariaLabel}
       aria-busy={loading}
     >
       {/* Content */}
-      {loading && (
-        <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
-      )}
+      {loading && <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />}
 
-      {!loading && icon && iconPosition === 'left' && (
-        <span aria-hidden="true">{icon}</span>
-      )}
+      {!loading && icon && iconPosition === 'left' && <span aria-hidden="true">{icon}</span>}
 
       <span>{children}</span>
 
-      {!loading && icon && iconPosition === 'right' && (
-        <span aria-hidden="true">{icon}</span>
-      )}
+      {!loading && icon && iconPosition === 'right' && <span aria-hidden="true">{icon}</span>}
 
       {/* Ripple Effect */}
       <AnimatePresence>
@@ -194,26 +185,26 @@ export function TouchOptimizedButton({
             className="absolute pointer-events-none rounded-full bg-white/30"
             style={{
               left: ripple.x,
-              top: ripple.y
+              top: ripple.y,
             }}
             initial={{
               width: 0,
               height: 0,
               x: 0,
               y: 0,
-              opacity: 1
+              opacity: 1,
             }}
             animate={{
               width: 200,
               height: 200,
               x: -100,
               y: -100,
-              opacity: 0
+              opacity: 0,
             }}
             exit={{ opacity: 0 }}
             transition={{
               duration: 0.6,
-              ease: 'easeOut'
+              ease: 'easeOut',
             }}
           />
         ))}

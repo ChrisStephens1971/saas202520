@@ -21,18 +21,21 @@ This directory contains business strategy, goals, OKRs, metrics, and milestone p
 ## How to Use
 
 ### OKRs (Objectives and Key Results)
+
 1. Set quarterly OKRs at the start of each quarter
 2. Review progress weekly
 3. Grade OKRs at end of quarter (0.0 - 1.0 scale)
 4. Use learnings to inform next quarter's OKRs
 
 ### Metrics Tracking
+
 - Update metrics dashboard weekly or bi-weekly
 - Track both leading and lagging indicators
 - Set targets and monitor trends
 - Use data to inform product decisions
 
 ### Milestones
+
 - Plan major launches and milestones
 - Set clear success criteria
 - Track progress toward completion

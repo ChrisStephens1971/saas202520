@@ -221,9 +221,10 @@ export function LiveLeaderboard({
             className={`
               flex items-center justify-between p-2 rounded-lg border
               transition-all duration-300
-              ${recentlyUpdated.has(player.id)
-                ? 'bg-blue-50 border-blue-300 dark:bg-blue-950 dark:border-blue-700'
-                : 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700'
+              ${
+                recentlyUpdated.has(player.id)
+                  ? 'bg-blue-50 border-blue-300 dark:bg-blue-950 dark:border-blue-700'
+                  : 'bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700'
               }
               ${player.isEliminated ? 'opacity-50' : ''}
             `}
@@ -263,11 +264,12 @@ export function LiveLeaderboard({
             key={player.id}
             className={`
               p-4 transition-all duration-300
-              ${recentlyUpdated.has(player.id)
-                ? 'bg-blue-50 dark:bg-blue-950 scale-[1.01]'
-                : index % 2 === 0
-                ? 'bg-gray-50 dark:bg-gray-900'
-                : 'bg-white dark:bg-gray-800'
+              ${
+                recentlyUpdated.has(player.id)
+                  ? 'bg-blue-50 dark:bg-blue-950 scale-[1.01]'
+                  : index % 2 === 0
+                    ? 'bg-gray-50 dark:bg-gray-900'
+                    : 'bg-white dark:bg-gray-800'
               }
               ${player.isEliminated ? 'opacity-50' : ''}
               hover:bg-gray-100 dark:hover:bg-gray-750

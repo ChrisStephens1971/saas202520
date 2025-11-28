@@ -8,10 +8,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { generatePayoutSheet } from '@/lib/pdf-generator';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -35,10 +32,7 @@ export async function GET(
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     if (tournament.organization.members.length === 0) {
@@ -55,17 +49,17 @@ export async function GET(
     });
 
     // Get players for payout names
-    const playerIds = payouts.map(p => p.playerId).filter(Boolean);
+    const playerIds = payouts.map((p) => p.playerId).filter(Boolean);
     const players = await prisma.player.findMany({
       where: { id: { in: playerIds } },
     });
 
-    const playerMap = new Map(players.map(p => [p.id, p]));
+    const playerMap = new Map(players.map((p) => [p.id, p]));
 
     // Calculate summary
     const totalCollected = payouts.reduce((sum, p) => sum + p.amount.toNumber(), 0);
     const totalPayouts = payouts
-      .filter(p => p.status !== 'voided')
+      .filter((p) => p.status !== 'voided')
       .reduce((sum, p) => sum + p.amount.toNumber(), 0);
     const houseTake = totalCollected - totalPayouts;
 
@@ -76,7 +70,7 @@ export async function GET(
         ? tournament.startedAt.toLocaleDateString()
         : tournament.createdAt.toLocaleDateString(),
       organizationName: tournament.organization.name,
-      payouts: payouts.map(p => ({
+      payouts: payouts.map((p) => ({
         placement: p.placement,
         playerName: p.playerId ? playerMap.get(p.playerId)?.name || 'Unknown' : 'TBD',
         amount: p.amount.toNumber(),
@@ -104,9 +98,6 @@ export async function GET(
   } catch (error: unknown) {
     console.error('Error generating payout sheet:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

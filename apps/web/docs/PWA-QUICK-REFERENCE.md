@@ -1,4 +1,5 @@
 # PWA Quick Reference Card
+
 **Sprint 10 Week 4 - Developer Reference**
 
 ## Quick Imports
@@ -13,25 +14,30 @@ import { getPushNotificationManager } from '@/lib/pwa/push-notifications';
 // Components
 import { InstallPrompt, InstallButton } from '@/components/mobile/InstallPrompt';
 import { NotificationSettings } from '@/components/settings/NotificationSettings';
-import { PushPermissionDialog, usePushPermissionDialog } from '@/components/mobile/PushPermissionDialog';
+import {
+  PushPermissionDialog,
+  usePushPermissionDialog,
+} from '@/components/mobile/PushPermissionDialog';
 import { PWAProvider } from '@/components/mobile/PWAProvider';
 ```
 
 ## Install Prompt Usage
 
 ### Check Install Status
+
 ```typescript
 const { state, showPrompt, deferPrompt, neverShowAgain } = useInstallPrompt();
 
 // Check states
-state.canInstall       // Can show native prompt
-state.isInstalled      // App is installed
-state.shouldShow       // Should show banner
-state.platform         // 'ios' | 'android' | 'desktop'
-state.visitCount       // Number of visits
+state.canInstall; // Can show native prompt
+state.isInstalled; // App is installed
+state.shouldShow; // Should show banner
+state.platform; // 'ios' | 'android' | 'desktop'
+state.visitCount; // Number of visits
 ```
 
 ### Show Install Prompt
+
 ```typescript
 // Programmatically show prompt
 const outcome = await showPrompt(); // 'accepted' | 'dismissed' | 'not-available'
@@ -44,6 +50,7 @@ neverShowAgain();
 ```
 
 ### Get Platform Instructions
+
 ```typescript
 const manager = getInstallPromptManager();
 const instructions = manager.getInstallInstructions();
@@ -53,6 +60,7 @@ const instructions = manager.getInstallInstructions();
 ## Push Notifications Usage
 
 ### Subscribe to Push
+
 ```typescript
 const manager = getPushNotificationManager();
 const subscription = await manager.subscribe();
@@ -63,17 +71,20 @@ if (subscription) {
 ```
 
 ### Unsubscribe
+
 ```typescript
 await manager.unsubscribe();
 ```
 
 ### Check Subscription
+
 ```typescript
 const subscription = await manager.getSubscription();
 const isSubscribed = !!subscription;
 ```
 
 ### Update Preferences
+
 ```typescript
 await manager.updatePreferences({
   enabled: true,
@@ -95,11 +106,13 @@ await manager.updatePreferences({
 ```
 
 ### Send Test Notification
+
 ```typescript
 await manager.testNotification();
 ```
 
 ### Check Permission
+
 ```typescript
 const permission = manager.getPermissionStatus();
 // 'granted' | 'denied' | 'default'
@@ -110,16 +123,13 @@ const isSupported = manager.isSupported();
 ## Sending Notifications (Server-Side)
 
 ### Send to Single User
+
 ```typescript
 // API Route or Server Component
 import webpush from 'web-push';
 import { VAPID_CONFIG } from '@/lib/pwa/vapid-keys';
 
-webpush.setVapidDetails(
-  VAPID_CONFIG.subject,
-  VAPID_CONFIG.publicKey,
-  VAPID_CONFIG.privateKey
-);
+webpush.setVapidDetails(VAPID_CONFIG.subject, VAPID_CONFIG.publicKey, VAPID_CONFIG.privateKey);
 
 const payload = JSON.stringify({
   title: 'Match Starting Soon',
@@ -137,6 +147,7 @@ await webpush.sendNotification(subscription, payload);
 ```
 
 ### Send to All Users (Broadcast)
+
 ```typescript
 import { prisma } from '@/lib/prisma';
 
@@ -166,6 +177,7 @@ results.forEach((result, index) => {
 ```
 
 ### Send to Specific Users
+
 ```typescript
 const userIds = ['user1', 'user2', 'user3'];
 
@@ -181,6 +193,7 @@ const subscriptions = await prisma.pushSubscription.findMany({
 ## Notification Types
 
 ### Match Notification
+
 ```typescript
 const notification = {
   title: 'Match Starting Soon',
@@ -194,6 +207,7 @@ const notification = {
 ```
 
 ### Tournament Update
+
 ```typescript
 const notification = {
   title: 'Tournament Update',
@@ -203,6 +217,7 @@ const notification = {
 ```
 
 ### Achievement
+
 ```typescript
 const notification = {
   title: 'Achievement Unlocked!',
@@ -212,6 +227,7 @@ const notification = {
 ```
 
 ### Announcement
+
 ```typescript
 const notification = {
   title: 'System Maintenance',
@@ -221,10 +237,11 @@ const notification = {
 ```
 
 ### Reminder
+
 ```typescript
 const notification = {
   title: 'Tournament Tomorrow',
-  body: 'Don\'t forget your tournament',
+  body: "Don't forget your tournament",
   data: { url: '/tournaments/789', type: 'reminder' },
 };
 ```
@@ -232,6 +249,7 @@ const notification = {
 ## Component Examples
 
 ### Install Button in Header
+
 ```tsx
 import { InstallButton } from '@/components/mobile/InstallPrompt';
 
@@ -245,6 +263,7 @@ function Header() {
 ```
 
 ### Notification Settings Page
+
 ```tsx
 import { NotificationSettings } from '@/components/settings/NotificationSettings';
 
@@ -258,8 +277,12 @@ export default function SettingsPage() {
 ```
 
 ### Push Permission Dialog
+
 ```tsx
-import { PushPermissionDialog, usePushPermissionDialog } from '@/components/mobile/PushPermissionDialog';
+import {
+  PushPermissionDialog,
+  usePushPermissionDialog,
+} from '@/components/mobile/PushPermissionDialog';
 
 function MyComponent() {
   const { isOpen, open, close } = usePushPermissionDialog();
@@ -280,37 +303,44 @@ function MyComponent() {
 ## Testing Commands
 
 ### Check Service Worker
+
 ```javascript
 // Browser console
-navigator.serviceWorker.getRegistration().then(reg => {
+navigator.serviceWorker.getRegistration().then((reg) => {
   console.log('Registered:', !!reg);
   console.log('Active:', !!reg?.active);
 });
 ```
 
 ### Check Push Subscription
+
 ```javascript
-navigator.serviceWorker.ready.then(reg => {
-  return reg.pushManager.getSubscription();
-}).then(sub => {
-  console.log('Subscribed:', !!sub);
-  console.log('Endpoint:', sub?.endpoint);
-});
+navigator.serviceWorker.ready
+  .then((reg) => {
+    return reg.pushManager.getSubscription();
+  })
+  .then((sub) => {
+    console.log('Subscribed:', !!sub);
+    console.log('Endpoint:', sub?.endpoint);
+  });
 ```
 
 ### Check Notification Permission
+
 ```javascript
 console.log('Permission:', Notification.permission);
 ```
 
 ### Request Notification Permission
+
 ```javascript
-Notification.requestPermission().then(permission => {
+Notification.requestPermission().then((permission) => {
   console.log('Permission:', permission);
 });
 ```
 
 ### Test Local Notification
+
 ```javascript
 new Notification('Test', {
   body: 'This is a test notification',
@@ -319,6 +349,7 @@ new Notification('Test', {
 ```
 
 ### Check Install Prompt State
+
 ```javascript
 import { getInstallPromptManager } from '@/lib/pwa/install-prompt';
 
@@ -327,6 +358,7 @@ console.log(manager.getState());
 ```
 
 ### Reset Install Prompt
+
 ```javascript
 const manager = getInstallPromptManager();
 manager.reset();
@@ -335,6 +367,7 @@ manager.reset();
 ## Database Queries
 
 ### Get User Subscriptions
+
 ```typescript
 const subscriptions = await prisma.pushSubscription.findMany({
   where: { userId: 'user_123' },
@@ -342,11 +375,13 @@ const subscriptions = await prisma.pushSubscription.findMany({
 ```
 
 ### Get All Active Subscriptions
+
 ```typescript
 const subscriptions = await prisma.pushSubscription.findMany();
 ```
 
 ### Delete Old Subscriptions
+
 ```typescript
 await prisma.pushSubscription.deleteMany({
   where: {
@@ -374,14 +409,18 @@ PWA_PROMPT_DELAY_DAYS=7
 ## Common Patterns
 
 ### Check if PWA
+
 ```typescript
 function isPWA() {
-  return window.matchMedia('(display-mode: standalone)').matches ||
-         (window.navigator as any).standalone === true;
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone === true
+  );
 }
 ```
 
 ### Detect Platform
+
 ```typescript
 function getPlatform() {
   const userAgent = navigator.userAgent.toLowerCase();
@@ -392,6 +431,7 @@ function getPlatform() {
 ```
 
 ### Check if Installed
+
 ```typescript
 function isInstalled() {
   const isPWA = window.matchMedia('(display-mode: standalone)').matches;
@@ -403,6 +443,7 @@ function isInstalled() {
 ## Troubleshooting
 
 ### Service Worker Not Registering
+
 ```typescript
 // Check HTTPS
 console.log('HTTPS:', location.protocol === 'https:');
@@ -411,12 +452,14 @@ console.log('HTTPS:', location.protocol === 'https:');
 console.log('SW Support:', 'serviceWorker' in navigator);
 
 // Register manually
-navigator.serviceWorker.register('/sw.js')
-  .then(reg => console.log('Registered:', reg))
-  .catch(err => console.error('Failed:', err));
+navigator.serviceWorker
+  .register('/sw.js')
+  .then((reg) => console.log('Registered:', reg))
+  .catch((err) => console.error('Failed:', err));
 ```
 
 ### Notifications Not Working
+
 ```typescript
 // Check support
 console.log('Notification support:', 'Notification' in window);
@@ -435,6 +478,7 @@ console.log('Public key:', process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
 ```
 
 ### Install Prompt Not Showing
+
 ```typescript
 // Check state
 const manager = getInstallPromptManager();
@@ -457,12 +501,14 @@ manager.reset();
 ## Performance Tips
 
 1. **Lazy Load PWA Features**
+
    ```typescript
    // Only load when needed
    const { getPushNotificationManager } = await import('@/lib/pwa/push-notifications');
    ```
 
 2. **Defer Service Worker Registration**
+
    ```typescript
    // Wait until page is loaded
    window.addEventListener('load', () => {
@@ -471,23 +517,28 @@ manager.reset();
    ```
 
 3. **Batch Notifications**
+
    ```typescript
    // Don't send immediately, batch them
    const queue = [];
    queue.push(notification1, notification2);
 
    // Send batch every 5 minutes
-   setInterval(() => {
-     if (queue.length > 0) {
-       sendBatch(queue);
-       queue.length = 0;
-     }
-   }, 5 * 60 * 1000);
+   setInterval(
+     () => {
+       if (queue.length > 0) {
+         sendBatch(queue);
+         queue.length = 0;
+       }
+     },
+     5 * 60 * 1000
+   );
    ```
 
 ## Security Best Practices
 
 1. **Never Expose Private Key**
+
    ```typescript
    // ❌ Never do this
    const privateKey = 'exposed-key';
@@ -497,6 +548,7 @@ manager.reset();
    ```
 
 2. **Validate Subscriptions**
+
    ```typescript
    // Check subscription belongs to user
    const sub = await prisma.pushSubscription.findUnique({
@@ -505,6 +557,7 @@ manager.reset();
    ```
 
 3. **Sanitize Notification Content**
+
    ```typescript
    // Escape user input
    import DOMPurify from 'isomorphic-dompurify';
@@ -515,6 +568,7 @@ manager.reset();
 ---
 
 **Need more help?**
+
 - 📖 Full Guide: `docs/PWA-IMPLEMENTATION-GUIDE.md`
 - 📋 Setup: `docs/PWA-SETUP-CHECKLIST.md`
 - 📝 Summary: `SPRINT-10-WEEK-4-AGENT-3-SUMMARY.md`

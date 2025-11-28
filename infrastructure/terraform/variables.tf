@@ -1,16 +1,16 @@
 # Terraform Variables
-# Azure SaaS Project: {{PROJECT_NAME}}
+# Azure SaaS Project: saas202520 (Tournament Platform)
 
 variable "org" {
   description = "Organization code (2-4 chars)"
   type        = string
-  default     = "{{AZURE_ORG}}"
+  default     = "vrd"
 }
 
 variable "project" {
   description = "Project code (2-5 chars)"
   type        = string
-  default     = "{{AZURE_PROJECT}}"
+  default     = "202520"
 }
 
 variable "env" {
@@ -21,7 +21,7 @@ variable "env" {
 variable "region" {
   description = "Azure region short code"
   type        = string
-  default     = "{{AZURE_PRIMARY_REGION}}"
+  default     = "eus2"
 }
 
 variable "location" {
@@ -38,7 +38,7 @@ variable "owner" {
 variable "cost_center" {
   description = "Cost center"
   type        = string
-  default     = "{{AZURE_PROJECT}}-llc"
+  default     = "202520-llc"
 }
 
 variable "data_sensitivity" {
@@ -62,5 +62,5 @@ variable "business_unit" {
 variable "application" {
   description = "Application name (optional)"
   type        = string
-  default     = "{{PROJECT_NAME}}"
+  default     = "saas202520"
 }

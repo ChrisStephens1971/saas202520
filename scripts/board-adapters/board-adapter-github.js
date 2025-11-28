@@ -49,12 +49,14 @@ class GitHubBoardAdapter {
       const items = JSON.parse(result);
 
       // Filter for items in "Ready" column
-      const readyItems = items.items.filter(item => {
+      const readyItems = items.items.filter((item) => {
         // Check if item is in Ready/TODO column
         const status = item.status || item.column || '';
-        return status.toLowerCase().includes('ready') ||
-               status.toLowerCase().includes('todo') ||
-               status === this.config.project.board.readyColumnId;
+        return (
+          status.toLowerCase().includes('ready') ||
+          status.toLowerCase().includes('todo') ||
+          status === this.config.project.board.readyColumnId
+        );
       });
 
       console.log(`Found ${readyItems.length} ticket(s) in Ready column\n`);
@@ -91,14 +93,14 @@ class GitHubBoardAdapter {
         number: item.content?.number || null,
         title: issueData?.title || item.title || 'Untitled',
         description: issueData?.body || item.content?.body || '',
-        labels: issueData?.labels?.map(l => l.name) || [],
+        labels: issueData?.labels?.map((l) => l.name) || [],
         lane: this.determineLane(issueData?.labels || []),
         priority: this.determinePriority(issueData?.labels || []),
         estimate: this.extractEstimate(issueData?.body || ''),
         acceptanceCriteria: this.extractAcceptanceCriteria(issueData?.body || ''),
-        assignees: issueData?.assignees?.map(a => a.login) || [],
+        assignees: issueData?.assignees?.map((a) => a.login) || [],
         status: 'ready',
-        createdAt: item.createdAt || new Date().toISOString()
+        createdAt: item.createdAt || new Date().toISOString(),
       };
 
       return ticket;
@@ -117,7 +119,7 @@ class GitHubBoardAdapter {
     }
 
     // Auto-determine based on other labels
-    const labelNames = labels.map(l => l.name.toLowerCase());
+    const labelNames = labels.map((l) => l.name.toLowerCase());
 
     if (labelNames.includes('api') || labelNames.includes('contract')) {
       return 'contracts';
@@ -140,7 +142,7 @@ class GitHubBoardAdapter {
   }
 
   determinePriority(labels) {
-    const labelNames = labels.map(l => l.name.toLowerCase());
+    const labelNames = labels.map((l) => l.name.toLowerCase());
 
     if (labelNames.includes('p0') || labelNames.includes('critical')) {
       return 'critical';
@@ -208,7 +210,9 @@ class GitHubBoardAdapter {
     // Count active agents in lane
     const activeCount = await this.countActiveAgentsInLane(ticket.lane);
     if (activeCount >= laneConfig.maxConcurrent) {
-      console.log(`   ⚠️ Lane ${ticket.lane} is at capacity (${activeCount}/${laneConfig.maxConcurrent})`);
+      console.log(
+        `   ⚠️ Lane ${ticket.lane} is at capacity (${activeCount}/${laneConfig.maxConcurrent})`
+      );
       return null;
     }
 
@@ -228,7 +232,7 @@ class GitHubBoardAdapter {
       estimate: ticket.estimate,
       acceptanceCriteria: ticket.acceptanceCriteria,
       assignedAt: new Date().toISOString(),
-      lastUpdate: new Date().toISOString()
+      lastUpdate: new Date().toISOString(),
     };
 
     // Save agent status
@@ -309,7 +313,7 @@ Assigned: ${agentStatus.assignedAt}`;
 
       // Add in-progress label
       execSync(`gh issue edit ${ticket.number} --repo ${owner}/${repo} --add-label "in-progress"`, {
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
 
       console.log(`   ✅ Updated ticket #${ticket.number} status`);
@@ -415,7 +419,9 @@ async function main() {
       console.log(`\n📋 Ready Tickets:\n`);
       for (const ticket of tickets) {
         console.log(`  #${ticket.number || 'N/A'} - ${ticket.title}`);
-        console.log(`    Lane: ${ticket.lane} | Priority: ${ticket.priority} | Estimate: ${ticket.estimate}`);
+        console.log(
+          `    Lane: ${ticket.lane} | Priority: ${ticket.priority} | Estimate: ${ticket.estimate}`
+        );
       }
       break;
 

@@ -22,6 +22,7 @@ Everything else is optional and situational.
 **Claude Code has powerful built-in capabilities that require ZERO installation:**
 
 ### ✅ Always Available (No Installation)
+
 - **File operations** - Read, Write, Edit, Glob, Grep
 - **Task tool with Explore/Plan agents** - Fast codebase exploration and planning
 - **Web research** - WebSearch, WebFetch
@@ -30,6 +31,7 @@ Everything else is optional and situational.
 **⚠️ CRITICAL:** Task tool's Explore and Plan agents are **BUILT-IN**. They do NOT need installation!
 
 ### 📦 Require Installation (Optional)
+
 - **Claude Code Templates** - 163 development agents (install when coding)
 - **Claude Skills** - Document processing (install when needed)
 - **WSHobson Agents** - Framework specialists (install when needed)
@@ -43,11 +45,11 @@ Everything else is optional and situational.
 
 ## Integration Overview
 
-| What | When | Priority |
-|------|------|----------|
-| **Built-in Templates** | Always available | ✅ Core |
-| **Claude Code Templates** | When coding | ⭐ Recommended |
-| **Claude Skills** | Working with documents | Optional |
+| What                      | When                   | Priority       |
+| ------------------------- | ---------------------- | -------------- |
+| **Built-in Templates**    | Always available       | ✅ Core        |
+| **Claude Code Templates** | When coding            | ⭐ Recommended |
+| **Claude Skills**         | Working with documents | Optional       |
 
 ---
 
@@ -60,6 +62,7 @@ Everything else is optional and situational.
 **Why recommended:** Purpose-built for development tasks, comprehensive coverage, well-documented.
 
 ### Quick Setup
+
 ```bash
 # Install on-demand as needed
 npx claude-code-templates@latest --agent development-team/frontend-developer
@@ -68,6 +71,7 @@ npx claude-code-templates@latest --command testing/generate-tests
 ```
 
 ### Common Use Cases
+
 - **Frontend:** `--agent development-team/frontend-developer`
 - **Backend APIs:** `--agent development-team/backend-architect`
 - **Full-stack:** `--agent development-team/fullstack-developer`
@@ -77,6 +81,7 @@ npx claude-code-templates@latest --command testing/generate-tests
 - **DevOps:** `--agent devops-infrastructure/devops-engineer`
 
 ### Full Documentation
+
 See `.config/claude-code-templates-guide.md` for complete reference.
 
 ---
@@ -90,11 +95,13 @@ See `.config/claude-code-templates-guide.md` for complete reference.
 **When:** Working with PDFs, spreadsheets, presentations, or specialized workflows.
 
 **Setup:**
+
 ```bash
 /plugin marketplace add anthropics/skills
 ```
 
 **Available:**
+
 - `pdf` - PDF creation, extraction, form filling
 - `xlsx` - Spreadsheet creation, editing, analysis
 - `docx` - Document creation and editing
@@ -112,12 +119,14 @@ See `.config/claude-code-templates-guide.md` for complete reference.
 **When:** Converting planning docs, PRDs, roadmaps to shareable Word format.
 
 **Setup (one-time):**
+
 ```powershell
 # Run the included installer
 powershell.exe -ExecutionPolicy Bypass -File scripts\install-pandoc.ps1
 ```
 
 **Usage:**
+
 ```bash
 # Convert all markdown files in a folder
 cd fundraising/
@@ -138,15 +147,18 @@ pandoc document.md -o document.docx
 ## 🎯 Recommended Setup Path
 
 ### Solo Founders (MVP)
+
 1. **Start:** Built-in templates (no setup)
 2. **When coding:** Claude Code Templates
 
 ### Small Teams (2-5 people)
+
 1. **Start:** Built-in templates
 2. **When coding:** Claude Code Templates
 3. **Optional:** Skills for documents
 
 ### Enterprise Teams
+
 1. **Start:** Built-in templates
 2. **Setup:** Claude Code Templates
 3. **Add:** Skills for office documents
@@ -159,6 +171,7 @@ pandoc document.md -o document.docx
 **Need framework-specific or domain-specific tools?**
 
 See `docs/advanced/SPECIALIZED-TOOLS.md` for:
+
 - Framework specialists (Django, FastAPI, GraphQL)
 - Payment integration (Stripe, PayPal)
 - AI/ML features (LangChain, RAG)
@@ -172,12 +185,15 @@ See `docs/advanced/SPECIALIZED-TOOLS.md` for:
 ## 🔄 Integration Priority
 
 **Essential (Always):**
+
 - Built-in templates ← You already have this
 
 **High Value (When Coding):**
+
 - Claude Code Templates
 
 **Nice to Have (Optional):**
+
 - Claude Skills (if working with documents)
 - Specialized tools (only for specific needs)
 
@@ -186,6 +202,7 @@ See `docs/advanced/SPECIALIZED-TOOLS.md` for:
 ## ❓ Questions?
 
 Just ask Claude:
+
 - "How do I set up Claude Code Templates?"
 - "Install the frontend developer agent"
 - "Do I need any integrations for my MVP?"
@@ -195,10 +212,12 @@ Just ask Claude:
 ## 📚 Related Documentation
 
 **In .config/:**
+
 - `claude-code-templates-guide.md` - Complete technical reference
 - `recommended-claude-skills.md` - Skills catalog
 
 **In docs/:**
+
 - `docs/advanced/SPECIALIZED-TOOLS.md` - Advanced specialists
 
 ---

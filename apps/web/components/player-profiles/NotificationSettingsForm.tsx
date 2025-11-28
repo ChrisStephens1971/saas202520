@@ -18,7 +18,10 @@ interface NotificationSettingsFormProps {
   playerId: string;
 }
 
-export function NotificationSettingsForm({ preferences, playerId: _playerId }: NotificationSettingsFormProps) {
+export function NotificationSettingsForm({
+  preferences,
+  playerId: _playerId,
+}: NotificationSettingsFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<NotificationPreferences>(preferences);
@@ -62,7 +65,11 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="email">Email Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive notifications via email</p>
           </div>
-          <Switch id="email" checked={formData.email} onCheckedChange={(checked: boolean) => setFormData({ ...formData, email: checked })} />
+          <Switch
+            id="email"
+            checked={formData.email}
+            onCheckedChange={(checked: boolean) => setFormData({ ...formData, email: checked })}
+          />
         </div>
 
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -70,7 +77,11 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="sms">SMS Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive text message notifications</p>
           </div>
-          <Switch id="sms" checked={formData.sms} onCheckedChange={(checked: boolean) => setFormData({ ...formData, sms: checked })} />
+          <Switch
+            id="sms"
+            checked={formData.sms}
+            onCheckedChange={(checked: boolean) => setFormData({ ...formData, sms: checked })}
+          />
         </div>
 
         <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -78,7 +89,11 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
             <Label htmlFor="push">Push Notifications</Label>
             <p className="text-sm text-muted-foreground">Receive browser push notifications</p>
           </div>
-          <Switch id="push" checked={formData.push} onCheckedChange={(checked: boolean) => setFormData({ ...formData, push: checked })} />
+          <Switch
+            id="push"
+            checked={formData.push}
+            onCheckedChange={(checked: boolean) => setFormData({ ...formData, push: checked })}
+          />
         </div>
       </div>
 
@@ -89,7 +104,9 @@ export function NotificationSettingsForm({ preferences, playerId: _playerId }: N
         <div className="flex items-center justify-between p-4 border rounded-lg">
           <div className="space-y-0.5">
             <Label htmlFor="tournaments">Tournament Notifications</Label>
-            <p className="text-sm text-muted-foreground">Registration confirmations, tournament updates</p>
+            <p className="text-sm text-muted-foreground">
+              Registration confirmations, tournament updates
+            </p>
           </div>
           <Switch
             id="tournaments"

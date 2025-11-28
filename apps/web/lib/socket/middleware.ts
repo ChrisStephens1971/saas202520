@@ -111,7 +111,9 @@ export async function authMiddleware(
       socket.data.role = role;
       socket.data.tournaments = new Set();
 
-      console.log(`Socket ${socket.id} authenticated as user ${userId} (${role}${orgId ? `, org: ${orgId}` : ''})`);
+      console.log(
+        `Socket ${socket.id} authenticated as user ${userId} (${role}${orgId ? `, org: ${orgId}` : ''})`
+      );
       next();
     } catch (error) {
       console.error(`Socket ${socket.id}: Token verification error:`, error);

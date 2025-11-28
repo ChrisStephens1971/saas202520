@@ -39,8 +39,7 @@ function testMiddlewareLogic(req: TestRequest) {
     nextUrl.pathname.startsWith('/api/health');
 
   const isOrgManagementRoute =
-    nextUrl.pathname === '/select-organization' ||
-    nextUrl.pathname === '/api/organizations';
+    nextUrl.pathname === '/select-organization' || nextUrl.pathname === '/api/organizations';
 
   // Redirect logged-in users away from login/signup
   if (isLoggedIn && (nextUrl.pathname === '/login' || nextUrl.pathname === '/signup')) {
@@ -405,17 +404,9 @@ describe('Enhanced Multi-Tenant Middleware', () => {
 
     it('should verify health check is in public routes list', () => {
       const healthCheckRoute = '/api/health';
-      const publicRoutesList = [
-        '/',
-        '/login',
-        '/signup',
-        '/api/auth',
-        '/api/health',
-      ];
+      const publicRoutesList = ['/', '/login', '/signup', '/api/auth', '/api/health'];
 
-      const isHealthPublic = publicRoutesList.some(
-        (route) => healthCheckRoute.startsWith(route)
-      );
+      const isHealthPublic = publicRoutesList.some((route) => healthCheckRoute.startsWith(route));
 
       expect(isHealthPublic).toBe(true);
     });

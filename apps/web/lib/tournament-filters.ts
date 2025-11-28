@@ -47,7 +47,7 @@ function filterBySearch(tournaments: Tournament[], query: string): Tournament[] 
 
   const lowerQuery = query.toLowerCase();
   return tournaments.filter(
-    tournament =>
+    (tournament) =>
       tournament.name.toLowerCase().includes(lowerQuery) ||
       tournament.format.toLowerCase().includes(lowerQuery) ||
       tournament.location?.toLowerCase().includes(lowerQuery) ||
@@ -60,7 +60,7 @@ function filterBySearch(tournaments: Tournament[], query: string): Tournament[] 
  */
 function filterByStatus(tournaments: Tournament[], statuses: string[]): Tournament[] {
   if (statuses.length === 0) return tournaments;
-  return tournaments.filter(tournament => statuses.includes(tournament.status));
+  return tournaments.filter((tournament) => statuses.includes(tournament.status));
 }
 
 /**
@@ -68,7 +68,7 @@ function filterByStatus(tournaments: Tournament[], statuses: string[]): Tourname
  */
 function filterByFormat(tournaments: Tournament[], formats: string[]): Tournament[] {
   if (formats.length === 0) return tournaments;
-  return tournaments.filter(tournament => formats.includes(tournament.format));
+  return tournaments.filter((tournament) => formats.includes(tournament.format));
 }
 
 /**
@@ -82,12 +82,12 @@ function filterByDateRange(
 
   if (dateRange.start) {
     const startDate = new Date(dateRange.start);
-    filtered = filtered.filter(tournament => new Date(tournament.startDate) >= startDate);
+    filtered = filtered.filter((tournament) => new Date(tournament.startDate) >= startDate);
   }
 
   if (dateRange.end) {
     const endDate = new Date(dateRange.end);
-    filtered = filtered.filter(tournament => new Date(tournament.startDate) <= endDate);
+    filtered = filtered.filter((tournament) => new Date(tournament.startDate) <= endDate);
   }
 
   return filtered;
@@ -130,10 +130,7 @@ function sortTournaments(
 /**
  * Apply all filters to tournaments
  */
-export function applyFilters(
-  tournaments: Tournament[],
-  filters: TournamentFilters
-): Tournament[] {
+export function applyFilters(tournaments: Tournament[], filters: TournamentFilters): Tournament[] {
   let filtered = tournaments;
 
   // Apply search
@@ -158,7 +155,7 @@ export function applyFilters(
  * Get unique formats from tournaments
  */
 export function getUniqueFormats(tournaments: Tournament[]): string[] {
-  const formats = new Set(tournaments.map(t => t.format));
+  const formats = new Set(tournaments.map((t) => t.format));
   return Array.from(formats).sort();
 }
 
@@ -168,10 +165,10 @@ export function getUniqueFormats(tournaments: Tournament[]): string[] {
 export function getTournamentStats(tournaments: Tournament[]) {
   return {
     total: tournaments.length,
-    active: tournaments.filter(t => t.status === 'active').length,
-    completed: tournaments.filter(t => t.status === 'completed').length,
-    draft: tournaments.filter(t => t.status === 'draft').length,
-    cancelled: tournaments.filter(t => t.status === 'cancelled').length,
+    active: tournaments.filter((t) => t.status === 'active').length,
+    completed: tournaments.filter((t) => t.status === 'completed').length,
+    draft: tournaments.filter((t) => t.status === 'draft').length,
+    cancelled: tournaments.filter((t) => t.status === 'cancelled').length,
   };
 }
 

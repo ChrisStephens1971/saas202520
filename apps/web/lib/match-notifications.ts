@@ -5,10 +5,7 @@
  */
 
 import { prisma } from '@/lib/prisma';
-import {
-  sendNotificationWithTemplate,
-  createInAppNotification,
-} from '@/lib/notification-service';
+import { sendNotificationWithTemplate, createInAppNotification } from '@/lib/notification-service';
 
 // ============================================================================
 // MATCH STATE CHANGE TRIGGERS
@@ -79,8 +76,7 @@ export async function notifyMatchCompleted(matchId: string): Promise<void> {
   const score = match.score as { playerA: number; playerB: number };
   const scoreText = `${score.playerA}-${score.playerB}`;
 
-  const loserName =
-    match.winnerId === match.playerA.id ? match.playerB.name : match.playerA.name;
+  const loserName = match.winnerId === match.playerA.id ? match.playerB.name : match.playerA.name;
 
   // Notify winner
   const winner = match.winnerId === match.playerA.id ? match.playerA : match.playerB;
@@ -101,8 +97,7 @@ export async function notifyMatchCompleted(matchId: string): Promise<void> {
 
   // Notify loser
   const loser = match.winnerId === match.playerA.id ? match.playerB : match.playerA;
-  const winnerName =
-    match.winnerId === match.playerA.id ? match.playerA.name : match.playerB.name;
+  const winnerName = match.winnerId === match.playerA.id ? match.playerA.name : match.playerB.name;
 
   await sendNotificationWithTemplate(
     orgId,
@@ -129,10 +124,7 @@ export async function notifyMatchCompleted(matchId: string): Promise<void> {
 /**
  * Send check-in reminder to a player
  */
-export async function sendCheckInReminder(
-  playerId: string,
-  tournamentId: string
-): Promise<void> {
+export async function sendCheckInReminder(playerId: string, tournamentId: string): Promise<void> {
   const player = await prisma.player.findUnique({
     where: { id: playerId },
     include: {
@@ -187,15 +179,15 @@ export async function sendBulkCheckInReminders(tournamentId: string): Promise<vo
     },
   });
 
-  console.log(`Sending check-in reminders to ${players.length} players in tournament ${tournamentId}`);
+  console.log(
+    `Sending check-in reminders to ${players.length} players in tournament ${tournamentId}`
+  );
 
   // Send reminders in batches to avoid rate limiting
   const BATCH_SIZE = 5;
   for (let i = 0; i < players.length; i += BATCH_SIZE) {
     const batch = players.slice(i, i + BATCH_SIZE);
-    await Promise.all(
-      batch.map((player) => sendCheckInReminder(player.id, tournamentId))
-    );
+    await Promise.all(batch.map((player) => sendCheckInReminder(player.id, tournamentId)));
 
     // Wait 1 second between batches to respect rate limits
     if (i + BATCH_SIZE < players.length) {

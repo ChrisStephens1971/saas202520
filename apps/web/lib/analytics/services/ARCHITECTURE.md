@@ -96,16 +96,19 @@ Return to Client
 ### Revenue Calculator
 
 **Depends On:**
+
 - Prisma (Database access)
 - `revenue_aggregates` table
 - `user_cohorts` table (for LTV)
 
 **Used By:**
+
 - Analytics Service
 - API Routes
 - Dashboard Components
 
 **Key Operations:**
+
 ```
 calculateMRR() ──┐
 calculateARR() ──┼──→ Revenue Analytics
@@ -116,15 +119,18 @@ projections()  ──┘
 ### Cohort Analyzer
 
 **Depends On:**
+
 - Prisma (Database access)
 - `user_cohorts` table
 
 **Used By:**
+
 - Analytics Service
 - Retention Reports
 - User Analytics Dashboard
 
 **Key Operations:**
+
 ```
 analyzeCohort() ──┐
 retentionCurve() ─┼──→ Cohort Analytics
@@ -135,14 +141,17 @@ benchmarks()    ──┘
 ### Cache Manager
 
 **Depends On:**
+
 - Redis (ioredis)
 
 **Used By:**
+
 - All Calculator Services
 - Analytics Service
 - Background Jobs
 
 **Key Operations:**
+
 ```
 get() ──────┐
 set() ──────┼──→ Cache Operations
@@ -257,12 +266,12 @@ app.get('/api/analytics/dashboard', async (req, res) => {
       success: true,
       data: dashboard,
       cached: dashboard.cached,
-      generatedAt: dashboard.generatedAt
+      generatedAt: dashboard.generatedAt,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -494,6 +503,7 @@ Future:
 ---
 
 **Architecture designed for:**
+
 - High performance
 - Easy scalability
 - Multi-tenant safety

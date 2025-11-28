@@ -14,6 +14,7 @@
 Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, admin dashboard, Redis caching, database optimization, load testing) to deliver business-critical features that drive user adoption, retention, and revenue. This sprint focuses on advanced analytics for business intelligence, enhanced player experience, public API for integrations, and mobile-first optimizations.
 
 **Key Objectives:**
+
 1. Advanced analytics and business intelligence for data-driven decisions
 2. Enhanced player experience (profiles, history, achievements, gamification)
 3. Public API and webhook system for third-party integrations
@@ -21,6 +22,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 5. Marketing and growth tools (referral system, white-label options)
 
 **Business Impact:**
+
 - **Increase user engagement** - Player profiles and achievements drive retention
 - **Enable integrations** - Public API opens ecosystem and partnership opportunities
 - **Data-driven decisions** - Advanced analytics inform product and marketing strategies
@@ -64,6 +66,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 **Focus:** Data visualization, insights, and actionable metrics
 
 **Tasks:**
+
 1. **Analytics Dashboard v2** (Enhancement)
    - Advanced data visualizations (charts, graphs, heatmaps)
    - Custom date range selection
@@ -91,6 +94,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
    - Alert thresholds and notifications
 
 **Deliverables:**
+
 - Enhanced analytics dashboard with 20+ new visualizations
 - Business intelligence report templates
 - Predictive models for key metrics
@@ -98,6 +102,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 - Export and scheduling functionality
 
 **Technologies:**
+
 - Recharts v2.10.0 (charts)
 - D3.js v7.8.0 (advanced visualizations)
 - React Query for real-time data
@@ -110,6 +115,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 **Focus:** Player profiles, history, achievements, and engagement
 
 **Tasks:**
+
 1. **Player Profiles**
    - Comprehensive player profile pages
    - Statistics dashboard (win rate, tournaments played, etc.)
@@ -144,6 +150,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
    - Recent opponents
 
 **Deliverables:**
+
 - Player profile system
 - Achievement framework (20+ achievements)
 - Player history and statistics
@@ -151,6 +158,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 - Privacy controls
 
 **Technologies:**
+
 - Next.js App Router (dynamic routes)
 - React Hook Form (settings)
 - Framer Motion (animations)
@@ -162,6 +170,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 **Focus:** Developer platform, webhooks, and third-party integrations
 
 **Tasks:**
+
 1. **Public API v1**
    - RESTful API design
    - API key authentication
@@ -200,6 +209,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
    - Support contact
 
 **Deliverables:**
+
 - Public API v1 (read-only)
 - Webhook system
 - API documentation (OpenAPI spec)
@@ -207,6 +217,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 - Code examples and SDKs
 
 **Technologies:**
+
 - Next.js API Routes
 - Swagger UI (documentation)
 - API key management library
@@ -219,6 +230,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 **Focus:** Mobile-first experience, offline capabilities, and app-like features
 
 **Tasks:**
+
 1. **Mobile UX Improvements**
    - Touch-optimized interfaces
    - Larger tap targets (44x44px minimum)
@@ -262,6 +274,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
    - Status bar theming
 
 **Deliverables:**
+
 - Mobile-optimized interfaces
 - Enhanced offline capabilities
 - Push notification system
@@ -269,6 +282,7 @@ Sprint 10 builds on the solid infrastructure from Sprint 9 (real-time features, 
 - Native-like features
 
 **Technologies:**
+
 - Workbox (service worker)
 - Web Push API
 - Notification API
@@ -287,6 +301,7 @@ As a business owner, I want comprehensive analytics to understand user behavior,
 **Features:**
 
 #### Revenue Analytics
+
 - Monthly Recurring Revenue (MRR) tracking
 - Annual Recurring Revenue (ARR) calculation
 - Churn rate and retention metrics
@@ -295,6 +310,7 @@ As a business owner, I want comprehensive analytics to understand user behavior,
 - Refund analytics
 
 #### User Analytics
+
 - New user signups (daily/weekly/monthly)
 - Active user metrics (DAU, WAU, MAU)
 - User cohort analysis
@@ -303,6 +319,7 @@ As a business owner, I want comprehensive analytics to understand user behavior,
 - User segmentation
 
 #### Tournament Analytics
+
 - Tournament completion rates
 - Average tournament duration
 - Players per tournament (trends)
@@ -311,12 +328,14 @@ As a business owner, I want comprehensive analytics to understand user behavior,
 - Venue performance comparison
 
 #### Predictive Models
+
 - Tournament attendance forecasting
 - Revenue projections
 - Churn prediction
 - Capacity planning
 
 **Visualizations:**
+
 - Line charts (trends over time)
 - Bar charts (comparisons)
 - Pie charts (distributions)
@@ -325,12 +344,14 @@ As a business owner, I want comprehensive analytics to understand user behavior,
 - Cohort tables
 
 **Export Options:**
+
 - CSV export
 - Excel export
 - PDF reports
 - Scheduled email delivery
 
 **File Structure:**
+
 ```
 apps/web/app/admin/analytics/
 ├── page.tsx                          # Main analytics dashboard
@@ -363,6 +384,7 @@ As a player, I want to see my tournament history, statistics, and achievements s
 **Features:**
 
 #### Profile Information
+
 - Player name, photo, bio
 - Skill rating (ELO/Fargo)
 - Location (city, state)
@@ -370,6 +392,7 @@ As a player, I want to see my tournament history, statistics, and achievements s
 - Privacy settings (public/private)
 
 #### Statistics Dashboard
+
 - Win/loss record
 - Win rate percentage
 - Total tournaments played
@@ -379,6 +402,7 @@ As a player, I want to see my tournament history, statistics, and achievements s
 - Current streak (wins/losses)
 
 #### Performance Trends
+
 - Win rate over time (chart)
 - Skill rating progression
 - Tournament frequency
@@ -386,12 +410,14 @@ As a player, I want to see my tournament history, statistics, and achievements s
 - Performance by format
 
 #### Tournament History
+
 - List of all tournaments (paginated)
 - Tournament details (placement, record)
 - Match history within tournaments
 - Prize winnings
 
 #### Achievements & Badges
+
 - Achievement progress
 - Unlocked achievements
 - Badge display
@@ -399,12 +425,14 @@ As a player, I want to see my tournament history, statistics, and achievements s
 - Share achievements
 
 #### Head-to-Head Records
+
 - Record against specific opponents
 - Most played opponents
 - Best/worst matchups
 - Rivalry tracking
 
 **File Structure:**
+
 ```
 apps/web/app/players/
 ├── page.tsx                          # Player search/directory
@@ -429,6 +457,7 @@ apps/web/lib/player/
 ```
 
 **Achievements (Initial Set):**
+
 1. **First Steps** - Complete first tournament
 2. **Participant** - Play 10 tournaments
 3. **Regular** - Play 50 tournaments
@@ -458,6 +487,7 @@ apps/web/lib/player/
 As a developer, I want a public API to integrate tournament data into my own applications and receive webhook notifications for events.
 
 **API Design Principles:**
+
 - RESTful architecture
 - JSON responses
 - API versioning (v1, v2)
@@ -497,16 +527,19 @@ GET    /api/v1/venues/:id/tournaments   # Venue tournaments
 ```
 
 **Authentication:**
+
 ```http
 Authorization: Bearer YOUR_API_KEY
 ```
 
 **Rate Limiting:**
+
 - Free tier: 100 requests/hour
 - Pro tier: 1000 requests/hour
 - Enterprise: 10,000 requests/hour
 
 **Webhook Events:**
+
 ```typescript
 enum WebhookEvent {
   // Tournament events
@@ -526,6 +559,7 @@ enum WebhookEvent {
 ```
 
 **Webhook Payload Example:**
+
 ```json
 {
   "id": "evt_abc123",
@@ -546,6 +580,7 @@ enum WebhookEvent {
 ```
 
 **File Structure:**
+
 ```
 apps/web/app/api/v1/
 ├── tournaments/
@@ -600,6 +635,7 @@ As a mobile user, I want an app-like experience with offline capabilities, push 
 **Features:**
 
 #### Touch Optimizations
+
 - Tap targets ≥44x44px
 - Swipe gestures (back/forward, refresh)
 - Long-press menus
@@ -607,6 +643,7 @@ As a mobile user, I want an app-like experience with offline capabilities, push 
 - Prevent accidental taps
 
 #### Offline Capabilities
+
 - View tournaments offline
 - Record match scores offline
 - Sync when connection returns
@@ -614,12 +651,14 @@ As a mobile user, I want an app-like experience with offline capabilities, push 
 - Queued actions display
 
 #### PWA Install Experience
+
 - Smart install prompts (3+ visits)
 - Custom install UI
 - Installation instructions
 - App shortcuts (quick access)
 
 #### Push Notifications
+
 - Match starting notifications
 - Tournament updates
 - Achievement unlocks
@@ -627,12 +666,14 @@ As a mobile user, I want an app-like experience with offline capabilities, push 
 - Notification preferences
 
 #### Mobile Navigation
+
 - Bottom navigation bar
 - Swipe between tabs
 - Floating action button (FAB)
 - Hamburger menu for secondary items
 
 #### Performance
+
 - Initial load <2s on 3G
 - Time to Interactive <3s
 - First Contentful Paint <1s
@@ -640,6 +681,7 @@ As a mobile user, I want an app-like experience with offline capabilities, push 
 - Optimized images (WebP, lazy loading)
 
 **File Structure:**
+
 ```
 apps/web/app/(mobile)/
 ├── layout.tsx                # Mobile-specific layout
@@ -692,6 +734,7 @@ public/
 ```
 
 ### Infrastructure
+
 - **Analytics:** Recharts + D3.js for visualizations
 - **API:** OpenAPI/Swagger for documentation
 - **Webhooks:** Redis queue for delivery
@@ -703,24 +746,28 @@ public/
 ## Success Metrics
 
 ### Analytics Dashboard
+
 - ✅ 20+ visualizations available
 - ✅ Export functionality (CSV, Excel, PDF)
 - ✅ Real-time data updates
 - ✅ <500ms dashboard load time
 
 ### Player Experience
+
 - ✅ 100% of players can view profiles
 - ✅ 20 achievements implemented
 - ✅ Player search <200ms response
 - ✅ Profile load time <1s
 
 ### Public API
+
 - ✅ 15+ API endpoints available
 - ✅ API documentation complete
 - ✅ Webhook delivery >99% success rate
 - ✅ API response time <100ms (p95)
 
 ### Mobile PWA
+
 - ✅ Lighthouse PWA score >90
 - ✅ Offline functionality working
 - ✅ Push notification delivery >95%
@@ -767,16 +814,19 @@ public/
 ### Week 1: Analytics (Parallel Agents)
 
 **Agent 1:** Revenue Analytics
+
 - Implement MRR/ARR calculations
 - Create revenue charts
 - Build export functionality
 
 **Agent 2:** User Analytics
+
 - Cohort analysis implementation
 - Retention metrics
 - User segmentation
 
 **Agent 3:** Tournament Analytics
+
 - Tournament performance metrics
 - Venue comparison
 - Predictive models
@@ -784,16 +834,19 @@ public/
 ### Week 2: Player Experience (Parallel Agents)
 
 **Agent 1:** Player Profiles
+
 - Profile pages
 - Statistics dashboard
 - Privacy settings
 
 **Agent 2:** Achievement System
+
 - Achievement definitions
 - Unlock logic
 - Badge display
 
 **Agent 3:** Player History
+
 - History tracking
 - Head-to-head records
 - Performance trends
@@ -801,16 +854,19 @@ public/
 ### Week 3: Public API (Parallel Agents)
 
 **Agent 1:** API Implementation
+
 - API endpoints
 - Authentication
 - Rate limiting
 
 **Agent 2:** API Documentation
+
 - OpenAPI specification
 - Swagger UI setup
 - Code examples
 
 **Agent 3:** Webhook System
+
 - Webhook registration
 - Delivery queue
 - Retry logic
@@ -818,16 +874,19 @@ public/
 ### Week 4: Mobile PWA (Parallel Agents)
 
 **Agent 1:** Mobile UX
+
 - Touch optimizations
 - Mobile layouts
 - Navigation improvements
 
 **Agent 2:** Offline & PWA
+
 - Offline capabilities
 - Service worker
 - Install prompts
 
 **Agent 3:** Push Notifications
+
 - Push setup
 - Notification templates
 - Permission handling
@@ -837,21 +896,25 @@ public/
 ## Timeline
 
 ### Week 1: Advanced Analytics
+
 - Days 1-2: Revenue and user analytics
 - Days 3-4: Tournament analytics and predictive models
 - Day 5: Export functionality and testing
 
 ### Week 2: Player Experience
+
 - Days 1-2: Player profiles and statistics
 - Days 3-4: Achievement system
 - Day 5: Player history and testing
 
 ### Week 3: Public API & Webhooks
+
 - Days 1-2: API endpoints and authentication
 - Days 3-4: Webhook system
 - Day 5: Documentation and developer portal
 
 ### Week 4: Mobile PWA
+
 - Days 1-2: Mobile UX improvements
 - Days 3-4: Offline capabilities and push notifications
 - Day 5: Testing and optimization
@@ -861,11 +924,13 @@ public/
 ## Dependencies
 
 ### External Services
+
 - Web Push service (for push notifications)
 - Analytics storage (consider separate analytics DB)
 - CDN for API documentation
 
 ### Internal Prerequisites
+
 - Sprint 9 completed ✅
 - Redis caching operational
 - Database optimizations applied
@@ -876,18 +941,22 @@ public/
 ## Rollback Plan
 
 ### Analytics Dashboard
+
 - Feature flags for new visualizations
 - Can revert to simple analytics if needed
 
 ### Player Profiles
+
 - Optional feature, can disable without affecting core functionality
 - Privacy settings allow users to hide profiles
 
 ### Public API
+
 - Versioned (v1), can deprecate and remove if needed
 - Rate limiting prevents abuse
 
 ### Mobile PWA
+
 - Progressive enhancement approach
 - Falls back to web experience if PWA features fail
 
@@ -898,18 +967,21 @@ public/
 ### What to Measure (30 Days After Sprint 10)
 
 **Engagement Metrics:**
+
 - Player profile views
 - Achievement unlock rate
 - API usage growth
 - Mobile app installs
 
 **Business Metrics:**
+
 - User retention improvement
 - API developer signups
 - Mobile user satisfaction
 - Analytics dashboard usage
 
 **Technical Metrics:**
+
 - API response times
 - Webhook delivery success rate
 - Mobile performance scores
@@ -942,7 +1014,7 @@ public/
 
 ---
 
-*Created: 2025-11-06*
-*Status: Planning*
-*Estimated Duration: 3-4 weeks*
-*Previous Sprint: Sprint 9 - Real-Time, Admin, Scale & Performance ✅*
+_Created: 2025-11-06_
+_Status: Planning_
+_Estimated Duration: 3-4 weeks_
+_Previous Sprint: Sprint 9 - Real-Time, Admin, Scale & Performance ✅_

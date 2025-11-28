@@ -19,6 +19,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 #### Leaderboard Endpoints (3 routes)
 
 **C:\devop\saas202520\apps\web\app\api\v1\leaderboards\route.ts**
+
 - GET /api/v1/leaderboards
 - Global leaderboards with query params: `?type=win-rate|tournaments|prize-money&limit=100`
 - Returns ranked player list with win rate, tournament count, or prize money
@@ -26,6 +27,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 - Multi-tenant filtering by orgId
 
 **C:\devop\saas202520\apps\web\app\api\v1\leaderboards\venue\[id]\route.ts**
+
 - GET /api/v1/leaderboards/venue/[id]
 - Venue-specific leaderboard
 - Query params: `?type=win-rate|tournaments&limit=100`
@@ -33,6 +35,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 - Minimum 3 matches played to qualify
 
 **C:\devop\saas202520\apps\web\app\api\v1\leaderboards\format\[format]\route.ts**
+
 - GET /api/v1/leaderboards/format/[format]
 - Format-specific leaderboard (single_elimination, double_elimination, etc.)
 - Query params: `?limit=100`
@@ -42,6 +45,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 #### Venue Endpoints (3 routes)
 
 **C:\devop\saas202520\apps\web\app\api\v1\venues\route.ts**
+
 - GET /api/v1/venues
 - List all venues with pagination
 - Query params: `?page=1&limit=20&search=pool&city=chicago`
@@ -49,12 +53,14 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 - NOTE: Requires venues table to be added to schema (currently returns mock data)
 
 **C:\devop\saas202520\apps\web\app\api\v1\venues\[id]\route.ts**
+
 - GET /api/v1/venues/[id]
 - Get single venue details
 - Returns full venue object (name, address, capacity, amenities, contact, statistics)
 - NOTE: Currently returns 501 Not Implemented (venues table not in schema yet)
 
 **C:\devop\saas202520\apps\web\app\api\v1\venues\[id]\tournaments\route.ts**
+
 - GET /api/v1/venues/[id]/tournaments
 - List tournaments at venue
 - Query params: `?status=upcoming|active|completed&page=1&limit=20`
@@ -64,6 +70,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 ### 2. OpenAPI Specification
 
 **C:\devop\saas202520\apps\web\public\api-docs\openapi.json**
+
 - Complete OpenAPI 3.0 specification
 - Documents all 6 new endpoints
 - Includes:
@@ -80,6 +87,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 ### 3. Swagger UI Integration
 
 **C:\devop\saas202520\apps\web\app\api-docs\page.tsx**
+
 - Interactive Swagger UI page
 - Features:
   - "Try it out" functionality with API key input
@@ -93,6 +101,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 ### 4. Documentation Landing Page
 
 **C:\devop\saas202520\apps\web\app\api-docs\overview\page.tsx**
+
 - Comprehensive developer documentation
 - Sections:
   1. **Getting Started**
@@ -118,6 +127,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 ### 5. Type Definitions
 
 **C:\devop\saas202520\apps\web\lib\api\types.ts**
+
 - Complete TypeScript types for all API responses
 - Includes:
   - LeaderboardEntry, VenueLeaderboardEntry, FormatLeaderboardEntry
@@ -134,18 +144,21 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 ## Key Features Implemented
 
 ### Authentication & Security
+
 - Bearer token authentication (placeholder tenant ID for now)
 - TODO: Connect to API key middleware from Agent 1
 - TODO: Add rate limiting integration
 - Multi-tenant filtering on all queries (orgId)
 
 ### Response Formats
+
 - Consistent JSON response structure
 - Standard error responses with codes
 - Pagination metadata on list endpoints
 - Rate limit headers (documented, not yet implemented)
 
 ### Code Quality
+
 - TypeScript with strict typing
 - Error handling on all endpoints
 - Query parameter validation
@@ -153,6 +166,7 @@ Implemented 6 additional API endpoints (leaderboards and venues), comprehensive 
 - Follows coding standards (camelCase, 80-char lines, docstrings)
 
 ### Documentation
+
 - OpenAPI 3.0 compliant specification
 - Interactive Swagger UI
 - Code examples in 3 languages
@@ -175,11 +189,13 @@ pnpm add -D @types/swagger-ui-react --filter web
 ## Database Schema Considerations
 
 ### Existing Tables Used
+
 - `players` - For leaderboard data
 - `matches` - For win/loss statistics
 - `tournaments` - For tournament filtering
 
 ### Tables Needed (Not Yet Implemented)
+
 1. **venues** table - Required for venue endpoints
    - Fields: id, orgId, name, address, city, state, zip, capacity, amenities, contact
    - Relation: tournaments.venue_id → venues.id
@@ -190,6 +206,7 @@ pnpm add -D @types/swagger-ui-react --filter web
    - Fields: id, tournament_id, player_id, amount, placement
 
 ### Current Workarounds
+
 - Venue endpoints return mock data or 501 Not Implemented
 - Prize money leaderboard returns empty array
 - Venue leaderboard uses all player data (not filtered by venue yet)
@@ -198,20 +215,21 @@ pnpm add -D @types/swagger-ui-react --filter web
 
 ## API Endpoints Summary
 
-| Method | Endpoint | Status | Description |
-|--------|----------|--------|-------------|
-| GET | /api/v1/leaderboards | ✅ Working | Global player rankings by win-rate, tournaments, or prize-money |
-| GET | /api/v1/leaderboards/venue/:id | ⚠️ Partial | Venue-specific rankings (not filtered by venue yet) |
-| GET | /api/v1/leaderboards/format/:format | ✅ Working | Rankings by tournament format |
-| GET | /api/v1/venues | ⚠️ Mock | List venues (requires venues table) |
-| GET | /api/v1/venues/:id | ❌ Not Impl | Venue details (requires venues table) |
-| GET | /api/v1/venues/:id/tournaments | ⚠️ Mock | Tournaments at venue (requires venue_id on tournaments) |
+| Method | Endpoint                            | Status      | Description                                                     |
+| ------ | ----------------------------------- | ----------- | --------------------------------------------------------------- |
+| GET    | /api/v1/leaderboards                | ✅ Working  | Global player rankings by win-rate, tournaments, or prize-money |
+| GET    | /api/v1/leaderboards/venue/:id      | ⚠️ Partial  | Venue-specific rankings (not filtered by venue yet)             |
+| GET    | /api/v1/leaderboards/format/:format | ✅ Working  | Rankings by tournament format                                   |
+| GET    | /api/v1/venues                      | ⚠️ Mock     | List venues (requires venues table)                             |
+| GET    | /api/v1/venues/:id                  | ❌ Not Impl | Venue details (requires venues table)                           |
+| GET    | /api/v1/venues/:id/tournaments      | ⚠️ Mock     | Tournaments at venue (requires venue_id on tournaments)         |
 
 ---
 
 ## Testing Endpoints
 
 ### Test Leaderboard Endpoint
+
 ```bash
 curl -X GET "http://localhost:3000/api/v1/leaderboards?type=win-rate&limit=50" \
   -H "Authorization: Bearer sk_live_test_key" \
@@ -219,12 +237,14 @@ curl -X GET "http://localhost:3000/api/v1/leaderboards?type=win-rate&limit=50" \
 ```
 
 ### Test Format Leaderboard
+
 ```bash
 curl -X GET "http://localhost:3000/api/v1/leaderboards/format/single_elimination?limit=100" \
   -H "Authorization: Bearer sk_live_test_key"
 ```
 
 ### Access Documentation
+
 - Swagger UI: http://localhost:3000/api-docs
 - Overview: http://localhost:3000/api-docs/overview
 
@@ -233,6 +253,7 @@ curl -X GET "http://localhost:3000/api/v1/leaderboards/format/single_elimination
 ## Next Steps
 
 ### Immediate (Same Sprint)
+
 1. **Connect Authentication Middleware**
    - Integrate with Agent 1's API key authentication
    - Replace placeholder tenant ID with real tenant from API key
@@ -249,6 +270,7 @@ curl -X GET "http://localhost:3000/api/v1/leaderboards/format/single_elimination
    - Track tournament winnings
 
 ### Future Enhancements
+
 1. **Caching**
    - Add Redis caching for leaderboards (5-10 min TTL)
    - Cache venue data (longer TTL)
@@ -298,12 +320,14 @@ apps/web/
 ## Notes
 
 ### Multi-Tenant Considerations
+
 - All endpoints filter by `tenant_id` (orgId)
 - Tenant ID extracted from API key (once authentication is connected)
 - No cross-tenant data leakage
 - All queries include `WHERE t.org_id = ${tenantId}`
 
 ### Performance Considerations
+
 - Leaderboard queries use raw SQL for performance
 - Minimum match counts to prevent noise (3-5 matches)
 - Pagination on all list endpoints
@@ -313,6 +337,7 @@ apps/web/
   - players.tournament_id
 
 ### Code Standards Compliance
+
 - ✅ TypeScript with strict types
 - ✅ camelCase for variables/functions
 - ✅ PascalCase for interfaces/types

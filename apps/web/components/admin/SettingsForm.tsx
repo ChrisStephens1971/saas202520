@@ -92,9 +92,7 @@ export function SettingsForm({
   const renderGeneralSettings = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Site Name
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Site Name</label>
         <input
           type="text"
           value={formData.siteName || ''}
@@ -105,9 +103,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Site Description
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Site Description</label>
         <textarea
           value={formData.siteDescription || ''}
           onChange={(e) => handleChange('siteDescription', e.target.value)}
@@ -118,9 +114,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Timezone
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Timezone</label>
         <select
           value={formData.timezone || 'America/New_York'}
           onChange={(e) => handleChange('timezone', e.target.value)}
@@ -137,9 +131,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Language
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
         <select
           value={formData.language || 'en'}
           onChange={(e) => handleChange('language', e.target.value)}
@@ -157,9 +149,7 @@ export function SettingsForm({
   const renderEmailSettings = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          SMTP Host
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Host</label>
         <input
           type="text"
           value={formData.smtpHost || ''}
@@ -170,9 +160,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          SMTP Port
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Port</label>
         <input
           type="number"
           value={formData.smtpPort || ''}
@@ -183,9 +171,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          SMTP Username
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Username</label>
         <input
           type="text"
           value={formData.smtpUser || ''}
@@ -196,9 +182,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          SMTP Password
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">SMTP Password</label>
         <input
           type="password"
           value={formData.smtpPassword || ''}
@@ -210,9 +194,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          From Email
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">From Email</label>
         <input
           type="email"
           value={formData.smtpFromEmail || ''}
@@ -223,9 +205,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          From Name
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">From Name</label>
         <input
           type="text"
           value={formData.smtpFromName || ''}
@@ -293,9 +273,7 @@ export function SettingsForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Max Login Attempts
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Max Login Attempts</label>
         <input
           type="number"
           value={formData.maxLoginAttempts || 5}
@@ -324,9 +302,7 @@ export function SettingsForm({
   const renderPerformanceSettings = () => (
     <div className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Cache TTL (seconds)
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Cache TTL (seconds)</label>
         <input
           type="number"
           value={formData.cacheTTL || ''}
@@ -334,7 +310,9 @@ export function SettingsForm({
           placeholder="3600"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-        <p className="mt-1 text-xs text-gray-500">How long to cache data (default: 3600s / 1 hour)</p>
+        <p className="mt-1 text-xs text-gray-500">
+          How long to cache data (default: 3600s / 1 hour)
+        </p>
       </div>
 
       <div>
@@ -421,9 +399,7 @@ export function SettingsForm({
       <div className="mt-8 flex items-center justify-between pt-6 border-t border-gray-200">
         <div>
           {saveStatus === 'success' && (
-            <span className="text-sm text-green-600 font-medium">
-              Settings saved successfully!
-            </span>
+            <span className="text-sm text-green-600 font-medium">Settings saved successfully!</span>
           )}
           {saveStatus === 'error' && (
             <span className="text-sm text-red-600 font-medium">

@@ -7,7 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { createConnectAccount, createAccountLink } from '@/lib/stripe';
-import type { CreateStripeAccountRequest, CreateStripeAccountResponse } from '@tournament/shared/types/payment';
+import type {
+  CreateStripeAccountRequest,
+  CreateStripeAccountResponse,
+} from '@tournament/shared/types/payment';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,10 +23,7 @@ export async function POST(request: NextRequest) {
     const { orgId, country } = body;
 
     if (!orgId) {
-      return NextResponse.json(
-        { error: 'Missing required field: orgId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: orgId' }, { status: 400 });
     }
 
     // Verify user has access to this organization
@@ -88,11 +88,7 @@ export async function POST(request: NextRequest) {
     const returnUrl = `${baseUrl}/settings/payments/onboarding/return?org=${orgId}`;
     const refreshUrl = `${baseUrl}/settings/payments/onboarding/refresh?org=${orgId}`;
 
-    const accountLink = await createAccountLink(
-      stripeAccountId,
-      returnUrl,
-      refreshUrl
-    );
+    const accountLink = await createAccountLink(stripeAccountId, returnUrl, refreshUrl);
 
     const account = await prisma.stripeAccount.findUnique({
       where: { orgId },
@@ -126,9 +122,6 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     console.error('Error creating Stripe onboarding:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

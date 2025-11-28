@@ -6,7 +6,11 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { recalculatePlayerStatistics, updateStatisticsAfterMatch, calculateStreaks } from '../statistics-calculator';
+import {
+  recalculatePlayerStatistics,
+  updateStatisticsAfterMatch,
+  calculateStreaks,
+} from '../statistics-calculator';
 
 const mockPrisma = {
   matchHistory: {
@@ -19,8 +23,8 @@ const mockPrisma = {
     upsert: vi.fn(),
   },
 };
-n// Mock @/lib/prisma module
-vi.mock("@/lib/prisma", () => ({
+n; // Mock @/lib/prisma module
+vi.mock('@/lib/prisma', () => ({
   prisma: mockPrisma,
 }));
 

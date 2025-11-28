@@ -5,11 +5,13 @@
 ### Initial Setup
 
 1. **Verify configuration**
+
    ```bash
    cat config.json
    ```
 
 2. **Test scripts**
+
    ```bash
    python scripts/aggregate-status.py
    node scripts/track-costs.js report
@@ -100,6 +102,7 @@ node scripts/collect-metrics.js
 ### Manually Assign Work to Lane
 
 Add label to PR:
+
 ```bash
 gh pr edit 123 --add-label "lane:backend"
 ```
@@ -132,12 +135,14 @@ done
 ### Agent Not Picking Up Work
 
 **Check:**
+
 1. Lane capacity not exceeded
 2. Agent status is "idle" not "paused"
 3. Ticket is in "Ready" column
 4. Ticket has correct lane label
 
 **Fix:**
+
 ```bash
 # Check config
 cat config.json | jq '.lanes.backend.maxConcurrent'
@@ -149,11 +154,13 @@ ls -l agent-status/backend-*.json
 ### Costs Exceeded Budget
 
 **Check:**
+
 ```bash
 node scripts/track-costs.js report
 ```
 
 **Fix:**
+
 1. Review cost breakdown by lane
 2. Adjust budget in config.json if needed
 3. Resume agents:
@@ -164,11 +171,13 @@ node scripts/track-costs.js report
 ### Deadlock Detected
 
 **Check:**
+
 ```bash
 node scripts/detect-deadlocks.js check
 ```
 
 **Fix:**
+
 1. Review deadlock report
 2. Cancel one of the circular PRs
 3. Or manually complete blocking dependency
@@ -176,12 +185,14 @@ node scripts/detect-deadlocks.js check
 ### Workflow Failing
 
 **Check:**
+
 ```bash
 gh run list --workflow=backend-worker.yml
 gh run view <run-id>
 ```
 
 **Common fixes:**
+
 - Secrets not configured (GITHUB_TOKEN, VERCEL_TOKEN)
 - Dependencies missing
 - Tests failing
@@ -251,11 +262,12 @@ echo '{"agentId":"system","type":"system","status":"idle","lastUpdate":"'$(date 
 ### Change Lane Capacity
 
 Edit `config.json`:
+
 ```json
 {
   "lanes": {
     "backend": {
-      "maxConcurrent": 5  // Increased from 3
+      "maxConcurrent": 5 // Increased from 3
     }
   }
 }
@@ -264,12 +276,13 @@ Edit `config.json`:
 ### Add New Security Path
 
 Edit `config.json`:
+
 ```json
 {
   "agents": {
     "reviewer": {
       "requireHumanReviewPaths": [
-        "**/new-sensitive-path/**"  // Add here
+        "**/new-sensitive-path/**" // Add here
       ]
     }
   }
@@ -279,10 +292,11 @@ Edit `config.json`:
 ### Adjust Budget
 
 Edit `config.json`:
+
 ```json
 {
   "cost": {
-    "budgetPerMonth": 750  // Increased from 500
+    "budgetPerMonth": 750 // Increased from 500
   }
 }
 ```
@@ -305,4 +319,4 @@ Edit `config.json`:
 
 ---
 
-*For detailed architecture, see docs/MULTI-TENANT-SWARM-GUIDE.md*
+_For detailed architecture, see docs/MULTI-TENANT-SWARM-GUIDE.md_

@@ -2,21 +2,13 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Trophy,
-  Users,
-  Calendar,
-  Settings,
-  Plus,
-  Heart,
-  Share
-} from 'lucide-react';
+import { Trophy, Users, Calendar, Settings, Plus, Heart, Share } from 'lucide-react';
 import {
   TouchFeedback,
   SwipeableCard,
   BottomSheet,
   TouchOptimizedButton,
-  triggerHaptic
+  triggerHaptic,
 } from '@/components/mobile';
 
 /**
@@ -36,29 +28,29 @@ export default function MobileHomePage() {
       title: 'Tournaments',
       icon: <Trophy className="w-6 h-6" />,
       description: 'View and manage tournaments',
-      path: '/tournaments'
+      path: '/tournaments',
     },
     {
       id: 'scoring',
       title: 'Score Match',
       icon: <Plus className="w-6 h-6" />,
       description: 'Touch-optimized scorer',
-      path: '/scoring'
+      path: '/scoring',
     },
     {
       id: 'players',
       title: 'Players',
       icon: <Users className="w-6 h-6" />,
       description: 'Player profiles and stats',
-      path: '/players'
+      path: '/players',
     },
     {
       id: 'schedule',
       title: 'Schedule',
       icon: <Calendar className="w-6 h-6" />,
       description: 'Upcoming matches and events',
-      path: '/schedule'
-    }
+      path: '/schedule',
+    },
   ];
 
   return (
@@ -67,9 +59,7 @@ export default function MobileHomePage() {
       <div className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10">
         <div className="px-4 py-6">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Pool Tournaments
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Pool Tournaments</h1>
             <TouchFeedback onPress={() => router.push('/settings')}>
               <div className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
                 <Settings className="w-6 h-6 text-gray-600 dark:text-gray-400" />
@@ -88,32 +78,22 @@ export default function MobileHomePage() {
         <div className="grid grid-cols-2 gap-3">
           <TouchFeedback onPress={() => triggerHaptic('light')}>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                12
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Active Tournaments
-              </div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">12</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Active Tournaments</div>
             </div>
           </TouchFeedback>
 
           <TouchFeedback onPress={() => triggerHaptic('light')}>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                48
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Total Players
-              </div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">48</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Total Players</div>
             </div>
           </TouchFeedback>
         </div>
 
         {/* Navigation Cards with Swipe Actions */}
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            Quick Access
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Quick Access</h2>
           <div className="space-y-3">
             {demoCards.map((card) => (
               <SwipeableCard
@@ -125,7 +105,7 @@ export default function MobileHomePage() {
                   onAction: () => {
                     triggerHaptic('success');
                   },
-                  haptic: 'medium'
+                  haptic: 'medium',
                 }}
                 rightAction={{
                   icon: <Share className="w-5 h-5" />,
@@ -134,7 +114,7 @@ export default function MobileHomePage() {
                   onAction: () => {
                     triggerHaptic('success');
                   },
-                  haptic: 'medium'
+                  haptic: 'medium',
                 }}
               >
                 <TouchFeedback
@@ -224,39 +204,24 @@ export default function MobileHomePage() {
             </h3>
 
             <div className="grid grid-cols-3 gap-3">
-              <TouchFeedback
-                onPress={() => {}}
-                hapticType="light"
-              >
+              <TouchFeedback onPress={() => {}} hapticType="light">
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
                   <div className="text-2xl">👆</div>
-                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">
-                    Light
-                  </div>
+                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">Light</div>
                 </div>
               </TouchFeedback>
 
-              <TouchFeedback
-                onPress={() => {}}
-                hapticType="medium"
-              >
+              <TouchFeedback onPress={() => {}} hapticType="medium">
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
                   <div className="text-2xl">👆</div>
-                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">
-                    Medium
-                  </div>
+                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">Medium</div>
                 </div>
               </TouchFeedback>
 
-              <TouchFeedback
-                onPress={() => {}}
-                hapticType="heavy"
-              >
+              <TouchFeedback onPress={() => {}} hapticType="heavy">
                 <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-4 text-center">
                   <div className="text-2xl">👆</div>
-                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">
-                    Heavy
-                  </div>
+                  <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">Heavy</div>
                 </div>
               </TouchFeedback>
             </div>
@@ -291,20 +256,12 @@ export default function MobileHomePage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                Status
-              </div>
-              <div className="font-medium text-gray-900 dark:text-white">
-                Active
-              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Status</div>
+              <div className="font-medium text-gray-900 dark:text-white">Active</div>
             </div>
             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                Last Updated
-              </div>
-              <div className="font-medium text-gray-900 dark:text-white">
-                Just now
-              </div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Last Updated</div>
+              <div className="font-medium text-gray-900 dark:text-white">Just now</div>
             </div>
           </div>
 
@@ -319,11 +276,7 @@ export default function MobileHomePage() {
             >
               Open
             </TouchOptimizedButton>
-            <TouchOptimizedButton
-              fullWidth
-              variant="secondary"
-              onClick={() => setShowSheet(false)}
-            >
+            <TouchOptimizedButton fullWidth variant="secondary" onClick={() => setShowSheet(false)}>
               Close
             </TouchOptimizedButton>
           </div>

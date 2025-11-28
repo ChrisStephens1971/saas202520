@@ -266,11 +266,7 @@
   },
   "phaseTransitions": {
     "planning_to_foundation": {
-      "criteria": [
-        "Roadmap complete",
-        "Architecture decided",
-        "Sprint 1 plan ready"
-      ],
+      "criteria": ["Roadmap complete", "Architecture decided", "Sprint 1 plan ready"],
       "recommended": true,
       "mandatory": false
     },

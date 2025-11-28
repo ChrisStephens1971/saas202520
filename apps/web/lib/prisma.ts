@@ -22,9 +22,7 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const client = new PrismaClient({
     // Logging configuration
-    log: process.env.NODE_ENV === 'development'
-      ? ['query', 'error', 'warn']
-      : ['error'],
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 
     // Connection pool configuration
     // Optimized for serverless and traditional deployments

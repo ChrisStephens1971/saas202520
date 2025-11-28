@@ -1,4 +1,5 @@
 # PWA Implementation Guide
+
 **Sprint 10 Week 4 - Agent 3: PWA Install & Push Notifications**
 
 ## Overview
@@ -108,9 +109,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#3b82f6" />
       </head>
       <body>
-        <PWAProvider>
-          {children}
-        </PWAProvider>
+        <PWAProvider>{children}</PWAProvider>
       </body>
     </html>
   );
@@ -122,16 +121,19 @@ export default function RootLayout({ children }) {
 ### 1. PWA Installation
 
 **Smart Timing:**
+
 - Shows after 3 visits
 - Waits 7 days between prompts
 - Respects "never show" preference
 
 **Platform Support:**
+
 - **Android/Chrome**: Native install prompt
 - **iOS/Safari**: Manual instructions
 - **Desktop**: Browser-specific install
 
 **User Actions:**
+
 - Install Now
 - Maybe Later
 - Never Show Again
@@ -141,6 +143,7 @@ export default function RootLayout({ children }) {
 **5 Notification Types:**
 
 1. **Match Notifications** (15 min before)
+
    ```typescript
    {
      type: 'match',
@@ -151,6 +154,7 @@ export default function RootLayout({ children }) {
    ```
 
 2. **Tournament Updates** (bracket changes)
+
    ```typescript
    {
      type: 'tournament',
@@ -161,6 +165,7 @@ export default function RootLayout({ children }) {
    ```
 
 3. **Achievement Unlocks** (immediate)
+
    ```typescript
    {
      type: 'achievement',
@@ -171,6 +176,7 @@ export default function RootLayout({ children }) {
    ```
 
 4. **System Announcements** (important)
+
    ```typescript
    {
      type: 'announcement',
@@ -191,6 +197,7 @@ export default function RootLayout({ children }) {
    ```
 
 **Notification Preferences:**
+
 - Enable/disable per type
 - Quiet hours (custom time range)
 - Sound on/off
@@ -210,6 +217,7 @@ export default function RootLayout({ children }) {
 ### Test 1: PWA Installation
 
 #### Android/Chrome
+
 1. Open app in Chrome
 2. Visit 3 times (or more)
 3. Wait 2 seconds for banner
@@ -219,6 +227,7 @@ export default function RootLayout({ children }) {
 7. Verify standalone mode (no browser UI)
 
 #### iOS/Safari
+
 1. Open app in Safari
 2. Visit 3 times
 3. Banner shows with instructions
@@ -227,6 +236,7 @@ export default function RootLayout({ children }) {
 6. Verify app on home screen
 
 #### Desktop/Chrome
+
 1. Open in Chrome/Edge
 2. Visit multiple times
 3. Click install prompt
@@ -252,6 +262,7 @@ manager.reset(); // Reset visit count
 ### Test 3: Push Notifications
 
 #### Subscribe Flow
+
 1. Go to Settings → Notifications
 2. Toggle "Push Notifications" on
 3. Grant permission in browser
@@ -259,6 +270,7 @@ manager.reset(); // Reset visit count
 5. Check database for subscription record
 
 #### Send Test Notification
+
 1. In Notification Settings
 2. Click "Send Test"
 3. Verify notification appears
@@ -266,6 +278,7 @@ manager.reset(); // Reset visit count
 5. Check analytics tracked
 
 #### Notification Types
+
 Test each type:
 
 ```typescript
@@ -274,7 +287,9 @@ fetch('/api/notifications/send', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    subscription: { /* your subscription */ },
+    subscription: {
+      /* your subscription */
+    },
     notification: {
       title: 'Test Match',
       body: 'Your match starts in 15 minutes',
@@ -283,10 +298,10 @@ fetch('/api/notifications/send', {
       tag: 'match-123',
       data: {
         url: '/matches/123',
-        type: 'match'
-      }
-    }
-  })
+        type: 'match',
+      },
+    },
+  }),
 });
 ```
 
@@ -336,12 +351,14 @@ fetch('/api/notifications/send', {
 ### Test 6: App Shortcuts
 
 #### Android
+
 1. Long-press app icon
 2. Verify 4 shortcuts appear
 3. Tap each shortcut
 4. Verify correct page opens
 
 #### iOS
+
 1. 3D Touch app icon
 2. Verify shortcuts appear
 3. Tap each shortcut
@@ -352,12 +369,14 @@ fetch('/api/notifications/send', {
 ### Issue: Install prompt not showing
 
 **Possible causes:**
+
 - Not visited 3 times yet
 - Shown recently (within 7 days)
 - User clicked "Never show"
 - Not HTTPS (PWA requires HTTPS)
 
 **Solutions:**
+
 ```typescript
 // Reset state
 const manager = getInstallPromptManager();
@@ -370,15 +389,17 @@ console.log(manager.getState());
 ### Issue: Push notifications not working
 
 **Possible causes:**
+
 - VAPID keys not configured
 - Service worker not registered
 - Notification permission denied
 - Subscription not saved
 
 **Solutions:**
+
 ```typescript
 // Check service worker
-navigator.serviceWorker.getRegistration().then(reg => {
+navigator.serviceWorker.getRegistration().then((reg) => {
   console.log('SW registered:', !!reg);
 });
 
@@ -387,7 +408,7 @@ console.log('Permission:', Notification.permission);
 
 // Check subscription
 const manager = getPushNotificationManager();
-manager.getSubscription().then(sub => {
+manager.getSubscription().then((sub) => {
   console.log('Subscribed:', !!sub);
 });
 ```
@@ -395,6 +416,7 @@ manager.getSubscription().then(sub => {
 ### Issue: Notifications during quiet hours
 
 **Check preference logic:**
+
 ```typescript
 const manager = getPushNotificationManager();
 const prefs = manager.getPreferences();
@@ -407,9 +429,10 @@ console.log('Should show match:', manager.shouldShowNotification('match'));
 ### Issue: Service worker not updating
 
 **Force update:**
+
 ```typescript
 // Unregister and re-register
-navigator.serviceWorker.getRegistration().then(reg => {
+navigator.serviceWorker.getRegistration().then((reg) => {
   reg.unregister().then(() => {
     navigator.serviceWorker.register('/sw.js');
   });
@@ -419,16 +442,19 @@ navigator.serviceWorker.getRegistration().then(reg => {
 ## Performance Considerations
 
 ### Cache Size
+
 - Max cache: 50MB
 - Automatic cleanup with Workbox
 - Monitor with dev tools
 
 ### Notification Frequency
+
 - Rate limit notifications
 - Batch updates when possible
 - Respect user preferences
 
 ### Battery Impact
+
 - Use `requireInteraction: false` for most notifications
 - Only use `true` for critical (match start)
 - Vibration pattern: short and efficient
@@ -436,16 +462,19 @@ navigator.serviceWorker.getRegistration().then(reg => {
 ## Security
 
 ### VAPID Keys
+
 - Keep private key secret (server-only)
 - Rotate keys periodically
 - Never commit to version control
 
 ### Subscription Data
+
 - Encrypt in database
 - Associate with user ID
 - Clean up old subscriptions
 
 ### Content Security
+
 - Validate notification payloads
 - Sanitize user input
 - Use HTTPS only
@@ -459,7 +488,7 @@ Track these events:
 gtag('event', 'pwa_install', {
   event_category: 'PWA',
   event_label: 'accepted',
-  platform: 'android'
+  platform: 'android',
 });
 
 // Notification events

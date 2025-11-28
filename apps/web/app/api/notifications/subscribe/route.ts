@@ -11,20 +11,14 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
     const { subscription, preferences } = body;
 
     if (!subscription || !subscription.endpoint) {
-      return NextResponse.json(
-        { error: 'Invalid subscription data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid subscription data' }, { status: 400 });
     }
 
     // Store or update subscription in database
@@ -56,9 +50,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error subscribing to notifications:', error);
-    return NextResponse.json(
-      { error: 'Failed to subscribe to notifications' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to subscribe to notifications' }, { status: 500 });
   }
 }

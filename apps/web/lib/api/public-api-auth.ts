@@ -82,9 +82,7 @@ function extractApiKey(request: NextRequest): string | null {
  * }
  * const tenantId = auth.context.tenantId;
  */
-export async function authenticateApiRequest(
-  request: NextRequest
-): Promise<ApiAuthResult> {
+export async function authenticateApiRequest(request: NextRequest): Promise<ApiAuthResult> {
   try {
     // Extract API key from header
     const apiKey = extractApiKey(request);
@@ -118,7 +116,7 @@ export async function authenticateApiRequest(
     });
 
     // Find matching key by comparing hashes
-    let matchedKey: typeof apiKeys[0] | null = null;
+    let matchedKey: (typeof apiKeys)[0] | null = null;
     for (const key of apiKeys) {
       const isMatch = await bcrypt.compare(apiKey, key.keyHash);
       if (isMatch) {
@@ -185,9 +183,7 @@ export async function authenticateApiRequest(
  * Get tenant ID from authenticated request
  * Convenience wrapper around authenticateApiRequest
  */
-export async function getTenantIdFromApiKey(
-  request: NextRequest
-): Promise<string | null> {
+export async function getTenantIdFromApiKey(request: NextRequest): Promise<string | null> {
   const auth = await authenticateApiRequest(request);
   return auth.success ? auth.context.tenantId : null;
 }

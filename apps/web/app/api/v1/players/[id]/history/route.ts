@@ -38,10 +38,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/players/clx1234/history?page=1&limit=20
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -49,10 +46,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -72,10 +66,7 @@ export async function GET(
     );
 
     if (!queryValidation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: queryValidation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: queryValidation.error.errors });
     }
 
     const { page, limit, status } = queryValidation.data;
@@ -108,7 +99,8 @@ export async function GET(
       },
     });
 
-    const privacySettings = (profile?.privacySettings as unknown as { showHistory?: boolean }) || {};
+    const privacySettings =
+      (profile?.privacySettings as unknown as { showHistory?: boolean }) || {};
     if (!privacySettings.showHistory) {
       return forbiddenError('Player history is private');
     }
@@ -116,10 +108,12 @@ export async function GET(
     // Build where clause
     const where: Prisma.TournamentWhereInput = {
       id: {
-        in: await prisma.player.findMany({
-          where: { id: playerId },
-          select: { tournamentId: true },
-        }).then(results => results.map(r => r.tournamentId)),
+        in: await prisma.player
+          .findMany({
+            where: { id: playerId },
+            select: { tournamentId: true },
+          })
+          .then((results) => results.map((r) => r.tournamentId)),
       },
       orgId: tenantId,
     };
@@ -174,15 +168,15 @@ export async function GET(
     });
 
     // Transform to API response format
-    const data: PlayerTournamentHistory[] = tournaments.map(t => {
+    const data: PlayerTournamentHistory[] = tournaments.map((t) => {
       const playerData = t.players[0];
 
       const matchesAsA = playerData?.matchesAsPlayerA || [];
       const matchesAsB = playerData?.matchesAsPlayerB || [];
 
       const wins = [
-        ...matchesAsA.filter(m => m.winnerId === playerId),
-        ...matchesAsB.filter(m => m.winnerId === playerId),
+        ...matchesAsA.filter((m) => m.winnerId === playerId),
+        ...matchesAsB.filter((m) => m.winnerId === playerId),
       ].length;
 
       const totalMatches = matchesAsA.length + matchesAsB.length;
@@ -205,7 +199,6 @@ export async function GET(
     const rateLimitHeaders = getRateLimitHeaders(1000, 992, Date.now() + 3600000);
 
     return apiPaginated(data, pagination, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/players/${id}/history:`, error);

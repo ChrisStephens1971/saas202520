@@ -5,11 +5,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ExportService } from '../export-service';
-import {
-  createMockPrismaClient,
-  resetAllMocks,
-  fixtures,
-} from '../../__tests__/test-utils';
+import { createMockPrismaClient, resetAllMocks, fixtures } from '../../__tests__/test-utils';
 
 vi.mock('@prisma/client', () => ({
   PrismaClient: vi.fn(() => createMockPrismaClient()),
@@ -50,9 +46,7 @@ describe('ExportService', () => {
     });
 
     it('should handle custom columns', async () => {
-      const data = [
-        { id: 1, name: 'Alice', age: 30, city: 'NYC' },
-      ];
+      const data = [{ id: 1, name: 'Alice', age: 30, city: 'NYC' }];
 
       const result = await ExportService.exportToCSV(data, {
         columns: ['name', 'city'],
@@ -65,9 +59,7 @@ describe('ExportService', () => {
     });
 
     it('should escape special characters', async () => {
-      const data = [
-        { name: 'Alice, Jr.', description: 'Uses "quotes"' },
-      ];
+      const data = [{ name: 'Alice, Jr.', description: 'Uses "quotes"' }];
 
       const result = await ExportService.exportToCSV(data, {
         filename: 'escaped.csv',
@@ -108,9 +100,7 @@ describe('ExportService', () => {
     });
 
     it('should handle single sheet', async () => {
-      const data = [
-        { name: 'Alice', revenue: 1000 },
-      ];
+      const data = [{ name: 'Alice', revenue: 1000 }];
 
       const buffer = await ExportService.exportToExcel(data, {
         filename: 'single-sheet.xlsx',
@@ -121,10 +111,7 @@ describe('ExportService', () => {
     });
 
     it('should handle empty sheets', async () => {
-      const buffer = await ExportService.exportToExcel(
-        { Sheet1: [] },
-        { filename: 'empty.xlsx' }
-      );
+      const buffer = await ExportService.exportToExcel({ Sheet1: [] }, { filename: 'empty.xlsx' });
 
       expect(buffer).toBeInstanceOf(Buffer);
     });
@@ -197,9 +184,7 @@ describe('ExportService', () => {
         exportType: 'invalid',
       };
 
-      await expect(
-        ExportService.queueExportJob(invalidJob as any)
-      ).rejects.toThrow();
+      await expect(ExportService.queueExportJob(invalidJob as any)).rejects.toThrow();
     });
 
     it('should set job priority', async () => {
@@ -266,9 +251,7 @@ describe('ExportService', () => {
     });
 
     it('should handle non-existent job', async () => {
-      await expect(
-        ExportService.getExportStatus('nonexistent-job')
-      ).rejects.toThrow();
+      await expect(ExportService.getExportStatus('nonexistent-job')).rejects.toThrow();
     });
   });
 

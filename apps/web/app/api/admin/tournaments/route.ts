@@ -28,7 +28,13 @@ const ListTournamentsQuerySchema = z.object({
     .enum(['draft', 'registration', 'active', 'paused', 'completed', 'cancelled'])
     .optional(),
   format: z
-    .enum(['single_elimination', 'double_elimination', 'round_robin', 'modified_single', 'chip_format'])
+    .enum([
+      'single_elimination',
+      'double_elimination',
+      'round_robin',
+      'modified_single',
+      'chip_format',
+    ])
     .optional(),
   orgId: z.string().optional(),
   startDate: z.string().datetime().optional(),
@@ -41,7 +47,13 @@ const CreateTournamentSchema = z.object({
   orgId: z.string().min(1, 'Organization ID is required'),
   name: z.string().min(1).max(255),
   description: z.string().max(2000).optional().nullable(),
-  format: z.enum(['single_elimination', 'double_elimination', 'round_robin', 'modified_single', 'chip_format']),
+  format: z.enum([
+    'single_elimination',
+    'double_elimination',
+    'round_robin',
+    'modified_single',
+    'chip_format',
+  ]),
   sportConfigId: z.string().min(1),
   sportConfigVersion: z.string().min(1),
   status: z.enum(['draft', 'registration', 'active']).default('draft'),
@@ -81,18 +93,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const {
-      page,
-      limit,
-      search,
-      status,
-      format,
-      orgId,
-      startDate,
-      endDate,
-      sortBy,
-      sortOrder,
-    } = validation.data;
+    const { page, limit, search, status, format, orgId, startDate, endDate, sortBy, sortOrder } =
+      validation.data;
 
     // Build where clause
     const where: Prisma.TournamentWhereInput = {};
@@ -144,9 +146,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy:
-        sortBy === 'playerCount'
-          ? { players: { _count: sortOrder } }
-          : { [sortBy]: sortOrder },
+        sortBy === 'playerCount' ? { players: { _count: sortOrder } } : { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
     });

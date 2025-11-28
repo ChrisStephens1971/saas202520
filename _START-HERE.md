@@ -16,12 +16,14 @@ This project has been created with a complete planning and documentation structu
 ### 1. Get Oriented (2 minutes)
 
 **What you have:**
+
 - ✅ Complete folder structure for planning and documentation
 - ✅ Templates ready to use
 - ✅ Git repository initialized
 - ✅ VS Code workspace configured
 
 **Where things are:**
+
 - `product/` - PRDs, roadmaps, features
 - `sprints/` - Sprint plans, user stories
 - `technical/` - Tech specs, ADRs, API docs
@@ -33,6 +35,7 @@ This project has been created with a complete planning and documentation structu
 **Have a project brief ready?**
 
 Open `project-brief/brief.md` and paste your vision. You can also add:
+
 - `project-brief/vision.md` - Long-term vision
 - `project-brief/target-users.md` - User personas
 - Or create your own `.md` files in `project-brief/`
@@ -46,6 +49,7 @@ Claude automatically reads ALL files in `project-brief/` during planning!
 **✅ Good news: Most tools are BUILT-IN!**
 
 Claude Code comes with powerful built-in tools that require ZERO setup:
+
 - **File operations** (Read, Write, Edit, Search)
 - **Specialized agents** (Explore codebase, Plan implementation)
 - **Web research** (WebSearch, WebFetch)
@@ -58,6 +62,7 @@ Claude Code comes with powerful built-in tools that require ZERO setup:
 **📦 Optional Extensions (Install Later)**
 
 When you're ready to code or need advanced features:
+
 - **Claude Skills** - Document processing (Excel, PDF, Word)
 - **WSHobson Agents** - Framework specialists (React, Python, databases)
 - **Claude Code Templates** - Role-based development workflows
@@ -80,11 +85,13 @@ Claude will guide you through creating your roadmap, sprint plan, and initial do
 ## 📖 Learn More
 
 **Detailed guides:**
+
 - `docs/ONBOARDING-GUIDE.md` - Complete onboarding walkthrough
 - `docs/TEMPLATES-INVENTORY.md` - All templates explained
 - `README.md` - Full template system documentation
 
 **Quick references:**
+
 - `docs/quick-reference/` - Quick start guides for different scenarios
 - `docs/guides/` - Solo founder guide, validation checklist, sprint plans
 
@@ -95,15 +102,18 @@ Claude will guide you through creating your roadmap, sprint plan, and initial do
 Tell Claude any of these:
 
 **Planning:**
+
 - "Help me create a product roadmap"
 - "Let's write a PRD for [feature]"
 - "Plan my first sprint"
 
 **Documentation:**
+
 - "Document my tech stack decision"
 - "Create a runbook for deployment"
 
 **Guidance:**
+
 - "What should I do first?"
 - "How do solo founders use this?"
 

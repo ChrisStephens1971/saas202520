@@ -14,10 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/auth/admin-middleware';
 import { prisma } from '@tournament/shared';
-import {
-  logTournamentUpdated,
-  logTournamentDeleted,
-} from '@/lib/audit/logger';
+import { logTournamentUpdated, logTournamentDeleted } from '@/lib/audit/logger';
 
 // ============================================================================
 // VALIDATION SCHEMAS
@@ -30,7 +27,13 @@ const UpdateTournamentSchema = z.object({
     .enum(['draft', 'registration', 'active', 'paused', 'completed', 'cancelled'])
     .optional(),
   format: z
-    .enum(['single_elimination', 'double_elimination', 'round_robin', 'modified_single', 'chip_format'])
+    .enum([
+      'single_elimination',
+      'double_elimination',
+      'round_robin',
+      'modified_single',
+      'chip_format',
+    ])
     .optional(),
 });
 
@@ -41,10 +44,7 @@ const UpdateTournamentSchema = z.object({
 /**
  * Get tournament details with full admin context
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {
@@ -175,10 +175,7 @@ export async function GET(
 /**
  * Update tournament (admin override)
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {

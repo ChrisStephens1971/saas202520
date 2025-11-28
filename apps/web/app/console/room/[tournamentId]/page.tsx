@@ -53,40 +53,43 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
   });
 
   // Generate quick actions based on current state
-  const quickActions: QuickAction[] = data ? [
-    {
-      type: QuickActionType.ASSIGN_TO_TABLE,
-      matchId: filteredMatches[0]?.match.id || '',
-      label: 'Assign Next',
-      icon: '🎯',
-      disabled: filteredMatches.length === 0 || data.overview.availableTables === 0,
-      disabledReason: filteredMatches.length === 0 ? 'No matches in queue' : 'No tables available',
-    },
-    {
-      type: QuickActionType.START_MATCH,
-      matchId: '',
-      label: 'Start Match',
-      icon: '▶️',
-      disabled: data.overview.activeMatches >= data.overview.totalTables,
-      disabledReason: 'All tables in use',
-    },
-    {
-      type: QuickActionType.COMPLETE_MATCH,
-      matchId: '',
-      label: 'Complete Match',
-      icon: '✅',
-      disabled: data.overview.activeMatches === 0,
-      disabledReason: 'No active matches',
-    },
-    {
-      type: QuickActionType.UPDATE_SCORE,
-      matchId: '',
-      label: 'Update Score',
-      icon: '📊',
-      disabled: data.overview.activeMatches === 0,
-      disabledReason: 'No active matches',
-    },
-  ] : [];
+  const quickActions: QuickAction[] = data
+    ? [
+        {
+          type: QuickActionType.ASSIGN_TO_TABLE,
+          matchId: filteredMatches[0]?.match.id || '',
+          label: 'Assign Next',
+          icon: '🎯',
+          disabled: filteredMatches.length === 0 || data.overview.availableTables === 0,
+          disabledReason:
+            filteredMatches.length === 0 ? 'No matches in queue' : 'No tables available',
+        },
+        {
+          type: QuickActionType.START_MATCH,
+          matchId: '',
+          label: 'Start Match',
+          icon: '▶️',
+          disabled: data.overview.activeMatches >= data.overview.totalTables,
+          disabledReason: 'All tables in use',
+        },
+        {
+          type: QuickActionType.COMPLETE_MATCH,
+          matchId: '',
+          label: 'Complete Match',
+          icon: '✅',
+          disabled: data.overview.activeMatches === 0,
+          disabledReason: 'No active matches',
+        },
+        {
+          type: QuickActionType.UPDATE_SCORE,
+          matchId: '',
+          label: 'Update Score',
+          icon: '📊',
+          disabled: data.overview.activeMatches === 0,
+          disabledReason: 'No active matches',
+        },
+      ]
+    : [];
 
   const handleQuickAction = async (action: QuickAction) => {
     try {
@@ -178,33 +181,26 @@ export default function RoomViewPage({ params }: RoomViewPageProps) {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
             </svg>
           </button>
         </div>
 
         {/* Tournament Overview Stats */}
-        {data && (
-          <TournamentOverviewComponent
-            data={data.overview}
-            loading={loading}
-          />
-        )}
+        {data && <TournamentOverviewComponent data={data.overview} loading={loading} />}
 
         {/* Quick Actions */}
         {data && (
-          <QuickActions
-            actions={quickActions}
-            onAction={handleQuickAction}
-            loading={loading}
-          />
+          <QuickActions actions={quickActions} onAction={handleQuickAction} loading={loading} />
         )}
 
         {/* Filters */}
-        <RoomViewFiltersComponent
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
+        <RoomViewFiltersComponent filters={filters} onFiltersChange={setFilters} />
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -372,7 +368,12 @@ function InstallPrompt() {
             className="text-gray-400 hover:text-white transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>

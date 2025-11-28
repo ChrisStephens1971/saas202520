@@ -109,21 +109,20 @@ export const TournamentCache = {
   /**
    * Cache tournament data
    */
-  async getTournament(tenantId: string, tournamentId: string, requestId?: string): Promise<TournamentData | null> {
-    return cacheService.get<TournamentData>(
-      tenantId,
-      `tournament:${tournamentId}`,
-      requestId
-    );
+  async getTournament(
+    tenantId: string,
+    tournamentId: string,
+    requestId?: string
+  ): Promise<TournamentData | null> {
+    return cacheService.get<TournamentData>(tenantId, `tournament:${tournamentId}`, requestId);
   },
 
-  async setTournament(tenantId: string, tournamentId: string, data: TournamentData): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      `tournament:${tournamentId}`,
-      data,
-      CacheTTL.TOURNAMENT
-    );
+  async setTournament(
+    tenantId: string,
+    tournamentId: string,
+    data: TournamentData
+  ): Promise<boolean> {
+    return cacheService.set(tenantId, `tournament:${tournamentId}`, data, CacheTTL.TOURNAMENT);
   },
 
   /**
@@ -136,11 +135,7 @@ export const TournamentCache = {
   ): Promise<TournamentList | null> {
     const filterKey = JSON.stringify(filters);
     const hash = this.hashString(filterKey);
-    return cacheService.get<TournamentList>(
-      tenantId,
-      `tournament:list:${hash}`,
-      requestId
-    );
+    return cacheService.get<TournamentList>(tenantId, `tournament:list:${hash}`, requestId);
   },
 
   async setTournamentList(
@@ -150,23 +145,18 @@ export const TournamentCache = {
   ): Promise<boolean> {
     const filterKey = JSON.stringify(filters);
     const hash = this.hashString(filterKey);
-    return cacheService.set(
-      tenantId,
-      `tournament:list:${hash}`,
-      data,
-      CacheTTL.TOURNAMENT_LIST
-    );
+    return cacheService.set(tenantId, `tournament:list:${hash}`, data, CacheTTL.TOURNAMENT_LIST);
   },
 
   /**
    * Cache tournament matches
    */
-  async getMatches(tenantId: string, tournamentId: string, requestId?: string): Promise<MatchData[] | null> {
-    return cacheService.get<MatchData[]>(
-      tenantId,
-      `tournament:${tournamentId}:matches`,
-      requestId
-    );
+  async getMatches(
+    tenantId: string,
+    tournamentId: string,
+    requestId?: string
+  ): Promise<MatchData[] | null> {
+    return cacheService.get<MatchData[]>(tenantId, `tournament:${tournamentId}:matches`, requestId);
   },
 
   async setMatches(tenantId: string, tournamentId: string, data: MatchData[]): Promise<boolean> {
@@ -181,7 +171,11 @@ export const TournamentCache = {
   /**
    * Cache tournament leaderboard
    */
-  async getLeaderboard(tenantId: string, tournamentId: string, requestId?: string): Promise<LeaderboardData | null> {
+  async getLeaderboard(
+    tenantId: string,
+    tournamentId: string,
+    requestId?: string
+  ): Promise<LeaderboardData | null> {
     return cacheService.get<LeaderboardData>(
       tenantId,
       `tournament:${tournamentId}:leaderboard`,
@@ -189,7 +183,11 @@ export const TournamentCache = {
     );
   },
 
-  async setLeaderboard(tenantId: string, tournamentId: string, data: LeaderboardData): Promise<boolean> {
+  async setLeaderboard(
+    tenantId: string,
+    tournamentId: string,
+    data: LeaderboardData
+  ): Promise<boolean> {
     return cacheService.set(
       tenantId,
       `tournament:${tournamentId}:leaderboard`,
@@ -226,21 +224,16 @@ export const UserCache = {
   /**
    * Cache user session data
    */
-  async getSession(tenantId: string, userId: string, requestId?: string): Promise<UserSession | null> {
-    return cacheService.get<UserSession>(
-      tenantId,
-      `user:${userId}:session`,
-      requestId
-    );
+  async getSession(
+    tenantId: string,
+    userId: string,
+    requestId?: string
+  ): Promise<UserSession | null> {
+    return cacheService.get<UserSession>(tenantId, `user:${userId}:session`, requestId);
   },
 
   async setSession(tenantId: string, userId: string, data: UserSession): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      `user:${userId}:session`,
-      data,
-      CacheTTL.USER_SESSION
-    );
+    return cacheService.set(tenantId, `user:${userId}:session`, data, CacheTTL.USER_SESSION);
   },
 
   async deleteSession(tenantId: string, userId: string) {
@@ -250,41 +243,31 @@ export const UserCache = {
   /**
    * Cache user profile data
    */
-  async getProfile(tenantId: string, userId: string, requestId?: string): Promise<UserProfile | null> {
-    return cacheService.get<UserProfile>(
-      tenantId,
-      `user:${userId}:profile`,
-      requestId
-    );
+  async getProfile(
+    tenantId: string,
+    userId: string,
+    requestId?: string
+  ): Promise<UserProfile | null> {
+    return cacheService.get<UserProfile>(tenantId, `user:${userId}:profile`, requestId);
   },
 
   async setProfile(tenantId: string, userId: string, data: UserProfile): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      `user:${userId}:profile`,
-      data,
-      CacheTTL.USER_PROFILE
-    );
+    return cacheService.set(tenantId, `user:${userId}:profile`, data, CacheTTL.USER_PROFILE);
   },
 
   /**
    * Cache user permissions
    */
-  async getPermissions(tenantId: string, userId: string, requestId?: string): Promise<UserPermissions | null> {
-    return cacheService.get<UserPermissions>(
-      tenantId,
-      `user:${userId}:permissions`,
-      requestId
-    );
+  async getPermissions(
+    tenantId: string,
+    userId: string,
+    requestId?: string
+  ): Promise<UserPermissions | null> {
+    return cacheService.get<UserPermissions>(tenantId, `user:${userId}:permissions`, requestId);
   },
 
   async setPermissions(tenantId: string, userId: string, data: UserPermissions): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      `user:${userId}:permissions`,
-      data,
-      CacheTTL.USER_PROFILE
-    );
+    return cacheService.set(tenantId, `user:${userId}:permissions`, data, CacheTTL.USER_PROFILE);
   },
 
   /**
@@ -303,20 +286,11 @@ export const AnalyticsCache = {
    * Cache system analytics
    */
   async getSystemAnalytics(tenantId: string, requestId?: string): Promise<AnalyticsData | null> {
-    return cacheService.get<AnalyticsData>(
-      tenantId,
-      'analytics:system',
-      requestId
-    );
+    return cacheService.get<AnalyticsData>(tenantId, 'analytics:system', requestId);
   },
 
   async setSystemAnalytics(tenantId: string, data: AnalyticsData): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      'analytics:system',
-      data,
-      CacheTTL.ANALYTICS
-    );
+    return cacheService.set(tenantId, 'analytics:system', data, CacheTTL.ANALYTICS);
   },
 
   /**
@@ -334,7 +308,11 @@ export const AnalyticsCache = {
     );
   },
 
-  async setTournamentAnalytics(tenantId: string, tournamentId: string, data: AnalyticsData): Promise<boolean> {
+  async setTournamentAnalytics(
+    tenantId: string,
+    tournamentId: string,
+    data: AnalyticsData
+  ): Promise<boolean> {
     return cacheService.set(
       tenantId,
       `analytics:tournament:${tournamentId}`,
@@ -402,11 +380,7 @@ export const APICache = {
     requestId?: string
   ): Promise<T | null> {
     const hash = TournamentCache.hashString(JSON.stringify(params));
-    return cacheService.get<T>(
-      tenantId,
-      `api:${endpoint}:${hash}`,
-      requestId
-    );
+    return cacheService.get<T>(tenantId, `api:${endpoint}:${hash}`, requestId);
   },
 
   async setResponse<T = unknown>(
@@ -417,12 +391,7 @@ export const APICache = {
     ttl: number = CacheTTL.API_RESPONSE
   ): Promise<boolean> {
     const hash = TournamentCache.hashString(JSON.stringify(params));
-    return cacheService.set(
-      tenantId,
-      `api:${endpoint}:${hash}`,
-      data,
-      ttl
-    );
+    return cacheService.set(tenantId, `api:${endpoint}:${hash}`, data, ttl);
   },
 
   /**
@@ -447,41 +416,27 @@ export const StaticCache = {
   /**
    * Cache static configuration
    */
-  async getConfig<T = unknown>(tenantId: string, key: string, requestId?: string): Promise<T | null> {
-    return cacheService.get<T>(
-      tenantId,
-      `static:config:${key}`,
-      requestId
-    );
+  async getConfig<T = unknown>(
+    tenantId: string,
+    key: string,
+    requestId?: string
+  ): Promise<T | null> {
+    return cacheService.get<T>(tenantId, `static:config:${key}`, requestId);
   },
 
   async setConfig<T = unknown>(tenantId: string, key: string, data: T): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      `static:config:${key}`,
-      data,
-      CacheTTL.STATIC_DATA
-    );
+    return cacheService.set(tenantId, `static:config:${key}`, data, CacheTTL.STATIC_DATA);
   },
 
   /**
    * Cache organization settings
    */
   async getOrgSettings(tenantId: string, requestId?: string): Promise<OrgSettings | null> {
-    return cacheService.get<OrgSettings>(
-      tenantId,
-      'static:org:settings',
-      requestId
-    );
+    return cacheService.get<OrgSettings>(tenantId, 'static:org:settings', requestId);
   },
 
   async setOrgSettings(tenantId: string, data: OrgSettings): Promise<boolean> {
-    return cacheService.set(
-      tenantId,
-      'static:org:settings',
-      data,
-      CacheTTL.STATIC_DATA
-    );
+    return cacheService.set(tenantId, 'static:org:settings', data, CacheTTL.STATIC_DATA);
   },
 
   /**

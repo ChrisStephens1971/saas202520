@@ -39,7 +39,8 @@ export default function Error({
           </h2>
 
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
-            We encountered an unexpected error. Please try again or contact support if the problem persists.
+            We encountered an unexpected error. Please try again or contact support if the problem
+            persists.
           </p>
 
           {process.env.NODE_ENV === 'development' && (

@@ -32,14 +32,16 @@ vi.mock('@/lib/prisma', () => ({
     tournamentEvent: {
       create: vi.fn(),
     },
-    $transaction: vi.fn((callback) => callback({
-      player: {
-        update: vi.fn(),
-      },
-      tournamentEvent: {
-        create: vi.fn(),
-      },
-    })),
+    $transaction: vi.fn((callback) =>
+      callback({
+        player: {
+          update: vi.fn(),
+        },
+        tournamentEvent: {
+          create: vi.fn(),
+        },
+      })
+    ),
   },
 }));
 

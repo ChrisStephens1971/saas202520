@@ -135,7 +135,9 @@ export default function SelectOrganizationPage() {
     };
 
     return (
-      <span className={`px-2 py-1 text-xs font-semibold rounded ${colors[role as keyof typeof colors]}`}>
+      <span
+        className={`px-2 py-1 text-xs font-semibold rounded ${colors[role as keyof typeof colors]}`}
+      >
         {role}
       </span>
     );
@@ -147,9 +149,7 @@ export default function SelectOrganizationPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Select Organization</h1>
-          <p className="text-slate-400">
-            Choose an organization to continue, or create a new one
-          </p>
+          <p className="text-slate-400">Choose an organization to continue, or create a new one</p>
         </div>
 
         {/* Error Display */}
@@ -209,21 +209,15 @@ export default function SelectOrganizationPage() {
             {organizations.length === 0 && !showCreateForm && (
               <div className="bg-slate-800/50 backdrop-blur p-8 rounded-lg border border-slate-700 text-center mb-6">
                 <div className="text-slate-400 text-5xl mb-4">🏢</div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  No Organizations Yet
-                </h3>
-                <p className="text-slate-400 mb-6">
-                  Create your first organization to get started
-                </p>
+                <h3 className="text-xl font-semibold text-white mb-2">No Organizations Yet</h3>
+                <p className="text-slate-400 mb-6">Create your first organization to get started</p>
               </div>
             )}
 
             {/* Create Organization Form */}
             {showCreateForm && (
               <div className="bg-slate-800/50 backdrop-blur p-6 rounded-lg border border-slate-700 mb-6">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Create New Organization
-                </h3>
+                <h3 className="text-xl font-semibold text-white mb-4">Create New Organization</h3>
                 <form onSubmit={handleCreateOrganization} className="space-y-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">

@@ -12,11 +12,13 @@
 Our tournament platform requires a robust database access layer with these critical requirements:
 
 **Multi-tenancy with Row-Level Security (RLS):**
+
 - All queries must be tenant-scoped (`org_id` filtering)
 - Postgres RLS policies must be enforced at the database level
 - Need to test that cross-tenant access is impossible
 
 **Complex data modeling:**
+
 - Event-sourced audit log (`tournament_events` append-only table)
 - Projections derived from event streams
 - Versioned sport configurations (JSON schemas)
@@ -24,11 +26,13 @@ Our tournament platform requires a robust database access layer with these criti
 - Payment and payout ledgers
 
 **Type safety:**
+
 - TypeScript types must match database schema exactly
 - Schema changes must propagate to application code automatically
 - Prevent runtime errors from schema drift
 
 **Team constraints:**
+
 - 2 developers with varying database expertise
 - 12-week timeline demands productivity
 - Need to iterate on schema quickly during early weeks
@@ -47,6 +51,7 @@ We will use **Prisma ORM** as our database access layer with the following confi
 - **Middleware pattern** for injecting tenant context (`org_id`) into all queries
 
 Implementation approach:
+
 ```typescript
 // Prisma schema with RLS-ready models
 model Tournament {
@@ -78,6 +83,7 @@ prisma.$use(async (params, next) => {
 ## Consequences
 
 ### Positive Consequences
+
 - **Excellent developer experience**: Auto-complete, type safety, migrations all managed
 - **Schema-first workflow**: `prisma migrate dev` updates DB + regenerates types in one command
 - **Fast development**: Prisma Studio for quick data inspection, seed scripts are simple
@@ -88,6 +94,7 @@ prisma.$use(async (params, next) => {
 - **Connection pooling**: Prisma handles connection management intelligently
 
 ### Negative Consequences
+
 - **RLS not native**: Must write raw SQL for RLS policies in migration files (Prisma doesn't generate RLS)
 - **Performance overhead**: Slightly slower than raw SQL for complex queries (~5-10ms added latency)
 - **Query builder limitations**: Very complex queries may require raw SQL escape hatch (`prisma.$queryRaw`)
@@ -95,6 +102,7 @@ prisma.$use(async (params, next) => {
 - **Lock-in risk**: Migrating away from Prisma requires rewriting data access layer (mitigated: abstraction layer can wrap Prisma)
 
 ### Neutral Consequences
+
 - **Learning curve**: 1-2 days to understand Prisma schema syntax and migration workflow
 - **Database-specific**: Prisma is opinionated about how it maps to Postgres (generally a good thing for consistency)
 
@@ -103,9 +111,11 @@ prisma.$use(async (params, next) => {
 ## Alternatives Considered
 
 ### Alternative 1: Drizzle ORM
+
 **Description:** Lightweight TypeScript ORM with better performance and native SQL-like query builder.
 
 **Pros:**
+
 - **Better performance**: 10-20% faster than Prisma in benchmarks, closer to raw SQL
 - **SQL-like syntax**: Queries look like SQL, easier for SQL-savvy developers
 - **Smaller bundle**: ~500KB vs Prisma's 1-2MB
@@ -113,6 +123,7 @@ prisma.$use(async (params, next) => {
 - **Explicit queries**: No "magic" middleware, everything is explicit
 
 **Cons:**
+
 - **Less mature**: Newer ecosystem, fewer resources, smaller community
 - **More boilerplate**: No auto-generated types from schema alone, must define schemas in TypeScript
 - **Weaker migrations**: Migration tooling is less polished than Prisma Migrate
@@ -125,9 +136,11 @@ prisma.$use(async (params, next) => {
 ---
 
 ### Alternative 2: Raw SQL with Postgres.js + Kysely
+
 **Description:** Use raw SQL for all queries with a query builder (Kysely) for type safety, and a migration tool like node-pg-migrate.
 
 **Pros:**
+
 - **Maximum performance**: No ORM overhead, every query is optimized
 - **Full control**: Can use every Postgres feature (RLS, partitions, advanced indexing)
 - **Predictable**: No surprises from ORM behavior
@@ -135,6 +148,7 @@ prisma.$use(async (params, next) => {
 - **Flexibility**: No constraints from ORM opinions
 
 **Cons:**
+
 - **High manual overhead**: Must write all CRUD operations by hand
 - **Type drift risk**: Schema changes don't auto-update TypeScript types
 - **More code to maintain**: 3-5x more lines of code for data access
@@ -147,15 +161,18 @@ prisma.$use(async (params, next) => {
 ---
 
 ### Alternative 3: TypeORM
+
 **Description:** Mature TypeScript ORM with decorator-based models.
 
 **Pros:**
+
 - **Mature ecosystem**: Been around for years
 - **Active Record + Data Mapper**: Flexible patterns
 - **Good TypeScript support**: Native TypeScript
 - **Migrations**: Built-in migration tool
 
 **Cons:**
+
 - **Heavier than Prisma**: More complex API surface
 - **Decorator-based**: Mixing decorators with domain logic can get messy
 - **Less modern DX**: Prisma's CLI and Studio are superior
@@ -179,6 +196,7 @@ prisma.$use(async (params, next) => {
 ## Notes
 
 **Implementation checklist:**
+
 - [ ] Install Prisma: `pnpm add -w prisma @prisma/client`
 - [ ] Initialize Prisma: `pnpm prisma init`
 - [ ] Define schema in `prisma/schema.prisma` with all models
@@ -191,6 +209,7 @@ prisma.$use(async (params, next) => {
 - [ ] Add Prisma Studio script: `pnpm prisma studio`
 
 **RLS integration pattern:**
+
 ```sql
 -- In migration file (raw SQL)
 CREATE POLICY "tenant_isolation" ON tournaments
@@ -203,6 +222,7 @@ await prisma.$executeRaw`SET app.current_org_id = ${orgId}`;
 ```
 
 **Performance optimization notes:**
+
 - Use `select` to fetch only needed fields
 - Use `include` sparingly (N+1 query risk)
 - Add indexes for `org_id` on all multi-tenant tables
@@ -210,12 +230,14 @@ await prisma.$executeRaw`SET app.current_org_id = ${orgId}`;
 
 **Escape hatches:**
 If Prisma becomes a bottleneck later (unlikely):
+
 1. Profile queries with `prisma.$queryRaw` and compare
 2. Optimize problematic queries with raw SQL
 3. Incrementally migrate hot paths to Drizzle or raw SQL
 4. Prisma can coexist with other approaches (gradual migration)
 
 **Team impact:**
+
 - **Estimated setup time:** 2-4 hours (schema definition, RLS policies)
 - **Learning time:** 1 day for basics, 3-4 days for proficiency
 - **Ongoing maintenance:** Minimal (migrations are straightforward)

@@ -28,13 +28,16 @@
 ## Implementation Notes
 
 ### Approach
+
 [High-level description of how this will be implemented]
 
 ### Files to Change
+
 - `file1.ts` - [what changes]
 - `file2.ts` - [what changes]
 
 ### API Changes
+
 - Endpoint: `POST /api/endpoint`
 - Request/Response: [describe]
 
@@ -43,13 +46,16 @@
 ## Testing Plan
 
 ### Unit Tests
+
 - [ ] Test case 1
 - [ ] Test case 2
 
 ### Integration Tests
+
 - [ ] Test scenario 1
 
 ### Manual Testing
+
 - [ ] Test flow 1
 - [ ] Test edge case 1
 
@@ -58,10 +64,12 @@
 ## Dependencies
 
 **Blocked By:**
+
 - [ ] US-XXX: [Dependency description]
 - [ ] Technical requirement: [Description]
 
 **Blocks:**
+
 - [ ] US-YYY: [What this story enables]
 
 ---
@@ -71,11 +79,13 @@
 **Mockups:** [Link to Figma or screenshots]
 
 **User Flow:**
+
 ```
 Step 1 → Step 2 → Step 3
 ```
 
 **Edge Cases to Handle:**
+
 - What if [scenario 1]?
 - What if [scenario 2]?
 
@@ -103,8 +113,8 @@ Step 1 → Step 2 → Step 3
 
 ## Time Log
 
-| Date | Hours | Activity |
-|------|-------|----------|
+| Date   | Hours | Activity             |
+| ------ | ----- | -------------------- |
 | [Date] | [X.X] | [What you worked on] |
 | [Date] | [X.X] | [What you worked on] |
 

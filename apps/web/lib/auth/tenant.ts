@@ -60,8 +60,8 @@ export async function extractTenantContext(): Promise<TenantExtractionResult> {
         {
           error: {
             code: 'UNAUTHORIZED',
-            message: 'Authentication required'
-          }
+            message: 'Authentication required',
+          },
         },
         { status: 401 }
       ),

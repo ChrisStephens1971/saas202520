@@ -8,10 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  type TournamentFilters as Filters,
-  DEFAULT_FILTERS,
-} from '@/lib/tournament-filters';
+import { type TournamentFilters as Filters, DEFAULT_FILTERS } from '@/lib/tournament-filters';
 import { Search, Play, Check, FileEdit, X, Calendar, Clock, Users } from 'lucide-react';
 
 interface TournamentFiltersProps {
@@ -34,29 +31,29 @@ export function TournamentFilters({
   }, [filters, onFiltersChange]);
 
   const handleSearchChange = (value: string) => {
-    setFilters(prev => ({ ...prev, searchQuery: value }));
+    setFilters((prev) => ({ ...prev, searchQuery: value }));
   };
 
   const handleStatusToggle = (status: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       status: prev.status.includes(status)
-        ? prev.status.filter(s => s !== status)
+        ? prev.status.filter((s) => s !== status)
         : [...prev.status, status],
     }));
   };
 
   const handleFormatToggle = (format: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       format: prev.format.includes(format)
-        ? prev.format.filter(f => f !== format)
+        ? prev.format.filter((f) => f !== format)
         : [...prev.format, format],
     }));
   };
 
   const handleDateRangeChange = (field: 'start' | 'end', value: string) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       dateRange: {
         ...prev.dateRange,
@@ -66,7 +63,7 @@ export function TournamentFilters({
   };
 
   const handleSortChange = (sortBy: Filters['sortBy']) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
       sortBy,
       // Toggle order if same field
@@ -108,15 +105,12 @@ export function TournamentFilters({
             id="tournament-search"
             type="text"
             value={filters.searchQuery}
-            onChange={e => handleSearchChange(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search by name, format, location..."
             className="w-full px-4 py-2 pl-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             aria-label="Search tournaments"
           />
-          <Search
-            className="absolute left-3 top-2.5 w-5 h-5 text-slate-400"
-            aria-hidden="true"
-          />
+          <Search className="absolute left-3 top-2.5 w-5 h-5 text-slate-400" aria-hidden="true" />
         </div>
       </div>
 
@@ -149,7 +143,7 @@ export function TournamentFilters({
               Status
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {statuses.map(status => {
+              {statuses.map((status) => {
                 const StatusIcon = status.IconComponent;
                 return (
                   <button
@@ -183,7 +177,7 @@ export function TournamentFilters({
                 Format
               </label>
               <div className="flex flex-wrap gap-2">
-                {availableFormats.map(format => (
+                {availableFormats.map((format) => (
                   <button
                     key={format}
                     onClick={() => handleFormatToggle(format)}
@@ -213,7 +207,7 @@ export function TournamentFilters({
                 <input
                   type="date"
                   value={filters.dateRange.start || ''}
-                  onChange={e => handleDateRangeChange('start', e.target.value)}
+                  onChange={(e) => handleDateRangeChange('start', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -224,7 +218,7 @@ export function TournamentFilters({
                 <input
                   type="date"
                   value={filters.dateRange.end || ''}
-                  onChange={e => handleDateRangeChange('end', e.target.value)}
+                  onChange={(e) => handleDateRangeChange('end', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -242,7 +236,7 @@ export function TournamentFilters({
                 { value: 'startDate' as const, label: 'Start Date', IconComponent: Calendar },
                 { value: 'createdAt' as const, label: 'Created', IconComponent: Clock },
                 { value: 'playerCount' as const, label: 'Players', IconComponent: Users },
-              ].map(sort => {
+              ].map((sort) => {
                 const SortIcon = sort.IconComponent;
                 return (
                   <button

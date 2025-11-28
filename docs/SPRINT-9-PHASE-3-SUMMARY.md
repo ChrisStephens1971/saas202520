@@ -19,6 +19,7 @@ Successfully implemented comprehensive database performance optimizations includ
 **Location:** `prisma/migrations/20251106000000_add_performance_indexes/`
 
 **Files:**
+
 - ✅ `migration.sql` - 20+ strategic indexes for all major tables
 - ✅ `rollback.sql` - Complete rollback script (emergency use)
 - ✅ `README.md` - Comprehensive migration guide
@@ -26,6 +27,7 @@ Successfully implemented comprehensive database performance optimizations includ
 **Indexes Added:**
 
 #### Tournaments Table (3 indexes)
+
 ```sql
 idx_tournaments_status          → Filter by status (active, completed)
 idx_tournaments_start_date      → Time-based queries (upcoming/past)
@@ -33,6 +35,7 @@ idx_tournaments_org_status      → Composite: org + status filtering
 ```
 
 #### Matches Table (3 indexes)
+
 ```sql
 idx_matches_tournament_status   → Composite: tournament + state
 idx_matches_completed_at        → Historical match queries
@@ -40,6 +43,7 @@ idx_matches_table_state         → Composite: table + state
 ```
 
 #### Players Table (3 indexes)
+
 ```sql
 idx_players_tournament_user     → Composite: registration duplicate check
 idx_players_tournament_status   → Composite: tournament + status
@@ -47,30 +51,35 @@ idx_players_chip_count          → Leaderboard sorting
 ```
 
 #### Users Table (2 indexes)
+
 ```sql
 idx_users_email                 → Authentication (critical!)
 idx_users_role_status           → Composite: admin user management
 ```
 
 #### Audit Logs Table (2 indexes)
+
 ```sql
 idx_audit_logs_org_timestamp    → Composite: org + time filtering
 idx_audit_logs_user_timestamp   → Composite: user activity timeline
 ```
 
 #### Notifications Table (2 indexes)
+
 ```sql
 idx_notifications_org_status           → Composite: notification queue
 idx_notifications_tournament_status    → Composite: tournament notifications
 ```
 
 #### Payments Table (2 indexes)
+
 ```sql
 idx_payments_tournament_status  → Composite: payment queries
 idx_payments_created_at         → Financial reporting
 ```
 
 #### Organization Members Table (1 index)
+
 ```sql
 idx_org_members_org_role        → Composite: role-based queries
 ```
@@ -84,6 +93,7 @@ idx_org_members_org_role        → Composite: role-based queries
 **Location:** `apps/web/lib/db/query-optimizer.ts`
 
 **Features:**
+
 - ✅ Automatic slow query detection (> 100ms threshold)
 - ✅ Performance metrics tracking (in-memory store)
 - ✅ Sentry integration for production monitoring
@@ -92,15 +102,17 @@ idx_org_members_org_role        → Composite: role-based queries
 - ✅ Statistics API for debugging
 
 **Key Functions:**
+
 ```typescript
-queryOptimizer           // Prisma middleware (auto-integrated)
-getQueryStats()          // Get query performance statistics
-getRecentSlowQueries()   // List recent slow queries
-getPerformanceReport()   // Detailed analysis with grouping
-clearQueryMetrics()      // Reset metrics (testing)
+queryOptimizer; // Prisma middleware (auto-integrated)
+getQueryStats(); // Get query performance statistics
+getRecentSlowQueries(); // List recent slow queries
+getPerformanceReport(); // Detailed analysis with grouping
+clearQueryMetrics(); // Reset metrics (testing)
 ```
 
 **Configuration:**
+
 ```typescript
 SLOW_QUERY_THRESHOLD: 100ms      // Configurable threshold
 ENABLE_DETAILED_LOGGING: dev     // Query params in dev
@@ -115,6 +127,7 @@ MAX_PARAMS_LENGTH: 500           // Prevent huge logs
 **Location:** `apps/web/lib/db/performance-monitor.ts`
 
 **Features:**
+
 - ✅ Database health metrics (connections, tables, indexes)
 - ✅ Connection pool statistics
 - ✅ Table size and row count tracking
@@ -123,15 +136,16 @@ MAX_PARAMS_LENGTH: 500           // Prevent huge logs
 - ✅ Health check with status (healthy/warning/critical)
 
 **Key Functions:**
+
 ```typescript
-getDatabaseHealth()        // Complete health report
-getSlowQueryAnalysis()     // Slow query patterns + recommendations
-checkDatabaseHealth()      // Health status with issues
-getConnectionStats()       // Active/idle connections
-getTableStats()            // Table sizes and row counts
-getIndexStats()            // Index usage statistics
-formatBytes()              // Human-readable sizes
-formatNumber()             // Formatted numbers
+getDatabaseHealth(); // Complete health report
+getSlowQueryAnalysis(); // Slow query patterns + recommendations
+checkDatabaseHealth(); // Health status with issues
+getConnectionStats(); // Active/idle connections
+getTableStats(); // Table sizes and row counts
+getIndexStats(); // Index usage statistics
+formatBytes(); // Human-readable sizes
+formatNumber(); // Formatted numbers
 ```
 
 ---
@@ -143,11 +157,13 @@ formatNumber()             // Formatted numbers
 **Endpoint:** `GET /api/admin/performance`
 
 **Query Parameters:**
+
 - `type=health` (default) - Database health metrics
 - `type=slow-queries` - Slow query analysis
 - `type=status` - Health status check
 
 **Response Example:**
+
 ```json
 {
   "connections": {
@@ -162,12 +178,8 @@ formatNumber()             // Formatted numbers
     "maxDuration": 250,
     "slowQueryPercentage": 3.6
   },
-  "tables": [
-    { "name": "tournaments", "rowCount": "1,500", "size": "512 KB" }
-  ],
-  "indexes": [
-    { "tableName": "tournaments", "indexName": "idx_tournaments_status", "scans": 1234 }
-  ]
+  "tables": [{ "name": "tournaments", "rowCount": "1,500", "size": "512 KB" }],
+  "indexes": [{ "tableName": "tournaments", "indexName": "idx_tournaments_status", "scans": 1234 }]
 }
 ```
 
@@ -180,6 +192,7 @@ formatNumber()             // Formatted numbers
 **Location:** `apps/web/lib/prisma.ts`
 
 **Enhancements:**
+
 - ✅ Connection pooling configuration
 - ✅ Query optimizer middleware integration
 - ✅ Comprehensive configuration documentation
@@ -187,14 +200,15 @@ formatNumber()             // Formatted numbers
 
 **Connection Pool Recommendations:**
 
-| Environment | Connection Limit | Use Case |
-|-------------|-----------------|----------|
-| Solo developer | 5 | Low traffic |
-| Small team | 10 | Medium traffic |
-| Production | 20-50 | High traffic |
-| Serverless | 1 | Lambda/Vercel |
+| Environment    | Connection Limit | Use Case       |
+| -------------- | ---------------- | -------------- |
+| Solo developer | 5                | Low traffic    |
+| Small team     | 10               | Medium traffic |
+| Production     | 20-50            | High traffic   |
+| Serverless     | 1                | Lambda/Vercel  |
 
 **Configuration Example:**
+
 ```env
 # Traditional server
 DATABASE_URL="postgresql://user:pass@host:5432/db?connection_limit=10"
@@ -208,9 +222,11 @@ DATABASE_URL="postgresql://user:pass@host:5432/db?connection_limit=1&pool_timeou
 ### 6. Documentation
 
 #### Complete Optimization Guide
+
 **Location:** `docs/database-optimization-guide.md`
 
 **Sections:**
+
 - Index strategy and design principles
 - Detailed explanation of each index
 - Query optimization middleware
@@ -222,9 +238,11 @@ DATABASE_URL="postgresql://user:pass@host:5432/db?connection_limit=1&pool_timeou
 - Monitoring and alerts setup
 
 #### Migration Documentation
+
 **Location:** `prisma/migrations/20251106000000_add_performance_indexes/README.md`
 
 **Sections:**
+
 - Migration summary and expected improvements
 - Running the migration (dev and production)
 - Verification steps
@@ -240,12 +258,14 @@ DATABASE_URL="postgresql://user:pass@host:5432/db?connection_limit=1&pool_timeou
 **Location:** `scripts/test-query-optimizer.ts`
 
 **Usage:**
+
 ```bash
 cd apps/web
 npx ts-node ../../scripts/test-query-optimizer.ts
 ```
 
 **Tests:**
+
 - Database connection
 - Fast query execution
 - Slow query simulation
@@ -258,24 +278,26 @@ npx ts-node ../../scripts/test-query-optimizer.ts
 
 ### Query Performance Benchmarks
 
-| Query Type | Before | After | Improvement |
-|------------|--------|-------|-------------|
-| **Tournament list (filtered)** | 300ms | 25ms | **12x faster** |
-| **Match list for tournament** | 250ms | 20ms | **12.5x faster** |
-| **Registration duplicate check** | 150ms | 10ms | **15x faster** |
-| **User authentication** | 100ms | 8ms | **12.5x faster** |
-| **Audit log queries (7 days)** | 800ms | 80ms | **10x faster** |
-| **Payment history** | 350ms | 35ms | **10x faster** |
+| Query Type                       | Before | After | Improvement      |
+| -------------------------------- | ------ | ----- | ---------------- |
+| **Tournament list (filtered)**   | 300ms  | 25ms  | **12x faster**   |
+| **Match list for tournament**    | 250ms  | 20ms  | **12.5x faster** |
+| **Registration duplicate check** | 150ms  | 10ms  | **15x faster**   |
+| **User authentication**          | 100ms  | 8ms   | **12.5x faster** |
+| **Audit log queries (7 days)**   | 800ms  | 80ms  | **10x faster**   |
+| **Payment history**              | 350ms  | 35ms  | **10x faster**   |
 
 ### Real-World Impact
 
 **Before Optimization:**
+
 - Dashboard load time: 2-3 seconds
 - Tournament view: 1.5-2 seconds
 - User registration: 500-800ms
 - Login: 300-500ms
 
 **After Optimization:**
+
 - Dashboard load time: 300-500ms (**6x faster**)
 - Tournament view: 200-300ms (**7x faster**)
 - User registration: 80-150ms (**6x faster**)
@@ -294,6 +316,7 @@ The query optimizer integrates seamlessly with the existing performance middlewa
 **Integration Points:**
 
 1. **Database Query Tracking:**
+
    ```typescript
    // Existing: trackDatabaseQuery()
    // New: queryOptimizer middleware (automatic)
@@ -301,6 +324,7 @@ The query optimizer integrates seamlessly with the existing performance middlewa
    ```
 
 2. **Sentry Integration:**
+
    ```typescript
    // Existing: Sentry transaction spans
    // New: Slow query reporting to Sentry
@@ -414,6 +438,7 @@ npx prisma migrate deploy
 ### Post-Deployment Monitoring (First Week)
 
 **Daily Checks:**
+
 1. Review slow query logs in application
 2. Check Sentry for slow query alerts
 3. Monitor connection pool utilization
@@ -421,6 +446,7 @@ npx prisma migrate deploy
 5. Check for any unexpected errors
 
 **Key Metrics to Track:**
+
 - Average query duration (should decrease by 10-20x)
 - Slow query count (should decrease significantly)
 - Database CPU usage (should remain similar or decrease)
@@ -428,6 +454,7 @@ npx prisma migrate deploy
 - Application response times (should improve)
 
 **Alert Thresholds:**
+
 - Slow query count > 50/hour → Investigate
 - Database CPU > 80% for 5+ minutes → Check queries
 - Connection pool > 80% utilization → Consider increasing pool size
@@ -442,11 +469,13 @@ npx prisma migrate deploy
 **Symptom:** Error when running `npx prisma migrate dev`
 
 **Possible Causes:**
+
 1. Database not running
 2. Connection string incorrect
 3. Insufficient permissions
 
 **Solution:**
+
 ```bash
 # 1. Verify database is running
 docker ps | grep postgres
@@ -466,6 +495,7 @@ psql $DATABASE_URL -f prisma/migrations/20251106000000_add_performance_indexes/m
 **Symptom:** Queries still taking > 100ms despite indexes
 
 **Diagnosis:**
+
 ```sql
 -- Check if index is being used
 EXPLAIN ANALYZE SELECT * FROM tournaments WHERE org_id = 'xxx' AND status = 'active';
@@ -475,27 +505,29 @@ EXPLAIN ANALYZE SELECT * FROM tournaments WHERE org_id = 'xxx' AND status = 'act
 ```
 
 **Possible Causes:**
+
 1. Index not created properly
 2. Wrong column order in WHERE clause
 3. Type mismatch (e.g., string vs UUID)
 4. Function calls on indexed columns
 
 **Solutions:**
+
 ```typescript
 // Good: Matches index column order
 prisma.tournament.findMany({
   where: {
-    orgId: 'xxx',    // First column in composite index
-    status: 'active' // Second column in composite index
-  }
+    orgId: 'xxx', // First column in composite index
+    status: 'active', // Second column in composite index
+  },
 });
 
 // Bad: Reversed order (index less effective)
 prisma.tournament.findMany({
   where: {
     status: 'active',
-    orgId: 'xxx'
-  }
+    orgId: 'xxx',
+  },
 });
 ```
 
@@ -504,24 +536,26 @@ prisma.tournament.findMany({
 **Symptom:** Application using more memory after deployment
 
 **Possible Causes:**
+
 1. Query metrics stored in memory (limited to 100 recent queries)
 2. Connection pool too large
 3. Fetching too many records at once
 
 **Solutions:**
+
 ```typescript
 // 1. Reduce connection pool size
-DATABASE_URL="...?connection_limit=5"
+DATABASE_URL = '...?connection_limit=5';
 
 // 2. Implement pagination
 prisma.tournament.findMany({
   take: 20,
-  skip: (page - 1) * 20
+  skip: (page - 1) * 20,
 });
 
 // 3. Use select to fetch only needed fields
 prisma.user.findMany({
-  select: { id: true, name: true, email: true }
+  select: { id: true, name: true, email: true },
 });
 ```
 
@@ -530,11 +564,13 @@ prisma.user.findMany({
 **Symptom:** `/api/admin/performance` returns empty arrays or zeros
 
 **Possible Causes:**
+
 1. No queries executed yet
 2. Metrics cleared
 3. Database permissions issue
 
 **Solutions:**
+
 ```typescript
 // 1. Execute some queries first
 await prisma.user.findMany();
@@ -553,6 +589,7 @@ await prisma.$queryRaw`SELECT 1`;
 ## Next Steps
 
 ### Immediate (This Week)
+
 1. ✅ Code review: Have team review implementation
 2. ⏳ Run migration in development environment
 3. ⏳ Test query performance improvements
@@ -560,6 +597,7 @@ await prisma.$queryRaw`SELECT 1`;
 5. ⏳ Deploy to staging environment for testing
 
 ### Short-Term (Next 2 Weeks)
+
 1. ⏳ Deploy to production during low-traffic period
 2. ⏳ Monitor slow query logs daily
 3. ⏳ Set up Sentry alerts for slow queries (> 500ms)
@@ -567,6 +605,7 @@ await prisma.$queryRaw`SELECT 1`;
 5. ⏳ Analyze slow query patterns and optimize further
 
 ### Mid-Term (Next Month)
+
 1. ⏳ Implement query result caching for hot queries
 2. ⏳ Add database connection pool monitoring to admin dashboard
 3. ⏳ Review index usage statistics (remove unused indexes)
@@ -574,6 +613,7 @@ await prisma.$queryRaw`SELECT 1`;
 5. ⏳ Set up automated performance testing in CI/CD
 
 ### Long-Term (Future Sprints)
+
 1. ⏳ Implement Redis caching for frequently accessed data
 2. ⏳ Add database partitioning for large tables (audit_logs)
 3. ⏳ Implement full-text search with PostgreSQL FTS
@@ -613,18 +653,21 @@ await prisma.$queryRaw`SELECT 1`;
 ## Maintenance Plan
 
 ### Weekly Tasks
+
 - Review slow query logs
 - Check for new slow query patterns
 - Monitor connection pool utilization
 - Verify index usage statistics
 
 ### Monthly Tasks
+
 - Analyze query performance trends
 - Review and optimize new slow queries
 - Check for unused indexes (remove if idx_scan = 0)
 - Update optimization documentation
 
 ### Quarterly Tasks
+
 - Comprehensive performance review
 - Evaluate caching strategy effectiveness
 - Consider read replica implementation
@@ -636,18 +679,21 @@ await prisma.$queryRaw`SELECT 1`;
 ## Additional Resources
 
 ### Documentation
+
 - **Complete Guide**: `docs/database-optimization-guide.md`
 - **Migration Guide**: `prisma/migrations/20251106000000_add_performance_indexes/README.md`
 - **PostgreSQL Index Docs**: https://www.postgresql.org/docs/current/indexes.html
 - **Prisma Performance**: https://www.prisma.io/docs/guides/performance-and-optimization
 
 ### Tools
+
 - **Query Optimizer**: `apps/web/lib/db/query-optimizer.ts`
 - **Performance Monitor**: `apps/web/lib/db/performance-monitor.ts`
 - **Test Script**: `scripts/test-query-optimizer.ts`
 - **Admin API**: `/api/admin/performance`
 
 ### Monitoring
+
 - **Sentry**: Slow query alerts and error tracking
 - **Application Logs**: Console logs for slow queries
 - **Admin Dashboard**: Real-time performance metrics
@@ -671,6 +717,7 @@ Successfully implemented comprehensive database performance optimizations for Sp
 **Status:** Ready for deployment and testing.
 
 **Expected Impact:**
+
 - 10-20x faster database queries
 - Significantly improved user experience
 - Better application scalability

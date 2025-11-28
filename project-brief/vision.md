@@ -6,7 +6,7 @@
 
 ## 🎯 Mission Statement
 
-*(What is the fundamental purpose of this product? Keep it to 1-2 sentences)*
+_(What is the fundamental purpose of this product? Keep it to 1-2 sentences)_
 
 Example: "We help small businesses accept payments online without technical complexity or high fees."
 
@@ -14,25 +14,25 @@ Example: "We help small businesses accept payments online without technical comp
 
 ## 🔭 Long-Term Vision (3-5 Years)
 
-*(Where do you see this product in 3-5 years?)*
+_(Where do you see this product in 3-5 years?)_
 
 ### Market Position
 
-*(What market share or recognition do you aim for?)*
+_(What market share or recognition do you aim for?)_
 
 ### Product Evolution
 
-*(How will the product grow and evolve?)*
+_(How will the product grow and evolve?)_
 
 ### Impact
 
-*(What change do you want to create in the world/industry?)*
+_(What change do you want to create in the world/industry?)_
 
 ---
 
 ## 💪 Core Values
 
-*(What principles guide your decisions?)*
+_(What principles guide your decisions?)_
 
 1.
 2.
@@ -42,16 +42,13 @@ Example: "We help small businesses accept payments online without technical comp
 
 ## 🚀 Success Looks Like...
 
-*(What does "making it" mean for this product?)*
+_(What does "making it" mean for this product?)_
 
-**Year 1:**
--
+## **Year 1:**
 
-**Year 3:**
--
+## **Year 3:**
 
-**Year 5:**
--
+## **Year 5:**
 
 ---
 

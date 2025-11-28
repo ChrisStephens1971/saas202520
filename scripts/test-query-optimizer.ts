@@ -14,7 +14,11 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { queryOptimizer, getQueryStats, getRecentSlowQueries } from '../apps/web/lib/db/query-optimizer';
+import {
+  queryOptimizer,
+  getQueryStats,
+  getRecentSlowQueries,
+} from '../apps/web/lib/db/query-optimizer';
 
 // Create a test Prisma client with the optimizer
 const prisma = new PrismaClient({
@@ -115,7 +119,7 @@ async function main() {
     await simulateSlowQuery();
 
     // Wait a moment for middleware to process
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // Display statistics
     displayStats();
@@ -136,8 +140,7 @@ async function main() {
 }
 
 // Run the test
-main()
-  .catch(error => {
-    console.error('Unhandled error:', error);
-    process.exit(1);
-  });
+main().catch((error) => {
+  console.error('Unhandled error:', error);
+  process.exit(1);
+});

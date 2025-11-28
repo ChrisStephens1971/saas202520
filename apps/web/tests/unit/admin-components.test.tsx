@@ -50,13 +50,7 @@ const AdminNav = ({ activeRoute }: { activeRoute: string }) => {
 };
 
 // Mock TournamentTable component
-const TournamentTable = ({
-  tournaments,
-  onSearch,
-  onFilter,
-  onSort,
-  onPageChange,
-}: any) => {
+const TournamentTable = ({ tournaments, onSearch, onFilter, onSort, onPageChange }: any) => {
   return (
     <div data-testid="tournament-table">
       <input
@@ -71,8 +65,12 @@ const TournamentTable = ({
         <option value="active">Active</option>
         <option value="completed">Completed</option>
       </select>
-      <button onClick={() => onSort('name')} data-testid="sort-name">Sort by Name</button>
-      <button onClick={() => onSort('date')} data-testid="sort-date">Sort by Date</button>
+      <button onClick={() => onSort('name')} data-testid="sort-name">
+        Sort by Name
+      </button>
+      <button onClick={() => onSort('date')} data-testid="sort-date">
+        Sort by Date
+      </button>
       <table>
         <tbody>
           {tournaments.map((t: any) => (
@@ -83,7 +81,9 @@ const TournamentTable = ({
           ))}
         </tbody>
       </table>
-      <button onClick={() => onPageChange(1)} data-testid="next-page">Next Page</button>
+      <button onClick={() => onPageChange(1)} data-testid="next-page">
+        Next Page
+      </button>
     </div>
   );
 };
@@ -151,13 +151,11 @@ const AnalyticsCharts = ({ data, dateRange, onDateChange }: any) => {
           onChange={(e) => onDateChange({ end: e.target.value })}
         />
       </div>
-      <div data-testid="chart-user-growth">
-        {data.userGrowth && <span>User Growth Chart</span>}
-      </div>
-      <div data-testid="chart-revenue">
-        {data.revenueData && <span>Revenue Chart</span>}
-      </div>
-      <button onClick={() => {}} data-testid="export-data">Export Data</button>
+      <div data-testid="chart-user-growth">{data.userGrowth && <span>User Growth Chart</span>}</div>
+      <div data-testid="chart-revenue">{data.revenueData && <span>Revenue Chart</span>}</div>
+      <button onClick={() => {}} data-testid="export-data">
+        Export Data
+      </button>
     </div>
   );
 };
@@ -182,7 +180,9 @@ const AuditLogViewer = ({ logs, onFilter, onSearch, onExport }: any) => {
         <option value="updated">Updated</option>
         <option value="deleted">Deleted</option>
       </select>
-      <button onClick={onExport} data-testid="export-csv">Export to CSV</button>
+      <button onClick={onExport} data-testid="export-csv">
+        Export to CSV
+      </button>
       <table>
         <tbody>
           {logs.map((log: any) => (
@@ -421,13 +421,7 @@ describe('UserTable Component', () => {
     const onBulkAction = vi.fn();
     const onSearch = vi.fn();
 
-    render(
-      <UserTable
-        users={mockUsers}
-        onBulkAction={onBulkAction}
-        onSearch={onSearch}
-      />
-    );
+    render(<UserTable users={mockUsers} onBulkAction={onBulkAction} onSearch={onSearch} />);
 
     expect(screen.getByTestId('user-1')).toBeInTheDocument();
     expect(screen.getByTestId('user-2')).toBeInTheDocument();
@@ -438,13 +432,7 @@ describe('UserTable Component', () => {
     const onBulkAction = vi.fn();
     const onSearch = vi.fn();
 
-    render(
-      <UserTable
-        users={mockUsers}
-        onBulkAction={onBulkAction}
-        onSearch={onSearch}
-      />
-    );
+    render(<UserTable users={mockUsers} onBulkAction={onBulkAction} onSearch={onSearch} />);
 
     const searchInput = screen.getByTestId('user-search');
     fireEvent.change(searchInput, { target: { value: 'User A' } });
@@ -456,13 +444,7 @@ describe('UserTable Component', () => {
     const onBulkAction = vi.fn();
     const onSearch = vi.fn();
 
-    render(
-      <UserTable
-        users={mockUsers}
-        onBulkAction={onBulkAction}
-        onSearch={onSearch}
-      />
-    );
+    render(<UserTable users={mockUsers} onBulkAction={onBulkAction} onSearch={onSearch} />);
 
     const selectAllCheckbox = screen.getByTestId('select-all');
     const bulkDeleteButton = screen.getByTestId('bulk-delete');
@@ -481,13 +463,7 @@ describe('UserTable Component', () => {
     const onBulkAction = vi.fn();
     const onSearch = vi.fn();
 
-    render(
-      <UserTable
-        users={mockUsers}
-        onBulkAction={onBulkAction}
-        onSearch={onSearch}
-      />
-    );
+    render(<UserTable users={mockUsers} onBulkAction={onBulkAction} onSearch={onSearch} />);
 
     const selectAllCheckbox = screen.getByTestId('select-all');
     const bulkDeleteButton = screen.getByTestId('bulk-delete');
@@ -571,12 +547,7 @@ describe('AuditLogViewer Component', () => {
     const onExport = vi.fn();
 
     render(
-      <AuditLogViewer
-        logs={mockLogs}
-        onFilter={onFilter}
-        onSearch={onSearch}
-        onExport={onExport}
-      />
+      <AuditLogViewer logs={mockLogs} onFilter={onFilter} onSearch={onSearch} onExport={onExport} />
     );
 
     expect(screen.getByTestId('log-1')).toBeInTheDocument();
@@ -590,12 +561,7 @@ describe('AuditLogViewer Component', () => {
     const onExport = vi.fn();
 
     render(
-      <AuditLogViewer
-        logs={mockLogs}
-        onFilter={onFilter}
-        onSearch={onSearch}
-        onExport={onExport}
-      />
+      <AuditLogViewer logs={mockLogs} onFilter={onFilter} onSearch={onSearch} onExport={onExport} />
     );
 
     const searchInput = screen.getByTestId('log-search');
@@ -610,12 +576,7 @@ describe('AuditLogViewer Component', () => {
     const onExport = vi.fn();
 
     render(
-      <AuditLogViewer
-        logs={mockLogs}
-        onFilter={onFilter}
-        onSearch={onSearch}
-        onExport={onExport}
-      />
+      <AuditLogViewer logs={mockLogs} onFilter={onFilter} onSearch={onSearch} onExport={onExport} />
     );
 
     const userFilter = screen.getByTestId('filter-user');
@@ -630,12 +591,7 @@ describe('AuditLogViewer Component', () => {
     const onExport = vi.fn();
 
     render(
-      <AuditLogViewer
-        logs={mockLogs}
-        onFilter={onFilter}
-        onSearch={onSearch}
-        onExport={onExport}
-      />
+      <AuditLogViewer logs={mockLogs} onFilter={onFilter} onSearch={onSearch} onExport={onExport} />
     );
 
     const actionFilter = screen.getByTestId('filter-action');
@@ -650,12 +606,7 @@ describe('AuditLogViewer Component', () => {
     const onExport = vi.fn();
 
     render(
-      <AuditLogViewer
-        logs={mockLogs}
-        onFilter={onFilter}
-        onSearch={onSearch}
-        onExport={onExport}
-      />
+      <AuditLogViewer logs={mockLogs} onFilter={onFilter} onSearch={onSearch} onExport={onExport} />
     );
 
     const exportButton = screen.getByTestId('export-csv');
@@ -678,13 +629,7 @@ describe('SettingsForm Component', () => {
   test('should render settings form', () => {
     const onSave = vi.fn();
 
-    render(
-      <SettingsForm
-        settings={mockSettings}
-        onSave={onSave}
-        autoSave={false}
-      />
-    );
+    render(<SettingsForm settings={mockSettings} onSave={onSave} autoSave={false} />);
 
     expect(screen.getByTestId('maintenance-toggle')).toBeInTheDocument();
     expect(screen.getByTestId('site-name-input')).toBeInTheDocument();
@@ -693,13 +638,7 @@ describe('SettingsForm Component', () => {
   test('should call onSave when save button clicked', () => {
     const onSave = vi.fn();
 
-    render(
-      <SettingsForm
-        settings={mockSettings}
-        onSave={onSave}
-        autoSave={false}
-      />
-    );
+    render(<SettingsForm settings={mockSettings} onSave={onSave} autoSave={false} />);
 
     const saveButton = screen.getByTestId('save-button');
     fireEvent.click(saveButton);
@@ -710,36 +649,27 @@ describe('SettingsForm Component', () => {
   test('should auto-save when autoSave enabled', async () => {
     const onSave = vi.fn();
 
-    render(
-      <SettingsForm
-        settings={mockSettings}
-        onSave={onSave}
-        autoSave={true}
-      />
-    );
+    render(<SettingsForm settings={mockSettings} onSave={onSave} autoSave={true} />);
 
     const siteNameInput = screen.getByTestId('site-name-input');
     fireEvent.change(siteNameInput, { target: { value: 'New Site Name' } });
 
     // Wait for auto-save
-    await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith({
-        maintenanceMode: false,
-        siteName: 'New Site Name',
-      });
-    }, { timeout: 1000 });
+    await waitFor(
+      () => {
+        expect(onSave).toHaveBeenCalledWith({
+          maintenanceMode: false,
+          siteName: 'New Site Name',
+        });
+      },
+      { timeout: 1000 }
+    );
   });
 
   test('should show save status when auto-saving', async () => {
     const onSave = vi.fn();
 
-    render(
-      <SettingsForm
-        settings={mockSettings}
-        onSave={onSave}
-        autoSave={true}
-      />
-    );
+    render(<SettingsForm settings={mockSettings} onSave={onSave} autoSave={true} />);
 
     const siteNameInput = screen.getByTestId('site-name-input');
     fireEvent.change(siteNameInput, { target: { value: 'New Name' } });
@@ -748,21 +678,18 @@ describe('SettingsForm Component', () => {
     expect(screen.getByTestId('save-status').textContent).toBe('Saving...');
 
     // Wait for saved status
-    await waitFor(() => {
-      expect(screen.getByTestId('save-status').textContent).toBe('Saved');
-    }, { timeout: 1000 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('save-status').textContent).toBe('Saved');
+      },
+      { timeout: 1000 }
+    );
   });
 
   test('should update form data on input change', () => {
     const onSave = vi.fn();
 
-    render(
-      <SettingsForm
-        settings={mockSettings}
-        onSave={onSave}
-        autoSave={false}
-      />
-    );
+    render(<SettingsForm settings={mockSettings} onSave={onSave} autoSave={false} />);
 
     const maintenanceToggle = screen.getByTestId('maintenance-toggle') as HTMLInputElement;
     expect(maintenanceToggle.checked).toBe(false);

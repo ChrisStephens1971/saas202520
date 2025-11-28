@@ -15,11 +15,13 @@ Comprehensive admin analytics dashboard system built for the SaaS202520 tourname
 ### Components (3 files - 753 lines)
 
 #### 1. MetricsCard.tsx (194 lines)
+
 **Location:** `apps/web/components/admin/MetricsCard.tsx`
 
 **Purpose:** Display single metrics with trend indicators
 
 **Features:**
+
 - Current value with previous period comparison
 - Automatic trend calculation (up/down/neutral)
 - Percentage change display
@@ -29,6 +31,7 @@ Comprehensive admin analytics dashboard system built for the SaaS202520 tourname
 - Grouped layout support
 
 **Props:**
+
 ```typescript
 interface MetricsCardProps {
   title: string;
@@ -46,6 +49,7 @@ interface MetricsCardProps {
 ```
 
 **Example Usage:**
+
 ```tsx
 <MetricsCard
   title="Total Users"
@@ -60,11 +64,13 @@ interface MetricsCardProps {
 ---
 
 #### 2. DateRangePicker.tsx (274 lines)
+
 **Location:** `apps/web/components/admin/DateRangePicker.tsx`
 
 **Purpose:** Date range selection for filtering analytics
 
 **Features:**
+
 - Quick preset ranges (Today, Last 7 days, Last 30 days, etc.)
 - Custom date range selection
 - Comparison with previous period toggle
@@ -72,6 +78,7 @@ interface MetricsCardProps {
 - Built with date-fns for date manipulation
 
 **Presets:**
+
 - Today
 - Yesterday
 - Last 7 Days
@@ -84,6 +91,7 @@ interface MetricsCardProps {
 - Custom Range
 
 **Props:**
+
 ```typescript
 interface DateRangePickerProps {
   value: DateRange;
@@ -101,6 +109,7 @@ interface DateRange {
 ```
 
 **Hook:**
+
 ```tsx
 const [dateRange, setDateRange] = useDateRange('last30days');
 ```
@@ -108,6 +117,7 @@ const [dateRange, setDateRange] = useDateRange('last30days');
 ---
 
 #### 3. AnalyticsCharts.tsx (485 lines)
+
 **Location:** `apps/web/components/admin/AnalyticsCharts.tsx`
 
 **Purpose:** Comprehensive chart components using Recharts
@@ -125,18 +135,20 @@ const [dateRange, setDateRange] = useDateRange('last30days');
 9. **MatchesPerDayChart** - Bar chart for daily match volume
 
 **Chart Configuration:**
+
 ```typescript
 const CHART_COLORS = {
-  primary: '#9333ea',    // purple-600
-  secondary: '#3b82f6',  // blue-500
-  success: '#10b981',    // green-500
-  warning: '#f59e0b',    // amber-500
-  danger: '#ef4444',     // red-500
-  info: '#06b6d4',       // cyan-500
+  primary: '#9333ea', // purple-600
+  secondary: '#3b82f6', // blue-500
+  success: '#10b981', // green-500
+  warning: '#f59e0b', // amber-500
+  danger: '#ef4444', // red-500
+  info: '#06b6d4', // cyan-500
 };
 ```
 
 **Example Usage:**
+
 ```tsx
 <UserGrowthChart
   data={[
@@ -151,17 +163,20 @@ const CHART_COLORS = {
 ---
 
 #### 4. ExportButton.tsx (326 lines)
+
 **Location:** `apps/web/components/admin/ExportButton.tsx`
 
 **Purpose:** Export analytics data in multiple formats
 
 **Supported Formats:**
+
 - CSV: Simple data export
 - Excel (XLSX): Formatted workbook
 - PNG: Chart image export
 - PDF: Full report with tables
 
 **Props:**
+
 ```typescript
 interface ExportButtonProps {
   data: any[];
@@ -174,6 +189,7 @@ interface ExportButtonProps {
 ```
 
 **Features:**
+
 - Single or multiple format selection
 - Dropdown menu for multiple formats
 - Automatic file naming with date
@@ -181,12 +197,9 @@ interface ExportButtonProps {
 - Loading states
 
 **Example Usage:**
+
 ```tsx
-<ExportButton
-  data={metricsArray}
-  filename="analytics-report"
-  formats={['csv', 'xlsx', 'pdf']}
-/>
+<ExportButton data={metricsArray} filename="analytics-report" formats={['csv', 'xlsx', 'pdf']} />
 ```
 
 ---
@@ -194,11 +207,13 @@ interface ExportButtonProps {
 ### Pages (4 files - 871 lines)
 
 #### 1. Overview Page (170 lines)
+
 **Location:** `apps/web/app/admin/analytics/page.tsx`
 
 **Purpose:** Main analytics dashboard with system-wide metrics
 
 **Metrics Displayed:**
+
 - Total Users (with trend)
 - Active Users (DAU)
 - Total Tournaments (with trend)
@@ -208,12 +223,14 @@ interface ExportButtonProps {
 - Error Rate
 
 **Charts:**
+
 - User Growth Over Time (line chart)
 - Tournament Activity (bar chart)
 - Match Status Distribution (pie chart)
 - Revenue Trends (area chart)
 
 **Features:**
+
 - Real-time data updates
 - Manual refresh button
 - Date range filtering
@@ -224,11 +241,13 @@ interface ExportButtonProps {
 ---
 
 #### 2. User Analytics Page (258 lines)
+
 **Location:** `apps/web/app/admin/analytics/users/page.tsx`
 
 **Purpose:** Detailed user metrics and engagement analysis
 
 **Metrics Displayed:**
+
 - Total Users
 - New Users (with trend)
 - Daily Active Users (DAU)
@@ -239,12 +258,14 @@ interface ExportButtonProps {
 - Churn Rate
 
 **Charts:**
+
 - User Registrations (line chart)
 - User Engagement DAU/WAU/MAU (multi-line chart)
 - User Role Distribution (pie chart)
 - Cohort Retention Analysis (table)
 
 **Key Insights:**
+
 - User Growth Rate
 - DAU/MAU Ratio (engagement indicator)
 - Average Retention
@@ -255,11 +276,13 @@ interface ExportButtonProps {
 ---
 
 #### 3. Tournament Analytics Page (230 lines)
+
 **Location:** `apps/web/app/admin/analytics/tournaments/page.tsx`
 
 **Purpose:** Tournament-specific analytics and insights
 
 **Metrics Displayed:**
+
 - Total Tournaments (with trend)
 - Completed Tournaments
 - Active Tournaments
@@ -270,15 +293,18 @@ interface ExportButtonProps {
 - Average Matches per Tournament
 
 **Charts:**
+
 - Tournament Activity (bar chart)
 - Tournament Formats (pie chart)
 - Matches Per Day (bar chart)
 - Tournament Status (pie chart)
 
 **Data Tables:**
+
 - Top Tournaments (name, format, players, matches, duration, status)
 
 **Key Insights:**
+
 - Most Popular Format
 - Match Completion Rate
 - Average Tournament Size
@@ -289,11 +315,13 @@ interface ExportButtonProps {
 ---
 
 #### 4. Performance Analytics Page (213 lines)
+
 **Location:** `apps/web/app/admin/analytics/performance/page.tsx`
 
 **Purpose:** System performance and health monitoring
 
 **Metrics Displayed:**
+
 - Average Response Time (with trend)
 - P95 Response Time
 - Error Rate (with trend)
@@ -304,16 +332,19 @@ interface ExportButtonProps {
 - Requests Per Minute
 
 **Charts:**
+
 - API Response Time (line chart)
 - Error Rate Over Time (line chart)
 - Request Throughput (line chart)
 
 **Real-Time Features:**
+
 - Auto-refresh every 60 seconds
 - Recent Errors list (with timestamp, endpoint, status code, message)
 - Slow Queries list (with duration, count)
 
 **Health Summary:**
+
 - API Health (Healthy/Degraded/Critical)
 - Database Health (Optimal/Acceptable/Slow)
 - Cache Efficiency (Excellent/Good/Poor)
@@ -327,14 +358,17 @@ interface ExportButtonProps {
 ### API Endpoints to Implement
 
 #### 1. Overview Endpoint
+
 **Route:** `GET /api/admin/analytics/overview`
 
 **Query Parameters:**
+
 - `startDate`: ISO date string
 - `endDate`: ISO date string
 - `compareWithPrevious`: boolean
 
 **Response Structure:**
+
 ```typescript
 {
   metrics: {
@@ -351,17 +385,18 @@ interface ExportButtonProps {
     previousRevenue: number;
     systemUptime: number;
     errorRate: number;
-  };
+  }
   charts: {
     userGrowth: Array<{ date: string; users: number; activeUsers: number }>;
     tournamentActivity: Array<{ date: string; created: number; completed: number }>;
     matchStatus: Array<{ name: string; value: number }>;
     revenue: Array<{ date: string; revenue: number }>;
-  };
+  }
 }
 ```
 
 **Data Sources:**
+
 - Users table (total count, active count)
 - Tournaments table (count by status)
 - Matches table (total, completed)
@@ -369,6 +404,7 @@ interface ExportButtonProps {
 - Application logs (uptime, errors)
 
 **Aggregation Queries:**
+
 ```sql
 -- Total users
 SELECT COUNT(*) FROM users WHERE created_at BETWEEN ? AND ?;
@@ -386,9 +422,11 @@ SELECT SUM(amount) FROM payments WHERE created_at BETWEEN ? AND ? AND status = '
 ---
 
 #### 2. User Analytics Endpoint
+
 **Route:** `GET /api/admin/analytics/users`
 
 **Response Structure:**
+
 ```typescript
 {
   metrics: {
@@ -404,17 +442,24 @@ SELECT SUM(amount) FROM payments WHERE created_at BETWEEN ? AND ? AND status = '
     previousRetentionRate: number;
     avgSessionDuration: number;
     churnRate: number;
-  };
+  }
   charts: {
     registrations: Array<{ date: string; users: number }>;
     engagement: Array<{ date: string; dau: number; wau: number; mau: number }>;
     roleDistribution: Array<{ role: string; count: number }>;
-    cohortRetention: Array<{ cohort: string; week1: number; week2: number; week3: number; week4: number }>;
-  };
+    cohortRetention: Array<{
+      cohort: string;
+      week1: number;
+      week2: number;
+      week3: number;
+      week4: number;
+    }>;
+  }
 }
 ```
 
 **Aggregation Queries:**
+
 ```sql
 -- Daily registrations
 SELECT DATE(created_at) as date, COUNT(*) as users
@@ -443,9 +488,11 @@ FROM user_activity_summary;
 ---
 
 #### 3. Tournament Analytics Endpoint
+
 **Route:** `GET /api/admin/analytics/tournaments`
 
 **Response Structure:**
+
 ```typescript
 {
   metrics: {
@@ -460,13 +507,13 @@ FROM user_activity_summary;
     totalMatches: number;
     completedMatches: number;
     avgMatchesPerTournament: number;
-  };
+  }
   charts: {
     activity: Array<{ date: string; created: number; completed: number; active: number }>;
     formatDistribution: Array<{ format: string; count: number }>;
     matchesPerDay: Array<{ date: string; matches: number; completed: number }>;
     statusDistribution: Array<{ name: string; value: number }>;
-  };
+  }
   topTournaments: Array<{
     id: string;
     name: string;
@@ -480,6 +527,7 @@ FROM user_activity_summary;
 ```
 
 **Aggregation Queries:**
+
 ```sql
 -- Tournament activity by day
 SELECT
@@ -514,9 +562,11 @@ LIMIT 10;
 ---
 
 #### 4. Performance Analytics Endpoint
+
 **Route:** `GET /api/admin/analytics/performance`
 
 **Response Structure:**
+
 ```typescript
 {
   metrics: {
@@ -532,12 +582,17 @@ LIMIT 10;
     requestsPerMinute: number;
     previousRequestsPerMinute: number;
     bandwidthUsage: number;
-  };
+  }
   charts: {
-    responseTime: Array<{ timestamp: string; responseTime: number; errorRate: number; throughput: number }>;
+    responseTime: Array<{
+      timestamp: string;
+      responseTime: number;
+      errorRate: number;
+      throughput: number;
+    }>;
     errors: Array<{ timestamp: string; count: number; type: string }>;
     connections: Array<{ timestamp: string; active: number; idle: number }>;
-  };
+  }
   recentErrors: Array<{
     timestamp: string;
     endpoint: string;
@@ -555,12 +610,14 @@ LIMIT 10;
 ```
 
 **Data Sources:**
+
 - Application logs (response times, errors)
 - Database performance logs (query times)
 - Redis/cache metrics (hit rate)
 - System monitoring (uptime, connections)
 
 **Aggregation:**
+
 - Use application middleware to log request/response times
 - Store in time-series database or aggregated logs table
 - Calculate percentiles (P95, P99)
@@ -574,17 +631,20 @@ LIMIT 10;
 ### Real-Time vs Cached Data
 
 **Real-Time Data (< 5 min cache):**
+
 - Active users count
 - Active connections
 - Current error rate
 - System health status
 
 **Short Cache (15-30 min):**
+
 - Daily active users
 - Recent errors
 - Performance metrics
 
 **Long Cache (1-24 hours):**
+
 - Historical trends
 - User growth charts
 - Tournament statistics
@@ -603,16 +663,17 @@ const CACHE_KEYS = {
 
 // Cache TTL (in seconds)
 const CACHE_TTL = {
-  overview: 1800,      // 30 minutes
-  users: 3600,         // 1 hour
-  tournaments: 3600,   // 1 hour
-  performance: 300,    // 5 minutes
+  overview: 1800, // 30 minutes
+  users: 3600, // 1 hour
+  tournaments: 3600, // 1 hour
+  performance: 300, // 5 minutes
 };
 ```
 
 ### Database Optimization
 
 **Indexes Required:**
+
 ```sql
 -- Users table
 CREATE INDEX idx_users_created_at ON users(created_at);
@@ -651,6 +712,7 @@ CREATE INDEX idx_perf_logs_endpoint ON performance_logs(endpoint);
 ### Recharts Settings
 
 **Global Config:**
+
 ```typescript
 // Responsive container - always use
 <ResponsiveContainer width="100%" height={300}>
@@ -672,6 +734,7 @@ const customTooltipStyle = {
 ```
 
 **Performance Tips:**
+
 - Limit data points to 50-100 for smooth rendering
 - Use `isAnimationActive={false}` for large datasets
 - Debounce data updates
@@ -684,6 +747,7 @@ const customTooltipStyle = {
 ### Unit Tests
 
 **Components:**
+
 ```typescript
 // MetricsCard.test.tsx
 - renders with correct value
@@ -706,6 +770,7 @@ const customTooltipStyle = {
 ### Integration Tests
 
 **Pages:**
+
 ```typescript
 // analytics/page.test.tsx
 - fetches data on mount
@@ -796,6 +861,7 @@ test('export to CSV works', async ({ page }) => {
 ## Summary
 
 **Total Implementation:**
+
 - 4 reusable components (753 lines)
 - 4 analytics pages (871 lines)
 - 8 chart types
@@ -803,6 +869,7 @@ test('export to CSV works', async ({ page }) => {
 - 4 API endpoints to implement
 
 **Key Features:**
+
 - Comprehensive system-wide analytics
 - User engagement and retention tracking
 - Tournament performance insights
@@ -814,6 +881,7 @@ test('export to CSV works', async ({ page }) => {
 - Caching strategy
 
 **Next Steps:**
+
 1. Implement API endpoints with proper data aggregation
 2. Set up caching layer (Redis)
 3. Create database indexes

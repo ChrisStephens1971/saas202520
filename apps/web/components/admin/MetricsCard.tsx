@@ -103,12 +103,22 @@ export function MetricsCard({
   const trendIcons = {
     up: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M5 10l7-7m0 0l7 7m-7-7v18"
+        />
       </svg>
     ),
     down: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M19 14l-7 7m0 0l-7-7m7 7V3"
+        />
       </svg>
     ),
     neutral: (
@@ -120,7 +130,9 @@ export function MetricsCard({
 
   if (loading) {
     return (
-      <div className={`backdrop-blur-lg rounded-xl p-6 border ${variantStyles[variant]} animate-pulse`}>
+      <div
+        className={`backdrop-blur-lg rounded-xl p-6 border ${variantStyles[variant]} animate-pulse`}
+      >
         <div className="h-4 bg-white/20 rounded w-1/2 mb-4"></div>
         <div className="h-8 bg-white/20 rounded w-3/4 mb-2"></div>
         <div className="h-3 bg-white/20 rounded w-1/3"></div>
@@ -129,7 +141,9 @@ export function MetricsCard({
   }
 
   return (
-    <div className={`backdrop-blur-lg rounded-xl p-6 border ${variantStyles[variant]} hover:bg-white/20 transition-colors`}>
+    <div
+      className={`backdrop-blur-lg rounded-xl p-6 border ${variantStyles[variant]} hover:bg-white/20 transition-colors`}
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -139,11 +153,7 @@ export function MetricsCard({
             {icon && <div className="text-gray-400">{icon}</div>}
           </div>
         </div>
-        {icon && !loading && (
-          <div className="text-gray-400 opacity-50">
-            {icon}
-          </div>
-        )}
+        {icon && !loading && <div className="text-gray-400 opacity-50">{icon}</div>}
       </div>
 
       {/* Trend Indicator */}
@@ -155,9 +165,7 @@ export function MetricsCard({
               {Math.abs(calculatedPercentage).toFixed(1)}%
             </span>
           </div>
-          <span className="text-xs text-gray-400">
-            {description || 'vs previous period'}
-          </span>
+          <span className="text-xs text-gray-400">{description || 'vs previous period'}</span>
         </div>
       )}
 
@@ -186,9 +194,5 @@ export function MetricsCardGroup({ children, columns = 4 }: MetricsCardGroupProp
     4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
   };
 
-  return (
-    <div className={`grid ${gridCols[columns]} gap-6`}>
-      {children}
-    </div>
-  );
+  return <div className={`grid ${gridCols[columns]} gap-6`}>{children}</div>;
 }

@@ -216,7 +216,7 @@ The `role` field is already a String type, so no schema change is needed. Howeve
 
 ```typescript
 const VALID_ROLES = ['owner', 'admin', 'td', 'scorekeeper', 'streamer'] as const;
-type Role = typeof VALID_ROLES[number];
+type Role = (typeof VALID_ROLES)[number];
 
 // Validation schema
 const RoleSchema = z.enum(VALID_ROLES);

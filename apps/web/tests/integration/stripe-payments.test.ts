@@ -741,7 +741,7 @@ describe('Stripe Payment Integration Tests', () => {
 
       expect(payout1st.amount).toBe(20000); // $200.00
       expect(payout2nd.amount).toBe(12000); // $120.00
-      expect(payout3rd.amount).toBe(8000);  // $80.00
+      expect(payout3rd.amount).toBe(8000); // $80.00
 
       // Verify total payouts match collected
       const totalPayouts = payout1st.amount + payout2nd.amount + payout3rd.amount;
@@ -842,7 +842,7 @@ describe('Stripe Payment Integration Tests', () => {
       const totalSidePots = sidePots.reduce((sum, p) => sum + p.amount, 0);
 
       expect(totalEntryFees).toBe(25000); // $250.00
-      expect(totalSidePots).toBe(6000);   // $60.00
+      expect(totalSidePots).toBe(6000); // $60.00
 
       // Create payouts from both sources
       const player1 = await prisma.player.create({
@@ -906,19 +906,19 @@ describe('Stripe Payment Integration Tests', () => {
 
       const breakdown = {
         entryFees: allPayments
-          .filter(p => p.purpose === 'entry_fee')
+          .filter((p) => p.purpose === 'entry_fee')
           .reduce((sum, p) => sum + p.amount, 0),
         sidePots: allPayments
-          .filter(p => p.purpose === 'side_pot')
+          .filter((p) => p.purpose === 'side_pot')
           .reduce((sum, p) => sum + p.amount, 0),
         addons: allPayments
-          .filter(p => p.purpose === 'addon')
+          .filter((p) => p.purpose === 'addon')
           .reduce((sum, p) => sum + p.amount, 0),
       };
 
       expect(breakdown.entryFees).toBe(15000); // $150.00
-      expect(breakdown.sidePots).toBe(2000);   // $20.00
-      expect(breakdown.addons).toBe(1000);     // $10.00
+      expect(breakdown.sidePots).toBe(2000); // $20.00
+      expect(breakdown.addons).toBe(1000); // $10.00
 
       const totalCollected = breakdown.entryFees + breakdown.sidePots + breakdown.addons;
       expect(totalCollected).toBe(18000); // $180.00
@@ -1173,13 +1173,9 @@ describe('Stripe Payment Integration Tests', () => {
     });
 
     test('should handle missing Stripe account', async () => {
-      mockStripe.accounts.retrieve.mockRejectedValue(
-        new Error('No such account: acct_missing')
-      );
+      mockStripe.accounts.retrieve.mockRejectedValue(new Error('No such account: acct_missing'));
 
-      await expect(
-        stripeLib.getConnectAccount('acct_missing')
-      ).rejects.toThrow('No such account');
+      await expect(stripeLib.getConnectAccount('acct_missing')).rejects.toThrow('No such account');
     });
 
     test('should handle card declined errors', async () => {
@@ -1198,13 +1194,11 @@ describe('Stripe Payment Integration Tests', () => {
     });
 
     test('should handle payment intent not found', async () => {
-      mockStripe.paymentIntents.retrieve.mockRejectedValue(
-        stripeErrors.paymentIntentNotFound()
-      );
+      mockStripe.paymentIntents.retrieve.mockRejectedValue(stripeErrors.paymentIntentNotFound());
 
-      await expect(
-        mockStripe.paymentIntents.retrieve('pi_nonexistent')
-      ).rejects.toThrow('No such payment_intent');
+      await expect(mockStripe.paymentIntents.retrieve('pi_nonexistent')).rejects.toThrow(
+        'No such payment_intent'
+      );
     });
   });
 });

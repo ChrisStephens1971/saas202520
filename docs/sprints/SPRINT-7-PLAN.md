@@ -56,6 +56,7 @@
 ## Success Metrics
 
 ### Quantitative
+
 - [ ] E2E test coverage: >80% of critical user flows
 - [ ] Lighthouse performance score: >90
 - [ ] Lighthouse accessibility score: >95
@@ -64,6 +65,7 @@
 - [ ] Mobile responsive: All pages work on 375px width
 
 ### Qualitative
+
 - [ ] E2E tests run reliably in CI/CD
 - [ ] Performance regressions caught automatically
 - [ ] Analytics provide actionable insights
@@ -79,6 +81,7 @@
 **Goal:** Comprehensive browser automation testing for critical workflows
 
 **Tasks:**
+
 1. Install and configure Playwright
    - `pnpm add -D @playwright/test`
    - Create `playwright.config.ts`
@@ -120,6 +123,7 @@
    - Test result reporting
 
 **Files to Create:**
+
 - `apps/web/playwright.config.ts`
 - `apps/web/tests/e2e/tournament-setup.spec.ts`
 - `apps/web/tests/e2e/chip-format-flow.spec.ts`
@@ -128,6 +132,7 @@
 - `.github/workflows/e2e-tests.yml`
 
 **Dependencies:**
+
 ```json
 {
   "@playwright/test": "^1.48.0"
@@ -143,12 +148,14 @@
 **Goal:** Automated performance tracking and regression detection
 
 **Tasks:**
+
 1. Install Lighthouse CI
    - `pnpm add -D @lhci/cli`
    - Create `.lighthouserc.json`
    - Configure performance budgets
 
 2. Set up performance budgets
+
    ```json
    {
      "budgets": [
@@ -182,11 +189,13 @@
    - Create performance monitoring dashboard
 
 **Files to Create:**
+
 - `.lighthouserc.json`
 - `apps/web/lib/web-vitals.ts`
 - `.github/workflows/lighthouse-ci.yml`
 
 **Dependencies:**
+
 ```json
 {
   "@lhci/cli": "^0.14.0",
@@ -203,6 +212,7 @@
 **Goal:** Visual analytics for tournament insights
 
 **Tasks:**
+
 1. Install recharts
    - `pnpm add recharts`
    - Create analytics component library
@@ -244,6 +254,7 @@
    - Date range filter
 
 **Files to Create:**
+
 - `apps/web/components/analytics/ChipProgressionChart.tsx`
 - `apps/web/components/analytics/MatchActivityChart.tsx`
 - `apps/web/components/analytics/PlayerPerformanceChart.tsx`
@@ -255,6 +266,7 @@
 - `apps/web/app/api/tournaments/[id]/analytics/statistics/route.ts`
 
 **Dependencies:**
+
 ```json
 {
   "recharts": "^2.15.0"
@@ -270,6 +282,7 @@
 **Goal:** Native-like mobile experience with offline support
 
 **Tasks:**
+
 1. Create PWA Manifest
    - App name, icons, theme colors
    - Display mode: standalone
@@ -295,12 +308,14 @@
    - Handle beforeinstallprompt event
 
 **Files to Create:**
+
 - `apps/web/public/manifest.json`
 - `apps/web/public/sw.js`
 - `apps/web/components/PWAInstallPrompt.tsx`
 - `apps/web/lib/service-worker-registration.ts`
 
 **Dependencies:**
+
 ```json
 {
   "next-pwa": "^5.6.0"
@@ -316,6 +331,7 @@
 **Goal:** Real-time push notifications for tournament events
 
 **Tasks:**
+
 1. Browser Notification API Integration
    - Request notification permission
    - Create notification utility functions
@@ -343,12 +359,14 @@
    - Handle notification errors gracefully
 
 **Files to Create:**
+
 - `apps/web/lib/notifications.ts`
 - `apps/web/hooks/useNotifications.ts`
 - `apps/web/components/settings/NotificationSettings.tsx`
 - `apps/web/app/api/notifications/preferences/route.ts`
 
 **Database Changes:**
+
 ```sql
 -- Add notification preferences to user
 ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAssigned": true, "finalsCutoff": true, "chipsAdjusted": true}'::JSONB;
@@ -363,16 +381,19 @@ ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAs
 ### Week 1 (Nov 7-13)
 
 **Day 1-2: E2E Testing Setup**
+
 - Install Playwright
 - Configure test environment
 - Create first E2E test (tournament creation)
 
 **Day 3-4: E2E Test Suites**
+
 - Chip format tournament flow tests
 - WebSocket real-time tests
 - Queue management tests
 
 **Day 5: Performance Monitoring**
+
 - Install Lighthouse CI
 - Configure performance budgets
 - Set up CI/CD integration
@@ -380,21 +401,25 @@ ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAs
 ### Week 2 (Nov 14-21)
 
 **Day 1-2: Analytics Dashboard**
+
 - Install recharts
 - Create chart components
 - Build analytics API endpoints
 
 **Day 3: Analytics Dashboard UI**
+
 - Create analytics dashboard page
 - Integrate charts
 - Add export functionality
 
 **Day 4: Mobile PWA (if time permits)**
+
 - Create PWA manifest
 - Implement service worker
 - Mobile UI improvements
 
 **Day 5: Advanced Notifications (if time permits)**
+
 - Browser notification API
 - WebSocket event notifications
 - Notification preferences UI
@@ -404,14 +429,17 @@ ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAs
 ## Dependencies and Prerequisites
 
 ### Technical Prerequisites
+
 - Sprint 6 complete (WebSocket integration, Tournament Setup Wizard)
 - Database accessible for E2E tests
 - CI/CD pipeline configured
 
 ### External Dependencies
+
 - None (all libraries are well-maintained open source)
 
 ### Team Dependencies
+
 - None (can be completed independently)
 
 ---
@@ -419,36 +447,44 @@ ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAs
 ## Risks and Mitigation
 
 ### Risk 1: E2E Tests Flaky
+
 **Probability:** Medium
 **Impact:** High
 **Mitigation:**
+
 - Use Playwright's auto-waiting features
 - Implement proper test isolation
 - Use retry logic for network operations
 - Run tests multiple times in CI
 
 ### Risk 2: Performance Budget Too Strict
+
 **Probability:** Medium
 **Impact:** Medium
 **Mitigation:**
+
 - Start with reasonable budgets
 - Iterate based on actual measurements
 - Allow for some variance
 - Focus on trends, not absolute numbers
 
 ### Risk 3: Analytics Queries Slow
+
 **Probability:** Low
 **Impact:** Medium
 **Mitigation:**
+
 - Add database indexes for analytics queries
 - Implement caching for expensive aggregations
 - Use pagination for large datasets
 - Consider pre-computing common analytics
 
 ### Risk 4: Service Worker Caching Issues
+
 **Probability:** Medium
 **Impact:** Medium
 **Mitigation:**
+
 - Implement versioned cache names
 - Clear old caches automatically
 - Test cache invalidation thoroughly
@@ -459,6 +495,7 @@ ALTER TABLE "User" ADD COLUMN "notificationPreferences" JSONB DEFAULT '{"matchAs
 ## Definition of Done
 
 Sprint 7 is "Done" when:
+
 - [x] E2E tests implemented and passing (>80% critical flow coverage)
 - [x] E2E tests integrated into CI/CD pipeline
 - [x] Lighthouse CI configured with performance budgets
@@ -480,21 +517,25 @@ Sprint 7 is "Done" when:
 ## Testing Strategy
 
 ### E2E Tests (New in Sprint 7)
+
 - Playwright browser automation
 - Critical user flows covered
 - Run in CI/CD on every PR
 - Screenshot/video on failure
 
 ### Unit Tests
+
 - Maintain >80% coverage
 - Test new analytics functions
 - Test notification logic
 
 ### Integration Tests
+
 - Existing chip format integration tests pass
 - Add analytics API integration tests
 
 ### Performance Tests
+
 - Lighthouse CI on every PR
 - Performance budgets enforced
 - Core Web Vitals monitored
@@ -504,11 +545,13 @@ Sprint 7 is "Done" when:
 ## Technical Debt
 
 ### Addressed in Sprint 7
+
 - E2E testing gap (deferred from Sprint 6)
 - Performance monitoring gap
 - Mobile experience gap
 
 ### Deferred to Future Sprints
+
 - Dark mode implementation
 - Multi-language support (i18n)
 - PDF export functionality
@@ -519,18 +562,21 @@ Sprint 7 is "Done" when:
 ## Notes
 
 ### From Sprint 6 Retrospective
+
 - E2E testing was deferred due to time constraints
 - Performance monitoring should be automated
 - Mobile experience needs improvement
 - Analytics would provide valuable insights
 
 ### For Engineering Team
+
 - Playwright requires Chromium/Firefox/WebKit browsers
 - Service workers require HTTPS (or localhost)
 - Notification API requires user permission
 - Lighthouse CI requires deployment URL
 
 ### For Product Team
+
 - E2E tests will give confidence for production launches
 - Analytics dashboard will help tournament directors make decisions
 - Mobile PWA will improve mobile user experience
@@ -541,6 +587,7 @@ Sprint 7 is "Done" when:
 ## Sprint Review Checklist
 
 At the end of Sprint 7, review:
+
 - [ ] All primary goals completed
 - [ ] E2E tests running reliably in CI
 - [ ] Performance budgets met

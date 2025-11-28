@@ -32,7 +32,7 @@ server.register(async function (fastify) {
   fastify.get('/', { websocket: true }, (socket, req) => {
     // Extract room name from URL query parameter
     // Format: ws://localhost:8020/?room=tournament:123
-    const roomName = req.query?.room as string || 'default';
+    const roomName = (req.query?.room as string) || 'default';
 
     fastify.log.info(`Client connecting to room: ${roomName}`);
 
@@ -73,16 +73,17 @@ server.register(async function (fastify) {
 });
 
 // Periodic cleanup of empty rooms (every 5 minutes)
-setInterval(() => {
-  roomManager.cleanupEmptyRooms();
-}, 5 * 60 * 1000);
+setInterval(
+  () => {
+    roomManager.cleanupEmptyRooms();
+  },
+  5 * 60 * 1000
+);
 
 // Start server
 const start = async () => {
   try {
-    const port = process.env.SYNC_SERVICE_PORT
-      ? parseInt(process.env.SYNC_SERVICE_PORT)
-      : 8020;
+    const port = process.env.SYNC_SERVICE_PORT ? parseInt(process.env.SYNC_SERVICE_PORT) : 8020;
     const host = process.env.HOST || '0.0.0.0';
 
     await server.listen({ port, host });

@@ -22,7 +22,9 @@ test.describe('Push Notifications', () => {
 
   test('should show browser support status', async ({ page }) => {
     // Check for support indicator
-    const supportStatus = page.locator('[data-testid="notification-status"], .notification-status').first();
+    const supportStatus = page
+      .locator('[data-testid="notification-status"], .notification-status')
+      .first();
 
     // Should indicate whether notifications are supported
     await expect(supportStatus).toBeVisible({ timeout: 10000 });

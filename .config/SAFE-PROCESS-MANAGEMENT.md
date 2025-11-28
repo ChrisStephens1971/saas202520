@@ -18,6 +18,7 @@ pkill -f analytics
 ```
 
 **Why dangerous:**
+
 - Kills processes from other projects
 - Terminates background terminals
 - Disrupts other users' work
@@ -220,11 +221,13 @@ lsof -ti:3009
 ## Summary: The Golden Rule
 
 **Always target processes by:**
+
 1. ✅ Specific PID
 2. ✅ Specific port number
 3. ✅ Specific container name
 
 **Never target processes by:**
+
 1. ❌ Process name (`node.exe`, `/IM node`)
 2. ❌ Pattern matching (`pkill -f`)
 3. ❌ Broad wildcards

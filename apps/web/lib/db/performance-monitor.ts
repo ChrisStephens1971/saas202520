@@ -70,11 +70,13 @@ export async function getConnectionStats() {
     `;
 
     const row = result[0];
-    return row ? {
-      total: Number(row.total),
-      active: Number(row.active),
-      idle: Number(row.idle),
-    } : { total: 0, active: 0, idle: 0 };
+    return row
+      ? {
+          total: Number(row.total),
+          active: Number(row.active),
+          idle: Number(row.idle),
+        }
+      : { total: 0, active: 0, idle: 0 };
   } catch (error) {
     console.error('Failed to get connection stats:', error);
     return { total: 0, active: 0, idle: 0 };
@@ -109,7 +111,7 @@ export async function getTableStats() {
       LIMIT 20
     `;
 
-    return result.map(row => ({
+    return result.map((row) => ({
       name: row.name,
       rowCount: Number(row.row_count),
       sizeBytes: Number(row.size_bytes),
@@ -154,7 +156,7 @@ export async function getIndexStats() {
       LIMIT 50
     `;
 
-    return result.map(row => ({
+    return result.map((row) => ({
       tableName: row.table_name,
       indexName: row.index_name,
       scans: Number(row.scans),
@@ -215,33 +217,36 @@ export async function getSlowQueryAnalysis() {
   }
 
   // Group queries by model and action
-  const grouped = slowQueries.reduce((acc, query) => {
-    const key = `${query.model}.${query.action}`;
-    if (!acc[key]) {
-      acc[key] = {
-        model: query.model,
-        action: query.action,
-        count: 0,
-        totalDuration: 0,
-        maxDuration: 0,
-        avgDuration: 0,
-        examples: [],
-      };
-    }
-    acc[key].count++;
-    acc[key].totalDuration += query.duration;
-    acc[key].maxDuration = Math.max(acc[key].maxDuration, query.duration);
+  const grouped = slowQueries.reduce(
+    (acc, query) => {
+      const key = `${query.model}.${query.action}`;
+      if (!acc[key]) {
+        acc[key] = {
+          model: query.model,
+          action: query.action,
+          count: 0,
+          totalDuration: 0,
+          maxDuration: 0,
+          avgDuration: 0,
+          examples: [],
+        };
+      }
+      acc[key].count++;
+      acc[key].totalDuration += query.duration;
+      acc[key].maxDuration = Math.max(acc[key].maxDuration, query.duration);
 
-    // Keep up to 3 examples
-    if (acc[key].examples.length < 3) {
-      acc[key].examples.push({
-        duration: query.duration,
-        timestamp: query.timestamp,
-      });
-    }
+      // Keep up to 3 examples
+      if (acc[key].examples.length < 3) {
+        acc[key].examples.push({
+          duration: query.duration,
+          timestamp: query.timestamp,
+        });
+      }
 
-    return acc;
-  }, {} as Record<string, GroupedQuery>);
+      return acc;
+    },
+    {} as Record<string, GroupedQuery>
+  );
 
   // Calculate averages
   Object.values(grouped).forEach((group) => {
@@ -286,12 +291,12 @@ interface GroupedQuery {
 function generateRecommendations(patterns: QueryPattern[]): string[] {
   const recommendations: string[] = [];
 
-  patterns.forEach(pattern => {
+  patterns.forEach((pattern) => {
     // Very slow queries (> 500ms)
     if (pattern.maxDuration > 500) {
       recommendations.push(
         `CRITICAL: ${pattern.model}.${pattern.action} taking ${pattern.maxDuration}ms. ` +
-        `Review indexes on ${pattern.model} table and consider query optimization.`
+          `Review indexes on ${pattern.model} table and consider query optimization.`
       );
     }
 
@@ -299,7 +304,7 @@ function generateRecommendations(patterns: QueryPattern[]): string[] {
     if (pattern.count > 10 && pattern.avgDuration > 150) {
       recommendations.push(
         `HIGH FREQUENCY: ${pattern.model}.${pattern.action} called ${pattern.count} times with avg ${pattern.avgDuration}ms. ` +
-        `Consider caching or optimizing this query pattern.`
+          `Consider caching or optimizing this query pattern.`
       );
     }
 
@@ -307,7 +312,7 @@ function generateRecommendations(patterns: QueryPattern[]): string[] {
     if (pattern.action === 'findMany' && pattern.avgDuration > 200) {
       recommendations.push(
         `OPTIMIZATION: ${pattern.model}.findMany() averaging ${pattern.avgDuration}ms. ` +
-        `Ensure proper WHERE clauses and implement pagination.`
+          `Ensure proper WHERE clauses and implement pagination.`
       );
     }
 
@@ -315,7 +320,7 @@ function generateRecommendations(patterns: QueryPattern[]): string[] {
     if (pattern.action === 'count' && pattern.avgDuration > 150) {
       recommendations.push(
         `COUNT OPTIMIZATION: ${pattern.model}.count() averaging ${pattern.avgDuration}ms. ` +
-        `Consider using approximate counts or caching for large tables.`
+          `Consider using approximate counts or caching for large tables.`
       );
     }
   });
@@ -360,42 +365,58 @@ export async function checkDatabaseHealth(): Promise<{
   const connectionUtilization = health.connections.active / health.connections.total;
   if (connectionUtilization > 0.9) {
     status = 'critical';
-    issues.push(`Connection pool at ${Math.round(connectionUtilization * 100)}% capacity. Consider increasing pool size.`);
+    issues.push(
+      `Connection pool at ${Math.round(connectionUtilization * 100)}% capacity. Consider increasing pool size.`
+    );
   } else if (connectionUtilization > 0.7) {
     status = 'warning';
-    issues.push(`Connection pool at ${Math.round(connectionUtilization * 100)}% capacity. Monitor closely.`);
+    issues.push(
+      `Connection pool at ${Math.round(connectionUtilization * 100)}% capacity. Monitor closely.`
+    );
   }
 
   // Check slow query percentage
   if (health.performance.slowQueryPercentage > 20) {
     status = 'critical';
-    issues.push(`${health.performance.slowQueryPercentage}% of queries are slow (> 100ms). Review slow query log.`);
+    issues.push(
+      `${health.performance.slowQueryPercentage}% of queries are slow (> 100ms). Review slow query log.`
+    );
   } else if (health.performance.slowQueryPercentage > 10) {
     if (status !== 'critical') status = 'warning';
-    issues.push(`${health.performance.slowQueryPercentage}% of queries are slow. Consider optimization.`);
+    issues.push(
+      `${health.performance.slowQueryPercentage}% of queries are slow. Consider optimization.`
+    );
   }
 
   // Check for very slow queries
   if (health.performance.maxDuration > 1000) {
     status = 'critical';
-    issues.push(`Maximum query duration: ${health.performance.maxDuration}ms. Critical performance issue detected.`);
+    issues.push(
+      `Maximum query duration: ${health.performance.maxDuration}ms. Critical performance issue detected.`
+    );
   } else if (health.performance.maxDuration > 500) {
     if (status !== 'critical') status = 'warning';
-    issues.push(`Maximum query duration: ${health.performance.maxDuration}ms. Review slow queries.`);
+    issues.push(
+      `Maximum query duration: ${health.performance.maxDuration}ms. Review slow queries.`
+    );
   }
 
   // Check for large tables without proper indexing
   const largeTableThreshold = 1000000; // 1 million rows
-  health.tables.forEach(table => {
+  health.tables.forEach((table) => {
     if (table.rowCount > largeTableThreshold) {
-      const tableIndexes = health.indexes.filter(idx => idx.tableName === table.name);
-      const unusedIndexes = tableIndexes.filter(idx => idx.scans === 0);
+      const tableIndexes = health.indexes.filter((idx) => idx.tableName === table.name);
+      const unusedIndexes = tableIndexes.filter((idx) => idx.scans === 0);
 
       if (tableIndexes.length === 0) {
         if (status !== 'critical') status = 'warning';
-        issues.push(`Large table "${table.name}" (${formatNumber(table.rowCount)} rows) has no indexes.`);
+        issues.push(
+          `Large table "${table.name}" (${formatNumber(table.rowCount)} rows) has no indexes.`
+        );
       } else if (unusedIndexes.length > 0) {
-        issues.push(`Table "${table.name}" has ${unusedIndexes.length} unused indexes that can be removed.`);
+        issues.push(
+          `Table "${table.name}" has ${unusedIndexes.length} unused indexes that can be removed.`
+        );
       }
     }
   });

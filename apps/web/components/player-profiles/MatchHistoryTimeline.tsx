@@ -21,7 +21,12 @@ interface MatchHistoryTimelineProps {
   pageSize?: number;
 }
 
-export function MatchHistoryTimeline({ matches, playerId: _playerId, showPagination = true, pageSize = 10 }: MatchHistoryTimelineProps) {
+export function MatchHistoryTimeline({
+  matches,
+  playerId: _playerId,
+  showPagination = true,
+  pageSize = 10,
+}: MatchHistoryTimelineProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(matches.length / pageSize);
@@ -57,7 +62,11 @@ export function MatchHistoryTimeline({ matches, playerId: _playerId, showPaginat
                   className={cn(
                     'absolute left-2 md:left-6 w-4 h-4 rounded-full border-4',
                     'transition-transform hover:scale-150',
-                    isWin ? 'bg-green-500 border-green-200' : isDraw ? 'bg-gray-500 border-gray-200' : 'bg-red-500 border-red-200'
+                    isWin
+                      ? 'bg-green-500 border-green-200'
+                      : isDraw
+                        ? 'bg-gray-500 border-gray-200'
+                        : 'bg-red-500 border-red-200'
                   )}
                 />
 
@@ -112,8 +121,12 @@ export function MatchHistoryTimeline({ matches, playerId: _playerId, showPaginat
                   {match.metadata && (
                     <div className="mt-2 flex gap-2 text-xs text-muted-foreground">
                       {match.metadata.round && <span>Round {match.metadata.round}</span>}
-                      {match.metadata.bracket && <span className="capitalize">{match.metadata.bracket} Bracket</span>}
-                      {match.metadata.tableNumber && <span>Table {match.metadata.tableNumber}</span>}
+                      {match.metadata.bracket && (
+                        <span className="capitalize">{match.metadata.bracket} Bracket</span>
+                      )}
+                      {match.metadata.tableNumber && (
+                        <span>Table {match.metadata.tableNumber}</span>
+                      )}
                     </div>
                   )}
 
@@ -134,7 +147,8 @@ export function MatchHistoryTimeline({ matches, playerId: _playerId, showPaginat
       {showPagination && totalPages > 1 && (
         <div className="flex items-center justify-between mt-8 pt-4 border-t">
           <div className="text-sm text-muted-foreground">
-            Showing {startIndex + 1}-{Math.min(endIndex, matches.length)} of {matches.length} matches
+            Showing {startIndex + 1}-{Math.min(endIndex, matches.length)} of {matches.length}{' '}
+            matches
           </div>
           <div className="flex gap-2">
             <Button

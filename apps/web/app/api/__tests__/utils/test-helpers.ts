@@ -80,15 +80,17 @@ export function createMockPrisma() {
       findMany: vi.fn(),
       update: vi.fn(),
     },
-    $transaction: vi.fn((callback) => callback({
-      match: { update: vi.fn(), findUnique: vi.fn() },
-      scoreUpdate: { create: vi.fn(), update: vi.fn() },
-      tournamentEvent: { create: vi.fn() },
-      organization: { create: vi.fn() },
-      organizationMember: { create: vi.fn() },
-      payment: { create: vi.fn(), update: vi.fn() },
-      payout: { create: vi.fn(), createMany: vi.fn() },
-    })),
+    $transaction: vi.fn((callback) =>
+      callback({
+        match: { update: vi.fn(), findUnique: vi.fn() },
+        scoreUpdate: { create: vi.fn(), update: vi.fn() },
+        tournamentEvent: { create: vi.fn() },
+        organization: { create: vi.fn() },
+        organizationMember: { create: vi.fn() },
+        payment: { create: vi.fn(), update: vi.fn() },
+        payout: { create: vi.fn(), createMany: vi.fn() },
+      })
+    ),
   };
 }
 
@@ -229,7 +231,19 @@ export const factories = {
     device: 'test-device',
     action: 'increment_a',
     previousScore: { playerA: 0, playerB: 0, raceTo: 9, games: [] },
-    newScore: { playerA: 1, playerB: 0, raceTo: 9, games: [{ gameNumber: 1, winner: 'playerA', score: { playerA: 1, playerB: 0 }, timestamp: new Date() }] },
+    newScore: {
+      playerA: 1,
+      playerB: 0,
+      raceTo: 9,
+      games: [
+        {
+          gameNumber: 1,
+          winner: 'playerA',
+          score: { playerA: 1, playerB: 0 },
+          timestamp: new Date(),
+        },
+      ],
+    },
     undone: false,
     timestamp: new Date('2024-01-01'),
     ...overrides,
@@ -297,11 +311,14 @@ export function expectErrorResponse(data: any, expectedCode?: string) {
 /**
  * Mock NextRequest with custom body
  */
-export function createMockRequest(url: string, options?: {
-  method?: string;
-  body?: any;
-  headers?: Record<string, string>;
-}) {
+export function createMockRequest(
+  url: string,
+  options?: {
+    method?: string;
+    body?: any;
+    headers?: Record<string, string>;
+  }
+) {
   const { method = 'GET', body, headers = {} } = options || {};
 
   return {

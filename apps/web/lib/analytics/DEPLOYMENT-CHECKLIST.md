@@ -9,6 +9,7 @@
 ## Pre-Deployment Checklist
 
 ### 1. Code Review & Quality
+
 - [ ] All TypeScript files compile without errors
 - [ ] All tests pass (`npm run test:run`)
 - [ ] Test coverage > 80% (`npm run test:coverage`)
@@ -18,6 +19,7 @@
 - [ ] Code reviewed by at least one team member
 
 ### 2. Environment Configuration
+
 - [ ] Environment variables configured (see `.env.example`)
 - [ ] Redis connection tested
 - [ ] Database connection tested
@@ -27,6 +29,7 @@
 - [ ] Secrets properly stored (AWS Secrets Manager / Vault)
 
 ### 3. Database Preparation
+
 - [ ] Database migrations applied
   ```bash
   npx prisma migrate deploy
@@ -40,6 +43,7 @@
 - [ ] Query performance tested on production data volume
 
 ### 4. Redis Setup
+
 - [ ] Redis instance provisioned (2 GB recommended)
 - [ ] Redis password configured
 - [ ] Redis persistence enabled (RDB + AOF)
@@ -49,6 +53,7 @@
 - [ ] Redis monitoring enabled
 
 ### 5. Background Workers
+
 - [ ] BullMQ workers configured
 - [ ] Export queue worker running
   ```bash
@@ -60,6 +65,7 @@
 - [ ] Dead letter queue configured for failed jobs
 
 ### 6. Email Service
+
 - [ ] SMTP configuration tested
 - [ ] Email templates rendered correctly
 - [ ] Test email sent successfully
@@ -68,6 +74,7 @@
 - [ ] Bounce handling configured
 
 ### 7. File Storage (S3)
+
 - [ ] S3 bucket created: `analytics-exports-beta`
 - [ ] Bucket permissions configured (private)
 - [ ] Lifecycle policy set (delete after 7 days)
@@ -77,6 +84,7 @@
 - [ ] Signed URL generation working
 
 ### 8. Rate Limiting
+
 - [ ] Upstash Redis rate limiter configured
 - [ ] Rate limits tested:
   - Revenue API: 100 requests/10 min per user
@@ -86,6 +94,7 @@
 - [ ] Error messages for rate-limited requests
 
 ### 9. Security
+
 - [ ] API endpoints require authentication
 - [ ] Tenant isolation verified (no cross-tenant data leaks)
 - [ ] SQL injection prevention tested
@@ -96,6 +105,7 @@
 - [ ] API keys not exposed in client code
 
 ### 10. Monitoring & Logging
+
 - [ ] Error tracking configured (Sentry)
 - [ ] Application logs aggregated (CloudWatch / Datadog)
 - [ ] Performance monitoring active (New Relic / Datadog)
@@ -110,6 +120,7 @@
 ### Phase 1: Infrastructure Setup
 
 1. **Provision Redis Instance**
+
    ```bash
    # AWS ElastiCache
    aws elasticache create-cache-cluster \
@@ -121,6 +132,7 @@
    ```
 
 2. **Create S3 Bucket**
+
    ```bash
    aws s3 mb s3://analytics-exports-beta
    aws s3api put-bucket-lifecycle-configuration \
@@ -138,12 +150,14 @@
 ### Phase 2: Application Deployment
 
 4. **Build Application**
+
    ```bash
    npm run build
    npm run test:run
    ```
 
 5. **Deploy to Beta Environment**
+
    ```bash
    # Deploy to your hosting platform (Vercel, AWS, etc.)
    vercel deploy --prod --env-file .env.beta
@@ -164,6 +178,7 @@
 ### Phase 3: Verification
 
 7. **Smoke Tests**
+
    ```bash
    # Test critical endpoints
    curl https://beta.yourdomain.com/api/analytics/revenue?month=2024-11 \
@@ -178,12 +193,14 @@
    ```
 
 8. **Database Connection Test**
+
    ```sql
    SELECT COUNT(*) FROM revenue_metrics;
    SELECT COUNT(*) FROM subscriptions WHERE status = 'active';
    ```
 
 9. **Redis Connection Test**
+
    ```bash
    redis-cli -h <redis-host> -p 6379 -a $REDIS_PASSWORD
    > PING
@@ -270,12 +287,14 @@ artillery run tests/load/analytics-load-test.yml
 ### Grant Access
 
 1. **Create Beta User Accounts**
+
    ```sql
    INSERT INTO users (email, role, beta_access)
    VALUES ('beta1@example.com', 'admin', true);
    ```
 
 2. **Send Beta Invitations**
+
    ```bash
    node scripts/send-beta-invitations.js \
      --users=beta-users.csv
@@ -303,6 +322,7 @@ artillery run tests/load/analytics-load-test.yml
 ### Rollback Triggers
 
 Rollback if:
+
 - Error rate > 5% for 5 minutes
 - Critical functionality broken
 - Data integrity issue detected
@@ -312,6 +332,7 @@ Rollback if:
 ### Rollback Procedure
 
 1. **Revert Application Code**
+
    ```bash
    git revert HEAD
    vercel rollback
@@ -320,17 +341,20 @@ Rollback if:
    ```
 
 2. **Restore Database**
+
    ```bash
    # Restore from backup taken pre-deployment
    pg_restore -d analytics_db backup-pre-deployment.sql
    ```
 
 3. **Clear Redis Cache**
+
    ```bash
    redis-cli -h <redis-host> FLUSHDB
    ```
 
 4. **Stop Workers**
+
    ```bash
    pm2 stop all
    ```
@@ -374,18 +398,18 @@ aws cloudwatch put-metric-alarm \
 ```yaml
 # monitors/analytics-performance.yml
 monitors:
-  - name: "Analytics API Response Time"
+  - name: 'Analytics API Response Time'
     type: metric alert
-    query: "avg(last_5m):avg:analytics.api.response_time{env:beta} > 500"
-    message: "Analytics API response time is too high!"
+    query: 'avg(last_5m):avg:analytics.api.response_time{env:beta} > 500'
+    message: 'Analytics API response time is too high!'
     tags:
       - team:analytics
       - severity:high
 
-  - name: "Cache Hit Rate Low"
+  - name: 'Cache Hit Rate Low'
     type: metric alert
-    query: "avg(last_10m):avg:analytics.cache.hit_rate{env:beta} < 0.6"
-    message: "Cache hit rate below 60%!"
+    query: 'avg(last_10m):avg:analytics.cache.hit_rate{env:beta} < 0.6'
+    message: 'Cache hit rate below 60%!'
 ```
 
 ---
@@ -405,16 +429,19 @@ monitors:
 ## Communication Plan
 
 ### Pre-Deployment
+
 - [ ] Announce deployment window to team
 - [ ] Notify beta users of upcoming release
 - [ ] Prepare support team with known issues
 
 ### During Deployment
+
 - [ ] Status page updated
 - [ ] Team notified of deployment start
 - [ ] Monitoring dashboard active
 
 ### Post-Deployment
+
 - [ ] Deployment success announcement
 - [ ] Beta users notified of go-live
 - [ ] Support team briefed on new features
@@ -425,21 +452,25 @@ monitors:
 ## Beta Testing Schedule
 
 **Week 1 (Nov 7-13):**
+
 - Internal testing by team
 - Fix critical bugs
 - Monitor performance metrics
 
 **Week 2 (Nov 14-20):**
+
 - Open to external beta users
 - Collect feedback
 - Implement minor improvements
 
 **Week 3 (Nov 21-27):**
+
 - Address feedback
 - Performance optimization
 - Final testing
 
 **Week 4 (Nov 28-Dec 4):**
+
 - Prepare for production release
 - Documentation finalization
 - Production deployment planning
@@ -449,6 +480,7 @@ monitors:
 ## Success Criteria
 
 Beta deployment is successful if:
+
 - [ ] Zero critical bugs in first 48 hours
 - [ ] Error rate < 0.5%
 - [ ] API response time targets met
@@ -488,11 +520,13 @@ Beta deployment is successful if:
 ## Emergency Contacts
 
 **On-Call Rotation:**
+
 - Primary: [Name] - [Phone] - [Email]
 - Secondary: [Name] - [Phone] - [Email]
 - Escalation: [Manager] - [Phone] - [Email]
 
 **External Contacts:**
+
 - AWS Support: [Case ID]
 - Redis Support: [Contact]
 - Database Admin: [Contact]
@@ -503,15 +537,15 @@ Beta deployment is successful if:
 
 **Deployment Approved By:**
 
-- [ ] Engineering Lead: _________________ Date: _______
-- [ ] Product Manager: _________________ Date: _______
-- [ ] QA Lead: _________________ Date: _______
-- [ ] DevOps Lead: _________________ Date: _______
+- [ ] Engineering Lead: ********\_******** Date: **\_\_\_**
+- [ ] Product Manager: ********\_******** Date: **\_\_\_**
+- [ ] QA Lead: ********\_******** Date: **\_\_\_**
+- [ ] DevOps Lead: ********\_******** Date: **\_\_\_**
 
 **Deployment Completed By:**
 
-- [ ] Deployment Engineer: _________________ Date: _______ Time: _______
+- [ ] Deployment Engineer: ********\_******** Date: **\_\_\_** Time: **\_\_\_**
 
 **Post-Deployment Verified By:**
 
-- [ ] QA Engineer: _________________ Date: _______ Time: _______
+- [ ] QA Engineer: ********\_******** Date: **\_\_\_** Time: **\_\_\_**

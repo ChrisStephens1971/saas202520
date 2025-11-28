@@ -57,9 +57,7 @@ export type TournamentFormat = z.infer<typeof TournamentFormatEnum>;
  * Currently supports pool/billiards variants.
  * Future: darts, cornhole, etc.
  */
-export const SportTypeEnum = z.enum([
-  'pool',
-]);
+export const SportTypeEnum = z.enum(['pool']);
 export type SportType = z.infer<typeof SportTypeEnum>;
 
 /**
@@ -71,12 +69,7 @@ export type SportType = z.infer<typeof SportTypeEnum>;
  * - ten-ball: 10-ball
  * - straight-pool: 14.1 continuous
  */
-export const GameTypeEnum = z.enum([
-  'eight-ball',
-  'nine-ball',
-  'ten-ball',
-  'straight-pool',
-]);
+export const GameTypeEnum = z.enum(['eight-ball', 'nine-ball', 'ten-ball', 'straight-pool']);
 export type GameType = z.infer<typeof GameTypeEnum>;
 
 // ============================================================================
@@ -93,7 +86,8 @@ export const TournamentSchema = z.object({
   id: z.string().cuid(),
   orgId: z.string().cuid(),
   name: z.string().min(1).max(255),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1)
     .max(100)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug must be lowercase alphanumeric with hyphens'),
@@ -147,12 +141,13 @@ export type TournamentWithStats = z.infer<typeof TournamentWithStatsSchema>;
  */
 export const CreateTournamentRequestSchema = z.object({
   name: z.string().min(1, 'Tournament name is required').max(255, 'Name too long'),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1, 'Slug is required')
     .max(100, 'Slug too long')
-    .transform(val => val.toLowerCase())
-    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val), {
-      message: 'Slug must be lowercase alphanumeric with hyphens'
+    .transform((val) => val.toLowerCase())
+    .refine((val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val), {
+      message: 'Slug must be lowercase alphanumeric with hyphens',
     }),
   description: z.string().max(2000).optional(),
   format: TournamentFormatEnum,
@@ -160,7 +155,11 @@ export const CreateTournamentRequestSchema = z.object({
   // Game configuration
   sport: SportTypeEnum.default('pool'),
   gameType: GameTypeEnum,
-  raceToWins: z.number().int().min(1, 'Race to wins must be at least 1').max(21, 'Race to wins cannot exceed 21'),
+  raceToWins: z
+    .number()
+    .int()
+    .min(1, 'Race to wins must be at least 1')
+    .max(21, 'Race to wins cannot exceed 21'),
   maxPlayers: z.number().int().min(8).max(128).optional(),
 
   // Optional scheduling
@@ -178,11 +177,12 @@ export type CreateTournamentRequest = z.infer<typeof CreateTournamentRequestSche
  */
 export const UpdateTournamentRequestSchema = z.object({
   name: z.string().min(1).max(255).optional(),
-  slug: z.string()
+  slug: z
+    .string()
     .min(1)
     .max(100)
-    .transform(val => val.toLowerCase())
-    .refine(val => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
+    .transform((val) => val.toLowerCase())
+    .refine((val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val))
     .optional(),
   description: z.string().max(2000).nullable().optional(),
   status: TournamentStatusEnum.optional(),

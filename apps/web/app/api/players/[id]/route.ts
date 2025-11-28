@@ -19,46 +19,30 @@ import { PlayerProfileError } from '@/lib/player-profiles/types';
  * @param params - Route parameters containing player ID
  * @returns Player profile data or error response
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get tenant ID from session (multi-tenant isolation)
     const tenantId = session.user.orgId;
     if (!tenantId) {
-      return NextResponse.json(
-        { error: 'No organization context' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No organization context' }, { status: 400 });
     }
 
     const { id: playerId } = await params;
 
     // Validate player ID format
     if (!playerId || playerId.length === 0) {
-      return NextResponse.json(
-        { error: 'Invalid player ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid player ID' }, { status: 400 });
     }
 
     // Get player profile with statistics and achievements
     // Pass viewerId for privacy checks
-    const profile = await getPlayerProfile(
-      playerId,
-      tenantId,
-      session.user.id
-    );
+    const profile = await getPlayerProfile(playerId, tenantId, session.user.id);
 
     // Return successful response
     return NextResponse.json(
@@ -74,11 +58,11 @@ export async function GET(
               : null,
             totalPrizeWon: parseFloat(profile.statistics.totalPrizeWon.toString()),
           },
-          achievements: profile.achievements.map(achievement => ({
+          achievements: profile.achievements.map((achievement) => ({
             ...achievement,
             achievement: {
               ...achievement.achievement,
-            }
+            },
           })),
           recentMatches: profile.recentMatches,
           rivalries: profile.rivalries,
@@ -100,10 +84,7 @@ export async function GET(
 
     // Handle unexpected errors
     console.error('[GET /api/players/[id]] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 

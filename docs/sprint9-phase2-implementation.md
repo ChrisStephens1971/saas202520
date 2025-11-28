@@ -1,4 +1,5 @@
 # Sprint 9 Phase 2 Implementation
+
 ## Audit Log Viewer & Settings Management UI
 
 **Date:** 2025-11-06
@@ -36,6 +37,7 @@ Added two new models:
 ### Components
 
 #### 1. **AuditLogViewer** (`/components/admin/AuditLogViewer.tsx`)
+
 - **Purpose:** Main audit log table with sorting, filtering, and pagination
 - **Features:**
   - TanStack Table v8 with virtual scrolling
@@ -48,6 +50,7 @@ Added two new models:
 - **Dependencies:** @tanstack/react-table, date-fns
 
 #### 2. **AuditLogDetail** (`/components/admin/AuditLogDetail.tsx`)
+
 - **Purpose:** Modal view for detailed audit log inspection
 - **Features:**
   - Before/after diff viewer for updates
@@ -59,6 +62,7 @@ Added two new models:
 - **UI:** Modal with backdrop, scrollable content
 
 #### 3. **SettingsForm** (`/components/admin/SettingsForm.tsx`)
+
 - **Purpose:** Generic settings form with validation
 - **Features:**
   - Category-based forms (general, email, security, performance, notifications)
@@ -75,6 +79,7 @@ Added two new models:
   - Notifications: Channel toggles
 
 #### 4. **FeatureToggle** (`/components/admin/FeatureToggle.tsx`)
+
 - **Purpose:** Toggle switch for feature flags
 - **Features:**
   - Impact indicators (low, medium, high)
@@ -96,6 +101,7 @@ Added two new models:
 ### Pages
 
 #### 1. **Audit Logs Page** (`/app/admin/logs/page.tsx`)
+
 - **Route:** `/admin/logs`
 - **Features:**
   - Advanced filtering (user, action, resource, date range)
@@ -107,6 +113,7 @@ Added two new models:
 - **Performance:** Handles large datasets with pagination
 
 #### 2. **Settings Page** (`/app/admin/settings/page.tsx`)
+
 - **Route:** `/admin/settings`
 - **Features:**
   - Tabbed interface (General, Email, Security, Features, Performance)
@@ -121,6 +128,7 @@ Added two new models:
   - Performance: Caching and rate limiting
 
 #### 3. **Notification Settings Page** (`/app/admin/settings/notifications/page.tsx`)
+
 - **Route:** `/admin/settings/notifications`
 - **Features:**
   - Channel toggles (Email, SMS, Push)
@@ -137,6 +145,7 @@ Added two new models:
 ### API Routes
 
 #### 1. **Settings API** (`/app/api/admin/settings/route.ts`)
+
 - **GET `/api/admin/settings`**
   - Fetch system settings for organization
   - Returns complete settings object
@@ -150,6 +159,7 @@ Added two new models:
   - Mock implementation (ready for Prisma integration)
 
 #### 2. **Audit Logs API** (`/app/api/admin/audit-logs/route.ts`)
+
 - **GET `/api/admin/audit-logs`**
   - Fetch audit logs with filtering
   - Query params: userId, action, resource, startDate, endDate, limit, offset
@@ -171,6 +181,7 @@ Added two new models:
 **Migration Name:** `add_audit_logs_and_settings`
 
 **To apply when database is available:**
+
 ```bash
 cd /c/devop/saas202520
 pnpm prisma migrate dev --name add_audit_logs_and_settings
@@ -185,6 +196,7 @@ pnpm prisma migrate dev --name add_audit_logs_and_settings
 Settings are stored in the `SystemSettings` table with one record per organization (unique constraint on `orgId`).
 
 **Advantages:**
+
 - Multi-tenant isolation
 - Audit trail of changes
 - Centralized management
@@ -192,12 +204,14 @@ Settings are stored in the `SystemSettings` table with one record per organizati
 
 **Environment Variable Override:**
 For sensitive or deployment-specific settings, environment variables take precedence:
+
 ```
 SMTP_HOST=smtp.example.com        # Overrides database value
 SESSION_TIMEOUT=120               # Overrides default
 ```
 
 **Implementation Pattern:**
+
 ```typescript
 const settings = await prisma.systemSettings.findUnique({ where: { orgId } });
 const smtpHost = process.env.SMTP_HOST || settings?.smtpHost;
@@ -208,12 +222,14 @@ const smtpHost = process.env.SMTP_HOST || settings?.smtpHost;
 ## Security Considerations
 
 ### 1. **Authentication & Authorization**
+
 - All admin routes require authentication
 - Role-based access control (owner, td roles have admin access)
 - Session validation on every request
 - Token-based API access
 
 **Implementation (when connected to auth):**
+
 ```typescript
 const session = await getServerSession();
 if (!session || !isAdmin(session.user)) {
@@ -222,12 +238,14 @@ if (!session || !isAdmin(session.user)) {
 ```
 
 ### 2. **Sensitive Data Encryption**
+
 - SMTP passwords encrypted at rest
 - Twilio API keys encrypted
 - Encryption key stored in environment variables
 - AES-256-GCM encryption
 
 **Implementation:**
+
 ```typescript
 import { encrypt, decrypt } from '@/lib/crypto';
 if (updateData.smtpPassword) {
@@ -236,23 +254,27 @@ if (updateData.smtpPassword) {
 ```
 
 ### 3. **Audit Trail**
+
 - All settings changes logged with before/after values
 - User actions tracked with IP address and user agent
 - Immutable audit log (append-only)
 - Retention policy (configurable)
 
 ### 4. **Input Validation**
+
 - Whitelist of allowed fields for settings updates
 - Type validation (Zod schemas recommended)
 - SQL injection prevention (Prisma ORM)
 - XSS prevention (sanitized inputs)
 
 ### 5. **Rate Limiting**
+
 - API endpoints rate-limited per user
 - Configurable via settings (rateLimit field)
 - 429 Too Many Requests response on exceed
 
 **Example:**
+
 ```typescript
 // Default: 60 requests per minute
 const settings = await getSettings(orgId);
@@ -260,6 +282,7 @@ const rateLimit = settings.rateLimit || 60;
 ```
 
 ### 6. **CSRF Protection**
+
 - Next.js built-in CSRF protection
 - SameSite cookie attributes
 - Double-submit cookie pattern for API routes
@@ -296,6 +319,7 @@ const rateLimit = settings.rateLimit || 60;
    - Soft delete instead of hard delete (preserve for compliance)
 
 **Example Archival Cron Job:**
+
 ```typescript
 // Run monthly
 const cutoffDate = new Date();
@@ -324,6 +348,7 @@ await prisma.auditLog.updateMany({
    - Invalidate on update
 
 **Example:**
+
 ```typescript
 import { redis } from '@/lib/redis';
 
@@ -351,6 +376,7 @@ async function getSettings(orgId: string) {
 ## Audit Actions to Track
 
 ### User Actions
+
 - `create` - User created
 - `update` - User profile updated
 - `delete` - User deleted
@@ -359,6 +385,7 @@ async function getSettings(orgId: string) {
 - `restore` - User restored from suspension
 
 ### Tournament Actions
+
 - `create` - Tournament created
 - `update` - Tournament settings updated
 - `delete` - Tournament deleted
@@ -369,6 +396,7 @@ async function getSettings(orgId: string) {
 - `cancel` - Tournament cancelled
 
 ### Match Actions
+
 - `create` - Match created
 - `update` - Match updated (score, players, etc.)
 - `assign_table` - Match assigned to table
@@ -377,9 +405,11 @@ async function getSettings(orgId: string) {
 - `void` - Match voided
 
 ### Settings Actions
+
 - `update` - Any settings change (with before/after values)
 
 ### Authentication Actions
+
 - `login` - Successful login
 - `logout` - User logged out
 - `failed_login` - Failed login attempt (track for security)
@@ -387,6 +417,7 @@ async function getSettings(orgId: string) {
 - `password_changed` - Password successfully changed
 
 ### System Events
+
 - `error` - System error occurred
 - `performance_issue` - Performance degradation detected
 - `backup_created` - Database backup created
@@ -399,6 +430,7 @@ async function getSettings(orgId: string) {
 ### Manual Testing Checklist
 
 **Audit Logs Page:**
+
 - [ ] Page loads without errors
 - [ ] Logs display in table
 - [ ] Sorting works (click column headers)
@@ -417,6 +449,7 @@ async function getSettings(orgId: string) {
 - [ ] Close modal returns to table
 
 **Settings Page:**
+
 - [ ] Page loads without errors
 - [ ] Tabs switch correctly
 - [ ] General settings form displays
@@ -433,6 +466,7 @@ async function getSettings(orgId: string) {
 - [ ] Link to Audit Logs works
 
 **Notification Settings Page:**
+
 - [ ] Page loads without errors
 - [ ] Channel toggles work
 - [ ] Template list displays
@@ -448,17 +482,20 @@ async function getSettings(orgId: string) {
 ### Automated Testing (Future)
 
 **Unit Tests:**
+
 - Component rendering
 - Form validation
 - Filter logic
 - CSV export generation
 
 **Integration Tests:**
+
 - API routes
 - Database queries
 - Audit log creation
 
 **E2E Tests (Playwright):**
+
 - Full audit log workflow
 - Settings update workflow
 - Notification template management
@@ -468,6 +505,7 @@ async function getSettings(orgId: string) {
 ## Future Enhancements
 
 ### Audit Logs
+
 1. **Advanced Search** - Full-text search on changes JSON
 2. **Real-Time Updates** - WebSocket for live log streaming
 3. **Anomaly Detection** - Alert on suspicious patterns (e.g., multiple failed logins)
@@ -475,6 +513,7 @@ async function getSettings(orgId: string) {
 5. **Diff Visualization** - Visual diff for complex objects (like tournament configs)
 
 ### Settings
+
 1. **Settings History** - View and rollback to previous settings
 2. **Environment-Specific Settings** - Different settings per environment (dev, staging, prod)
 3. **Settings Import/Export** - Bulk import/export settings as JSON
@@ -482,6 +521,7 @@ async function getSettings(orgId: string) {
 5. **Multi-Tenant Overrides** - Allow certain settings to be overridden per tenant
 
 ### Notifications
+
 1. **Rich Template Editor** - WYSIWYG editor for email templates
 2. **Template Versioning** - Track template changes over time
 3. **A/B Testing** - Test multiple template variants
@@ -493,12 +533,14 @@ async function getSettings(orgId: string) {
 ## Dependencies
 
 **Existing:**
+
 - @tanstack/react-table: ^8.21.3 ✓
 - date-fns: ^4.1.0 ✓
 - next: 16.0.1 ✓
 - react: 19.2.0 ✓
 
 **Optional (for production):**
+
 - zod: ^3.25.76 (for validation)
 - ioredis: ^5.8.2 (for caching)
 - crypto (Node.js built-in) (for encryption)
@@ -634,11 +676,13 @@ export function decrypt(encrypted: string): string {
 ```
 
 Add to `.env`:
+
 ```
 ENCRYPTION_KEY=<base64-encoded-32-byte-key>
 ```
 
 Generate key:
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 ```
@@ -660,6 +704,7 @@ This implementation provides:
 **Status:** Ready for integration with Prisma and NextAuth. Mock data in place for UI testing.
 
 **Next Steps:**
+
 1. Connect database (run migration)
 2. Integrate with NextAuth for authentication
 3. Add encryption for sensitive fields

@@ -208,9 +208,7 @@ describe('Seeding Algorithms', () => {
 
     it('should throw for manual without order', () => {
       const players = createPlayers(4);
-      expect(() => applySeedingAlgorithm(players, 'manual')).toThrow(
-        'requires manualOrder'
-      );
+      expect(() => applySeedingAlgorithm(players, 'manual')).toThrow('requires manualOrder');
     });
   });
 

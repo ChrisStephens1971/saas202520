@@ -13,10 +13,7 @@ import * as ScheduledReportsService from '@/lib/analytics/services/scheduled-rep
  * GET /api/analytics/reports/[id]/history
  * Get delivery history for a scheduled report
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();

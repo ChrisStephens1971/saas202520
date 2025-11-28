@@ -12,6 +12,7 @@
 ## Interview Goals
 
 What are we trying to learn?
+
 1. Goal 1
 2. Goal 2
 3. Goal 3
@@ -21,6 +22,7 @@ What are we trying to learn?
 ## Background
 
 ### About the Customer
+
 - **Role:** [Job title]
 - **Company Size:** [Employees, revenue range]
 - **Industry:** [Industry]
@@ -44,6 +46,7 @@ A: [Response]
 A: [Response]
 
 **Follow-up observations:**
+
 - [Insight 1]
 - [Insight 2]
 
@@ -53,6 +56,7 @@ A: [Response]
 A: [Response]
 
 **Pain points identified:**
+
 - [Pain point 1]
 - [Pain point 2]
 
@@ -83,6 +87,7 @@ A: [Response]
 A: [Response]
 
 **Workflow notes:**
+
 ```
 [Describe their workflow or draw it out]
 ```
@@ -105,6 +110,7 @@ A: [Response]
 A: [Response]
 
 **Decision makers:**
+
 - [Name and role]
 - [Name and role]
 
@@ -142,10 +148,10 @@ A: [Response]
 
 ## Feature Requests / Feedback
 
-| Feature/Request | Priority (Customer) | Feasibility | Notes |
-|-----------------|---------------------|-------------|-------|
-| [Feature 1] | High | Medium | [Notes] |
-| [Feature 2] | Medium | High | [Notes] |
+| Feature/Request | Priority (Customer) | Feasibility | Notes   |
+| --------------- | ------------------- | ----------- | ------- |
+| [Feature 1]     | High                | Medium      | [Notes] |
+| [Feature 2]     | Medium              | High        | [Notes] |
 
 ---
 
@@ -169,12 +175,15 @@ A: [Response]
 ## Next Steps
 
 **Immediate:**
+
 - [Next step with this customer]
 
 **Future:**
+
 - [Longer-term follow-up]
 
 **Follow-up Email:**
+
 - [ ] Send thank you and recap within 24 hours
 - [ ] Include: [Key points to mention]
 

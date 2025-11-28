@@ -28,17 +28,11 @@ export async function GET(request: NextRequest) {
     const includeDisabled = searchParams.get('includeDisabled') === 'true';
 
     if (!tenantId) {
-      return NextResponse.json(
-        { error: 'Missing required parameter: tenantId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameter: tenantId' }, { status: 400 });
     }
 
     // Get reports
-    const reports = await ScheduledReportsService.getScheduledReports(
-      tenantId,
-      includeDisabled
-    );
+    const reports = await ScheduledReportsService.getScheduledReports(tenantId, includeDisabled);
 
     return NextResponse.json({
       success: true,
@@ -75,8 +69,7 @@ export async function POST(request: NextRequest) {
     if (!config.tenantId || !config.name || !config.schedule || !config.recipients) {
       return NextResponse.json(
         {
-          error:
-            'Missing required fields: tenantId, name, schedule, recipients',
+          error: 'Missing required fields: tenantId, name, schedule, recipients',
         },
         { status: 400 }
       );

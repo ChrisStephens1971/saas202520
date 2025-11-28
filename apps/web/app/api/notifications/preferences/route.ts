@@ -19,10 +19,7 @@ export async function POST(request: NextRequest) {
     const { playerId, smsEnabled, emailEnabled, quietHoursStart, quietHoursEnd, timezone } = body;
 
     if (!playerId) {
-      return NextResponse.json(
-        { error: 'Missing required field: playerId' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required field: playerId' }, { status: 400 });
     }
 
     // TODO: Check if user has permission to update preferences for this player
@@ -36,16 +33,10 @@ export async function POST(request: NextRequest) {
       timezone,
     });
 
-    return NextResponse.json(
-      { success: true, preferences },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, preferences }, { status: 200 });
   } catch (error) {
     console.error('Error updating notification preferences:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -64,10 +55,7 @@ export async function PUT(request: NextRequest) {
     const { subscription, preferences } = body;
 
     if (!subscription || !subscription.endpoint) {
-      return NextResponse.json(
-        { error: 'Invalid subscription data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid subscription data' }, { status: 400 });
     }
 
     // Verify subscription exists (preferences are stored in PlayerSettings, not PushSubscription)
@@ -78,10 +66,7 @@ export async function PUT(request: NextRequest) {
     });
 
     if (!existingSubscription) {
-      return NextResponse.json(
-        { error: 'Subscription not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Subscription not found' }, { status: 404 });
     }
 
     // TODO: Update push notification preferences in PlayerSettings model
@@ -93,9 +78,6 @@ export async function PUT(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error updating push notification preferences:', error);
-    return NextResponse.json(
-      { error: 'Failed to update preferences' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update preferences' }, { status: 500 });
   }
 }

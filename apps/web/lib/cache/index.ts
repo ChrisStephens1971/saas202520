@@ -10,11 +10,7 @@ export { cacheService } from './redis';
 export type { CacheResult } from './redis';
 
 // Cache strategies
-import {
-  cacheAside,
-  writeThrough,
-  refreshCache,
-} from './strategies';
+import { cacheAside, writeThrough, refreshCache } from './strategies';
 
 export {
   CacheTTL,
@@ -184,13 +180,7 @@ export async function getCacheHealth() {
  * Returns statistics about cache usage
  */
 export async function getCacheStats(_tenantId: string) {
-  const patterns = [
-    'tournament:*',
-    'user:*',
-    'analytics:*',
-    'api:*',
-    'static:*',
-  ];
+  const patterns = ['tournament:*', 'user:*', 'analytics:*', 'api:*', 'static:*'];
 
   const stats: Record<string, number> = {};
 
@@ -310,12 +300,7 @@ export async function withCacheLock<T>(
 
   try {
     // Try to acquire lock
-    const acquired = await cache.set(
-      tenantId,
-      lockKey,
-      lockValue,
-      options.lockTimeout
-    );
+    const acquired = await cache.set(tenantId, lockKey, lockValue, options.lockTimeout);
 
     if (!acquired) {
       // Someone else has the lock, wait and try to get from cache

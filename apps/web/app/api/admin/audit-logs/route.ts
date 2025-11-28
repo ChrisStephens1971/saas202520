@@ -21,8 +21,12 @@ export async function GET(request: NextRequest) {
     const userId = searchParams.get('userId') || undefined;
     const action = searchParams.get('action') as AuditAction | undefined;
     const resource = searchParams.get('resource') as AuditResource | undefined;
-    const startDate = searchParams.get('startDate') ? new Date(searchParams.get('startDate')!) : undefined;
-    const endDate = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined;
+    const startDate = searchParams.get('startDate')
+      ? new Date(searchParams.get('startDate')!)
+      : undefined;
+    const endDate = searchParams.get('endDate')
+      ? new Date(searchParams.get('endDate')!)
+      : undefined;
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
@@ -46,10 +50,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching audit logs:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch audit logs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch audit logs' }, { status: 500 });
   }
 }
 
@@ -93,16 +94,16 @@ export async function POST(request: NextRequest) {
       userAgent: request.headers.get('user-agent') || undefined,
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Audit log created successfully'
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Audit log created successfully',
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error creating audit log:', error);
-    return NextResponse.json(
-      { error: 'Failed to create audit log' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create audit log' }, { status: 500 });
   }
 }
 

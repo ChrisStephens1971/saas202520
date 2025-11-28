@@ -56,7 +56,7 @@ test.describe('Multi-Tenant Isolation', () => {
     let requestHeaders: any = null;
 
     // Intercept API request
-    page.on('request', request => {
+    page.on('request', (request) => {
       if (request.url().includes('/api/')) {
         requestHeaders = request.headers();
       }
@@ -66,9 +66,7 @@ test.describe('Multi-Tenant Isolation', () => {
     await page.click('[data-testid="tournaments"]');
 
     // Wait for API call
-    await page.waitForResponse(response =>
-      response.url().includes('/api/tournaments')
-    );
+    await page.waitForResponse((response) => response.url().includes('/api/tournaments'));
 
     // Verify X-Tenant-ID header is present
     expect(requestHeaders).toHaveProperty('x-tenant-id');

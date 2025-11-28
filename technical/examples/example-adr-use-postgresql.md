@@ -31,6 +31,7 @@ We will use PostgreSQL as our primary database for the MVP and foreseeable futur
 ## Consequences
 
 ### Positive Consequences
+
 - **Proven reliability:** PostgreSQL is battle-tested and trusted by major companies
 - **Rich feature set:** JSONB support gives us flexibility for semi-structured data
 - **ACID compliance:** Strong consistency guarantees for critical operations
@@ -41,11 +42,13 @@ We will use PostgreSQL as our primary database for the MVP and foreseeable futur
 - **Extensions:** PostGIS, full-text search, and other extensions available
 
 ### Negative Consequences
+
 - **Horizontal scaling complexity:** Harder to shard than NoSQL databases
 - **Learning curve:** More complex than simple key-value stores
 - **Resource usage:** Can be memory-intensive under heavy load
 
 ### Neutral Consequences
+
 - Need to learn PostgreSQL-specific features and optimization techniques
 - Will need managed hosting or DevOps setup for production
 
@@ -54,14 +57,17 @@ We will use PostgreSQL as our primary database for the MVP and foreseeable futur
 ## Alternatives Considered
 
 ### Alternative 1: MySQL/MariaDB
+
 **Description:** Popular open-source relational database
 
 **Pros:**
+
 - Similar to PostgreSQL in many ways
 - Slightly simpler for basic use cases
 - Also has managed hosting options
 
 **Cons:**
+
 - Less advanced features (weaker JSON support, fewer data types)
 - More fragmentation in ecosystem (MySQL vs MariaDB vs Percona)
 - PostgreSQL is generally considered more standards-compliant
@@ -71,14 +77,17 @@ We will use PostgreSQL as our primary database for the MVP and foreseeable futur
 ---
 
 ### Alternative 2: MongoDB (NoSQL)
+
 **Description:** Document-oriented NoSQL database
 
 **Pros:**
+
 - Flexible schema great for rapid prototyping
 - Easy horizontal scaling
 - Familiar to many developers
 
 **Cons:**
+
 - Lack of transactions and joins makes complex queries harder
 - Eventual consistency can cause issues for our use case
 - Less confidence in data integrity for critical business data
@@ -88,14 +97,17 @@ We will use PostgreSQL as our primary database for the MVP and foreseeable futur
 ---
 
 ### Alternative 3: SQLite
+
 **Description:** Embedded SQL database
 
 **Pros:**
+
 - Extremely simple to set up
 - Zero configuration
 - Perfect for development
 
 **Cons:**
+
 - Not suitable for concurrent writes at scale
 - No built-in replication
 - Would need to migrate later as we grow

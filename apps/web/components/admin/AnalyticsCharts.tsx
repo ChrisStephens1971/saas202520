@@ -73,7 +73,11 @@ interface UserGrowthChartProps {
   showActiveUsers?: boolean;
 }
 
-export function UserGrowthChart({ data, title = 'User Growth', showActiveUsers = false }: UserGrowthChartProps) {
+export function UserGrowthChart({
+  data,
+  title = 'User Growth',
+  showActiveUsers = false,
+}: UserGrowthChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
@@ -125,7 +129,10 @@ interface TournamentActivityChartProps {
   title?: string;
 }
 
-export function TournamentActivityChart({ data, title = 'Tournament Activity' }: TournamentActivityChartProps) {
+export function TournamentActivityChart({
+  data,
+  title = 'Tournament Activity',
+}: TournamentActivityChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
@@ -160,7 +167,10 @@ interface MatchCompletionChartProps {
   title?: string;
 }
 
-export function MatchCompletionChart({ data, title = 'Match Status Distribution' }: MatchCompletionChartProps) {
+export function MatchCompletionChart({
+  data,
+  title = 'Match Status Distribution',
+}: MatchCompletionChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
@@ -203,7 +213,11 @@ interface RevenueTrendsChartProps {
   showBreakdown?: boolean;
 }
 
-export function RevenueTrendsChart({ data, title = 'Revenue Trends', showBreakdown = false }: RevenueTrendsChartProps) {
+export function RevenueTrendsChart({
+  data,
+  title = 'Revenue Trends',
+  showBreakdown = false,
+}: RevenueTrendsChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
@@ -211,12 +225,12 @@ export function RevenueTrendsChart({ data, title = 'Revenue Trends', showBreakdo
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.8}/>
-              <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0}/>
+              <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorSubscriptions" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={CHART_COLORS.success} stopOpacity={0.8}/>
-              <stop offset="95%" stopColor={CHART_COLORS.success} stopOpacity={0}/>
+              <stop offset="5%" stopColor={CHART_COLORS.success} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={CHART_COLORS.success} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
@@ -324,7 +338,10 @@ interface FormatDistributionChartProps {
   title?: string;
 }
 
-export function FormatDistributionChart({ data, title = 'Tournament Format Distribution' }: FormatDistributionChartProps) {
+export function FormatDistributionChart({
+  data,
+  title = 'Tournament Format Distribution',
+}: FormatDistributionChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
@@ -368,7 +385,11 @@ interface PerformanceChartProps {
   metric?: 'responseTime' | 'errorRate' | 'throughput';
 }
 
-export function PerformanceChart({ data, title = 'System Performance', metric = 'responseTime' }: PerformanceChartProps) {
+export function PerformanceChart({
+  data,
+  title = 'System Performance',
+  metric = 'responseTime',
+}: PerformanceChartProps) {
   const metricConfig = {
     responseTime: {
       name: 'Response Time (ms)',
@@ -423,7 +444,10 @@ interface RoleDistributionChartProps {
   title?: string;
 }
 
-export function RoleDistributionChart({ data, title = 'User Role Distribution' }: RoleDistributionChartProps) {
+export function RoleDistributionChart({
+  data,
+  title = 'User Role Distribution',
+}: RoleDistributionChartProps) {
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
       <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>

@@ -55,17 +55,13 @@ export function NotificationSettings() {
     }
   };
 
-  const handleUpdatePreferences = async (
-    updates: Partial<NotificationPreferences>
-  ) => {
+  const handleUpdatePreferences = async (updates: Partial<NotificationPreferences>) => {
     const newPreferences = { ...preferences, ...updates };
     setPreferences(newPreferences);
     await manager.updatePreferences(newPreferences);
   };
 
-  const handleToggleNotificationType = (
-    type: keyof NotificationPreferences['types']
-  ) => {
+  const handleToggleNotificationType = (type: keyof NotificationPreferences['types']) => {
     handleUpdatePreferences({
       types: {
         ...preferences.types,
@@ -122,9 +118,7 @@ export function NotificationSettings() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Notification Settings
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Notification Settings</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
           Manage your push notification preferences
         </p>
@@ -140,7 +134,8 @@ export function NotificationSettings() {
                 Push Notifications Not Supported
               </h3>
               <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
-                Your browser doesn't support push notifications. Try using a modern browser like Chrome, Firefox, or Edge.
+                Your browser doesn't support push notifications. Try using a modern browser like
+                Chrome, Firefox, or Edge.
               </p>
             </div>
           </div>
@@ -157,9 +152,7 @@ export function NotificationSettings() {
               <BellOff className="h-6 w-6 text-gray-400" />
             )}
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white">
-                Push Notifications
-              </h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white">Push Notifications</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {isSubscribed
                   ? 'Notifications are enabled'
@@ -187,38 +180,27 @@ export function NotificationSettings() {
       {/* Notification Types */}
       {isSubscribed && (
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
-            Notification Types
-          </h3>
+          <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Notification Types</h3>
 
           <div className="space-y-4">
             {notificationTypes.map((type) => (
-              <div
-                key={type.key}
-                className="flex items-start justify-between gap-4"
-              >
+              <div key={type.key} className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                     {type.label}
                   </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {type.description}
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{type.description}</p>
                 </div>
 
                 <button
                   onClick={() => handleToggleNotificationType(type.key)}
                   className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${
-                    preferences.types[type.key]
-                      ? 'bg-blue-600'
-                      : 'bg-gray-200 dark:bg-gray-700'
+                    preferences.types[type.key] ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      preferences.types[type.key]
-                        ? 'translate-x-6'
-                        : 'translate-x-1'
+                      preferences.types[type.key] ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
                 </button>
@@ -231,9 +213,7 @@ export function NotificationSettings() {
       {/* Sound and Vibration */}
       {isSubscribed && (
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-          <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
-            Sound & Vibration
-          </h3>
+          <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Sound & Vibration</h3>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -244,9 +224,7 @@ export function NotificationSettings() {
                   <VolumeX className="h-5 w-5 text-gray-400" />
                 )}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                    Sound
-                  </h4>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white">Sound</h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Play sound with notifications
                   </p>
@@ -254,13 +232,9 @@ export function NotificationSettings() {
               </div>
 
               <button
-                onClick={() =>
-                  handleUpdatePreferences({ sound: !preferences.sound })
-                }
+                onClick={() => handleUpdatePreferences({ sound: !preferences.sound })}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  preferences.sound
-                    ? 'bg-blue-600'
-                    : 'bg-gray-200 dark:bg-gray-700'
+                  preferences.sound ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -275,9 +249,7 @@ export function NotificationSettings() {
               <div className="flex items-center gap-3">
                 <Vibrate className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                 <div>
-                  <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                    Vibration
-                  </h4>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white">Vibration</h4>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Vibrate device with notifications
                   </p>
@@ -291,9 +263,7 @@ export function NotificationSettings() {
                   })
                 }
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  preferences.vibration
-                    ? 'bg-blue-600'
-                    : 'bg-gray-200 dark:bg-gray-700'
+                  preferences.vibration ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               >
                 <span
@@ -314,9 +284,7 @@ export function NotificationSettings() {
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white">
-                  Quiet Hours
-                </h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">Quiet Hours</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Pause notifications during specific hours
                 </p>
@@ -333,16 +301,12 @@ export function NotificationSettings() {
                 })
               }
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                preferences.quietHours.enabled
-                  ? 'bg-blue-600'
-                  : 'bg-gray-200 dark:bg-gray-700'
+                preferences.quietHours.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  preferences.quietHours.enabled
-                    ? 'translate-x-6'
-                    : 'translate-x-1'
+                  preferences.quietHours.enabled ? 'translate-x-6' : 'translate-x-1'
                 }`}
               />
             </button>
@@ -397,9 +361,7 @@ export function NotificationSettings() {
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white">
-                Test Notification
-              </h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white">Test Notification</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Send a test notification to verify your settings
               </p>

@@ -12,9 +12,11 @@ Both tokens MUST be provided for WebSocket connections.
 ## 1. Session Token (User JWT)
 
 ### Issued By
+
 NextAuth.js authentication service (automatically handled by `/api/auth` endpoints)
 
 ### Location
+
 - HTTP Header: `Authorization: Bearer <token>`
 - Query Parameter: `?token=<token>` (for WebSocket connections)
 
@@ -23,17 +25,17 @@ NextAuth.js authentication service (automatically handled by `/api/auth` endpoin
 ```typescript
 interface SessionToken {
   // Standard JWT claims
-  sub: string;           // Subject (user ID)
-  iat: number;           // Issued at (Unix timestamp)
-  exp: number;           // Expiration (Unix timestamp)
+  sub: string; // Subject (user ID)
+  iat: number; // Issued at (Unix timestamp)
+  exp: number; // Expiration (Unix timestamp)
 
   // Custom claims (from NextAuth)
-  userId: string;        // User ID (same as sub)
-  email: string;         // User email
-  name?: string;         // User display name
-  orgId: string;         // Organization ID (CRITICAL for tenant isolation)
-  orgSlug: string;       // Organization slug (human-readable)
-  role: string;          // User role: 'owner' | 'admin' | 'member'
+  userId: string; // User ID (same as sub)
+  email: string; // User email
+  name?: string; // User display name
+  orgId: string; // Organization ID (CRITICAL for tenant isolation)
+  orgSlug: string; // Organization slug (human-readable)
+  role: string; // User role: 'owner' | 'admin' | 'member'
 }
 ```
 
@@ -63,6 +65,7 @@ interface SessionToken {
 ### How to Obtain
 
 **Client-side (Browser):**
+
 ```typescript
 import { getSession } from 'next-auth/react';
 
@@ -71,6 +74,7 @@ const sessionToken = session?.accessToken; // or session?.id_token
 ```
 
 **Server-side (API Route):**
+
 ```typescript
 import { auth } from '@/auth';
 
@@ -81,20 +85,22 @@ const session = await auth();
 ## 2. Room Access Token
 
 ### Issued By
+
 Web app API endpoint: `POST /api/sync/room-token`
 
 ### Purpose
+
 Grants time-limited access to a specific tournament's Y.js document room.
 
 ### Claims Structure
 
 ```typescript
 interface RoomAccessToken {
-  tournamentId: string;           // Tournament UUID
-  orgId: string;                  // Organization ID (must match session token)
-  userId: string;                 // User ID (must match session token)
-  permissions: Permission[];      // Array of permissions
-  exp: number;                    // Expiration (Unix timestamp)
+  tournamentId: string; // Tournament UUID
+  orgId: string; // Organization ID (must match session token)
+  userId: string; // User ID (must match session token)
+  permissions: Permission[]; // Array of permissions
+  exp: number; // Expiration (Unix timestamp)
 }
 
 type Permission = 'read' | 'write' | 'admin';
@@ -122,15 +128,16 @@ type Permission = 'read' | 'write' | 'admin';
 
 ### Permission Levels
 
-| Permission | Description | Can Read | Can Write | Can Admin |
-|------------|-------------|----------|-----------|-----------|
-| `read` | View-only access | ✅ | ❌ | ❌ |
-| `write` | Read + modify document | ✅ | ✅ | ❌ |
-| `admin` | Full access + room management | ✅ | ✅ | ✅ |
+| Permission | Description                   | Can Read | Can Write | Can Admin |
+| ---------- | ----------------------------- | -------- | --------- | --------- |
+| `read`     | View-only access              | ✅       | ❌        | ❌        |
+| `write`    | Read + modify document        | ✅       | ✅        | ❌        |
+| `admin`    | Full access + room management | ✅       | ✅        | ✅        |
 
 ### How to Obtain
 
 **Client-side Request:**
+
 ```typescript
 // Must be authenticated (session exists)
 const response = await fetch('/api/sync/room-token', {
@@ -146,6 +153,7 @@ const { roomToken, expiresAt } = await response.json();
 ```
 
 **Response:**
+
 ```json
 {
   "roomToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -184,7 +192,7 @@ const { roomToken } = await roomResponse.json();
 // 3. Connect to WebSocket with BOTH tokens
 const wsUrl = new URL(`${process.env.NEXT_PUBLIC_SYNC_SERVICE_URL}`);
 wsUrl.searchParams.set('token', session.accessToken); // Session JWT
-wsUrl.searchParams.set('room', roomToken);           // Room access JWT
+wsUrl.searchParams.set('room', roomToken); // Room access JWT
 
 const ws = new WebSocket(wsUrl.toString());
 
@@ -234,11 +242,13 @@ ws.onerror = (error) => {
 ### Token Storage
 
 **✅ DO:**
+
 - Store session token in httpOnly cookie (handled by NextAuth)
 - Store room token in memory (component state)
 - Request new room token on page refresh
 
 **❌ DON'T:**
+
 - Store tokens in localStorage (XSS vulnerable)
 - Log tokens to console (visible in browser dev tools)
 - Share tokens between users or organizations
@@ -246,10 +256,12 @@ ws.onerror = (error) => {
 ### Token Rotation
 
 **Session Token:**
+
 - Automatically rotated by NextAuth on activity
 - Expires after inactivity (configured in NextAuth)
 
 **Room Token:**
+
 - Request new token when approaching expiration
 - Implement automatic renewal before WebSocket disconnect
 - Handle 401/403 errors by requesting new token
@@ -258,12 +270,12 @@ ws.onerror = (error) => {
 
 **Common WebSocket Close Codes:**
 
-| Code | Reason | Action |
-|------|--------|--------|
-| 1008 | Authentication/Authorization Failed | Request new tokens, reconnect |
-| 1009 | Message Too Large | Reduce payload size |
-| 1011 | Internal Server Error | Retry with exponential backoff |
-| 4001 | Rate Limit Exceeded | Wait before reconnecting |
+| Code | Reason                              | Action                         |
+| ---- | ----------------------------------- | ------------------------------ |
+| 1008 | Authentication/Authorization Failed | Request new tokens, reconnect  |
+| 1009 | Message Too Large                   | Reduce payload size            |
+| 1011 | Internal Server Error               | Retry with exponential backoff |
+| 4001 | Rate Limit Exceeded                 | Wait before reconnecting       |
 
 ## Testing
 
@@ -320,12 +332,14 @@ node -e "console.log(require('jsonwebtoken').verify('eyJhbGc...', 'your-secret')
 ### "Authentication required" (401)
 
 **Causes:**
+
 - Missing session token
 - Invalid signature
 - Expired token
 - Wrong `AUTH_SECRET` environment variable
 
 **Solution:**
+
 - Check token is being sent in request
 - Verify `AUTH_SECRET` matches between services
 - Request new session token (re-login)
@@ -333,33 +347,39 @@ node -e "console.log(require('jsonwebtoken').verify('eyJhbGc...', 'your-secret')
 ### "Invalid room access token" (400/1008)
 
 **Causes:**
+
 - Missing room token
 - Invalid signature
 - Expired room token
 - Token format invalid
 
 **Solution:**
+
 - Request new room token from `/api/sync/room-token`
 - Check token format (3 parts separated by dots)
 
 ### "Organization mismatch" (1008)
 
 **Causes:**
+
 - Room token `orgId` doesn't match session token `orgId`
 - User switched organizations without refreshing
 - Stale room token
 
 **Solution:**
+
 - Request new room token after org switch
 - Ensure both tokens are for same organization
 
 ### "Room quota exceeded" (1008)
 
 **Causes:**
+
 - Organization has >100 active rooms
 - Too many concurrent tournaments
 
 **Solution:**
+
 - Wait for inactive rooms to be cleaned up (5 minute interval)
 - Close unused tournament connections
 - Contact admin to increase quota

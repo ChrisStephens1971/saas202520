@@ -36,13 +36,14 @@
 ## Brand Overview
 
 **Product Name:** [PROJECT NAME]
-**Tagline:** *[TO BE DEFINED - suggestions: ...]*
+**Tagline:** _[TO BE DEFINED - suggestions: ...]_
 **Industry:** [INDUSTRY / CATEGORY]
 **Target Audience:** [PRIMARY AUDIENCE DESCRIPTION]
 
 **Brand Positioning:** [1-2 SENTENCE POSITIONING STATEMENT]
 
 **Brand Attributes:**
+
 - **[ATTRIBUTE 1]** - [Description]
 - **[ATTRIBUTE 2]** - [Description]
 - **[ATTRIBUTE 3]** - [Description]
@@ -50,6 +51,7 @@
 - **[ATTRIBUTE 5]** - [Description]
 
 **Product Offerings:**
+
 - [Feature 1]
 - [Feature 2]
 - [Feature 3]
@@ -69,23 +71,27 @@
 **Logo Variations:**
 
 #### Full Logo (Primary)
+
 - **Use:** [PRIMARY USE CASES]
 - **Description:** Icon + "PROJECT NAME" wordmark (stacked or horizontal)
 - **Background:** [PREFERRED BACKGROUND COLOR]
 - **File Format:** PNG (transparent background preferred)
 
 #### Icon Only
+
 - **Use:** App icons, favicons, small spaces, profile pictures
 - **Description:** Icon without text
 - **Minimum Size:** 32px (favicon), 48px recommended
 - **File Format:** ICO (favicon), PNG (transparent)
 
 #### Horizontal Logo
+
 - **Use:** Website headers, email signatures, wide formats
 - **Description:** Icon left, wordmark right, aligned center
 - **Aspect Ratio:** Approximately 4:1
 
 #### Stacked Logo
+
 - **Use:** Square formats, mobile applications, social media
 - **Description:** Icon top, wordmark bottom, centered
 - **Aspect Ratio:** Approximately 1:1.2
@@ -93,12 +99,14 @@
 ### Logo Anatomy
 
 **Icon Elements:**
+
 - **[ELEMENT 1]:** [Meaning/symbolism]
 - **[ELEMENT 2]:** [Meaning/symbolism]
 - **[ELEMENT 3]:** [Meaning/symbolism]
 - **Colors:** [Describe color scheme]
 
 **Wordmark:**
+
 - **Font:** [Font name or style description]
 - **Weight:** [Font weight - e.g., Bold (700)]
 - **Case:** [Title case, All caps, etc.]
@@ -111,6 +119,7 @@
 ### Primary Colors
 
 #### [COLOR NAME 1] (Primary Brand Color)
+
 - **Hex:** `#XXXXXX`
 - **RGB:** X, X, X
 - **CMYK:** X, X, X, X
@@ -118,6 +127,7 @@
 - **Usage:** [When/where to use this color]
 
 #### [COLOR NAME 2] (Secondary/Accent)
+
 - **Hex:** `#XXXXXX`
 - **RGB:** X, X, X
 - **CMYK:** X, X, X, X
@@ -125,6 +135,7 @@
 - **Usage:** [When/where to use this color]
 
 #### [COLOR NAME 3] (Accent/Action)
+
 - **Hex:** `#XXXXXX`
 - **RGB:** X, X, X
 - **CMYK:** X, X, X, X
@@ -134,16 +145,19 @@
 ### Secondary Colors
 
 #### [COLOR NAME 4] (Text/Dark)
+
 - **Hex:** `#XXXXXX`
 - **RGB:** X, X, X
 - **Usage:** [When/where to use this color]
 
 #### White
+
 - **Hex:** `#FFFFFF`
 - **RGB:** 255, 255, 255
 - **Usage:** Primary backgrounds, text on dark, clean spaces
 
 #### Light Gray (Background)
+
 - **Hex:** `#FXXXXX`
 - **RGB:** XXX, XXX, XXX
 - **Usage:** Alternate backgrounds, cards, sections
@@ -151,38 +165,46 @@
 ### Semantic Colors
 
 #### Success
+
 - **Hex:** `#XXXXXX`
 - **Usage:** Success messages, positive states
 
 #### Warning
+
 - **Hex:** `#XXXXXX`
 - **Usage:** Warnings, pending states, attention needed
 
 #### Error
+
 - **Hex:** `#XXXXXX`
 - **Usage:** Errors, critical alerts
 
 #### Info
+
 - **Hex:** `#XXXXXX`
 - **Usage:** Information messages, neutral notifications
 
 ### Color Usage Guidelines
 
 **Primary Combinations:**
+
 - **[STYLE 1]:** [Background + text + accent description]
 - **[STYLE 2]:** [Background + text + accent description]
 
 **Accessibility:**
+
 - [Color 1] on White: WCAG [AA/AAA] compliant (X:1 contrast)
 - [Color 2] on White: WCAG [AA/AAA] compliant (X:1 contrast)
 - Always test color combinations for accessibility
 
 **Do:**
+
 - [Guideline 1]
 - [Guideline 2]
 - [Guideline 3]
 
 **Don't:**
+
 - [Restriction 1]
 - [Restriction 2]
 - [Restriction 3]
@@ -194,11 +216,13 @@
 ### Primary Typeface: **[FONT NAME]** ([Style - serif/sans-serif])
 
 **Why [FONT NAME]:**
+
 - [Reason 1]
 - [Reason 2]
 - [Reason 3]
 
 **Fallbacks (if unavailable):**
+
 1. [Fallback 1]
 2. [Fallback 2]
 3. System fonts
@@ -206,6 +230,7 @@
 ### Type Scale
 
 #### Headings
+
 - **H1:** XXpx/Xrem, [Weight], Letter-spacing: X
 - **H2:** XXpx/Xrem, [Weight], Letter-spacing: X
 - **H3:** XXpx/Xrem, [Weight], Letter-spacing: X
@@ -214,23 +239,27 @@
 - **H6:** XXpx/Xrem, [Weight], Letter-spacing: X
 
 #### Body Text
+
 - **Large:** XXpx/Xrem, Regular (400), Line-height: X
 - **Base:** XXpx/Xrem, Regular (400), Line-height: X
 - **Small:** XXpx/Xrem, Regular (400), Line-height: X
 - **Caption:** XXpx/Xrem, Regular (400), Line-height: X
 
 #### Special
+
 - **Button:** XXpx, [Weight], Letter-spacing: X
 - **Label:** XXpx, [Weight], Letter-spacing: X
 
 ### Typography Guidelines
 
 **Do:**
+
 - [Guideline 1]
 - [Guideline 2]
 - [Guideline 3]
 
 **Don't:**
+
 - [Restriction 1]
 - [Restriction 2]
 - [Restriction 3]
@@ -245,6 +274,7 @@
 **Purpose:** Ensure logo visibility and prevent crowding
 
 **Measurement:**
+
 - Use "X" as unit (X = [DEFINE MEASUREMENT])
 - Maintain minimum 1X clear space on all sides
 - For emphasis, use 1.5X-2X
@@ -252,21 +282,25 @@
 ### Minimum Size
 
 **Digital:**
+
 - Full logo: XXXpx width minimum
 - Icon only: 32px minimum (favicon), 48px recommended
 
 **Print:**
+
 - Full logo: X inches width minimum
 - Icon only: 0.5 inches minimum
 
 ### Logo Placement
 
 **Preferred Positions:**
+
 - [Position 1 - e.g., Top left corner]
 - [Position 2 - e.g., Center]
 - [Position 3 - e.g., Bottom right]
 
 **Avoid:**
+
 - [Placement to avoid 1]
 - [Placement to avoid 2]
 
@@ -275,6 +309,7 @@
 #### Recommended Backgrounds
 
 **Primary:**
+
 - [Background 1] - [Usage context]
 - [Background 2] - [Usage context]
 - [Background 3] - [Usage context]
@@ -282,20 +317,24 @@
 #### Logo Color Variations
 
 **Standard:**
+
 - Use on: [Backgrounds]
 - Contrast: [Description]
 
 **White (All white):**
+
 - Use on: [Dark backgrounds]
 - Contrast: Ensure 4.5:1 minimum
 
 **Monochrome:**
+
 - Use on: B&W printing, grayscale contexts
 - Color: [Color to use]
 
 ### What NOT to Do
 
 ❌ **Don't:**
+
 - Rotate the logo
 - Stretch or squish (always maintain aspect ratio)
 - Change colors (except approved variations)
@@ -307,6 +346,7 @@
 - Add your own text to the logo
 
 ✅ **Do:**
+
 - Scale proportionally
 - Use approved color variations
 - Maintain clear space
@@ -321,6 +361,7 @@
 ### Brand Personality
 
 **[PROJECT NAME] is:**
+
 - **[TRAIT 1]** - [Description]
 - **[TRAIT 2]** - [Description]
 - **[TRAIT 3]** - [Description]
@@ -328,6 +369,7 @@
 - **[TRAIT 5]** - [Description]
 
 **[PROJECT NAME] is NOT:**
+
 - [Anti-trait 1]
 - [Anti-trait 2]
 - [Anti-trait 3]
@@ -335,6 +377,7 @@
 ### Voice & Tone
 
 **Voice Characteristics:**
+
 - **[CHARACTERISTIC 1]:** [Description]
 - **[CHARACTERISTIC 2]:** [Description]
 - **[CHARACTERISTIC 3]:** [Description]
@@ -342,14 +385,17 @@
 **Tone Variations by Context:**
 
 **[CONTEXT 1 - e.g., Marketing/Website]:**
+
 - [Tone description]
 - Example: "[Example copy]"
 
 **[CONTEXT 2 - e.g., In-App/Product]:**
+
 - [Tone description]
 - Example: "[Example copy]"
 
 **[CONTEXT 3 - e.g., Support/Help]:**
+
 - [Tone description]
 - Example: "[Example copy]"
 
@@ -359,12 +405,14 @@
 "[ONE SENTENCE VALUE PROPOSITION]"
 
 **Key Messages:**
+
 1. **[MESSAGE 1 TITLE]** - [Description]
 2. **[MESSAGE 2 TITLE]** - [Description]
 3. **[MESSAGE 3 TITLE]** - [Description]
 4. **[MESSAGE 4 TITLE]** - [Description]
 
 **Tagline Options:**
+
 - "[TAGLINE OPTION 1]"
 - "[TAGLINE OPTION 2]"
 - "[TAGLINE OPTION 3]"
@@ -372,11 +420,13 @@
 ### Writing Style
 
 **Do:**
+
 - [Guideline 1]
 - [Guideline 2]
 - [Guideline 3]
 
 **Don't:**
+
 - [Restriction 1]
 - [Restriction 2]
 - [Restriction 3]
@@ -394,30 +444,37 @@
 ### [PRIMARY PLATFORM - e.g., Web App, Mobile App, etc.]
 
 **[SECTION 1]:**
+
 - [Guideline 1]
 - [Guideline 2]
 
 **[SECTION 2]:**
+
 - [Guideline 1]
 - [Guideline 2]
 
 ### Website
 
 **Header:**
+
 - [Description]
 
 **Hero:**
+
 - [Description]
 
 **Footer:**
+
 - [Description]
 
 ### Marketing Materials
 
 **[MATERIAL TYPE 1]:**
+
 - [Description]
 
 **[MATERIAL TYPE 2]:**
+
 - [Description]
 
 ---
@@ -462,10 +519,12 @@
 ### Co-Branding Guidelines
 
 **Product Marketing:**
+
 - [PROJECT NAME] logo primary, Verdaio in footer/about
 - Format: "A Verdaio Product" in small text
 
 **Corporate/Investor Materials:**
+
 - Verdaio primary, [PROJECT NAME] as portfolio product
 - Format: "Verdaio: Building [Product List]"
 
@@ -502,4 +561,4 @@ chris.stephens@verdaio.com
 
 ---
 
-*This is a living document. Update as brand evolves.*
+_This is a living document. Update as brand evolves._

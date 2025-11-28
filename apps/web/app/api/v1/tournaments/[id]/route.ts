@@ -26,10 +26,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/tournaments/clx1234567890
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -37,10 +34,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -112,7 +106,6 @@ export async function GET(
     const rateLimitHeaders = getRateLimitHeaders(1000, 998, Date.now() + 3600000);
 
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/tournaments/${id}:`, error);

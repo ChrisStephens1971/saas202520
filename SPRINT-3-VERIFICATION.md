@@ -11,56 +11,74 @@
 ### Payment Endpoints (9 total)
 
 #### Stripe Connect (PAY-001)
+
 ✅ `POST /api/payments/stripe/onboarding` - Create Connect account
+
 - File: `apps/web/app/api/payments/stripe/onboarding/route.ts`
 - Lines: 120
 - Status: Complete
 
 #### Payment Intent (PAY-002)
+
 ✅ `POST /api/payments/create-intent` - Create payment intent
+
 - File: `apps/web/app/api/payments/create-intent/route.ts`
 - Lines: 118
 - Status: Complete
 
 #### Payment Confirmation (PAY-003)
+
 ✅ `POST /api/payments/[id]/confirm` - Confirm payment
+
 - File: `apps/web/app/api/payments/[id]/confirm/route.ts`
 - Lines: 106
 - Status: Complete
 
 #### Refund Processing (PAY-004)
+
 ✅ `POST /api/payments/[id]/refund` - Process refund
+
 - File: `apps/web/app/api/payments/[id]/refund/route.ts`
 - Lines: 130
 - Status: Complete
 
 #### Payout Calculation (PAY-005)
+
 ✅ `POST /api/tournaments/[id]/payouts/calculate` - Calculate payouts
+
 - File: `apps/web/app/api/tournaments/[id]/payouts/calculate/route.ts`
 - Lines: 176
 - Status: Complete
 
 #### Payout Ledger (PAY-006)
+
 ✅ `GET /api/tournaments/[id]/payouts` - Get payouts
 ✅ `PUT /api/tournaments/[id]/payouts` - Mark payout as paid
+
 - File: `apps/web/app/api/tournaments/[id]/payouts/route.ts`
 - Lines: 171
 - Status: Complete
 
 #### PDF Generation (PAY-007)
+
 ✅ `GET /api/tournaments/[id]/payouts/sheet` - Generate PDF payout sheet
+
 - File: `apps/web/app/api/tournaments/[id]/payouts/sheet/route.ts`
 - Lines: 112
 - Status: Complete
 
 #### Dispute Evidence (PAY-008)
+
 ✅ `GET /api/payments/[id]/dispute-evidence` - Get dispute evidence
+
 - File: `apps/web/app/api/payments/[id]/dispute-evidence/route.ts`
 - Lines: 175
 - Status: Complete
 
 #### Bonus: Account Status
+
 ✅ `GET /api/payments/stripe/account` - Get Stripe account status
+
 - File: `apps/web/app/api/payments/stripe/account/route.ts`
 - Lines: 87
 - Status: Complete
@@ -70,19 +88,25 @@
 ## Supporting Infrastructure
 
 ### Stripe SDK Wrapper
+
 ✅ `apps/web/lib/stripe.ts`
+
 - Lines: 115
 - Functions: 6 (createConnectAccount, createAccountLink, getConnectAccount, createPaymentIntent, createRefund, getReceiptUrl)
 - Status: Complete
 
 ### PDF Generator
+
 ✅ `apps/web/lib/pdf-generator.ts`
+
 - Lines: 134
 - Functions: 2 (generatePayoutSheet, getPlacementSuffix)
 - Status: Complete
 
 ### Bug Fixes
+
 ✅ `apps/web/lib/permissions.ts`
+
 - Fixed: `getScorek eepers` → `getScorekeepers` (typo fix)
 - Status: Complete
 
@@ -91,14 +115,18 @@
 ## Database Models (Prisma)
 
 ### StripeAccount
+
 ✅ Models organization-to-Stripe-account relationship
+
 - One-to-one per organization
 - Tracks onboarding completion
 - Capability status (charges, payouts)
 - Status: Complete
 
 ### Payment
+
 ✅ Records all payment transactions
+
 - Links to tournament and optional player
 - Tracks refunded amounts
 - Purpose classification (entry_fee, side_pot, addon)
@@ -106,7 +134,9 @@
 - Status: Complete
 
 ### Refund
+
 ✅ Individual refund transaction record
+
 - Links to payment
 - Reason tracking (duplicate, fraudulent, requested)
 - Actor tracking
@@ -114,7 +144,9 @@
 - Status: Complete
 
 ### Payout
+
 ✅ Prize pool distribution
+
 - Links to tournament and player
 - Placement-based amounts
 - Status tracking (pending, paid, voided)
@@ -125,36 +157,40 @@
 
 ## Code Statistics
 
-| Component | Lines | Files | Status |
-|-----------|-------|-------|--------|
-| API Routes | 1,074 | 9 | ✅ Complete |
-| Stripe SDK | 115 | 1 | ✅ Complete |
-| PDF Generator | 134 | 1 | ✅ Complete |
-| Bug Fixes | 1 | 1 | ✅ Complete |
-| **Total** | **1,324** | **12** | **✅ Complete** |
+| Component     | Lines     | Files  | Status          |
+| ------------- | --------- | ------ | --------------- |
+| API Routes    | 1,074     | 9      | ✅ Complete     |
+| Stripe SDK    | 115       | 1      | ✅ Complete     |
+| PDF Generator | 134       | 1      | ✅ Complete     |
+| Bug Fixes     | 1         | 1      | ✅ Complete     |
+| **Total**     | **1,324** | **12** | **✅ Complete** |
 
 ---
 
 ## Security Verification
 
 ### Authentication
+
 ✅ All endpoints require NextAuth session
 ✅ User ID extracted from session
 ✅ 401 responses for missing session
 
 ### Authorization
+
 ✅ Owner/TD role verification for payment setup
 ✅ Organization membership checks
 ✅ Tournament ownership verification
 ✅ Role-based permission enforcement
 
 ### Audit Trail
+
 ✅ All operations logged with actor tracking
 ✅ Timestamps on all records
 ✅ Refund reason tracking
 ✅ Payout confirmation with notes
 
 ### Multi-Tenant Isolation
+
 ✅ Organization scoping on Stripe accounts
 ✅ Tournament scoping on payments
 ✅ Cross-organization access prevention
@@ -165,11 +201,13 @@
 ## API Compliance
 
 ### HTTP Methods
+
 ✅ POST: Create operations (onboarding, intent, refund, payouts)
 ✅ GET: Retrieve operations (account status, payouts, evidence)
 ✅ PUT: Update operations (mark payout paid)
 
 ### Status Codes
+
 ✅ 200: Successful operations
 ✅ 400: Invalid requests
 ✅ 401: Unauthorized access
@@ -178,12 +216,14 @@
 ✅ 500: Server errors
 
 ### Request Validation
+
 ✅ Required field checks
 ✅ Amount validation (positive numbers)
 ✅ Permission verification
 ✅ Data range validation
 
 ### Response Format
+
 ✅ Consistent JSON responses
 ✅ Type-safe data structures
 ✅ Error messages with details
@@ -194,18 +234,21 @@
 ## Type Safety
 
 ### TypeScript
+
 ✅ All files in TypeScript (.ts)
 ✅ Proper type annotations
 ✅ Request/response types defined
 ✅ Database model types from Prisma
 
 ### Type Contracts
+
 ✅ Shared types in `@repo/shared/types/payment`
 ✅ Request interfaces
 ✅ Response interfaces
 ✅ Data model interfaces
 
 ### Error Handling
+
 ✅ Typed error responses
 ✅ Proper error messages
 ✅ Error status codes
@@ -216,6 +259,7 @@
 ## Integration Verification
 
 ### Stripe Integration
+
 ✅ SDK initialization with API key
 ✅ Connect account creation
 ✅ Payment intent creation
@@ -223,18 +267,21 @@
 ✅ Account status retrieval
 
 ### Database Integration
+
 ✅ Prisma client usage
 ✅ Transaction safety
 ✅ Relationship management
 ✅ Data persistence
 
 ### Authentication Integration
+
 ✅ NextAuth session verification
 ✅ User ID extraction
 ✅ Role-based checks
 ✅ Organization membership verification
 
 ### PDF Integration
+
 ✅ PDFKit usage
 ✅ Buffer generation
 ✅ HTTP response headers
@@ -245,6 +292,7 @@
 ## Feature Checklist
 
 ### Payment Collection
+
 ✅ Create payment intents
 ✅ Confirm payment completion
 ✅ Handle payment failures
@@ -252,6 +300,7 @@
 ✅ Track payment status
 
 ### Refund Management
+
 ✅ Full refund support
 ✅ Partial refund support
 ✅ Refund validation
@@ -259,6 +308,7 @@
 ✅ Refund audit trail
 
 ### Payout Calculation
+
 ✅ Prize structure definition
 ✅ Entry fee aggregation
 ✅ Side pot aggregation
@@ -266,6 +316,7 @@
 ✅ House take calculation
 
 ### Payout Management
+
 ✅ Payout ledger retrieval
 ✅ Status tracking
 ✅ Mark payments as paid
@@ -273,6 +324,7 @@
 ✅ Payment confirmation
 
 ### PDF Generation
+
 ✅ Professional formatting
 ✅ Tournament information
 ✅ Payout table
@@ -280,6 +332,7 @@
 ✅ Download-ready output
 
 ### Dispute Support
+
 ✅ Complete audit trail
 ✅ Refund history
 ✅ Event timeline
@@ -291,6 +344,7 @@
 ## Documentation Verification
 
 ### Comprehensive Documentation
+
 ✅ File: `docs/progress/SPRINT-3-PAYMENT-IMPLEMENTATION.md`
 ✅ Endpoint details
 ✅ Request/response examples
@@ -300,6 +354,7 @@
 ✅ Future enhancements
 
 ### Quick Reference Guide
+
 ✅ File: `docs/API-PAYMENT-ENDPOINTS.md`
 ✅ All endpoint URLs
 ✅ Parameter lists
@@ -308,6 +363,7 @@
 ✅ Integration checklist
 
 ### Implementation Summary
+
 ✅ File: `PAYMENT-IMPLEMENTATION-COMPLETE.md`
 ✅ Executive summary
 ✅ Technical architecture
@@ -333,6 +389,7 @@
 ## Sprint Completion
 
 ### Required Stories
+
 ✅ PAY-001: Stripe Connect Onboarding
 ✅ PAY-002: Payment Intent Creation
 ✅ PAY-003: Payment Confirmation
@@ -343,6 +400,7 @@
 ✅ PAY-008: Dispute Evidence
 
 ### Acceptance Criteria
+
 ✅ All payment endpoints implemented
 ✅ Stripe Connect integration complete
 ✅ PDF generation working
@@ -357,6 +415,7 @@
 ## Deployment Ready
 
 ### Prerequisites
+
 ✅ Stripe and PDFKit dependencies in package.json
 ✅ Prisma models defined
 ✅ Type contracts available
@@ -364,12 +423,14 @@
 ✅ Security controls in place
 
 ### Environment Setup
+
 ✅ STRIPE_SECRET_KEY required
 ✅ DATABASE_URL required
 ✅ NEXT_PUBLIC_APP_URL required
 ✅ NextAuth configuration required
 
 ### Post-Deployment
+
 ✅ Run database migrations
 ✅ Generate Prisma client
 ✅ Test with Stripe test mode
@@ -380,15 +441,15 @@
 
 ## Quality Metrics
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| Test Coverage | All endpoints | ✅ Good |
-| Type Safety | 100% TypeScript | ✅ Complete |
-| Error Handling | All paths covered | ✅ Complete |
-| Security | Multi-tenant isolation | ✅ Implemented |
-| Documentation | 3 comprehensive guides | ✅ Excellent |
-| Code Organization | Modular & maintainable | ✅ Good |
-| Performance | Optimized queries | ✅ Good |
+| Metric            | Value                  | Status         |
+| ----------------- | ---------------------- | -------------- |
+| Test Coverage     | All endpoints          | ✅ Good        |
+| Type Safety       | 100% TypeScript        | ✅ Complete    |
+| Error Handling    | All paths covered      | ✅ Complete    |
+| Security          | Multi-tenant isolation | ✅ Implemented |
+| Documentation     | 3 comprehensive guides | ✅ Excellent   |
+| Code Organization | Modular & maintainable | ✅ Good        |
+| Performance       | Optimized queries      | ✅ Good        |
 
 ---
 

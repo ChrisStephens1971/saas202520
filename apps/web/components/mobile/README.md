@@ -7,9 +7,11 @@ Touch-optimized mobile components with swipe gestures and haptic feedback.
 ## Components Overview
 
 ### 1. TouchFeedback
+
 Visual and haptic feedback for touch interactions.
 
 **Features:**
+
 - Visual ripple effect on tap
 - Haptic feedback (vibration)
 - Scale animation on press
@@ -18,6 +20,7 @@ Visual and haptic feedback for touch interactions.
 - WCAG 2.1 compliant (≥44x44px touch targets)
 
 **Usage:**
+
 ```tsx
 import { TouchFeedback } from '@/components/mobile';
 
@@ -28,10 +31,11 @@ import { TouchFeedback } from '@/components/mobile';
   showRipple={true}
 >
   <button>Click me</button>
-</TouchFeedback>
+</TouchFeedback>;
 ```
 
 **Props:**
+
 - `onPress?: (e) => void` - Called on tap/click
 - `onLongPress?: (e) => void` - Called on long press (default 500ms)
 - `hapticType?: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' | 'selection'`
@@ -43,9 +47,11 @@ import { TouchFeedback } from '@/components/mobile';
 ---
 
 ### 2. SwipeableCard
+
 Card with swipe gesture support for actions and navigation.
 
 **Features:**
+
 - Swipe left/right for actions
 - Swipe up/down for navigation
 - Spring animations
@@ -54,6 +60,7 @@ Card with swipe gesture support for actions and navigation.
 - Alternative buttons for accessibility
 
 **Usage:**
+
 ```tsx
 import { SwipeableCard } from '@/components/mobile';
 import { Trash, Archive } from 'lucide-react';
@@ -64,24 +71,25 @@ import { Trash, Archive } from 'lucide-react';
     label: 'Archive',
     color: '#3b82f6',
     onAction: () => console.log('Archived'),
-    haptic: 'medium'
+    haptic: 'medium',
   }}
   rightAction={{
     icon: <Trash />,
     label: 'Delete',
     color: '#ef4444',
     onAction: () => console.log('Deleted'),
-    haptic: 'heavy'
+    haptic: 'heavy',
   }}
   onSwipeUp={() => console.log('View details')}
   onSwipeDown={() => console.log('Refresh')}
   threshold={0.3}
 >
   <div className="p-4">Card content</div>
-</SwipeableCard>
+</SwipeableCard>;
 ```
 
 **Props:**
+
 - `leftAction?: SwipeAction` - Action when swiping right
 - `rightAction?: SwipeAction` - Action when swiping left
 - `onSwipeUp?: () => void` - Called on swipe up
@@ -91,6 +99,7 @@ import { Trash, Archive } from 'lucide-react';
 - `enableVerticalSwipe?: boolean` - Enable vertical swipes (default false)
 
 **SwipeAction Interface:**
+
 ```ts
 interface SwipeAction {
   icon?: React.ReactNode;
@@ -104,9 +113,11 @@ interface SwipeAction {
 ---
 
 ### 3. BottomSheet
+
 Mobile-optimized bottom sheet modal with drag-to-dismiss.
 
 **Features:**
+
 - Drag down to close
 - Multiple snap points support
 - Smooth spring animations
@@ -117,6 +128,7 @@ Mobile-optimized bottom sheet modal with drag-to-dismiss.
 - ESC key to close
 
 **Usage:**
+
 ```tsx
 import { BottomSheet } from '@/components/mobile';
 
@@ -130,10 +142,11 @@ const [isOpen, setIsOpen] = useState(false);
   snapPoints={[90, 60, 30]}
 >
   <div>Bottom sheet content</div>
-</BottomSheet>
+</BottomSheet>;
 ```
 
 **Props:**
+
 - `isOpen: boolean` - Control visibility
 - `onClose: () => void` - Called when closing
 - `title?: string` - Optional title in header
@@ -144,9 +157,11 @@ const [isOpen, setIsOpen] = useState(false);
 ---
 
 ### 4. TouchOptimizedButton
+
 Button optimized for touch interfaces with haptic feedback.
 
 **Features:**
+
 - WCAG 2.1 compliant (≥44x44px)
 - Haptic feedback
 - Loading states
@@ -155,6 +170,7 @@ Button optimized for touch interfaces with haptic feedback.
 - Full-width option
 
 **Usage:**
+
 ```tsx
 import { TouchOptimizedButton } from '@/components/mobile';
 import { Plus } from 'lucide-react';
@@ -170,10 +186,11 @@ import { Plus } from 'lucide-react';
   fullWidth={true}
 >
   Add Match
-</TouchOptimizedButton>
+</TouchOptimizedButton>;
 ```
 
 **Props:**
+
 - `variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost'`
 - `size?: 'sm' | 'md' | 'lg'` - sm:44px, md:48px, lg:56px min height
 - `onClick?: (e) => void` - Click handler
@@ -195,19 +212,19 @@ import { Plus } from 'lucide-react';
 import { triggerHaptic, gameHaptics } from '@/components/mobile';
 
 // Basic haptic feedback
-triggerHaptic('light');    // Light tap
-triggerHaptic('medium');   // Medium tap
-triggerHaptic('heavy');    // Heavy tap
-triggerHaptic('success');  // Success pattern
-triggerHaptic('error');    // Error pattern
+triggerHaptic('light'); // Light tap
+triggerHaptic('medium'); // Medium tap
+triggerHaptic('heavy'); // Heavy tap
+triggerHaptic('success'); // Success pattern
+triggerHaptic('error'); // Error pattern
 
 // Game-specific haptics
-gameHaptics.scorePoint();  // Light tap for scoring
-gameHaptics.winGame();     // Success pattern for game win
-gameHaptics.winMatch();    // Celebration pattern for match win
-gameHaptics.undo();        // Medium tap for undo
+gameHaptics.scorePoint(); // Light tap for scoring
+gameHaptics.winGame(); // Success pattern for game win
+gameHaptics.winMatch(); // Celebration pattern for match win
+gameHaptics.undo(); // Medium tap for undo
 gameHaptics.buttonPress(); // Light tap for buttons
-gameHaptics.swipe();       // Selection feedback for swipes
+gameHaptics.swipe(); // Selection feedback for swipes
 ```
 
 ### React Hook
@@ -218,11 +235,7 @@ import { useHaptic } from '@/components/mobile';
 function MyComponent() {
   const haptic = useHaptic();
 
-  return (
-    <button onClick={() => haptic.trigger('medium')}>
-      Click me
-    </button>
-  );
+  return <button onClick={() => haptic.trigger('medium')}>Click me</button>;
 }
 ```
 
@@ -274,6 +287,7 @@ Touch-optimized tournament bracket view with swipe navigation.
 **Location:** `app/(mobile)/tournaments/[id]/mobile-view.tsx`
 
 **Features:**
+
 - Touch-optimized bracket visualization
 - Swipe between rounds
 - Pull-to-refresh
@@ -282,6 +296,7 @@ Touch-optimized tournament bracket view with swipe navigation.
 - Responsive card layout
 
 **Usage:**
+
 ```tsx
 import { MobileTournamentView } from '@/app/(mobile)/tournaments/[id]/mobile-view';
 
@@ -290,7 +305,7 @@ import { MobileTournamentView } from '@/app/(mobile)/tournaments/[id]/mobile-vie
   onRefresh={async () => {
     // Refresh tournament data
   }}
-/>
+/>;
 ```
 
 ---
@@ -302,6 +317,7 @@ Touch-optimized score keeper with large tap targets.
 **Location:** `app/(mobile)/scoring/mobile-scorer.tsx`
 
 **Features:**
+
 - Large tap targets (60x60px minimum)
 - Swipe to undo last action
 - Haptic feedback on score changes
@@ -310,6 +326,7 @@ Touch-optimized score keeper with large tap targets.
 - Score history
 
 **Usage:**
+
 ```tsx
 import { MobileScorer } from '@/app/(mobile)/scoring/mobile-scorer';
 
@@ -320,8 +337,8 @@ import { MobileScorer } from '@/app/(mobile)/scoring/mobile-scorer';
     player2: { id: '2', name: 'Player 2' },
     format: {
       gamesToWin: 3,
-      pointsToWin: 9
-    }
+      pointsToWin: 9,
+    },
   }}
   onComplete={(winnerId, scores) => {
     console.log('Match completed', winnerId, scores);
@@ -329,7 +346,7 @@ import { MobileScorer } from '@/app/(mobile)/scoring/mobile-scorer';
   onCancel={() => {
     console.log('Scoring cancelled');
   }}
-/>
+/>;
 ```
 
 ---
@@ -339,21 +356,25 @@ import { MobileScorer } from '@/app/(mobile)/scoring/mobile-scorer';
 All components meet WCAG 2.1 Level AA standards:
 
 ### Touch Targets
+
 - **Minimum size:** 44x44px (WCAG 2.1)
 - **Primary actions:** 60x60px for critical interactions
 - **Spacing:** Adequate spacing between interactive elements
 
 ### Visual Feedback
+
 - Non-haptic visual feedback provided
 - Clear pressed/active states
 - Color contrast ratios meet standards
 
 ### Screen Readers
+
 - Proper ARIA labels and roles
 - Screen reader announcements
 - Alternative action methods (buttons for swipe actions)
 
 ### Keyboard Navigation
+
 - All interactive elements focusable
 - Logical tab order
 - Enter/Space key support
@@ -364,6 +385,7 @@ All components meet WCAG 2.1 Level AA standards:
 ## Best Practices
 
 ### 1. Touch Target Sizing
+
 ```tsx
 // ✅ Good - Meets minimum size
 <TouchOptimizedButton size="md">Click</TouchOptimizedButton>
@@ -373,6 +395,7 @@ All components meet WCAG 2.1 Level AA standards:
 ```
 
 ### 2. Haptic Feedback Usage
+
 ```tsx
 // ✅ Good - Appropriate feedback for action
 <TouchOptimizedButton
@@ -393,6 +416,7 @@ All components meet WCAG 2.1 Level AA standards:
 ```
 
 ### 3. Swipe Gestures
+
 ```tsx
 // ✅ Good - Provide visual hints and alternatives
 <SwipeableCard
@@ -414,6 +438,7 @@ All components meet WCAG 2.1 Level AA standards:
 ```
 
 ### 4. Bottom Sheets
+
 ```tsx
 // ✅ Good - Appropriate height and focus management
 <BottomSheet
@@ -438,16 +463,19 @@ All components meet WCAG 2.1 Level AA standards:
 ## Performance Considerations
 
 ### Animation Performance
+
 - Uses `transform` and `opacity` for hardware acceleration
 - Avoids layout thrashing
 - Spring animations are optimized with framer-motion
 
 ### Touch Responsiveness
+
 - Touch events handled with `touchstart`/`touchend`
 - Prevents 300ms click delay with `touch-action: manipulation`
 - Gesture recognition optimized for mobile
 
 ### Memory Management
+
 - Haptic feedback patterns reused
 - Event listeners cleaned up on unmount
 - History limited to recent actions
@@ -457,6 +485,7 @@ All components meet WCAG 2.1 Level AA standards:
 ## Browser Support
 
 ### Haptic Feedback (Vibration API)
+
 - ✅ Chrome/Edge (Android)
 - ✅ Firefox (Android)
 - ✅ Samsung Internet
@@ -464,11 +493,13 @@ All components meet WCAG 2.1 Level AA standards:
 - Gracefully degrades to visual feedback only
 
 ### Touch Events
+
 - ✅ All modern mobile browsers
 - ✅ iOS Safari
 - ✅ Chrome/Firefox/Edge mobile
 
 ### Recommended Testing
+
 - Chrome DevTools mobile emulation
 - Real device testing (iOS and Android)
 - Various screen sizes (320px to 768px)
@@ -478,6 +509,7 @@ All components meet WCAG 2.1 Level AA standards:
 ## Migration Guide
 
 ### From Regular Buttons
+
 ```tsx
 // Before
 <button
@@ -499,6 +531,7 @@ All components meet WCAG 2.1 Level AA standards:
 ```
 
 ### From Standard Modals
+
 ```tsx
 // Before
 <Dialog open={isOpen} onClose={setIsOpen}>
@@ -522,6 +555,7 @@ All components meet WCAG 2.1 Level AA standards:
 ## Testing
 
 ### Unit Tests
+
 ```tsx
 import { render, fireEvent } from '@testing-library/react';
 import { TouchFeedback } from '@/components/mobile';
@@ -542,18 +576,14 @@ test('triggers haptic on press', () => {
 ```
 
 ### Integration Tests
+
 ```tsx
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MobileScorer } from '@/app/(mobile)/scoring/mobile-scorer';
 
 test('scores points correctly', async () => {
   const onComplete = jest.fn();
-  const { getByLabelText } = render(
-    <MobileScorer
-      match={mockMatch}
-      onComplete={onComplete}
-    />
-  );
+  const { getByLabelText } = render(<MobileScorer match={mockMatch} onComplete={onComplete} />);
 
   // Simulate scoring
   fireEvent.click(getByLabelText('Increase score'));
@@ -569,23 +599,27 @@ test('scores points correctly', async () => {
 ## Troubleshooting
 
 ### Haptics Not Working
+
 1. Check device support: `isHapticSupported()`
 2. Check user preference: `isHapticEnabled()`
 3. Verify browser (iOS Safari doesn't support Vibration API)
 4. Check if running over HTTPS (required for some browsers)
 
 ### Touch Targets Too Small
+
 1. Ensure minimum 44x44px: `style={{ minWidth: '44px', minHeight: '44px' }}`
 2. Use TouchOptimizedButton for consistent sizing
 3. Check parent container constraints
 
 ### Swipes Not Registering
+
 1. Check threshold setting (default 0.3 = 30%)
 2. Verify touch-action CSS property
 3. Ensure parent doesn't capture touch events
 4. Check for conflicting scroll handlers
 
 ### Bottom Sheet Focus Issues
+
 1. Ensure content has focusable elements
 2. Check for focus trap conflicts
 3. Verify ARIA attributes
@@ -596,6 +630,7 @@ test('scores points correctly', async () => {
 ## Future Enhancements
 
 ### Planned Features
+
 - [ ] Multi-touch gestures (pinch, rotate)
 - [ ] Gesture customization per user
 - [ ] Advanced haptic patterns
@@ -604,6 +639,7 @@ test('scores points correctly', async () => {
 - [ ] Touch heatmap analytics
 
 ### Experimental Features
+
 - Force touch detection (where supported)
 - Gesture shortcuts
 - Contextual haptics based on game state
@@ -627,6 +663,7 @@ When adding new mobile components:
 ## Support
 
 For issues or questions:
+
 - Check this documentation first
 - Review accessibility guidelines: WCAG 2.1 Level AA
 - Test on target devices before reporting bugs

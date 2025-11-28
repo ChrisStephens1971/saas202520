@@ -16,11 +16,7 @@ interface CohortHeatmapProps {
   height?: number;
 }
 
-export function CohortHeatmap({
-  data,
-  width = 800,
-  height = 400,
-}: CohortHeatmapProps) {
+export function CohortHeatmap({ data, width = 800, height = 400 }: CohortHeatmapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -33,14 +29,9 @@ export function CohortHeatmap({
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
 
-    const svg = d3
-      .select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+    const svg = d3.select(svgRef.current).attr('width', width).attr('height', height);
 
-    const g = svg
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Find max number of months
     const maxMonths = Math.max(...data.map((d) => d.retentionByMonth.length));
@@ -112,10 +103,7 @@ export function CohortHeatmap({
         // Add text labels for values
         if (xScale.bandwidth() > 40 && yScale.bandwidth() > 30) {
           g.append('text')
-            .attr(
-              'x',
-              (xScale(`Month ${monthIndex}`) || 0) + xScale.bandwidth() / 2
-            )
+            .attr('x', (xScale(`Month ${monthIndex}`) || 0) + xScale.bandwidth() / 2)
             .attr('y', (yScale(cohort.cohortMonth) || 0) + yScale.bandwidth() / 2)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', 'middle')

@@ -16,10 +16,7 @@ import type {
 
 const MAX_UNDO_DEPTH = 3;
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -31,10 +28,7 @@ export async function POST(
     const { device, rev } = body;
 
     if (!device || rev === undefined) {
-      return NextResponse.json(
-        { error: 'Missing required fields: device, rev' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields: device, rev' }, { status: 400 });
     }
 
     // Fetch match with optimistic locking
@@ -89,10 +83,7 @@ export async function POST(
     });
 
     if (recentUpdates.length === 0) {
-      return NextResponse.json(
-        { error: 'No actions available to undo' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No actions available to undo' }, { status: 400 });
     }
 
     // Get the most recent update to undo
@@ -174,22 +165,21 @@ export async function POST(
         winnerId: result.updatedMatch.winnerId || undefined,
         rev: result.updatedMatch.rev,
       },
-      undoneUpdates: [{
-        ...updateToUndo,
-        timestamp: updateToUndo.timestamp,
-        action: updateToUndo.action as 'increment_a' | 'increment_b' | 'undo',
-        previousScore: updateToUndo.previousScore as unknown as MatchScore,
-        newScore: updateToUndo.newScore as unknown as MatchScore,
-      }],
+      undoneUpdates: [
+        {
+          ...updateToUndo,
+          timestamp: updateToUndo.timestamp,
+          action: updateToUndo.action as 'increment_a' | 'increment_b' | 'undo',
+          previousScore: updateToUndo.previousScore as unknown as MatchScore,
+          newScore: updateToUndo.newScore as unknown as MatchScore,
+        },
+      ],
       canUndo,
     };
 
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error('Error undoing score:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

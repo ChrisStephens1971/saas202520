@@ -60,12 +60,14 @@ apps/web/lib/analytics/
 ### 1. Queue Infrastructure (`jobs/queue.ts`)
 
 **Responsibilities:**
+
 - Initialize and manage BullMQ queue
 - Create workers for processing jobs
 - Handle job lifecycle (retry, failure, completion)
 - Provide queue metrics and health checks
 
 **Key Functions:**
+
 - `initializeQueue()` - Set up BullMQ queue with Redis
 - `createWorker()` - Create worker instances
 - `addJob()` - Queue new jobs
@@ -73,6 +75,7 @@ apps/web/lib/analytics/
 - `healthCheck()` - Verify queue system health
 
 **Job Types:**
+
 - `aggregation` - Compute analytics aggregates
 - `export` - Generate data exports (future)
 - `scheduled-report` - Send automated reports (future)
@@ -80,6 +83,7 @@ apps/web/lib/analytics/
 ### 2. Aggregation Service (`services/aggregation-service.ts`)
 
 **Responsibilities:**
+
 - Query raw data from database
 - Compute aggregated metrics
 - Upsert results into aggregate tables
@@ -87,7 +91,9 @@ apps/web/lib/analytics/
 **Functions:**
 
 #### `aggregateRevenue(tenantId, periodStart, periodEnd, periodType)`
+
 Computes revenue metrics:
+
 - Total revenue (successful payments)
 - Payment counts and success rates
 - Refund amounts
@@ -96,7 +102,9 @@ Computes revenue metrics:
 Writes to: `revenue_aggregates` table
 
 #### `aggregateCohorts(tenantId, cohortMonth)`
+
 Computes user retention:
+
 - Cohort size (users signed up in month)
 - Retained users per month
 - Retention rate percentages
@@ -104,7 +112,9 @@ Computes user retention:
 Writes to: `user_cohorts` table
 
 #### `aggregateTournaments(tenantId, periodStart, periodEnd, periodType)`
+
 Computes tournament metrics:
+
 - Tournament counts (total, completed)
 - Completion rates
 - Player statistics (total, average)
@@ -115,31 +125,36 @@ Computes tournament metrics:
 Writes to: `tournament_aggregates` table
 
 #### `aggregateAll(tenantId, periodStart, periodEnd, periodType)`
+
 Runs all aggregation types for a period.
 
 #### `getActiveTenants()`
+
 Returns list of all organization IDs for batch processing.
 
 ### 3. Aggregation Job (`jobs/aggregation-job.ts`)
 
 **Responsibilities:**
+
 - Process BullMQ job payloads
 - Call appropriate aggregation service functions
 - Handle errors and retries
 - Report job progress
 
 **Job Payload:**
+
 ```typescript
 interface AggregationJobData {
-  tenantId?: string;  // Optional - if undefined, process all tenants
+  tenantId?: string; // Optional - if undefined, process all tenants
   type: 'revenue' | 'cohorts' | 'tournaments' | 'all';
-  periodStart?: string;  // ISO date string
-  periodEnd?: string;    // ISO date string
+  periodStart?: string; // ISO date string
+  periodEnd?: string; // ISO date string
   periodType?: 'day' | 'week' | 'month' | 'quarter' | 'year';
 }
 ```
 
 **Retry Configuration:**
+
 - Max attempts: 3
 - Backoff: Exponential (5s, 10s, 20s)
 - Failed jobs kept for 7 days
@@ -147,20 +162,22 @@ interface AggregationJobData {
 ### 4. Job Scheduler (`jobs/scheduler.ts`)
 
 **Responsibilities:**
+
 - Define cron schedules for recurring jobs
 - Queue jobs at scheduled times
 - Manage scheduler lifecycle (start/stop/destroy)
 
 **Scheduled Tasks:**
 
-| Task | Schedule | Cron Expression | Description |
-|------|----------|-----------------|-------------|
-| Hourly Aggregation | Every hour at :00 | `0 * * * *` | Run all aggregations |
-| Daily Revenue | Daily at midnight | `0 0 * * *` | Aggregate yesterday's revenue |
-| Monthly Cohorts | 1st of month at 1:00 AM | `0 1 1 * *` | Analyze user cohorts |
-| Weekly Tournaments | Monday at 2:00 AM | `0 2 * * 1` | Aggregate last week's tournaments |
+| Task               | Schedule                | Cron Expression | Description                       |
+| ------------------ | ----------------------- | --------------- | --------------------------------- |
+| Hourly Aggregation | Every hour at :00       | `0 * * * *`     | Run all aggregations              |
+| Daily Revenue      | Daily at midnight       | `0 0 * * *`     | Aggregate yesterday's revenue     |
+| Monthly Cohorts    | 1st of month at 1:00 AM | `0 1 1 * *`     | Analyze user cohorts              |
+| Weekly Tournaments | Monday at 2:00 AM       | `0 2 * * 1`     | Aggregate last week's tournaments |
 
 **Functions:**
+
 - `initializeScheduler()` - Create all scheduled tasks
 - `startScheduler()` - Begin executing schedules
 - `stopScheduler()` - Pause all schedules
@@ -171,12 +188,14 @@ interface AggregationJobData {
 ### 5. Worker Starter (`jobs/start-workers.ts`)
 
 **Responsibilities:**
+
 - Entry point for starting workers
 - Initialize workers and schedulers
 - Handle graceful shutdown
 - Monitor health
 
 **Usage:**
+
 ```bash
 # Start all (workers + schedulers)
 pnpm workers
@@ -192,6 +211,7 @@ pnpm workers --help
 ```
 
 **Features:**
+
 - Graceful shutdown on SIGTERM/SIGINT
 - Uncaught error handling
 - Periodic health checks (every 60s)
@@ -204,6 +224,7 @@ pnpm workers --help
 Stores pre-computed revenue metrics by time period.
 
 **Key Fields:**
+
 - `tenantId` - Organization ID
 - `periodStart`, `periodEnd` - Time period boundaries
 - `periodType` - day, week, month, quarter, year
@@ -219,6 +240,7 @@ Stores pre-computed revenue metrics by time period.
 Stores user retention analysis by signup cohort.
 
 **Key Fields:**
+
 - `tenantId` - Organization ID
 - `cohortMonth` - First day of signup month (YYYY-MM-01)
 - `monthNumber` - Months since signup (0 = signup month, 1 = month 1, etc.)
@@ -233,6 +255,7 @@ Stores user retention analysis by signup cohort.
 Stores tournament performance metrics by time period.
 
 **Key Fields:**
+
 - `tenantId` - Organization ID
 - `periodStart`, `periodEnd` - Time period boundaries
 - `periodType` - day, week, month, quarter, year
@@ -251,6 +274,7 @@ Stores tournament performance metrics by time period.
 ### Prerequisites
 
 1. **Redis** must be running:
+
    ```bash
    # Check if Redis is running
    redis-cli ping
@@ -277,6 +301,7 @@ pnpm workers
 ```
 
 **Expected Output:**
+
 ```
 ============================================================
 Analytics Workers - Background Job Processing
@@ -300,6 +325,7 @@ Sprint 10 Week 1 - Advanced Analytics
 ### Stopping Workers
 
 Press `CTRL+C` to trigger graceful shutdown:
+
 - Stops accepting new jobs
 - Waits for active jobs to complete
 - Closes all connections
@@ -427,6 +453,7 @@ console.log(status);
 ### Job Failures
 
 Jobs that fail are automatically retried up to 3 times with exponential backoff:
+
 - Attempt 1 fails → Wait 5 seconds → Retry
 - Attempt 2 fails → Wait 10 seconds → Retry
 - Attempt 3 fails → Job marked as failed
@@ -440,6 +467,7 @@ If one tenant's aggregation fails, other tenants continue processing. Errors are
 ### Worker Crashes
 
 If a worker crashes:
+
 - BullMQ automatically marks jobs as "stalled"
 - Jobs are automatically reassigned to other workers
 - Workers log stalled jobs for investigation
@@ -471,6 +499,7 @@ limiter: {
 ### Memory Management
 
 Completed jobs are automatically removed:
+
 - Completed jobs: Kept for 24 hours (max 1000 jobs)
 - Failed jobs: Kept for 7 days (max 5000 jobs)
 
@@ -490,6 +519,7 @@ await cleanQueue(86400000);
 **Problem:** Health check fails on startup
 
 **Solutions:**
+
 1. Check Redis is running: `redis-cli ping`
 2. Verify Redis connection settings in environment
 3. Check Redis logs: `redis-cli INFO`
@@ -500,6 +530,7 @@ await cleanQueue(86400000);
 **Problem:** Jobs queued but not processing
 
 **Solutions:**
+
 1. Check if workers are running: `getQueueMetrics()`
 2. Verify worker count and concurrency settings
 3. Check for stalled jobs: Look for "stalled" logs
@@ -510,6 +541,7 @@ await cleanQueue(86400000);
 **Problem:** Jobs fail with aggregation errors
 
 **Solutions:**
+
 1. Check database connectivity
 2. Verify Prisma schema matches database
 3. Check for missing tenant data
@@ -521,6 +553,7 @@ await cleanQueue(86400000);
 **Problem:** Cron jobs not executing
 
 **Solutions:**
+
 1. Verify scheduler is started: `getSchedulerStatus()`
 2. Check timezone settings (`TZ` environment variable)
 3. Validate cron expressions: `validateCronExpression()`
@@ -588,6 +621,7 @@ pnpm workers
 ## Support
 
 For issues or questions:
+
 1. Check logs: `pm2 logs analytics-workers`
 2. Review queue metrics: `getQueueMetrics()`
 3. Check Redis status: `redis-cli INFO`

@@ -10,6 +10,7 @@
 ## Overview
 
 This runbook covers response to ransomware attacks affecting Azure resources:
+
 - VM disk encryption by ransomware
 - Storage account blob/file encryption
 - Database corruption or encryption
@@ -23,6 +24,7 @@ This runbook covers response to ransomware attacks affecting Azure resources:
 ## Detection Indicators
 
 ### Automated Alerts
+
 - Defender for Servers: Ransomware behavior detected
 - Defender for Storage: Mass file deletion/modification
 - Azure Backup: Backup job failures
@@ -31,6 +33,7 @@ This runbook covers response to ransomware attacks affecting Azure resources:
 - File extension changes (.locked, .encrypted, .crypt, etc.)
 
 ### Manual Discovery
+
 - Files inaccessible or encrypted
 - Ransom note in directories (README.txt, HOW_TO_DECRYPT.html)
 - Desktop background changed to ransom demand
@@ -44,6 +47,7 @@ This runbook covers response to ransomware attacks affecting Azure resources:
 ### 1. DO NOT SHUT DOWN AFFECTED VMs
 
 **Critical: Keep VMs running!**
+
 - Encryption keys may be in memory
 - Forensics requires live system
 - Shutting down can make recovery harder
@@ -389,6 +393,7 @@ az backup vault backup-properties set \
 ### Business Impact Assessment
 
 **Calculate costs:**
+
 - Downtime cost = (Revenue/hour) × Hours down
 - Recovery costs (labor, consulting)
 - Data loss impact
@@ -399,6 +404,7 @@ az backup vault backup-properties set \
 ### Root Cause Analysis
 
 **Common Attack Vectors:**
+
 1. **Phishing email** → User downloads malicious attachment
 2. **RDP brute force** → Weak passwords, RDP exposed to internet
 3. **Software vulnerability** → Unpatched systems
@@ -408,6 +414,7 @@ az backup vault backup-properties set \
 ### Regulatory Notifications
 
 **May require notification:**
+
 - **GDPR:** Data breach → 72 hours
 - **HIPAA:** PHI compromised → 60 days
 - **State laws:** PII compromised (varies)
@@ -437,6 +444,7 @@ az monitor activity-log list \
 ## Prevention Checklist
 
 **Immediate (Week 1):**
+
 - [ ] Disable RDP/SSH from internet
 - [ ] Enable JIT access via Defender
 - [ ] Enable immutable backups
@@ -446,6 +454,7 @@ az monitor activity-log list \
 - [ ] Review and revoke excessive permissions
 
 **Short-term (Month 1):**
+
 - [ ] Implement zero trust network access
 - [ ] Enable Defender for Cloud (all plans)
 - [ ] Segment networks (VLANs, subnets, NSGs)
@@ -455,6 +464,7 @@ az monitor activity-log list \
 - [ ] Conduct ransomware simulation drill
 
 **Long-term (Quarter 1):**
+
 - [ ] Air-gapped backup strategy
 - [ ] Incident response team training
 - [ ] Cyber insurance coverage
@@ -468,6 +478,7 @@ az monitor activity-log list \
 ## DO NOT Pay Ransom
 
 **Why?**
+
 1. No guarantee of decryption
 2. Funds terrorist organizations
 3. Makes you a target for repeat attacks
@@ -475,6 +486,7 @@ az monitor activity-log list \
 5. Recovery from backup is faster and cheaper
 
 **If Recovery Fails:**
+
 - Contact professional incident response firm
 - Contact law enforcement (FBI, Secret Service)
 - Check https://www.nomoreransom.org/ for decryptors

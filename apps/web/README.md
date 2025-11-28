@@ -53,6 +53,7 @@ NEXTAUTH_URL=http://localhost:3020
 See `../../.env.example` for all available configuration options.
 
 **Essential services:**
+
 - **Upstash Redis** - Rate limiting & SMS deduplication (production required)
 - **Email (SMTP/SendGrid)** - Email notifications
 - **Twilio** - SMS notifications (optional, configured per-organization)
@@ -95,6 +96,7 @@ pnpm test:coverage    # Generate coverage report
 ```
 
 **Test files:**
+
 - Unit tests: `tests/unit/**/*.test.ts`
 - Integration tests: `tests/integration/**/*.test.ts`
 - API tests: `app/api/**/__tests__/*.test.ts`
@@ -146,17 +148,20 @@ apps/web/
 ## 🎯 Key Features
 
 ### Sprint 1-2: Core Tournament System
+
 - ✅ Organization & player management
 - ✅ Tournament creation & registration
 - ✅ Bracket generation (single/double elimination, round robin, swiss)
 
 ### Sprint 3: Scoring & Payments
+
 - ✅ Match scoring & progression
 - ✅ Real-time bracket updates
 - ✅ Stripe payment integration
 - ✅ Entry fee collection
 
 ### Sprint 4: Notifications (89% Complete)
+
 - ✅ In-app notification system
 - ✅ Email notifications (SMTP/SendGrid)
 - ✅ SMS notifications (Twilio)
@@ -199,6 +204,7 @@ pnpm test app/api/brackets/__tests__
 ### Test Coverage
 
 Current coverage:
+
 - **Notification system:** 95% (64 tests)
 - **Payment system:** 90% (23 tests)
 - **Bracket generation:** 85% (40+ tests)
@@ -231,20 +237,20 @@ See `../../technical/api/` for API endpoint documentation.
 
 ### Required for Production
 
-| Service | Purpose | Setup Guide |
-|---------|---------|-------------|
-| **Upstash Redis** | Rate limiting, deduplication | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#1-upstash-redis-setup) |
-| **Email Provider** | Email notifications | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#2-email-setup) |
-| **PostgreSQL** | Primary database | Auto-configured |
+| Service            | Purpose                      | Setup Guide                                                                  |
+| ------------------ | ---------------------------- | ---------------------------------------------------------------------------- |
+| **Upstash Redis**  | Rate limiting, deduplication | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#1-upstash-redis-setup) |
+| **Email Provider** | Email notifications          | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#2-email-setup)         |
+| **PostgreSQL**     | Primary database             | Auto-configured                                                              |
 
 ### Optional Services
 
-| Service | Purpose | Setup Guide |
-|---------|---------|-------------|
-| **Twilio** | SMS notifications | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#3-twilio-sms-setup) |
-| **Stripe** | Payment processing | [Setup](../../technical/PAYMENT-INTEGRATION.md) |
-| **Sentry** | Error tracking | [Docs](https://docs.sentry.io/) |
-| **PostHog** | Product analytics | [Docs](https://posthog.com/docs) |
+| Service     | Purpose            | Setup Guide                                                               |
+| ----------- | ------------------ | ------------------------------------------------------------------------- |
+| **Twilio**  | SMS notifications  | [Setup](../../technical/NOTIFICATION-SERVICE-SETUP.md#3-twilio-sms-setup) |
+| **Stripe**  | Payment processing | [Setup](../../technical/PAYMENT-INTEGRATION.md)                           |
+| **Sentry**  | Error tracking     | [Docs](https://docs.sentry.io/)                                           |
+| **PostHog** | Product analytics  | [Docs](https://posthog.com/docs)                                          |
 
 ---
 
@@ -260,6 +266,7 @@ pnpm start
 ### Environment Variables (Production)
 
 **Required:**
+
 ```bash
 DATABASE_URL=postgresql://...
 JWT_SECRET=...
@@ -275,6 +282,7 @@ EMAIL_FROM=noreply@yourdomain.com
 ```
 
 **Optional:**
+
 ```bash
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
@@ -283,11 +291,13 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ### Deployment Platforms
 
 **Recommended:**
+
 - **Vercel** - Zero-config Next.js hosting
 - **Railway** - Full-stack hosting with PostgreSQL
 - **Render** - Docker-based hosting
 
 **Database:**
+
 - **Neon** - Serverless PostgreSQL
 - **Supabase** - PostgreSQL with real-time features
 - **Railway** - Integrated PostgreSQL
@@ -305,6 +315,7 @@ Error: Can't reach database server
 ```
 
 **Fix:**
+
 - Verify PostgreSQL is running on port 5420
 - Check `DATABASE_URL` in `.env.local`
 - Run: `pnpm prisma migrate dev`
@@ -312,6 +323,7 @@ Error: Can't reach database server
 #### 2. Notifications Not Sending
 
 **Fix:**
+
 - Check Redis credentials (rate limiting)
 - Verify SMTP credentials (email)
 - Check Twilio credentials (SMS)
@@ -410,6 +422,7 @@ Proprietary - All rights reserved
 ## 💬 Support
 
 **Questions or Issues?**
+
 - Check documentation in `../../technical/`
 - Review sprint summaries in `../../docs/progress/`
 - Check test files for examples

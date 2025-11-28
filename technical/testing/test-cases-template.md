@@ -11,12 +11,14 @@
 
 **Total Test Cases:** [Number]
 **Priority Breakdown:**
+
 - Critical: [#]
 - High: [#]
 - Medium: [#]
 - Low: [#]
 
 **Test Type Breakdown:**
+
 - Unit Tests: [#]
 - Integration Tests: [#]
 - End-to-End Tests: [#]
@@ -31,16 +33,19 @@
 **Status:** ⬜ Not Started | ⬜ Pass | ⬜ Fail | ⬜ Blocked
 
 ### Description
+
 [Brief description of what this test case validates]
 
 ### Preconditions
+
 - [ ] [Prerequisite 1]
 - [ ] [Prerequisite 2]
 - [ ] [System state requirement]
 
 ### Test Data
-| Field | Value | Notes |
-|-------|-------|-------|
+
+| Field        | Value        | Notes            |
+| ------------ | ------------ | ---------------- |
 | [Field name] | [Test value] | [Why this value] |
 
 ### Test Steps
@@ -55,12 +60,14 @@
    - **Expected Result:** [Expected outcome]
 
 ### Expected Results
+
 - [ ] [Overall expected outcome 1]
 - [ ] [Overall expected outcome 2]
 - [ ] [Data validation point]
 - [ ] [UI state verification]
 
 ### Actual Results
+
 > Fill during test execution
 
 **Date Executed:** [Date]
@@ -71,22 +78,27 @@
 [Describe what actually happened]
 
 ### Pass/Fail Criteria
+
 **Pass if:**
+
 - [ ] All expected results match actual results
 - [ ] No errors in console/logs
 - [ ] Performance within acceptable range
 
 **Fail if:**
+
 - [ ] Any expected result doesn't match
 - [ ] Error messages appear
 - [ ] System crashes or hangs
 
 ### Test Evidence
+
 - Screenshots: [Link or attach]
 - Logs: [Link or attach]
 - Screen recording: [Link]
 
 ### Notes
+
 [Any observations, edge cases discovered, or follow-up needed]
 
 ---
@@ -99,9 +111,11 @@
 **Status:** ⬜ Not Started | ⬜ Pass | ⬜ Fail | ⬜ Blocked
 
 ### Description
+
 [What this test validates]
 
 ### Preconditions
+
 - [ ] [Requirement 1]
 - [ ] [Requirement 2]
 
@@ -112,13 +126,16 @@
 3. [Action 3]
 
 ### Expected Results
+
 - [ ] [Expected outcome 1]
 - [ ] [Expected outcome 2]
 
 ### Actual Results
+
 [To be filled during execution]
 
 ### Notes
+
 [Additional context]
 
 ---
@@ -134,10 +151,12 @@
 **Scenario:** [Describe the edge case]
 
 **Test Steps:**
+
 1. [Unusual input or condition]
 2. [System behavior to verify]
 
 **Expected Behavior:**
+
 - [How system should handle this edge case]
 - [Error message if applicable]
 - [Recovery behavior]
@@ -169,10 +188,12 @@
 **Test:** [What error condition to test]
 
 **Steps to Trigger Error:**
+
 1. [Action that causes error]
 2. [Verify error handling]
 
 **Expected Error Handling:**
+
 - [ ] Appropriate error message shown
 - [ ] User guided to resolution
 - [ ] System remains stable
@@ -190,12 +211,14 @@
 **Test Scenario:** [What integration to verify]
 
 **Test Steps:**
+
 1. **Trigger:** [Action in Service A]
 2. **Verify:** [Expected call to Service B]
 3. **Validate:** [Expected data passed]
 4. **Confirm:** [Expected response received]
 
 **Success Criteria:**
+
 - [ ] API call made with correct payload
 - [ ] Response received within timeout
 - [ ] Data format matches contract
@@ -234,6 +257,7 @@
    - Expected: [Data retrievable and correct]
 
 **End-to-End Validation:**
+
 - [ ] Complete workflow successful
 - [ ] All intermediate states correct
 - [ ] Data persisted correctly
@@ -249,6 +273,7 @@
 **Test:** [What performance aspect to measure]
 
 **Test Configuration:**
+
 - Load: [Number of concurrent users]
 - Duration: [Test duration]
 - Ramp-up: [How load increases]
@@ -277,11 +302,13 @@
 [Describe the attack attempt]
 
 **Test Steps:**
+
 1. [Attempt to exploit]
 2. [Verify protection mechanism]
 3. [Check for security logging]
 
 **Expected Security Behavior:**
+
 - [ ] Attack blocked/prevented
 - [ ] Appropriate error message (not revealing system info)
 - [ ] Security event logged
@@ -289,6 +316,7 @@
 - [ ] Data not exposed
 
 **Security Validation:**
+
 - [ ] Authentication required
 - [ ] Authorization enforced
 - [ ] Input sanitized
@@ -307,11 +335,13 @@
 **Test Scenario:** [What accessibility feature to verify]
 
 **Test Steps:**
+
 1. [Using assistive technology]
 2. [Navigate to feature]
 3. [Attempt interaction]
 
 **Accessibility Criteria:**
+
 - [ ] Keyboard navigable
 - [ ] Screen reader announces correctly
 - [ ] Focus indicators visible
@@ -339,6 +369,7 @@
 | Chrome Mobile | Latest | Android | ⬜ | |
 
 **Test Checklist (per browser):**
+
 - [ ] Layout renders correctly
 - [ ] Functionality works
 - [ ] No console errors
@@ -359,6 +390,7 @@
 | Tablet | 1024x768 | Landscape | ⬜ |
 
 **Responsive Criteria:**
+
 - [ ] Content readable at all sizes
 - [ ] Touch targets min 44x44px
 - [ ] No horizontal scrolling
@@ -376,11 +408,13 @@
 **Feature:** [What to verify hasn't broken]
 
 **Quick Smoke Test:**
+
 1. [Essential function 1] ✓ / ✗
 2. [Essential function 2] ✓ / ✗
 3. [Essential function 3] ✓ / ✗
 
 **Full Regression:**
+
 - [ ] Reference TC-XXX (previous test case)
 - [ ] All previous test cases still pass
 
@@ -395,17 +429,17 @@
 **Environment:** [Environment name]
 **Tester:** [Name]
 
-| Test Case ID | Status | Execution Time | Notes |
-|--------------|--------|----------------|-------|
-| TC-001 | ✓ Pass | 3 min | |
-| TC-002 | ✗ Fail | 2 min | Bug logged: BUG-123 |
-| TC-003 | ⬜ Blocked | - | Waiting on API fix |
+| Test Case ID | Status     | Execution Time | Notes               |
+| ------------ | ---------- | -------------- | ------------------- |
+| TC-001       | ✓ Pass     | 3 min          |                     |
+| TC-002       | ✗ Fail     | 2 min          | Bug logged: BUG-123 |
+| TC-003       | ⬜ Blocked | -              | Waiting on API fix  |
 
 ### Bugs Found
 
-| Bug ID | Test Case | Severity | Status | Description |
-|--------|-----------|----------|--------|-------------|
-| BUG-123 | TC-002 | High | Open | [Brief description] |
+| Bug ID  | Test Case | Severity | Status | Description         |
+| ------- | --------- | -------- | ------ | ------------------- |
+| BUG-123 | TC-002    | High     | Open   | [Brief description] |
 
 ---
 
@@ -420,12 +454,15 @@
 **Description:**
 
 **Preconditions:**
+
 - [ ]
 
 **Test Steps:**
+
 1.
 
 **Expected Results:**
+
 - [ ]
 
 **Actual Results:**
@@ -437,11 +474,13 @@
 ## Notes and Observations
 
 **Testing Notes:**
+
 - [Any patterns observed]
 - [Common failure modes]
 - [Areas needing more test coverage]
 
 **Improvement Suggestions:**
+
 - [How to improve test cases]
 - [Additional scenarios to add]
 - [Test automation opportunities]

@@ -58,13 +58,16 @@ export interface RenderedTemplate {
 // DEFAULT TEMPLATES
 // ============================================================================
 
-const DEFAULT_TEMPLATES: Record<NotificationTemplateType, {
-  emailSubject: string;
-  emailBody: string;
-  smsBody: string;
-  inAppTitle: string;
-  inAppBody: string;
-}> = {
+const DEFAULT_TEMPLATES: Record<
+  NotificationTemplateType,
+  {
+    emailSubject: string;
+    emailBody: string;
+    smsBody: string;
+    inAppTitle: string;
+    inAppBody: string;
+  }
+> = {
   match_completed: {
     emailSubject: 'Match Result - {{tournamentName}}',
     emailBody: `
@@ -91,7 +94,8 @@ const DEFAULT_TEMPLATES: Record<NotificationTemplateType, {
       <p>View match details: <a href="{{actionUrl}}">{{actionUrl}}</a></p>
       <p>Good luck!</p>
     `,
-    smsBody: 'Upcoming match vs {{matchOpponent}} at {{matchTime}}. Location: {{matchLocation}}. Details: {{actionUrl}}',
+    smsBody:
+      'Upcoming match vs {{matchOpponent}} at {{matchTime}}. Location: {{matchLocation}}. Details: {{actionUrl}}',
     inAppTitle: 'Upcoming Match',
     inAppBody: 'Match vs {{matchOpponent}} at {{matchTime}}. Location: {{matchLocation}}',
   },
@@ -195,15 +199,9 @@ export function renderEmailTemplate(
 ): RenderedTemplate {
   const defaultTemplate = DEFAULT_TEMPLATES[type];
 
-  const subject = interpolate(
-    customTemplate?.subject || defaultTemplate.emailSubject,
-    variables
-  );
+  const subject = interpolate(customTemplate?.subject || defaultTemplate.emailSubject, variables);
 
-  const body = interpolate(
-    customTemplate?.body || defaultTemplate.emailBody,
-    variables
-  );
+  const body = interpolate(customTemplate?.body || defaultTemplate.emailBody, variables);
 
   return { subject, body };
 }
@@ -218,16 +216,11 @@ export function renderSMSTemplate(
 ): RenderedTemplate {
   const defaultTemplate = DEFAULT_TEMPLATES[type];
 
-  const body = interpolate(
-    customTemplate || defaultTemplate.smsBody,
-    variables
-  );
+  const body = interpolate(customTemplate || defaultTemplate.smsBody, variables);
 
   // SMS character limit: 160 chars (standard), 306 chars (extended)
   const maxLength = 306;
-  const truncatedBody = body.length > maxLength
-    ? body.substring(0, maxLength - 3) + '...'
-    : body;
+  const truncatedBody = body.length > maxLength ? body.substring(0, maxLength - 3) + '...' : body;
 
   return { body: truncatedBody };
 }
@@ -242,15 +235,9 @@ export function renderInAppTemplate(
 ): { title: string; body: string } {
   const defaultTemplate = DEFAULT_TEMPLATES[type];
 
-  const title = interpolate(
-    customTemplate?.title || defaultTemplate.inAppTitle,
-    variables
-  );
+  const title = interpolate(customTemplate?.title || defaultTemplate.inAppTitle, variables);
 
-  const body = interpolate(
-    customTemplate?.body || defaultTemplate.inAppBody,
-    variables
-  );
+  const body = interpolate(customTemplate?.body || defaultTemplate.inAppBody, variables);
 
   return { title, body };
 }

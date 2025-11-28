@@ -11,6 +11,7 @@ All endpoints are relative to: `/api/admin`
 ## Authentication
 
 All endpoints require:
+
 - Valid session with authenticated user
 - User must have `admin` role
 - Organization context must be set
@@ -24,6 +25,7 @@ All endpoints require:
 List all users with filtering, sorting, and pagination.
 
 **Query Parameters:**
+
 - `page` (number, optional): Page number (default: 1)
 - `pageSize` (number, optional): Items per page (default: 20)
 - `query` (string, optional): Search by name or email
@@ -34,6 +36,7 @@ List all users with filtering, sorting, and pagination.
 - `sortOrder` (string, optional): Sort direction (asc, desc)
 
 **Response:**
+
 ```json
 {
   "users": [
@@ -62,6 +65,7 @@ List all users with filtering, sorting, and pagination.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not an admin
@@ -73,6 +77,7 @@ List all users with filtering, sorting, and pagination.
 Get detailed information about a specific user.
 
 **Response:**
+
 ```json
 {
   "user": {
@@ -143,6 +148,7 @@ Get detailed information about a specific user.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `404 Not Found`: User not found
 - `401 Unauthorized`: Not authenticated
@@ -155,6 +161,7 @@ Get detailed information about a specific user.
 Update user information.
 
 **Request Body:**
+
 ```json
 {
   "name": "John Doe Updated",
@@ -166,6 +173,7 @@ Update user information.
 ```
 
 **Response:**
+
 ```json
 {
   "user": {
@@ -180,6 +188,7 @@ Update user information.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `400 Bad Request`: Validation error
 - `404 Not Found`: User not found
@@ -196,6 +205,7 @@ Permanently delete a user account.
 **Warning:** This is a destructive action that cannot be undone.
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -204,6 +214,7 @@ Permanently delete a user account.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `404 Not Found`: User not found
 - `401 Unauthorized`: Not authenticated
@@ -216,6 +227,7 @@ Permanently delete a user account.
 Perform moderation actions on a user.
 
 **Request Body:**
+
 ```json
 {
   "action": "warn|suspend|ban|unban|unsuspend",
@@ -226,12 +238,14 @@ Perform moderation actions on a user.
 ```
 
 **Fields:**
+
 - `action` (required): Type of moderation action
 - `reason` (required): Explanation for the action
 - `duration` (optional): Days for suspension (only for suspend action)
 - `notifyUser` (optional): Whether to send notification (default: true)
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -254,6 +268,7 @@ Perform moderation actions on a user.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `400 Bad Request`: Invalid action or missing required fields
 - `404 Not Found`: User not found
@@ -267,6 +282,7 @@ Perform moderation actions on a user.
 Perform bulk operations on multiple users.
 
 **Request Body:**
+
 ```json
 {
   "userIds": ["usr_123", "usr_456"],
@@ -280,6 +296,7 @@ Perform bulk operations on multiple users.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -299,6 +316,7 @@ Perform bulk operations on multiple users.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success (even if some operations failed)
 - `400 Bad Request`: Invalid operation or data
 - `401 Unauthorized`: Not authenticated
@@ -313,12 +331,14 @@ Perform bulk operations on multiple users.
 Get detailed activity log for a user.
 
 **Query Parameters:**
+
 - `limit` (number, optional): Number of activities to return (default: 50)
 - `offset` (number, optional): Pagination offset (default: 0)
 - `action` (string, optional): Filter by action type
 - `resource` (string, optional): Filter by resource type
 
 **Response:**
+
 ```json
 {
   "activities": [
@@ -343,6 +363,7 @@ Get detailed activity log for a user.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `404 Not Found`: User not found
 - `401 Unauthorized`: Not authenticated
@@ -357,6 +378,7 @@ Get detailed activity log for a user.
 Get list of all available roles and their permissions.
 
 **Response:**
+
 ```json
 {
   "roles": [
@@ -381,17 +403,14 @@ Get list of all available roles and their permissions.
       "id": "player",
       "name": "Player",
       "description": "Basic user access",
-      "permissions": [
-        "tournaments:view:own",
-        "profile:view:own",
-        "profile:edit:own"
-      ]
+      "permissions": ["tournaments:view:own", "profile:view:own", "profile:edit:own"]
     }
   ]
 }
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not an admin
@@ -403,6 +422,7 @@ Get list of all available roles and their permissions.
 Get list of all available permissions.
 
 **Response:**
+
 ```json
 {
   "permissions": [
@@ -423,6 +443,7 @@ Get list of all available permissions.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not an admin
@@ -436,6 +457,7 @@ Get list of all available permissions.
 Get aggregate statistics about users.
 
 **Response:**
+
 ```json
 {
   "totalUsers": 150,
@@ -455,6 +477,7 @@ Get aggregate statistics about users.
 ```
 
 **Status Codes:**
+
 - `200 OK`: Success
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not an admin
@@ -466,6 +489,7 @@ Get aggregate statistics about users.
 ### Database Queries
 
 All user list endpoints should:
+
 1. Include organization membership information
 2. Calculate aggregate statistics (tournaments, matches, wins)
 3. Use efficient joins and indexing
@@ -474,6 +498,7 @@ All user list endpoints should:
 ### Audit Logging
 
 All moderation actions must:
+
 1. Create an entry in `UserModerationAction` table
 2. Create an entry in `AuditLog` table
 3. Include actor information (who performed the action)
@@ -482,6 +507,7 @@ All moderation actions must:
 ### Notifications
 
 When moderation actions are performed:
+
 1. Send in-app notification to affected user
 2. Send email notification if enabled
 3. Log notification delivery status
@@ -558,6 +584,7 @@ All endpoints return errors in this format:
 ### Test Data
 
 Seed database with:
+
 - 3 admin users
 - 20 organizer users
 - 100 player users

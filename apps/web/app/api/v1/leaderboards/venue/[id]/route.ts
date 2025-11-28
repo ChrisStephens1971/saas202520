@@ -17,19 +17,13 @@ interface LeaderboardEntry {
   matches_played: number;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate API request and get tenant context
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -42,12 +36,7 @@ export async function GET(
     const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 500);
 
     // Get venue leaderboard
-    const leaderboard = await getVenueLeaderboard(
-      tenantId,
-      venueId,
-      type,
-      limit
-    );
+    const leaderboard = await getVenueLeaderboard(tenantId, venueId, type, limit);
 
     return NextResponse.json({
       data: leaderboard,

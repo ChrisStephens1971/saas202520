@@ -1,19 +1,17 @@
 # PWA Integration Examples
+
 **Sprint 10 Week 4 - Real-World Usage Examples**
 
 ## Example 1: Basic App Setup
 
 ### Root Layout Integration
+
 ```tsx
 // app/layout.tsx
 import { PWAProvider } from '@/components/mobile/PWAProvider';
 import { Toaster } from '@/components/ui/toaster';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -45,6 +43,7 @@ export default function RootLayout({
 ## Example 2: Navigation with Install Button
 
 ### Header Component
+
 ```tsx
 // components/Header.tsx
 'use client';
@@ -66,10 +65,7 @@ export function Header() {
           <InstallButton />
 
           {/* Notifications Link */}
-          <Link
-            href="/settings/notifications"
-            className="rounded-lg p-2 hover:bg-gray-100"
-          >
+          <Link href="/settings/notifications" className="rounded-lg p-2 hover:bg-gray-100">
             <Bell className="h-5 w-5" />
           </Link>
         </div>
@@ -84,6 +80,7 @@ export function Header() {
 ## Example 3: Settings Page with Notifications
 
 ### Settings Page
+
 ```tsx
 // app/settings/notifications/page.tsx
 import { NotificationSettings } from '@/components/settings/NotificationSettings';
@@ -102,6 +99,7 @@ export default function NotificationsPage() {
 ## Example 4: Onboarding with Permission Request
 
 ### Onboarding Flow
+
 ```tsx
 // app/onboarding/page.tsx
 'use client';
@@ -133,9 +131,7 @@ export default function OnboardingPage() {
         <div>
           <h2>Stay Updated</h2>
           <p>Enable notifications to never miss a match or tournament update.</p>
-          <button onClick={() => setShowPushDialog(true)}>
-            Enable Notifications
-          </button>
+          <button onClick={() => setShowPushDialog(true)}>Enable Notifications</button>
           <button onClick={handleComplete}>Skip</button>
         </div>
       )}
@@ -155,17 +151,14 @@ export default function OnboardingPage() {
 ## Example 5: Tournament Notifications
 
 ### Send Match Start Notification
+
 ```typescript
 // lib/notifications/match-notifications.ts
 import { prisma } from '@/lib/prisma';
 import webpush from 'web-push';
 import { VAPID_CONFIG } from '@/lib/pwa/vapid-keys';
 
-webpush.setVapidDetails(
-  VAPID_CONFIG.subject,
-  VAPID_CONFIG.publicKey,
-  VAPID_CONFIG.privateKey
-);
+webpush.setVapidDetails(VAPID_CONFIG.subject, VAPID_CONFIG.publicKey, VAPID_CONFIG.privateKey);
 
 export async function sendMatchStartNotification(
   matchId: string,
@@ -237,9 +230,11 @@ export async function sendMatchStartNotification(
     if (result.status === 'rejected') {
       console.error('Failed to send notification:', result.reason);
       // Optionally remove invalid subscription
-      prisma.pushSubscription.delete({
-        where: { id: subscriptions[index].id },
-      }).catch(console.error);
+      prisma.pushSubscription
+        .delete({
+          where: { id: subscriptions[index].id },
+        })
+        .catch(console.error);
     }
   });
 
@@ -248,6 +243,7 @@ export async function sendMatchStartNotification(
 ```
 
 ### Schedule Match Notifications
+
 ```typescript
 // lib/notifications/scheduler.ts
 import cron from 'node-cron';
@@ -287,6 +283,7 @@ cron.schedule('* * * * *', async () => {
 ## Example 6: Tournament Bracket Updates
 
 ### Send Bracket Update
+
 ```typescript
 // lib/notifications/tournament-notifications.ts
 import { prisma } from '@/lib/prisma';
@@ -353,6 +350,7 @@ export async function sendBracketUpdateNotification(tournamentId: string) {
 ## Example 7: Achievement Notifications
 
 ### Send Achievement
+
 ```typescript
 // lib/notifications/achievement-notifications.ts
 export async function sendAchievementNotification(
@@ -406,13 +404,10 @@ export async function sendAchievementNotification(
 ## Example 8: System Announcements
 
 ### Broadcast Announcement
+
 ```typescript
 // lib/notifications/announcement-notifications.ts
-export async function broadcastAnnouncement(
-  title: string,
-  message: string,
-  url: string = '/'
-) {
+export async function broadcastAnnouncement(title: string, message: string, url: string = '/') {
   // Get all active subscriptions
   const subscriptions = await prisma.pushSubscription.findMany();
 
@@ -465,6 +460,7 @@ export async function broadcastAnnouncement(
 ## Example 9: Tournament Reminders
 
 ### Schedule Reminder
+
 ```typescript
 // lib/notifications/reminder-notifications.ts
 import cron from 'node-cron';
@@ -539,6 +535,7 @@ cron.schedule('0 10 * * *', async () => {
 ## Example 10: Custom Hook for Notifications
 
 ### useNotifications Hook
+
 ```typescript
 // hooks/useNotifications.ts
 'use client';
@@ -550,9 +547,7 @@ import type { NotificationPreferences } from '@/lib/pwa/push-notifications';
 export function useNotifications() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [preferences, setPreferences] = useState<NotificationPreferences | null>(
-    null
-  );
+  const [preferences, setPreferences] = useState<NotificationPreferences | null>(null);
 
   useEffect(() => {
     checkSubscription();
@@ -612,6 +607,7 @@ export function useNotifications() {
 ```
 
 ### Usage in Component
+
 ```tsx
 // components/NotificationToggle.tsx
 'use client';
@@ -635,11 +631,7 @@ export function NotificationToggle() {
       disabled={isLoading}
       className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
     >
-      {isLoading
-        ? 'Loading...'
-        : isSubscribed
-          ? 'Disable Notifications'
-          : 'Enable Notifications'}
+      {isLoading ? 'Loading...' : isSubscribed ? 'Disable Notifications' : 'Enable Notifications'}
     </button>
   );
 }
@@ -650,6 +642,7 @@ export function NotificationToggle() {
 ## Example 11: Analytics Integration
 
 ### Track Notification Events
+
 ```typescript
 // lib/analytics/notification-events.ts
 export function trackInstallPromptShown(platform: string) {
@@ -704,25 +697,30 @@ export function trackNotificationClicked(type: string) {
 ## Complete Integration Summary
 
 ### 1. Root Setup
+
 - Add `PWAProvider` to root layout
 - Include manifest link and meta tags
 - Set up theme colors
 
 ### 2. Navigation
+
 - Add `InstallButton` to header
 - Link to notification settings
 
 ### 3. Onboarding
+
 - Show `PushPermissionDialog` during onboarding
 - Explain benefits clearly
 - Track conversion
 
 ### 4. Settings
+
 - Full `NotificationSettings` component
 - Per-type preferences
 - Quiet hours configuration
 
 ### 5. Backend Integration
+
 - Send match notifications (15 min before)
 - Send tournament updates (bracket changes)
 - Send achievement notifications (immediate)
@@ -730,6 +728,7 @@ export function trackNotificationClicked(type: string) {
 - Send tournament reminders (day before)
 
 ### 6. Analytics
+
 - Track install conversions
 - Track notification engagement
 - Track permission grants
@@ -738,6 +737,7 @@ export function trackNotificationClicked(type: string) {
 ---
 
 **See also:**
+
 - 📖 `docs/PWA-IMPLEMENTATION-GUIDE.md` - Complete technical guide
 - 📋 `docs/PWA-SETUP-CHECKLIST.md` - Quick setup
 - 📝 `docs/PWA-QUICK-REFERENCE.md` - Developer reference

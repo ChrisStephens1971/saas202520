@@ -5,11 +5,7 @@
  * Server-side utilities to emit Socket.io events when tournament data changes
  */
 
-import {
-  emitToTournament,
-  emitToUser,
-  getIO,
-} from './server';
+import { emitToTournament, emitToUser, getIO } from './server';
 import {
   SocketEvent,
   TournamentUpdatedPayload,
@@ -201,7 +197,9 @@ export function notifyChipsAwarded(
     timestamp: new Date().toISOString(),
   } as any);
 
-  console.log(`[Socket] Chips awarded: ${chipsAwarded} to ${playerId} in tournament ${tournamentId}`);
+  console.log(
+    `[Socket] Chips awarded: ${chipsAwarded} to ${playerId} in tournament ${tournamentId}`
+  );
 }
 
 /**
@@ -288,10 +286,7 @@ export function notifyBracketAdvanced(
 /**
  * Emit tournament started event
  */
-export function notifyTournamentStarted(
-  tournamentId: string,
-  tournamentName: string
-): void {
+export function notifyTournamentStarted(tournamentId: string, tournamentName: string): void {
   emitToTournament(tournamentId, SocketEvent.TOURNAMENT_UPDATED, {
     tournamentId,
     name: tournamentName,

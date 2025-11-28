@@ -56,7 +56,10 @@ class PerformanceMonitor {
       };
     }
 
-    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    const connection =
+      (navigator as any).connection ||
+      (navigator as any).mozConnection ||
+      (navigator as any).webkitConnection;
 
     return {
       userAgent: navigator.userAgent,
@@ -109,7 +112,8 @@ class PerformanceMonitor {
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
       const target = PERFORMANCE_TARGETS[metric.name as keyof typeof PERFORMANCE_TARGETS];
-      const emoji = metric.rating === 'good' ? '✅' : metric.rating === 'needs-improvement' ? '⚠️' : '❌';
+      const emoji =
+        metric.rating === 'good' ? '✅' : metric.rating === 'needs-improvement' ? '⚠️' : '❌';
 
       console.log(
         `${emoji} [Performance] ${metric.name}: ${metric.value.toFixed(2)}ms (${metric.rating})`,

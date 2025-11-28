@@ -11,14 +11,7 @@
  */
 
 import { PrismaClient, Prisma } from '@prisma/client';
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  addMonths,
-  
-  format,
-} from 'date-fns';
+import { startOfMonth, endOfMonth, subMonths, addMonths, format } from 'date-fns';
 import { aggregateAll } from './aggregation-service';
 
 const prisma = new PrismaClient();
@@ -47,7 +40,7 @@ const DEFAULT_CONFIG: SeederConfig = {
   baseRevenue: 5000,
   baseTournaments: 50,
   growthRate: 0.08, // 8% monthly growth
-  churnRate: 0.20, // 20% monthly churn
+  churnRate: 0.2, // 20% monthly churn
   seasonality: true,
 };
 
@@ -94,9 +87,7 @@ export async function seedAnalyticsData(
     await aggregateAll(tenantId, monthStart, monthEnd, 'month');
   }
 
-  console.log(
-    `[Seeder] Analytics data generation complete for tenant: ${tenantId}`
-  );
+  console.log(`[Seeder] Analytics data generation complete for tenant: ${tenantId}`);
 }
 
 /**
@@ -125,9 +116,7 @@ export async function seedUserCohortData(
     const cohortMonth = startOfMonth(addMonths(startDate, i));
 
     // Apply growth and seasonality
-    const seasonalFactor = config.seasonality
-      ? 1 + 0.2 * Math.sin((i / 12) * 2 * Math.PI)
-      : 1;
+    const seasonalFactor = config.seasonality ? 1 + 0.2 * Math.sin((i / 12) * 2 * Math.PI) : 1;
     const cohortSize = Math.round(
       config.baseUsers * Math.pow(1 + config.growthRate, i) * seasonalFactor
     );
@@ -139,9 +128,7 @@ export async function seedUserCohortData(
 
     for (let monthNum = 0; monthNum <= monthsFromCohort; monthNum++) {
       // Exponential retention decay
-      const retentionRate =
-        100 * Math.pow(1 - config.churnRate, monthNum) +
-        Math.random() * 5; // Add some noise
+      const retentionRate = 100 * Math.pow(1 - config.churnRate, monthNum) + Math.random() * 5; // Add some noise
       const retainedUsers = Math.round((cohortSize * retentionRate) / 100);
 
       // Calculate revenue for this cohort-month
@@ -208,13 +195,8 @@ export async function seedRevenueData(
     const monthEnd = endOfMonth(monthStart);
 
     // Apply growth and seasonality
-    const seasonalFactor = config.seasonality
-      ? 1 + 0.15 * Math.sin((i / 12) * 2 * Math.PI)
-      : 1;
-    const monthlyRevenue =
-      config.baseRevenue *
-      Math.pow(1 + config.growthRate, i) *
-      seasonalFactor;
+    const seasonalFactor = config.seasonality ? 1 + 0.15 * Math.sin((i / 12) * 2 * Math.PI) : 1;
+    const monthlyRevenue = config.baseRevenue * Math.pow(1 + config.growthRate, i) * seasonalFactor;
 
     // Calculate MRR and ARR
     const mrr = monthlyRevenue;
@@ -222,7 +204,7 @@ export async function seedRevenueData(
 
     // Simulate new/churned/expansion revenue
     const newRevenue = monthlyRevenue * 0.25; // 25% from new customers
-    const churnedRevenue = monthlyRevenue * 0.10; // 10% churned
+    const churnedRevenue = monthlyRevenue * 0.1; // 10% churned
     const expansionRevenue = monthlyRevenue * 0.15; // 15% from upsells
     const totalRevenue = monthlyRevenue;
 
@@ -298,20 +280,13 @@ export async function seedTournamentData(
       ? 1 + 0.3 * Math.sin((i / 12) * 2 * Math.PI + Math.PI / 2)
       : 1;
     const tournamentCount = Math.round(
-      config.baseTournaments *
-        Math.pow(1 + config.growthRate, i) *
-        seasonalFactor
+      config.baseTournaments * Math.pow(1 + config.growthRate, i) * seasonalFactor
     );
 
     // Completion rate improves over time (learning curve)
     const baseCompletionRate = 65;
-    const completionRate = Math.min(
-      95,
-      baseCompletionRate + i * 2 + Math.random() * 5
-    );
-    const completedCount = Math.round(
-      (tournamentCount * completionRate) / 100
-    );
+    const completionRate = Math.min(95, baseCompletionRate + i * 2 + Math.random() * 5);
+    const completedCount = Math.round((tournamentCount * completionRate) / 100);
 
     // Player statistics
     const avgPlayersPerTournament = 16 + Math.random() * 16; // 16-32 players
@@ -378,10 +353,7 @@ export async function clearTestData(tenantId: string): Promise<void> {
  * @param tenantIds - Array of organization IDs
  * @param months - Number of months to generate
  */
-export async function seedMultipleTenants(
-  tenantIds: string[],
-  months: number = 12
-): Promise<void> {
+export async function seedMultipleTenants(tenantIds: string[], months: number = 12): Promise<void> {
   console.log(`[Seeder] Seeding data for ${tenantIds.length} tenants...`);
 
   for (const tenantId of tenantIds) {

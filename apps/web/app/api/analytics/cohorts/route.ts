@@ -238,29 +238,25 @@ export async function GET(request: NextRequest) {
     });
 
     // 8. Build cohort analysis
-    const cohorts: CohortAnalysis[] = Array.from(cohortMap.entries()).map(
-      ([cohortKey, data]) => {
-        const initialData = data.find((d) => d.monthNumber === 0);
-        const totalRevenue = data.reduce((sum, d) => sum + (d.revenue || 0), 0);
-        const ltvValues = data.filter((d) => d.ltv !== null).map((d) => d.ltv as number);
-        const averageLtv =
-          ltvValues.length > 0
-            ? ltvValues.reduce((sum, ltv) => sum + ltv, 0) / ltvValues.length
-            : 0;
+    const cohorts: CohortAnalysis[] = Array.from(cohortMap.entries()).map(([cohortKey, data]) => {
+      const initialData = data.find((d) => d.monthNumber === 0);
+      const totalRevenue = data.reduce((sum, d) => sum + (d.revenue || 0), 0);
+      const ltvValues = data.filter((d) => d.ltv !== null).map((d) => d.ltv as number);
+      const averageLtv =
+        ltvValues.length > 0 ? ltvValues.reduce((sum, ltv) => sum + ltv, 0) / ltvValues.length : 0;
 
-        return {
-          cohort: cohortKey,
-          initialSize: initialData?.cohortSize || 0,
-          retentionByMonth: data.map((d) => ({
-            month: d.monthNumber,
-            retained: d.retainedUsers,
-            rate: d.retentionRate,
-          })),
-          totalRevenue,
-          averageLtv,
-        };
-      }
-    );
+      return {
+        cohort: cohortKey,
+        initialSize: initialData?.cohortSize || 0,
+        retentionByMonth: data.map((d) => ({
+          month: d.monthNumber,
+          retained: d.retainedUsers,
+          rate: d.retentionRate,
+        })),
+        totalRevenue,
+        averageLtv,
+      };
+    });
 
     // 9. Calculate summary statistics
     const calculateAverageRetention = (monthNum: number): number => {

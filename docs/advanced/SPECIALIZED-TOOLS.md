@@ -11,10 +11,12 @@
 **Most projects don't need these tools.**
 
 If you're building a standard SaaS application, use:
+
 - Built-in templates (planning)
 - Claude Code Templates (development)
 
 **Only explore these if you have specific needs** like:
+
 - Framework-specific patterns (Django, FastAPI)
 - Payment processing (Stripe)
 - AI-powered features
@@ -28,12 +30,14 @@ If you're building a standard SaaS application, use:
 **When:** You're using specific frameworks and want deep expertise.
 
 ### Django Specialist
+
 ```bash
 /plugin marketplace add wshobson/agents
 /plugin install python-development
 ```
 
 **Provides:**
+
 - `django-pro` agent - Django 5.x patterns
 - Django ORM optimization
 - Django Rest Framework best practices
@@ -45,11 +49,13 @@ If you're building a standard SaaS application, use:
 ---
 
 ### FastAPI Specialist
+
 ```bash
 /plugin install python-development
 ```
 
 **Provides:**
+
 - `fastapi-pro` agent - FastAPI async patterns
 - Pydantic V2 models
 - SQLAlchemy 2.0 integration
@@ -61,11 +67,13 @@ If you're building a standard SaaS application, use:
 ---
 
 ### GraphQL Specialist
+
 ```bash
 /plugin install backend-development
 ```
 
 **Provides:**
+
 - `graphql-architect` agent - GraphQL schema design
 - Federation patterns
 - Performance optimization
@@ -85,6 +93,7 @@ If you're building a standard SaaS application, use:
 ```
 
 **Provides:**
+
 - Stripe integration patterns
 - PayPal integration
 - Subscription billing logic
@@ -92,6 +101,7 @@ If you're building a standard SaaS application, use:
 - PCI compliance guidance
 
 **Use when:**
+
 - Implementing SaaS billing
 - Adding payment processing
 - Building subscription features
@@ -109,6 +119,7 @@ If you're building a standard SaaS application, use:
 ```
 
 **Provides:**
+
 - LangChain integration
 - Retrieval-Augmented Generation (RAG)
 - Prompt engineering patterns
@@ -116,6 +127,7 @@ If you're building a standard SaaS application, use:
 - Model evaluation
 
 **Use when:**
+
 - Adding AI chat features
 - Building recommendation systems
 - Implementing semantic search
@@ -132,6 +144,7 @@ If you're building a standard SaaS application, use:
 ```
 
 **Provides:**
+
 - SEO-optimized content generation
 - Technical SEO analysis
 - Content strategy
@@ -139,6 +152,7 @@ If you're building a standard SaaS application, use:
 - Meta description generation
 
 **Use when:**
+
 - Building content-heavy SaaS
 - Marketing website optimization
 - Blog content generation
@@ -155,6 +169,7 @@ If you're building a standard SaaS application, use:
 ```
 
 **Provides:**
+
 - 12-step feature development workflow:
   1. Database design
   2. Backend architecture
@@ -170,6 +185,7 @@ If you're building a standard SaaS application, use:
   12. Performance optimization
 
 **Use when:**
+
 - Building complex features that span full stack
 - Need coordinated multi-agent workflow
 - Want opinionated end-to-end process
@@ -181,21 +197,27 @@ If you're building a standard SaaS application, use:
 ## 🎮 Niche Domains
 
 ### Blockchain & Web3
+
 ```bash
 /plugin install blockchain-web3
 ```
+
 **Use when:** Building blockchain/crypto features
 
 ### Gaming Development
+
 ```bash
 /plugin install gaming-development
 ```
+
 **Use when:** Building game-related features
 
 ### Quantitative Trading
+
 ```bash
 /plugin install quantitative-trading
 ```
+
 **Use when:** Building fintech/trading platforms
 
 ---
@@ -203,21 +225,25 @@ If you're building a standard SaaS application, use:
 ## 📚 How to Use WSHobson Plugins
 
 ### Step 1: Add Marketplace
+
 ```bash
 /plugin marketplace add wshobson/agents
 ```
 
 ### Step 2: Install Specific Plugin
+
 ```bash
 /plugin install [plugin-name]
 ```
 
 ### Step 3: Use Agent
+
 ```bash
 /[plugin-name]:[agent-name] "task description"
 ```
 
 **Example:**
+
 ```bash
 /python-development:fastapi-pro "create user authentication with JWT"
 ```
@@ -227,6 +253,7 @@ If you're building a standard SaaS application, use:
 ## 🤔 Should You Use These?
 
 **Use if:**
+
 - ✅ You need framework-specific expertise (Django/FastAPI/GraphQL)
 - ✅ You're implementing payments (Stripe/PayPal)
 - ✅ You're building AI features (LLM/RAG)
@@ -234,6 +261,7 @@ If you're building a standard SaaS application, use:
 - ✅ Your project is in a niche domain (blockchain/gaming/trading)
 
 **Don't use if:**
+
 - ❌ You're building a standard SaaS MVP
 - ❌ Claude Code Templates already covers your needs
 - ❌ You want simpler, more general tools
@@ -244,9 +272,11 @@ If you're building a standard SaaS application, use:
 ## 📖 Full Documentation
 
 **WSHobson Repository:**
+
 - https://github.com/wshobson/agents
 
 **Documentation:**
+
 - [Complete Plugin Reference](https://github.com/wshobson/agents/blob/main/docs/plugins.md)
 - [All Agents](https://github.com/wshobson/agents/blob/main/docs/agents.md)
 - [Agent Skills](https://github.com/wshobson/agents/blob/main/docs/agent-skills.md)
@@ -258,6 +288,7 @@ If you're building a standard SaaS application, use:
 **Start with Claude Code Templates** (in main INTEGRATIONS.md).
 
 **Come back here only if:**
+
 1. You're using Django, FastAPI, or GraphQL specifically
 2. You need Stripe/PayPal integration
 3. You're building AI-powered features

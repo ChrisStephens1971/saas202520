@@ -10,16 +10,16 @@ const { execSync } = require('child_process');
 
 // Model pricing (per 1M tokens)
 const PRICING = {
-  'haiku': { input: 0.25, output: 1.25 },
-  'sonnet': { input: 3.00, output: 15.00 },
-  'opus': { input: 15.00, output: 75.00 }
+  haiku: { input: 0.25, output: 1.25 },
+  sonnet: { input: 3.0, output: 15.0 },
+  opus: { input: 15.0, output: 75.0 },
 };
 
 // Average tokens per operation
 const TOKENS_PER_OP = {
-  'simple': { input: 1000, output: 500 },
-  'moderate': { input: 3000, output: 2000 },
-  'complex': { input: 8000, output: 5000 }
+  simple: { input: 1000, output: 500 },
+  moderate: { input: 3000, output: 2000 },
+  complex: { input: 8000, output: 5000 },
 };
 
 class CostTracker {
@@ -47,7 +47,7 @@ class CostTracker {
         byLane: {},
         byAgent: {},
         byDay: {},
-        operations: []
+        operations: [],
       };
     }
 
@@ -60,7 +60,7 @@ class CostTracker {
         byLane: {},
         byAgent: {},
         byDay: {},
-        operations: []
+        operations: [],
       };
     }
   }
@@ -80,7 +80,7 @@ class CostTracker {
       model,
       complexity,
       tokens,
-      cost: totalCost
+      cost: totalCost,
     };
 
     // Update totals
@@ -139,7 +139,9 @@ class CostTracker {
     const budget = this.config.cost.budgetPerMonth;
     const totalCost = this.costData.totalCost;
 
-    console.log(`⚠️ Cost Alert: ${percent.toFixed(1)}% of budget used ($${totalCost.toFixed(2)}/$${budget})`);
+    console.log(
+      `⚠️ Cost Alert: ${percent.toFixed(1)}% of budget used ($${totalCost.toFixed(2)}/$${budget})`
+    );
 
     // Log alert
     if (alert.action === 'log') {
@@ -166,13 +168,13 @@ class CostTracker {
     try {
       // Get list of open PRs
       const prs = execSync('gh pr list --json number,title,labels', {
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
       const prList = JSON.parse(prs);
 
       // Filter for agent-created PRs (have lane labels)
-      const agentPRs = prList.filter(pr =>
-        pr.labels.some(label => label.name.startsWith('lane:'))
+      const agentPRs = prList.filter((pr) =>
+        pr.labels.some((label) => label.name.startsWith('lane:'))
       );
 
       const pauseType = action.includes('all') ? 'ALL agents' : 'non-critical agents';
@@ -198,7 +200,7 @@ class CostTracker {
       for (const pr of agentPRs) {
         try {
           execSync(`gh pr comment ${pr.number} --body "${message.replace(/"/g, '\\"')}"`, {
-            encoding: 'utf8'
+            encoding: 'utf8',
           });
           console.log(`   ✅ Notified PR #${pr.number}`);
         } catch (error) {
@@ -257,25 +259,26 @@ class CostTracker {
       text: `🚨 Agent Swarm Cost Alert: ${percent.toFixed(1)}% of monthly budget used`,
       blocks: [
         {
-          type: "section",
+          type: 'section',
           text: {
-            type: "mrkdwn",
-            text: `*Agent Swarm Cost Alert*\n\n` +
-                  `Current spend: $${totalCost.toFixed(2)}\n` +
-                  `Budget: $${budget}\n` +
-                  `Utilization: ${percent.toFixed(1)}%\n\n` +
-                  (percent >= 90 ? '⚠️ Non-critical agents paused\n' : '') +
-                  (percent >= 100 ? '🛑 All agents paused\n' : '')
-          }
-        }
-      ]
+            type: 'mrkdwn',
+            text:
+              `*Agent Swarm Cost Alert*\n\n` +
+              `Current spend: $${totalCost.toFixed(2)}\n` +
+              `Budget: $${budget}\n` +
+              `Utilization: ${percent.toFixed(1)}%\n\n` +
+              (percent >= 90 ? '⚠️ Non-critical agents paused\n' : '') +
+              (percent >= 100 ? '🛑 All agents paused\n' : ''),
+          },
+        },
+      ],
     };
 
     try {
       const response = await fetch(webhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message)
+        body: JSON.stringify(message),
       });
 
       if (response.ok) {
@@ -303,12 +306,16 @@ class CostTracker {
     console.log('\n📊 Cost Report');
     console.log('═══════════════════════════════════════');
     console.log(`Month: ${this.costData.month}`);
-    console.log(`Total Cost: $${this.costData.totalCost.toFixed(2)} / $${budget} (${percent.toFixed(1)}%)`);
+    console.log(
+      `Total Cost: $${this.costData.totalCost.toFixed(2)} / $${budget} (${percent.toFixed(1)}%)`
+    );
 
     console.log('\n💰 Cost by Lane:');
     for (const [lane, data] of Object.entries(this.costData.byLane)) {
       const avgCost = data.cost / data.operations;
-      console.log(`  ${lane}: $${data.cost.toFixed(2)} (${data.operations} ops, avg: $${avgCost.toFixed(3)})`);
+      console.log(
+        `  ${lane}: $${data.cost.toFixed(2)} (${data.operations} ops, avg: $${avgCost.toFixed(3)})`
+      );
     }
 
     console.log('\n🤖 Top 5 Agents by Cost:');

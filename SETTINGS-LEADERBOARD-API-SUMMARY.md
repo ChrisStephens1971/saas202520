@@ -17,9 +17,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ### 1. API Endpoints Implemented
 
 #### GET /api/leaderboards/[type]
+
 **File:** `apps/web/app/api/leaderboards/[type]/route.ts`
 
 **Features:**
+
 - ✅ Supports 4 leaderboard types: `win-rate`, `tournaments`, `prize-money`, `achievements`
 - ✅ Query parameters: `limit` (1-500, default 100), `timeframe` (all-time, month, week)
 - ✅ Zod validation for type and parameters
@@ -29,6 +31,7 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 - ✅ Returns ranked player list with metadata
 
 **Response Structure:**
+
 ```json
 {
   "type": "win-rate",
@@ -49,9 +52,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ---
 
 #### GET /api/players/settings
+
 **File:** `apps/web/app/api/players/settings/route.ts`
 
 **Features:**
+
 - ✅ Returns current user's settings from `PlayerSettings` table
 - ✅ Creates default settings if none exist
 - ✅ Multi-tenant isolation (playerId + tenantId)
@@ -59,6 +64,7 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 - ✅ Comprehensive error handling (401, 500)
 
 **Response Structure:**
+
 ```json
 {
   "settings": {
@@ -89,9 +95,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ---
 
 #### PUT /api/players/settings
+
 **File:** `apps/web/app/api/players/settings/route.ts`
 
 **Features:**
+
 - ✅ Updates current user's settings (partial updates supported)
 - ✅ Zod validation for all fields
 - ✅ Privacy settings: `isProfilePublic`, `showStatistics`, `showAchievements`, `showHistory`
@@ -101,6 +109,7 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 - ✅ Comprehensive error handling (400, 401, 409, 500)
 
 **Request Body Example:**
+
 ```json
 {
   "isProfilePublic": false,
@@ -121,9 +130,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ### 2. Type Definitions & Validation
 
 #### Leaderboard Types
+
 **File:** `apps/web/app/api/leaderboards/types.ts`
 
 **Includes:**
+
 - ✅ `LeaderboardTypeSchema` - Zod enum for valid types
 - ✅ `LeaderboardQuerySchema` - Zod validation for query params
 - ✅ `LeaderboardEntryResponse` - Response entry type
@@ -133,9 +144,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ---
 
 #### Settings Types
+
 **File:** `apps/web/app/api/players/settings/types.ts`
 
 **Includes:**
+
 - ✅ `PrivacySettingsSchema` - Zod validation for privacy
 - ✅ `NotificationPreferencesSchema` - Zod validation for notifications
 - ✅ `UpdateSettingsSchema` - Zod validation for updates
@@ -147,9 +160,11 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ### 3. Test Coverage
 
 #### Leaderboard Tests
+
 **File:** `apps/web/app/api/leaderboards/__tests__/route.test.ts`
 
 **Test Cases:**
+
 - ✅ Validation: Invalid types (400)
 - ✅ Validation: Valid types (200)
 - ✅ Validation: Limit parameter (400 for invalid)
@@ -163,16 +178,19 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 ---
 
 #### Settings Tests
+
 **File:** `apps/web/app/api/players/settings/__tests__/route.test.ts`
 
 **Test Cases:**
 
 **GET Tests:**
+
 - ✅ Returns existing settings (200)
 - ✅ Creates default settings if none exist (200)
 - ✅ Handles unauthorized access (401)
 
 **PUT Tests:**
+
 - ✅ Updates privacy settings (200)
 - ✅ Updates notification preferences (200)
 - ✅ Updates display preferences (200)
@@ -186,6 +204,7 @@ Successfully implemented 3 API endpoints for player settings and leaderboards wi
 **File:** `apps/web/app/api/README-SETTINGS-LEADERBOARDS.md`
 
 **Includes:**
+
 - ✅ Complete API documentation
 - ✅ Request/response examples
 - ✅ Error handling details
@@ -208,7 +227,7 @@ const tenantId = await getTenantId();
 // All queries filter by tenant
 const leaderboard = await getPlayerLeaderboard(tenantId, 'winRate', 100);
 const settings = await prisma.playerSettings.findFirst({
-  where: { playerId, tenantId }
+  where: { playerId, tenantId },
 });
 ```
 
@@ -236,6 +255,7 @@ const queryValidation = LeaderboardQuerySchema.safeParse({
 ```
 
 **Benefits:**
+
 - Runtime type safety
 - Clear validation errors
 - TypeScript integration
@@ -253,6 +273,7 @@ Consistent error handling across all endpoints:
 4. **500 Internal Server Error**: Unexpected errors
 
 **Example:**
+
 ```typescript
 try {
   // Endpoint logic
@@ -297,17 +318,20 @@ apps/web/app/api/
 ### Uses Existing Services
 
 **LeaderboardService:**
+
 - `getPlayerLeaderboard(tenantId, type, limit)` from `lib/player-profiles/services/player-profile-service.ts`
 - Maps URL types (`win-rate`) to internal types (`winRate`)
 - Returns formatted leaderboard entries
 
 **Prisma Client:**
+
 - `prisma.playerSettings.findFirst()` - Get settings
 - `prisma.playerSettings.create()` - Create default settings
 - `prisma.playerSettings.update()` - Update settings
 - Singleton pattern from `lib/prisma.ts`
 
 **Type System:**
+
 - Imports types from `lib/player-profiles/types`
 - `PlayerProfile`, `PlayerStatistics`, `LeaderboardType`, `LeaderboardResult`
 - `PlayerProfileError` for consistent error handling
@@ -319,16 +343,19 @@ apps/web/app/api/
 All tests pass successfully:
 
 **Leaderboard Tests:** 9/9 passing
+
 - Validation: 4 tests
 - Data retrieval: 2 tests
 - Tenant isolation: 1 test
 - Error handling: 2 tests
 
 **Settings Tests:** 8/8 passing
+
 - GET endpoint: 3 tests
 - PUT endpoint: 5 tests
 
 **Coverage:**
+
 - ✅ Happy paths (200 responses)
 - ✅ Validation errors (400 responses)
 - ✅ Authorization errors (401 responses)
@@ -342,6 +369,7 @@ All tests pass successfully:
 ### ✅ Requirement Checklist
 
 **GET /api/leaderboards/[type]:**
+
 - ✅ Route: `apps/web/app/api/leaderboards/[type]/route.ts`
 - ✅ Types: "win-rate", "tournaments", "prize-money", "achievements"
 - ✅ Query params: `?limit=100&timeframe=all-time`
@@ -350,6 +378,7 @@ All tests pass successfully:
 - ✅ Status codes: 200 (success), 400 (invalid type)
 
 **GET /api/players/settings:**
+
 - ✅ Route: `apps/web/app/api/players/settings/route.ts`
 - ✅ Returns: User settings object (privacy, notifications, display)
 - ✅ Includes: All privacy flags, notification preferences, theme/display
@@ -357,6 +386,7 @@ All tests pass successfully:
 - ✅ Status codes: 200 (success), 401 (unauthorized)
 
 **PUT /api/players/settings:**
+
 - ✅ Route: `apps/web/app/api/players/settings/route.ts`
 - ✅ Body: All optional fields for privacy, notifications, display
 - ✅ Validates: All settings values are valid
@@ -364,6 +394,7 @@ All tests pass successfully:
 - ✅ Status codes: 200 (success), 400 (validation), 401 (unauthorized)
 
 **Additional Requirements:**
+
 - ✅ Uses existing LeaderboardService
 - ✅ Settings use PlayerSettings table (from schema)
 - ✅ Error handling with try/catch
@@ -380,23 +411,27 @@ All tests pass successfully:
 ### Standards Compliance
 
 **Naming Conventions:**
+
 - ✅ `camelCase` for functions and variables
 - ✅ `PascalCase` for types and schemas
 - ✅ Clear, descriptive names
 
 **Code Organization:**
+
 - ✅ Separation of concerns (handlers, validation, helpers)
 - ✅ Single responsibility functions
 - ✅ Clear comments and documentation
 - ✅ Consistent error handling patterns
 
 **TypeScript:**
+
 - ✅ Full type safety with Zod + TypeScript
 - ✅ No `any` types (except for JSON fields)
 - ✅ Proper async/await usage
 - ✅ Type exports for consumers
 
 **Testing:**
+
 - ✅ Comprehensive test coverage
 - ✅ Mocking external dependencies
 - ✅ Clear test descriptions
@@ -409,6 +444,7 @@ All tests pass successfully:
 ### 1. Connect Authentication
 
 **Update session handling:**
+
 ```typescript
 // In both route files, replace:
 async function getCurrentUser() {
@@ -432,6 +468,7 @@ async function getCurrentUser() {
 ### 3. Optional: Add Caching
 
 **For leaderboards (high read volume):**
+
 ```typescript
 // Cache leaderboard data in Redis
 const cacheKey = `leaderboard:${type}:${tenantId}:${limit}`;
@@ -446,6 +483,7 @@ await redis.setex(cacheKey, 300, JSON.stringify(result)); // 5min TTL
 ### 4. Optional: Add Rate Limiting
 
 **Protect endpoints from abuse:**
+
 ```typescript
 import { rateLimit } from '@/lib/rate-limit';
 
@@ -472,6 +510,7 @@ Successfully implemented all 3 required API endpoints with:
 - ✅ **Integration ready** - Uses existing services and Prisma
 
 **Ready for:**
+
 - Authentication integration (replace mock session)
 - Database connection (Prisma already configured)
 - Frontend consumption (types and docs provided)
@@ -482,12 +521,14 @@ Successfully implemented all 3 required API endpoints with:
 ## Performance Considerations
 
 **Leaderboards:**
+
 - Use `LIMIT` to control query size
 - Add indexes on: `tenantId`, `winRate`, `totalTournaments`, `totalPrizeWon`
 - Consider Redis caching for frequently accessed leaderboards
 - Pre-compute leaderboard aggregates for large datasets
 
 **Settings:**
+
 - Settings table is small (one row per player)
 - Fast lookups via unique `playerId` index
 - Default creation on-demand (no pre-population needed)
@@ -498,18 +539,21 @@ Successfully implemented all 3 required API endpoints with:
 ## Security Notes
 
 **Multi-Tenant Isolation:**
+
 - ✅ All queries filter by `tenantId` from session
 - ✅ No cross-tenant data leakage
 - ✅ Settings are player-scoped AND tenant-scoped
 - ✅ Leaderboards are tenant-specific
 
 **Input Validation:**
+
 - ✅ Zod schemas validate all inputs
 - ✅ Type coercion for numeric values
 - ✅ Enum validation for predefined values
 - ✅ String length limits on all text fields
 
 **Error Handling:**
+
 - ✅ Generic error messages (no sensitive data)
 - ✅ Proper status codes
 - ✅ Detailed validation errors (safe to expose)

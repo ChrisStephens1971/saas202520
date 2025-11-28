@@ -95,7 +95,11 @@ export function LoginForm() {
             aria-describedby={fieldErrors.email ? 'email-error' : undefined}
           />
           {fieldErrors.email && (
-            <p id="email-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p
+              id="email-error"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
+              role="alert"
+            >
               {fieldErrors.email}
             </p>
           )}
@@ -120,7 +124,11 @@ export function LoginForm() {
             aria-describedby={fieldErrors.password ? 'password-error' : undefined}
           />
           {fieldErrors.password && (
-            <p id="password-error" className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p
+              id="password-error"
+              className="mt-1 text-sm text-red-600 dark:text-red-400"
+              role="alert"
+            >
               {fieldErrors.password}
             </p>
           )}
@@ -135,7 +143,10 @@ export function LoginForm() {
             type="checkbox"
             className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 dark:text-blue-500 bg-white dark:bg-gray-800 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-0 transition-colors"
           />
-          <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-100">
+          <label
+            htmlFor="remember-me"
+            className="ml-2 block text-sm text-gray-900 dark:text-gray-100"
+          >
             Remember me
           </label>
         </div>

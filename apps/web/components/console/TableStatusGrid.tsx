@@ -35,7 +35,9 @@ export function TableStatusGrid({
 
   if (loading) {
     return (
-      <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 ${className}`}>
+      <div
+        className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 ${className}`}
+      >
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <div key={i} className="aspect-square bg-white/10 rounded-lg animate-pulse" />
         ))}
@@ -56,11 +58,7 @@ export function TableStatusGrid({
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {sortedTables.map((table) => (
-          <TableCard
-            key={table.id}
-            table={table}
-            onClick={() => onTableClick?.(table)}
-          />
+          <TableCard key={table.id} table={table} onClick={() => onTableClick?.(table)} />
         ))}
       </div>
     </div>
@@ -158,9 +156,7 @@ function TableCard({ table, onClick }: TableCardProps) {
 
       {/* Table Label */}
       <div className="text-center">
-        <div className="font-bold text-white text-lg leading-tight">
-          {table.label}
-        </div>
+        <div className="font-bold text-white text-lg leading-tight">{table.label}</div>
         <div className={`text-xs ${statusConfig.text} leading-tight mt-0.5`}>
           {statusConfig.label}
         </div>
@@ -173,7 +169,12 @@ function TableCard({ table, onClick }: TableCardProps) {
           {eta && (
             <div className="text-gray-400 flex items-center justify-center gap-1 mt-1">
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               {eta}
             </div>
@@ -186,16 +187,17 @@ function TableCard({ table, onClick }: TableCardProps) {
         <div className="text-xs text-center text-gray-300 leading-tight">
           <div className="text-gray-400">Until:</div>
           <div className="font-medium">
-            {new Date(table.blockedUntil).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(table.blockedUntil).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
           </div>
         </div>
       )}
 
       {/* Last Activity (if available and not in use) */}
       {table.status === TableStatus.AVAILABLE && lastActivity && (
-        <div className="text-xs text-gray-400 leading-tight">
-          {lastActivity}
-        </div>
+        <div className="text-xs text-gray-400 leading-tight">{lastActivity}</div>
       )}
     </button>
   );

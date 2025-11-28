@@ -213,11 +213,7 @@ export async function checkInPlayer(playerId: string, tenantId: string) {
 // In tournament bracket/elimination logic
 import { publishPlayerEliminated } from '@/lib/api/services/event-publisher.service';
 
-export async function eliminatePlayer(
-  playerId: string,
-  placement: number,
-  tenantId: string
-) {
+export async function eliminatePlayer(playerId: string, placement: number, tenantId: string) {
   // Update player status
   const player = await prisma.player.update({
     where: { id: playerId },

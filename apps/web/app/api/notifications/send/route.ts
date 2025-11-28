@@ -13,11 +13,7 @@ let vapidConfigured = false;
 // Configure web-push on first request
 function ensureVapidConfigured() {
   if (!vapidConfigured) {
-    webpush.setVapidDetails(
-      VAPID_CONFIG.subject,
-      VAPID_CONFIG.publicKey,
-      VAPID_CONFIG.privateKey
-    );
+    webpush.setVapidDetails(VAPID_CONFIG.subject, VAPID_CONFIG.publicKey, VAPID_CONFIG.privateKey);
     vapidConfigured = true;
   }
 }
@@ -34,17 +30,11 @@ export async function POST(request: NextRequest) {
     const { subscription, notification } = body;
 
     if (!subscription || !subscription.endpoint) {
-      return NextResponse.json(
-        { error: 'Invalid subscription data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid subscription data' }, { status: 400 });
     }
 
     if (!notification || !notification.title) {
-      return NextResponse.json(
-        { error: 'Invalid notification data' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid notification data' }, { status: 400 });
     }
 
     // Prepare push subscription
@@ -75,9 +65,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error sending push notification:', error);
-    return NextResponse.json(
-      { error: 'Failed to send notification' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send notification' }, { status: 500 });
   }
 }

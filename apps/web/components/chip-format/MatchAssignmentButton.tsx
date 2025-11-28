@@ -150,11 +150,7 @@ export default function MatchAssignmentButton({
           {lastAssignment.success ? (
             <div>
               <div className="flex items-center gap-2 text-green-800 font-semibold mb-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -180,14 +176,11 @@ export default function MatchAssignmentButton({
 
               {lastAssignment.assignments && lastAssignment.count && (
                 <div className="text-sm text-gray-700">
-                  <div className="font-medium mb-1">
-                    {lastAssignment.count} matches assigned:
-                  </div>
+                  <div className="font-medium mb-1">{lastAssignment.count} matches assigned:</div>
                   <div className="space-y-1 max-h-32 overflow-y-auto">
                     {lastAssignment.assignments.map((assignment, i) => (
                       <div key={i} className="text-xs">
-                        • {assignment.match.playerAName} vs.{' '}
-                        {assignment.match.playerBName}
+                        • {assignment.match.playerAName} vs. {assignment.match.playerBName}
                         {assignment.match.tableNumber && ` (Table ${assignment.match.tableNumber})`}
                       </div>
                     ))}
@@ -198,11 +191,7 @@ export default function MatchAssignmentButton({
           ) : (
             <div>
               <div className="flex items-center gap-2 text-red-800 font-semibold mb-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"

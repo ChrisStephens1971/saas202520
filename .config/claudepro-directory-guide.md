@@ -12,6 +12,7 @@
 **ClaudePro.directory is a website that catalogs Claude configurations**, NOT a plugin system.
 
 It's a **searchable database** of pre-built prompts and configurations that you can:
+
 1. **Browse** on the website
 2. **Copy** the configuration
 3. **Paste** into Claude
@@ -23,21 +24,23 @@ It's a **searchable database** of pre-built prompts and configurations that you 
 
 ## 📊 Key Differences from Other Resources
 
-| Resource | Type | Count | Usage | Our Use |
-|----------|------|-------|-------|---------|
-| **Our Template** | Virtual agents in CLAUDE.md | 9 | Always loaded | ✅ Project management |
-| **WSHobson Agents** | Claude Code plugins | 85 | Install & use | ✅ Development tasks |
-| **Claude Skills** | Agent skills (Anthropic) | ~15 | Install & use | ✅ Specialized tasks |
-| **ClaudePro.directory** | Configuration catalog | 206+ | Copy & paste | ⚠️ Individual prompts |
+| Resource                | Type                        | Count | Usage         | Our Use               |
+| ----------------------- | --------------------------- | ----- | ------------- | --------------------- |
+| **Our Template**        | Virtual agents in CLAUDE.md | 9     | Always loaded | ✅ Project management |
+| **WSHobson Agents**     | Claude Code plugins         | 85    | Install & use | ✅ Development tasks  |
+| **Claude Skills**       | Agent skills (Anthropic)    | ~15   | Install & use | ✅ Specialized tasks  |
+| **ClaudePro.directory** | Configuration catalog       | 206+  | Copy & paste  | ⚠️ Individual prompts |
 
 ---
 
 ## 📚 What's in ClaudePro.directory?
 
 ### 1. **Agents** (21)
+
 Pre-written agent prompts with detailed instructions
 
 **Examples:**
+
 - Backend Architect Agent
 - Full Stack AI Development Agent
 - Product Management AI Agent
@@ -46,6 +49,7 @@ Pre-written agent prompts with detailed instructions
 - Database Specialist Agent
 
 **Format:** JSON file with:
+
 - Description
 - Full prompt/system instructions
 - Configuration (temperature, max tokens)
@@ -53,6 +57,7 @@ Pre-written agent prompts with detailed instructions
 - Troubleshooting guides
 
 **How to use:**
+
 1. Visit https://claudepro.directory/agents/backend-architect-agent
 2. Copy the prompt
 3. Paste into Claude conversation
@@ -61,9 +66,11 @@ Pre-written agent prompts with detailed instructions
 ---
 
 ### 2. **MCP Servers** (40)
+
 Catalog of MCP server configurations
 
 **Examples:**
+
 - Stripe MCP Server
 - GitHub MCP Server
 - PostgreSQL MCP Server
@@ -72,12 +79,14 @@ Catalog of MCP server configurations
 - AWS Services MCP Server
 
 **NOT actual MCP servers** - These are documentation/guides for existing MCP servers with:
+
 - Installation instructions
 - Configuration examples
 - Use case descriptions
 - Setup guides
 
 **How to use:**
+
 1. Find the MCP server you need
 2. Follow installation instructions (usually npm install or Docker)
 3. Configure in your Claude setup
@@ -86,9 +95,11 @@ Catalog of MCP server configurations
 ---
 
 ### 3. **Hooks** (65)
+
 Event-driven automation scripts for Claude Code
 
 **Examples:**
+
 - Auto Code Formatter Hook
 - Git Auto Commit On Stop
 - Test Runner Hook
@@ -97,6 +108,7 @@ Event-driven automation scripts for Claude Code
 - Database Migration Runner
 
 **What they do:** Run scripts automatically when:
+
 - Files are modified
 - Claude session ends
 - Specific triggers occur
@@ -104,6 +116,7 @@ Event-driven automation scripts for Claude Code
 **Format:** Bash/Python scripts that integrate with Claude Code
 
 **How to use:**
+
 1. Copy the hook script
 2. Add to `.claude/hooks/` in your project
 3. Configure triggers
@@ -112,9 +125,11 @@ Event-driven automation scripts for Claude Code
 ---
 
 ### 4. **Commands** (16)
+
 Slash commands for Claude Code
 
 **Examples:**
+
 - /debug - Advanced debugging assistant
 - /docs - Documentation generator
 - /review - Code review command
@@ -122,6 +137,7 @@ Slash commands for Claude Code
 - /cursor-rules - Generate .cursorrules files
 
 **How to use:**
+
 1. Copy command configuration
 2. Add to `.claude/commands/` directory
 3. Use with `/command-name` in Claude Code
@@ -129,9 +145,11 @@ Slash commands for Claude Code
 ---
 
 ### 5. **Rules** (60+)
+
 Custom instruction sets for Claude
 
 **Examples:**
+
 - Code style rules
 - Testing standards
 - Documentation requirements
@@ -139,6 +157,7 @@ Custom instruction sets for Claude
 - Project-specific patterns
 
 **How to use:**
+
 1. Copy the rules
 2. Add to your Custom Instructions
 3. Claude follows those rules
@@ -150,12 +169,14 @@ Custom instruction sets for Claude
 ### ⚠️ Limited Usefulness for Your Template
 
 **Why it's less useful:**
+
 1. **One-off prompts** - Not integrated workflows like your virtual agents
 2. **Manual copy-paste** - No automation or persistence
 3. **Individual use** - Doesn't compose into systems
 4. **Not for project templates** - For individual Claude conversations
 
 **Your template is better** because:
+
 - ✅ Integrated workflows (virtual agents)
 - ✅ Persistent configurations (CLAUDE.md)
 - ✅ Project-wide standards
@@ -169,6 +190,7 @@ Custom instruction sets for Claude
 **1. Finding MCP Server Configurations**
 
 If you need to integrate external services:
+
 ```
 Example: Want to integrate Linear?
 1. Visit https://claudepro.directory/mcp/linear-mcp-server
@@ -179,6 +201,7 @@ Example: Want to integrate Linear?
 **2. Inspiration for New Virtual Agents**
 
 Browse their agents for ideas:
+
 - Check out "Product Management AI Agent" → Inspire your Project Manager agent
 - Review "Test Automation Engineer" → Enhance your QA Testing agent
 - Look at "Cloud Infrastructure Architect" → Improve System Architect agent
@@ -186,6 +209,7 @@ Browse their agents for ideas:
 **3. Hook Ideas for Automation**
 
 Their hooks can inspire your project workflows:
+
 - "Auto Code Formatter Hook" → Add to development workflow
 - "Git Auto Commit On Stop" → Session cleanup automation
 - "Documentation Generator" → Auto-update docs on changes
@@ -197,6 +221,7 @@ Their hooks can inspire your project workflows:
 ### DON'T: Copy Everything
 
 **Why not:**
+
 - ❌ Not integrated into your template system
 - ❌ One-off use, no persistence
 - ❌ Doesn't compose with virtual agents
@@ -207,18 +232,21 @@ Their hooks can inspire your project workflows:
 **Use ClaudePro.directory for:**
 
 **1. MCP Server Discovery**
+
 ```bash
 # Found on ClaudePro.directory, integrate into project
 npx @modelcontextprotocol/server-stripe
 ```
 
 **2. Prompt Pattern Inspiration**
+
 ```
 # See their "Backend Architect Agent" prompt structure
 # Adapt best parts into your System Architect virtual agent
 ```
 
 **3. Hook Script Ideas**
+
 ```bash
 # Copy useful hooks to .claude/hooks/
 # Example: auto-format-hook.sh
@@ -265,24 +293,28 @@ Result: Individual prompts, no integration
 ### Use ClaudePro.directory When:
 
 **1. Quick One-off Tasks**
+
 ```
 Need: Code review for a PR
 Solution: Copy "Code Reviewer Agent" → Paste → Review
 ```
 
 **2. Discovering MCP Servers**
+
 ```
 Need: Stripe integration
 Solution: Visit their Stripe MCP page → Install guide
 ```
 
 **3. Learning Prompt Patterns**
+
 ```
 Need: Ideas for better agent prompts
 Solution: Read their agent examples → Adapt patterns
 ```
 
 **4. Finding Hooks/Commands**
+
 ```
 Need: Auto-formatter hook
 Solution: Copy their hook script → Add to project
@@ -302,18 +334,21 @@ Solution: Copy their hook script → Add to project
 ### 1. Hooks That Could Enhance Your Template
 
 **Auto Code Formatter Hook**
+
 ```bash
 # Could add to your template:
 # .claude/hooks/on-file-write/auto-format.sh
 ```
 
 **Git Auto Commit On Stop**
+
 ```bash
 # Could add to your template:
 # .claude/hooks/on-session-stop/auto-commit.sh
 ```
 
 **Documentation Generator**
+
 ```bash
 # Could integrate with Multi-Doc Generator agent
 # .claude/hooks/on-file-write/update-docs.sh
@@ -322,6 +357,7 @@ Solution: Copy their hook script → Add to project
 ### 2. MCP Servers for SaaS
 
 **Essential for SaaS Projects:**
+
 - Stripe MCP Server (payments)
 - Linear MCP Server (project management)
 - GitHub MCP Server (repository management)
@@ -330,6 +366,7 @@ Solution: Copy their hook script → Add to project
 - Vercel MCP Server (deployment)
 
 **Installation Pattern:**
+
 ```bash
 # Example: Linear MCP Server
 npm install @modelcontextprotocol/server-linear
@@ -341,26 +378,32 @@ npm install @modelcontextprotocol/server-linear
 ### 3. Agent Prompt Patterns to Adapt
 
 **From "Full Stack AI Development Agent":**
+
 - Multi-layer architecture thinking
 - Type safety across stack
 - AI-assisted coding workflows
 
 **Adapt to your System Architect agent:**
+
 ```markdown
 Add to CLAUDE.md System Architect workflow:
+
 - Emphasize type safety across frontend/backend
 - Include AI-assisted code generation patterns
 - Add end-to-end type checking validation
 ```
 
 **From "Product Management AI Agent":**
+
 - User story generation patterns
 - A/B testing frameworks
 - Data-driven decision making
 
 **Adapt to your Project Manager agent:**
+
 ```markdown
 Add to CLAUDE.md Project Manager workflow:
+
 - Enhanced user story templates
 - A/B testing checklist
 - Decision framework based on metrics
@@ -373,6 +416,7 @@ Add to CLAUDE.md Project Manager workflow:
 ### Phase 1: Discovery (Now)
 
 **Browse ClaudePro.directory for:**
+
 - [ ] MCP servers you might need
 - [ ] Hook scripts that automate your workflows
 - [ ] Agent prompt patterns to adapt
@@ -408,21 +452,21 @@ Example: Improve QA Testing Agent
 
 ### ClaudePro.directory Value:
 
-| Category | Value | Time Investment |
-|----------|-------|-----------------|
-| MCP Discovery | High | 30 min browsing |
-| Hook Scripts | Medium | 1-2 hours adaptation |
-| Agent Inspiration | Low-Medium | 2-3 hours reading |
-| Copy-Paste Use | Low | Per-use (no persistence) |
+| Category          | Value      | Time Investment          |
+| ----------------- | ---------- | ------------------------ |
+| MCP Discovery     | High       | 30 min browsing          |
+| Hook Scripts      | Medium     | 1-2 hours adaptation     |
+| Agent Inspiration | Low-Medium | 2-3 hours reading        |
+| Copy-Paste Use    | Low        | Per-use (no persistence) |
 
 ### Your Template System Value:
 
-| Category | Value | Time Investment |
-|----------|-------|-----------------|
+| Category             | Value     | Time Investment  |
+| -------------------- | --------- | ---------------- |
 | Integrated Workflows | Very High | Already built ✅ |
-| Project Persistence | Very High | Already built ✅ |
-| Team Standards | Very High | Already built ✅ |
-| Multi-Agent System | Very High | Already built ✅ |
+| Project Persistence  | Very High | Already built ✅ |
+| Team Standards       | Very High | Already built ✅ |
+| Multi-Agent System   | Very High | Already built ✅ |
 
 **Verdict:** Your template is more valuable for project work. Use ClaudePro.directory as a **reference library**, not a replacement.
 
@@ -500,6 +544,7 @@ Example: Improve QA Testing Agent
 **Cloned to:** `C:\devop\claudepro-directory\`
 
 **Content Categories:**
+
 - `content/agents/` - Agent prompts (21)
 - `content/mcp/` - MCP server configs (40)
 - `content/hooks/` - Automation scripts (65)
@@ -509,6 +554,7 @@ Example: Improve QA Testing Agent
 - `content/statuslines/` - Status line configs
 
 **Related Files in Your Template:**
+
 - `.config/wshobson-agents-guide.md` - WSHobson integration
 - `.config/recommended-claude-skills.md` - Claude Skills guide
 - `CLAUDE.md` - Your virtual agents (better than ClaudePro one-offs)
@@ -520,6 +566,7 @@ Example: Improve QA Testing Agent
 **Optional Actions:**
 
 1. **Browse the website** (10 minutes)
+
    ```
    Visit https://claudepro.directory
    Explore MCP servers you might need
@@ -527,12 +574,14 @@ Example: Improve QA Testing Agent
    ```
 
 2. **Mine for MCP servers** (as needed)
+
    ```
    When you need Stripe, Linear, GitHub, etc.
    Follow their guides for setup
    ```
 
 3. **Consider useful hooks** (optional)
+
    ```
    Copy auto-format hook
    Copy auto-commit hook

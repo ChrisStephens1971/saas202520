@@ -35,9 +35,9 @@ const LeaderboardQuerySchema = z.object({
 function mapLeaderboardType(urlType: string): LeaderboardType {
   const mapping: Record<string, LeaderboardType> = {
     'win-rate': 'winRate',
-    'tournaments': 'tournaments',
+    tournaments: 'tournaments',
     'prize-money': 'prizes',
-    'achievements': 'achievements',
+    achievements: 'achievements',
   };
 
   return mapping[urlType] || 'winRate';
@@ -62,10 +62,7 @@ async function getTenantId(): Promise<string> {
 // API ROUTE HANDLER
 // ============================================================================
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ type: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ type: string }> }) {
   try {
     const { type } = await params;
 

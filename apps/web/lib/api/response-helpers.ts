@@ -134,7 +134,7 @@ export function createOptimizedResponse(
       return new NextResponse(null, {
         status: 304,
         headers: {
-          'ETag': etagValue,
+          ETag: etagValue,
           'Cache-Control': 'public, max-age=60, must-revalidate',
         },
       });
@@ -302,11 +302,7 @@ export function createErrorResponse(
  * }
  * ```
  */
-export function createSuccessResponse(
-  message: string,
-  data?: any,
-  status = 200
-): NextResponse {
+export function createSuccessResponse(message: string, data?: any, status = 200): NextResponse {
   return NextResponse.json(
     {
       success: true,

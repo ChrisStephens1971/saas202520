@@ -189,10 +189,7 @@ export async function blockTableUntil(
 /**
  * Unblock a table and make it available
  */
-export async function unblockTable(
-  tableId: string,
-  orgId: string
-): Promise<TableResource> {
+export async function unblockTable(tableId: string, orgId: string): Promise<TableResource> {
   const table = await prisma.table.findFirst({
     where: {
       id: tableId,
@@ -297,10 +294,7 @@ export async function assignMatchToTable(
 /**
  * Release a table when a match completes
  */
-export async function releaseTable(
-  tableId: string,
-  orgId: string
-): Promise<TableResource> {
+export async function releaseTable(tableId: string, orgId: string): Promise<TableResource> {
   const table = await prisma.table.findFirst({
     where: {
       id: tableId,
@@ -372,10 +366,7 @@ export async function autoReleaseTableOnMatchComplete(
 /**
  * Check if a specific table is available
  */
-export async function isTableAvailable(
-  tableId: string,
-  orgId: string
-): Promise<boolean> {
+export async function isTableAvailable(tableId: string, orgId: string): Promise<boolean> {
   const table = await prisma.table.findFirst({
     where: {
       id: tableId,
@@ -440,10 +431,7 @@ export async function getAvailableTables(
           id: currentMatch.id,
           round: currentMatch.round,
           position: currentMatch.position,
-          players: [
-            currentMatch.playerA?.name || 'TBD',
-            currentMatch.playerB?.name || 'TBD',
-          ],
+          players: [currentMatch.playerA?.name || 'TBD', currentMatch.playerB?.name || 'TBD'],
         },
       }),
       ...(table.blockedUntil && { blockedUntil: table.blockedUntil }),
@@ -454,10 +442,7 @@ export async function getAvailableTables(
 /**
  * Get all tables for a tournament (regardless of availability)
  */
-export async function getAllTables(
-  tournamentId: string,
-  orgId: string
-): Promise<TableResource[]> {
+export async function getAllTables(tournamentId: string, orgId: string): Promise<TableResource[]> {
   const tables = await prisma.table.findMany({
     where: {
       tournamentId,
@@ -642,10 +627,7 @@ export async function createTablesBulk(
 /**
  * Delete a table (only if not in use)
  */
-export async function deleteTable(
-  tableId: string,
-  orgId: string
-): Promise<void> {
+export async function deleteTable(tableId: string, orgId: string): Promise<void> {
   const table = await prisma.table.findFirst({
     where: {
       id: tableId,

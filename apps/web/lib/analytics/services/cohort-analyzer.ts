@@ -8,11 +8,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import {
-  startOfMonth,
-  addMonths,
-  format,
-} from 'date-fns';
+import { startOfMonth, addMonths, format } from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -145,10 +141,7 @@ export interface CohortSegment {
  * @param cohortMonth - Cohort month (first day of month)
  * @returns Complete cohort analysis
  */
-export async function analyzeCohort(
-  tenantId: string,
-  cohortMonth: Date
-): Promise<CohortAnalysis> {
+export async function analyzeCohort(tenantId: string, cohortMonth: Date): Promise<CohortAnalysis> {
   const cohortStart = startOfMonth(cohortMonth);
 
   // Get all cohort data points
@@ -164,10 +157,7 @@ export async function analyzeCohort(
 
   if (cohortData.length === 0) {
     throw new Error(
-      `No cohort data found for tenant ${tenantId}, cohort ${format(
-        cohortMonth,
-        'yyyy-MM'
-      )}`
+      `No cohort data found for tenant ${tenantId}, cohort ${format(cohortMonth, 'yyyy-MM')}`
     );
   }
 
@@ -177,12 +167,9 @@ export async function analyzeCohort(
   const retentionCurve: RetentionDataPoint[] = cohortData.map((data) => {
     const retentionRate = parseFloat(data.retentionRate.toString());
     const retainedUsers = data.retainedUsers;
-    const churnedUsers = data.monthNumber === 0
-      ? 0
-      : cohortSize - retainedUsers;
-    const churnRate = data.monthNumber === 0
-      ? 0
-      : ((cohortSize - retainedUsers) / cohortSize) * 100;
+    const churnedUsers = data.monthNumber === 0 ? 0 : cohortSize - retainedUsers;
+    const churnRate =
+      data.monthNumber === 0 ? 0 : ((cohortSize - retainedUsers) / cohortSize) * 100;
 
     return {
       monthNumber: data.monthNumber,
@@ -196,17 +183,12 @@ export async function analyzeCohort(
 
   // Calculate key metrics
   const avgRetentionRate =
-    retentionCurve.reduce((sum, point) => sum + point.retentionRate, 0) /
-    retentionCurve.length;
+    retentionCurve.reduce((sum, point) => sum + point.retentionRate, 0) / retentionCurve.length;
 
-  const month1Retention = retentionCurve.find((p) => p.monthNumber === 1)
-    ?.retentionRate || 0;
-  const month3Retention = retentionCurve.find((p) => p.monthNumber === 3)
-    ?.retentionRate || 0;
-  const month6Retention = retentionCurve.find((p) => p.monthNumber === 6)
-    ?.retentionRate || 0;
-  const month12Retention = retentionCurve.find((p) => p.monthNumber === 12)
-    ?.retentionRate || null;
+  const month1Retention = retentionCurve.find((p) => p.monthNumber === 1)?.retentionRate || 0;
+  const month3Retention = retentionCurve.find((p) => p.monthNumber === 3)?.retentionRate || 0;
+  const month6Retention = retentionCurve.find((p) => p.monthNumber === 6)?.retentionRate || 0;
+  const month12Retention = retentionCurve.find((p) => p.monthNumber === 12)?.retentionRate || null;
 
   // Calculate revenue metrics
   const totalRevenue = cohortData.reduce((sum, data) => {
@@ -217,9 +199,7 @@ export async function analyzeCohort(
   const avgRevenuePerUser = cohortSize > 0 ? totalRevenue / cohortSize : 0;
 
   const lastCohort = cohortData[cohortData.length - 1];
-  const latestLTV = lastCohort?.ltv
-    ? parseFloat(lastCohort.ltv.toString())
-    : avgRevenuePerUser;
+  const latestLTV = lastCohort?.ltv ? parseFloat(lastCohort.ltv.toString()) : avgRevenuePerUser;
 
   // Determine cohort status
   const monthsActive = cohortData.length;
@@ -241,8 +221,7 @@ export async function analyzeCohort(
       month1Retention: Math.round(month1Retention * 100) / 100,
       month3Retention: Math.round(month3Retention * 100) / 100,
       month6Retention: Math.round(month6Retention * 100) / 100,
-      month12Retention:
-        month12Retention !== null ? Math.round(month12Retention * 100) / 100 : null,
+      month12Retention: month12Retention !== null ? Math.round(month12Retention * 100) / 100 : null,
     },
     revenue: {
       totalRevenue: Math.round(totalRevenue * 100) / 100,
@@ -275,10 +254,7 @@ export async function calculateRetentionCurve(
  * @param cohort - Cohort month (first day of month)
  * @returns LTV metrics with revenue breakdown by month
  */
-export async function calculateCohortLTV(
-  tenantId: string,
-  cohort: Date
-): Promise<CohortLTV> {
+export async function calculateCohortLTV(tenantId: string, cohort: Date): Promise<CohortLTV> {
   const cohortStart = startOfMonth(cohort);
 
   const cohortData = await prisma.userCohort.findMany({
@@ -352,9 +328,7 @@ export async function compareCohortsRetention(
   cohorts: Date[]
 ): Promise<CohortComparison> {
   // Analyze each cohort
-  const analyses = await Promise.all(
-    cohorts.map((cohort) => analyzeCohort(tenantId, cohort))
-  );
+  const analyses = await Promise.all(cohorts.map((cohort) => analyzeCohort(tenantId, cohort)));
 
   // Build comparison data
   const comparisonData = analyses.map((analysis) => ({
@@ -378,8 +352,7 @@ export async function compareCohortsRetention(
   const avgRetentionTrend = calculateTrend(month1Retentions);
 
   // Calculate volatility (standard deviation)
-  const mean =
-    month1Retentions.reduce((sum, val) => sum + val, 0) / month1Retentions.length;
+  const mean = month1Retentions.reduce((sum, val) => sum + val, 0) / month1Retentions.length;
   const variance =
     month1Retentions.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) /
     month1Retentions.length;
@@ -402,9 +375,7 @@ export async function compareCohortsRetention(
  * @param tenantId - Organization ID
  * @returns Retention benchmarks compared to industry standards
  */
-export async function getRetentionBenchmarks(
-  tenantId: string
-): Promise<RetentionBenchmarks> {
+export async function getRetentionBenchmarks(tenantId: string): Promise<RetentionBenchmarks> {
   // Get the most recent cohort data
   const latestCohort = await prisma.userCohort.findFirst({
     where: { tenantId },
@@ -446,19 +417,14 @@ export async function getRetentionBenchmarks(
     month12: {
       target: industryBenchmarks.month12,
       current: analysis.metrics.month12Retention || 0,
-      status: getStatus(
-        analysis.metrics.month12Retention || 0,
-        industryBenchmarks.month12
-      ),
+      status: getStatus(analysis.metrics.month12Retention || 0, industryBenchmarks.month12),
     },
   };
 
   // Generate recommendations
   const recommendations: string[] = [];
   if (benchmarks.month1.status === 'below') {
-    recommendations.push(
-      'Focus on improving onboarding experience to boost month 1 retention'
-    );
+    recommendations.push('Focus on improving onboarding experience to boost month 1 retention');
   }
   if (benchmarks.month3.status === 'below') {
     recommendations.push(
@@ -466,9 +432,7 @@ export async function getRetentionBenchmarks(
     );
   }
   if (benchmarks.month6.status === 'above' && benchmarks.month1.status === 'above') {
-    recommendations.push(
-      'Excellent retention! Consider expanding features for power users'
-    );
+    recommendations.push('Excellent retention! Consider expanding features for power users');
   }
 
   return {
@@ -539,8 +503,8 @@ export async function predictFutureRetention(
     analysis.retentionCurve.length >= 6
       ? 'high'
       : analysis.retentionCurve.length >= 4
-      ? 'medium'
-      : 'low';
+        ? 'medium'
+        : 'low';
 
   return {
     cohort: analysis.cohort,
@@ -588,9 +552,7 @@ export async function segmentCohortByAttribute(
     },
   ];
 
-  const sortedByRetention = [...segments].sort(
-    (a, b) => b.retentionRate - a.retentionRate
-  );
+  const sortedByRetention = [...segments].sort((a, b) => b.retentionRate - a.retentionRate);
   const bestSegment = sortedByRetention[0].value;
   const worstSegment = sortedByRetention[sortedByRetention.length - 1].value;
 

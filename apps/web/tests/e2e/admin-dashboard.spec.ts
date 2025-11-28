@@ -197,9 +197,7 @@ test.describe('Admin Dashboard E2E Tests', () => {
       await page.getByTestId(`tournament-${tournament.id}-status`).selectOption('active');
 
       // Verify status changed
-      await expect(
-        page.getByTestId(`tournament-${tournament.id}-status`)
-      ).toHaveValue('active');
+      await expect(page.getByTestId(`tournament-${tournament.id}-status`)).toHaveValue('active');
 
       // Verify in database
       const updated = await prisma.tournament.findUnique({
@@ -228,7 +226,7 @@ test.describe('Admin Dashboard E2E Tests', () => {
       await page.getByTestId(`tournament-${tournament.id}-delete`).click();
 
       // Confirm deletion
-      await page.getByRole('button', { name: /confirm|yes/i }).click();
+      await page.getByRole('button', { name: 'Delete' }).click();
 
       // Verify removed from list
       await expect(page.getByTestId(`tournament-${tournament.id}`)).not.toBeVisible();
@@ -274,9 +272,9 @@ test.describe('Admin Dashboard E2E Tests', () => {
       // Select all
       await page.getByTestId('select-all-tournaments').check();
 
-      // Click bulk archive
-      await page.getByRole('button', { name: /archive selected/i }).click();
-      await page.getByRole('button', { name: /confirm/i }).click();
+      // Click bulk delete
+      await page.getByRole('button', { name: /delete selected/i }).click();
+      await page.getByRole('button', { name: 'Delete Selected' }).click();
 
       // Verify archived
       const archived = await prisma.tournament.findMany({

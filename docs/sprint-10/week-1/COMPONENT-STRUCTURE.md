@@ -1,4 +1,5 @@
 # Analytics Dashboard - Component Structure
+
 ## Visual Guide to All Components
 
 ---
@@ -47,6 +48,7 @@
 ```
 
 **Features:**
+
 - Icon system (dollar, chart, trophy, users)
 - Trend arrows (green ↑, red ↓)
 - Percentage change
@@ -271,6 +273,7 @@ When Open:
 ```
 
 **Loading State:**
+
 ```
 ┌───────────────────────────────────────────────────────────┐
 │  Chart Title                              [↻] [⬇]        │
@@ -284,6 +287,7 @@ When Open:
 ```
 
 **Error State:**
+
 ```
 ┌───────────────────────────────────────────────────────────┐
 │  Chart Title                              [↻] [⬇]        │
@@ -421,6 +425,7 @@ apps/web/
 ## Responsive Layouts
 
 ### Mobile (< 768px)
+
 ```
 ┌─────────────────┐
 │  KPI Card 1     │
@@ -438,6 +443,7 @@ apps/web/
 ```
 
 ### Tablet (768px - 1024px)
+
 ```
 ┌──────────┬──────────┐
 │ KPI 1    │ KPI 2    │
@@ -451,6 +457,7 @@ apps/web/
 ```
 
 ### Desktop (> 1024px)
+
 ```
 ┌─────┬─────┬─────┬─────┐
 │ KPI │ KPI │ KPI │ KPI │

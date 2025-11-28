@@ -26,6 +26,7 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 **Purpose:** Raw event stream for all analytics-relevant activities
 
 **Columns:**
+
 - `id` (TEXT, PK) - Unique event identifier
 - `tenant_id` (TEXT, FK) - Organization identifier (multi-tenant)
 - `event_type` (VARCHAR(100)) - Event type (payment_completed, user_signup, tournament_completed)
@@ -36,11 +37,13 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 - `created_at` (TIMESTAMP) - When the record was created
 
 **Indexes:**
+
 - `(tenant_id, event_type)` - Fast filtering by tenant and event type
 - `(tenant_id, timestamp DESC)` - Fast tenant-scoped time-series queries
 - `(user_id, timestamp DESC)` - Fast user activity lookups
 
 **Foreign Keys:**
+
 - `tenant_id` → `organizations(id)` ON DELETE CASCADE
 - `user_id` → `users(id)` ON DELETE SET NULL
 
@@ -53,13 +56,14 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 **Purpose:** Pre-computed revenue metrics for fast dashboard queries
 
 **Columns:**
+
 - `id` (TEXT, PK) - Unique aggregate identifier
 - `tenant_id` (TEXT, FK) - Organization identifier
 - `period_start` (DATE) - Start of aggregation period
 - `period_end` (DATE) - End of aggregation period
 - `period_type` (VARCHAR(20)) - Period type: day, week, month, quarter, year
 - `mrr` (DECIMAL(10,2)) - Monthly Recurring Revenue
-- `arr` (DECIMAL(10,2)) - Annual Recurring Revenue (MRR * 12)
+- `arr` (DECIMAL(10,2)) - Annual Recurring Revenue (MRR \* 12)
 - `new_revenue` (DECIMAL(10,2)) - Revenue from new customers
 - `churned_revenue` (DECIMAL(10,2)) - Revenue lost from churned customers
 - `expansion_revenue` (DECIMAL(10,2)) - Revenue growth from existing customers
@@ -71,10 +75,12 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 - `updated_at` (TIMESTAMP) - Last update timestamp
 
 **Indexes:**
+
 - `UNIQUE (tenant_id, period_type, period_start)` - Prevent duplicate aggregates
 - `(tenant_id, period_start DESC)` - Fast time-series queries
 
 **Foreign Keys:**
+
 - `tenant_id` → `organizations(id)` ON DELETE CASCADE
 
 **Update Strategy:** Hourly cron job aggregates new events (upsert for idempotency)
@@ -86,22 +92,25 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 **Purpose:** User retention analysis by signup cohort
 
 **Columns:**
+
 - `id` (TEXT, PK) - Unique cohort record identifier
 - `tenant_id` (TEXT, FK) - Organization identifier
 - `cohort_month` (DATE) - First day of signup month (YYYY-MM-01)
 - `cohort_size` (INTEGER) - Total users who signed up in this month
 - `month_number` (INTEGER) - Months since signup (0 = signup month, 1 = month 1, etc.)
 - `retained_users` (INTEGER) - Users still active in this month
-- `retention_rate` (DECIMAL(5,2)) - Retention percentage (retained_users / cohort_size * 100)
+- `retention_rate` (DECIMAL(5,2)) - Retention percentage (retained_users / cohort_size \* 100)
 - `revenue` (DECIMAL(10,2)) - Total revenue from cohort in this month
 - `ltv` (DECIMAL(10,2)) - Cumulative lifetime value per user
 - `updated_at` (TIMESTAMP) - Last update timestamp
 
 **Indexes:**
+
 - `UNIQUE (tenant_id, cohort_month, month_number)` - Prevent duplicate cohort records
 - `(tenant_id, cohort_month DESC)` - Fast cohort lookups
 
 **Foreign Keys:**
+
 - `tenant_id` → `organizations(id)` ON DELETE CASCADE
 
 **Update Strategy:** Daily cron job recalculates retention for recent cohorts (last 3 months)
@@ -113,6 +122,7 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 **Purpose:** Tournament performance metrics aggregated by time period
 
 **Columns:**
+
 - `id` (TEXT, PK) - Unique aggregate identifier
 - `tenant_id` (TEXT, FK) - Organization identifier
 - `period_start` (DATE) - Start of aggregation period
@@ -129,10 +139,12 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 - `updated_at` (TIMESTAMP) - Last update timestamp
 
 **Indexes:**
+
 - `UNIQUE (tenant_id, period_type, period_start)` - Prevent duplicate aggregates
 - `(tenant_id, period_start DESC)` - Fast time-series queries
 
 **Foreign Keys:**
+
 - `tenant_id` → `organizations(id)` ON DELETE CASCADE
 
 **Update Strategy:** Hourly cron job aggregates completed tournaments
@@ -144,6 +156,7 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 **Purpose:** Configuration for automated report generation and delivery
 
 **Columns:**
+
 - `id` (TEXT, PK) - Unique report configuration identifier
 - `tenant_id` (TEXT, FK) - Organization identifier
 - `name` (VARCHAR(255)) - Human-readable report name
@@ -158,10 +171,12 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 - `updated_at` (TIMESTAMP) - Last update timestamp
 
 **Indexes:**
+
 - `(tenant_id)` - Fast tenant-scoped queries
 - `(next_run_at)` - Fast scheduling queries for active reports
 
 **Foreign Keys:**
+
 - `tenant_id` → `organizations(id)` ON DELETE CASCADE
 
 **Scheduling Logic:** Cron job runs every 15 minutes, queries for `is_active = true AND next_run_at <= NOW()`
@@ -171,6 +186,7 @@ This migration adds 5 new database tables to support the Advanced Analytics feat
 ## Multi-Tenant Considerations
 
 All tables include `tenant_id` column with foreign key to `organizations(id)`:
+
 - **ON DELETE CASCADE** - When an organization is deleted, all analytics data is deleted
 - **Indexes** - All queries are scoped by `tenant_id` for performance and isolation
 - **Row-Level Security (RLS)** - Should be enabled in production to prevent cross-tenant data access
@@ -218,16 +234,19 @@ Frontend Visualizations
 ## Migration Commands
 
 ### Apply Migration (when database is running):
+
 ```bash
 npx prisma migrate deploy
 ```
 
 ### Generate Prisma Client:
+
 ```bash
 npx prisma generate
 ```
 
 ### Rollback (if needed):
+
 ```sql
 -- Drop foreign keys first
 ALTER TABLE "analytics_events" DROP CONSTRAINT "analytics_events_tenant_id_fkey";

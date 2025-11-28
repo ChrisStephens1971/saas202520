@@ -149,9 +149,7 @@ export default function OfflineIndicator({
 
   return (
     <div
-      className={`fixed ${
-        position === 'top' ? 'top-0' : 'bottom-0'
-      } left-0 right-0 z-50 shadow-lg`}
+      className={`fixed ${position === 'top' ? 'top-0' : 'bottom-0'} left-0 right-0 z-50 shadow-lg`}
     >
       {/* Main Banner */}
       <div
@@ -214,12 +212,7 @@ export default function OfflineIndicator({
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
@@ -233,9 +226,7 @@ export default function OfflineIndicator({
               <span className="text-gray-600">Connection:</span>
               <span
                 className={`font-medium ${
-                  syncStatus?.connectionStatus === 'online'
-                    ? 'text-green-600'
-                    : 'text-yellow-600'
+                  syncStatus?.connectionStatus === 'online' ? 'text-green-600' : 'text-yellow-600'
                 }`}
               >
                 {syncStatus?.connectionStatus === 'online' ? 'Online' : 'Offline'}

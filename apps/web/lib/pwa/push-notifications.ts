@@ -7,12 +7,7 @@
 
 import { getPublicVapidKey, urlBase64ToUint8Array } from './vapid-keys';
 
-export type NotificationType =
-  | 'match'
-  | 'tournament'
-  | 'achievement'
-  | 'announcement'
-  | 'reminder';
+export type NotificationType = 'match' | 'tournament' | 'achievement' | 'announcement' | 'reminder';
 
 export interface NotificationPayload {
   title: string;
@@ -178,11 +173,10 @@ class PushNotificationManager {
       const publicKey = getPublicVapidKey();
       const convertedKey = urlBase64ToUint8Array(publicKey);
 
-      const subscription =
-        await this.serviceWorkerRegistration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: convertedKey as BufferSource,
-        });
+      const subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: convertedKey as BufferSource,
+      });
 
       this.subscription = subscription;
 
@@ -232,8 +226,7 @@ class PushNotificationManager {
     }
 
     try {
-      const subscription =
-        await this.serviceWorkerRegistration.pushManager.getSubscription();
+      const subscription = await this.serviceWorkerRegistration.pushManager.getSubscription();
       this.subscription = subscription;
       return subscription;
     } catch (error) {
@@ -245,9 +238,7 @@ class PushNotificationManager {
   /**
    * Send subscription to server
    */
-  private async sendSubscriptionToServer(
-    subscription: PushSubscription
-  ): Promise<void> {
+  private async sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
     try {
       const response = await fetch('/api/notifications/subscribe', {
         method: 'POST',
@@ -295,9 +286,7 @@ class PushNotificationManager {
   /**
    * Update preferences
    */
-  async updatePreferences(
-    preferences: Partial<NotificationPreferences>
-  ): Promise<void> {
+  async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<void> {
     this.preferences = { ...this.preferences, ...preferences };
     this.savePreferences();
 

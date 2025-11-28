@@ -74,9 +74,27 @@ describe('NotificationBell', () => {
       });
 
       const mockNotifications = [
-        { id: '1', type: 'in_app', message: 'Test 1', status: 'sent', createdAt: new Date().toISOString() },
-        { id: '2', type: 'in_app', message: 'Test 2', status: 'sent', createdAt: new Date().toISOString() },
-        { id: '3', type: 'in_app', message: 'Test 3', status: 'delivered', createdAt: new Date().toISOString() },
+        {
+          id: '1',
+          type: 'in_app',
+          message: 'Test 1',
+          status: 'sent',
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: '2',
+          type: 'in_app',
+          message: 'Test 2',
+          status: 'sent',
+          createdAt: new Date().toISOString(),
+        },
+        {
+          id: '3',
+          type: 'in_app',
+          message: 'Test 3',
+          status: 'delivered',
+          createdAt: new Date().toISOString(),
+        },
       ];
 
       vi.mocked(global.fetch).mockResolvedValueOnce({
@@ -130,7 +148,13 @@ describe('NotificationBell', () => {
       });
 
       const mockNotifications = [
-        { id: '1', type: 'in_app', message: 'Test 1', status: 'delivered', createdAt: new Date().toISOString() },
+        {
+          id: '1',
+          type: 'in_app',
+          message: 'Test 1',
+          status: 'delivered',
+          createdAt: new Date().toISOString(),
+        },
       ];
 
       vi.mocked(global.fetch).mockResolvedValueOnce({
@@ -170,9 +194,7 @@ describe('NotificationBell', () => {
       render(<NotificationBell />);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('orgId=org-456')
-        );
+        expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('orgId=org-456'));
       });
     });
   });

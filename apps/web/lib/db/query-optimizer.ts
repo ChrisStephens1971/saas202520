@@ -68,7 +68,7 @@ function addQueryMetric(metric: QueryMetrics): void {
  * @returns Array of recent slow queries
  */
 export function getRecentSlowQueries(): QueryMetrics[] {
-  return recentQueries.filter(q => q.duration > QUERY_CONFIG.SLOW_QUERY_THRESHOLD);
+  return recentQueries.filter((q) => q.duration > QUERY_CONFIG.SLOW_QUERY_THRESHOLD);
 }
 
 /**
@@ -87,8 +87,8 @@ export function getQueryStats() {
     };
   }
 
-  const slowQueries = recentQueries.filter(q => q.duration > QUERY_CONFIG.SLOW_QUERY_THRESHOLD);
-  const durations = recentQueries.map(q => q.duration);
+  const slowQueries = recentQueries.filter((q) => q.duration > QUERY_CONFIG.SLOW_QUERY_THRESHOLD);
+  const durations = recentQueries.map((q) => q.duration);
   const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
   const maxDuration = Math.max(...durations);
 
@@ -126,10 +126,10 @@ function logSlowQuery(metric: QueryMetrics): void {
 
   console.warn(
     `[SLOW QUERY] ${timestamp}\n` +
-    `  Model: ${metric.model}\n` +
-    `  Action: ${metric.action}\n` +
-    `  Duration: ${metric.duration}ms\n` +
-    `  Params: ${formattedParams}`
+      `  Model: ${metric.model}\n` +
+      `  Action: ${metric.action}\n` +
+      `  Duration: ${metric.duration}ms\n` +
+      `  Params: ${formattedParams}`
   );
 }
 
@@ -255,7 +255,7 @@ export const queryOptimizer: any = async (params: any, next: any) => {
     // Log failed query
     console.error(
       `[QUERY ERROR] Model: ${params.model || 'Unknown'}, ` +
-      `Action: ${params.action}, Duration: ${duration}ms, Error: ${error}`
+        `Action: ${params.action}, Duration: ${duration}ms, Error: ${error}`
     );
 
     // Report to Sentry
@@ -303,28 +303,32 @@ export function getPerformanceReport() {
   const slowQueries = getRecentSlowQueries();
 
   // Group slow queries by model and action
-  const groupedSlowQueries = slowQueries.reduce((acc, query) => {
-    const key = `${query.model}.${query.action}`;
-    if (!acc[key]) {
-      acc[key] = {
-        count: 0,
-        totalDuration: 0,
-        maxDuration: 0,
-        avgDuration: 0,
-        queries: [],
-      };
-    }
-    acc[key].count++;
-    acc[key].totalDuration += query.duration;
-    acc[key].maxDuration = Math.max(acc[key].maxDuration, query.duration);
-    acc[key].queries.push(query);
-    return acc;
-  }, {} as Record<string, GroupedSlowQuery>);
+  const groupedSlowQueries = slowQueries.reduce(
+    (acc, query) => {
+      const key = `${query.model}.${query.action}`;
+      if (!acc[key]) {
+        acc[key] = {
+          count: 0,
+          totalDuration: 0,
+          maxDuration: 0,
+          avgDuration: 0,
+          queries: [],
+        };
+      }
+      acc[key].count++;
+      acc[key].totalDuration += query.duration;
+      acc[key].maxDuration = Math.max(acc[key].maxDuration, query.duration);
+      acc[key].queries.push(query);
+      return acc;
+    },
+    {} as Record<string, GroupedSlowQuery>
+  );
 
   // Calculate average duration for each group
-  Object.keys(groupedSlowQueries).forEach(key => {
+  Object.keys(groupedSlowQueries).forEach((key) => {
     groupedSlowQueries[key].avgDuration =
-      Math.round((groupedSlowQueries[key].totalDuration / groupedSlowQueries[key].count) * 100) / 100;
+      Math.round((groupedSlowQueries[key].totalDuration / groupedSlowQueries[key].count) * 100) /
+      100;
   });
 
   return {

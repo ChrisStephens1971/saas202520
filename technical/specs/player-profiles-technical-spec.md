@@ -22,6 +22,7 @@ Players currently have no persistent identity or way to track their progress acr
 ### Solution Summary
 
 Build a comprehensive player profile system with:
+
 - **Player Profiles** - Persistent player identities with photos, bios, and customization
 - **Statistics Dashboard** - Real-time aggregated stats (win/loss, win rate, tournaments played, streaks)
 - **Achievement System** - Gamification layer with 20 achievements across 4 categories
@@ -33,6 +34,7 @@ Build a comprehensive player profile system with:
 ### Goals
 
 **Performance Goals:**
+
 - Profile page load time: <1 second (Time to Interactive)
 - Statistics calculation: <50ms (cached)
 - Achievement check processing: <200ms per player (background job)
@@ -40,12 +42,14 @@ Build a comprehensive player profile system with:
 - Head-to-head calculation: <100ms
 
 **User Engagement Goals:**
+
 - 80% of active players view their profile within first week
 - 60% of players unlock at least 1 achievement within 2 weeks
 - 70% profile completion rate (add bio/photo)
 - 40% check head-to-head records within first week
 
 **Business Goals:**
+
 - Increase tournament registration rate by 25%
 - Increase return player rate from 35% to 55%
 - Increase average session duration by 30%
@@ -53,6 +57,7 @@ Build a comprehensive player profile system with:
 ### Non-Goals
 
 **Explicitly out of scope for v1:**
+
 - Social messaging system between players (v2)
 - Custom/organization-specific achievements (v2)
 - Player-to-player challenges or betting (v2)
@@ -69,6 +74,7 @@ Build a comprehensive player profile system with:
 ### Current State
 
 **Existing Systems:**
+
 - Tournament management system (brackets, matches, results)
 - User authentication and multi-tenant organization structure
 - Real-time WebSocket system for live updates
@@ -77,6 +83,7 @@ Build a comprehensive player profile system with:
 - Next.js 14+ App Router frontend
 
 **Current User Flow:**
+
 1. User registers for tournament
 2. Tournament director creates brackets
 3. Players compete, matches are recorded
@@ -84,6 +91,7 @@ Build a comprehensive player profile system with:
 5. **Data disappears** - No historical record, no player stats, no progression
 
 **Pain Points:**
+
 - Players ask "How many tournaments have I won?" - No answer
 - TDs manually track player skill levels in spreadsheets
 - No way to show improvement or progression over time
@@ -92,6 +100,7 @@ Build a comprehensive player profile system with:
 ### Constraints
 
 **Technical Constraints:**
+
 - Must maintain <1s page load time (performance critical)
 - Multi-tenant architecture required (all data scoped to organization)
 - Must respect existing tournament data model (no breaking changes)
@@ -99,18 +108,21 @@ Build a comprehensive player profile system with:
 - Photo storage budget: ~$50/month for 10,000 users
 
 **Business Constraints:**
+
 - 5-day development timeline (Sprint 10 Week 2)
 - Must launch before end of Sprint 10
 - Cannot delay other Sprint 10 features
 - No budget for third-party achievement platforms
 
 **Privacy Constraints:**
+
 - GDPR compliance required (right to delete, export)
 - Default privacy: Private profiles (opt-in to public)
 - Tournament directors can always view profiles in their organization
 - No cross-tenant data visibility
 
 **Timeline Constraints:**
+
 - Day 1: Database schema + Profile pages
 - Day 2: Statistics + History
 - Day 3: Achievement system
@@ -334,6 +346,7 @@ Tournament finalized
 **Server Component:** Yes (SSR for SEO)
 
 **Features:**
+
 - Player search with autocomplete
 - Advanced filters (skill level, location, tournaments played)
 - Grid view of player cards (3 columns desktop, 1 column mobile)
@@ -341,11 +354,13 @@ Tournament finalized
 - Privacy-respecting (only shows public profiles + own org)
 
 **Performance:**
+
 - Initial load: <800ms
 - Search typing: 200ms debounce
 - Filter change: <300ms
 
 **Tech Stack:**
+
 - React Server Component for initial data
 - Client component for search/filter interactivity
 - React Query for search results caching
@@ -362,6 +377,7 @@ Tournament finalized
 **Server Component:** Yes (SSR with ISR - 60s revalidation)
 
 **Sections:**
+
 1. **Profile Header**
    - Profile photo (400x400, optimized WebP)
    - Display name
@@ -391,11 +407,13 @@ Tournament finalized
    - "View Full History →" link
 
 **Performance:**
+
 - Time to Interactive: <1s
 - Skeleton loader while loading
 - Staggered content load (header → stats → achievements → history)
 
 **Caching Strategy:**
+
 - Public profiles: Redis 60s + Next.js ISR 60s
 - Private profiles: Redis 10s + no ISR (always fresh)
 - Owner viewing own profile: 5s cache (frequent updates)
@@ -411,6 +429,7 @@ Tournament finalized
 **Server Component:** Hybrid (SSR initial, client-side pagination)
 
 **Features:**
+
 - Table view with sortable columns
 - Filters: format, date range (presets + custom), venue
 - Pagination (20 per page, cursor-based)
@@ -418,6 +437,7 @@ Tournament finalized
 - Export to CSV button
 
 **Table Columns:**
+
 - Tournament name (link to tournament)
 - Date
 - Format badge
@@ -427,6 +447,7 @@ Tournament finalized
 - Prize amount (if applicable)
 
 **Performance:**
+
 - Initial load: <500ms
 - Filter change: <200ms (cached)
 - Page navigation: <150ms
@@ -442,6 +463,7 @@ Tournament finalized
 **Client Component:** Yes (interactive, real-time updates)
 
 **Features:**
+
 - Achievement grid (4 columns desktop, 2 mobile)
 - Filter by category (participation, performance, engagement, format)
 - Filter by status (all, unlocked, in progress, locked)
@@ -450,12 +472,14 @@ Tournament finalized
 - Share achievement button (social media)
 
 **Achievement Card States:**
+
 1. **Unlocked** - Full color, badge, unlock date
 2. **In Progress** - Semi-transparent, progress bar, "X/Y completed"
 3. **Locked** - Grayscale, lock icon
 4. **Secret** - Question mark icon (hidden until unlocked)
 
 **Modal Details:**
+
 - Achievement name and description
 - Badge icon (large)
 - Rarity and points
@@ -464,6 +488,7 @@ Tournament finalized
 - Share buttons (Twitter, Facebook, copy link)
 
 **Performance:**
+
 - Grid render: <300ms
 - Modal open: <100ms
 - Real-time unlock: WebSocket notification
@@ -479,6 +504,7 @@ Tournament finalized
 **Client Component:** Yes (charts require client-side rendering)
 
 **Charts:**
+
 1. **Win Rate Over Time** (line chart)
    - X-axis: Date (daily/weekly/monthly granularity based on zoom)
    - Y-axis: Win rate percentage
@@ -506,17 +532,20 @@ Tournament finalized
    - Shows percentage of total matches per format
 
 **Data Aggregation:**
+
 - Stats calculated on-demand (not pre-computed)
 - Cached for 5 minutes in Redis
 - Query optimization with proper indexes
 
 **Performance:**
+
 - Chart library: Recharts (lightweight, React-native)
 - Lazy load: Charts only render when tab is visible
 - Initial render: <400ms per chart
 - Interaction (zoom, filter): <100ms
 
 **Export:**
+
 - "Export Data" button → CSV download
 - Includes all stats for selected period
 
@@ -560,6 +589,7 @@ Tournament finalized
    - Note: "Tournament directors in your organization can always view your profile"
 
 **Form Handling:**
+
 - Auto-save on blur (debounced)
 - Optimistic UI updates (instant feedback)
 - Error handling with inline validation
@@ -567,6 +597,7 @@ Tournament finalized
 - "Save" and "Cancel" buttons (sticky at bottom)
 
 **Photo Upload Flow:**
+
 1. User selects file
 2. Client-side validation (size, format)
 3. Show crop tool
@@ -578,6 +609,7 @@ Tournament finalized
 9. Optimistic UI update (show new photo immediately)
 
 **Performance:**
+
 - Form field updates: <50ms (optimistic)
 - Photo upload: <2s (for 5MB image)
 - Save confirmation: <200ms
@@ -628,16 +660,19 @@ Tournament finalized
    - "Search Another Opponent" (autocomplete search box)
 
 **Privacy:**
+
 - Respects "Allow head-to-head lookups" setting
 - If opponent has disabled H2H, show message: "This player has disabled head-to-head lookups"
 - TDs can always view H2H in their organization
 
 **Performance:**
+
 - Query optimization: Single SQL query with JOINs
 - Cached for 60s in Redis
 - Initial load: <300ms
 
 **Data Source:**
+
 - Query `player_matches` table
 - Filter: `(player1_id = A AND player2_id = B) OR (player1_id = B AND player2_id = A)`
 - Aggregate: Count wins per player, group by format/venue
@@ -651,6 +686,7 @@ Tournament finalized
 **Purpose:** Reusable player card for search results, leaderboards
 
 **Props:**
+
 ```typescript
 interface PlayerCardProps {
   playerId: string;
@@ -669,6 +705,7 @@ interface PlayerCardProps {
 ```
 
 **Layout:**
+
 ```
 ┌─────────────────────────────┐
 │ ┌────────┐  John Smith      │
@@ -680,6 +717,7 @@ interface PlayerCardProps {
 ```
 
 **Features:**
+
 - Hover effect (scale + shadow)
 - Click to navigate to profile
 - Skeleton loader state
@@ -692,6 +730,7 @@ interface PlayerCardProps {
 **Purpose:** Statistics dashboard component (used on profile page)
 
 **Props:**
+
 ```typescript
 interface StatsOverviewProps {
   statistics: {
@@ -709,6 +748,7 @@ interface StatsOverviewProps {
 ```
 
 **Layout:**
+
 ```
 ┌──────────────────────────────────────────────┐
 │ STATISTICS DASHBOARD                          │
@@ -731,6 +771,7 @@ interface StatsOverviewProps {
 ```
 
 **Features:**
+
 - Color-coded trends (green up, red down)
 - Animated counters (count up on mount)
 - Collapsible "By Format" section
@@ -743,6 +784,7 @@ interface StatsOverviewProps {
 **Purpose:** Individual achievement display (badge + info)
 
 **Props:**
+
 ```typescript
 interface AchievementBadgeProps {
   achievement: {
@@ -788,6 +830,7 @@ interface AchievementBadgeProps {
    - "Unlock this to reveal" for description
 
 **Rarity Colors:**
+
 - Common: Gray (#9CA3AF)
 - Uncommon: Green (#10B981)
 - Rare: Blue (#3B82F6)
@@ -801,6 +844,7 @@ interface AchievementBadgeProps {
 **Purpose:** Grid layout for all achievements with filtering
 
 **Props:**
+
 ```typescript
 interface AchievementGridProps {
   achievements: Achievement[];
@@ -814,11 +858,13 @@ interface AchievementGridProps {
 ```
 
 **Layout:**
+
 - Grid: 4 columns (desktop), 2 columns (mobile)
 - Gap: 1rem
 - Responsive breakpoints
 
 **Filtering:**
+
 - Category dropdown (All, Participation, Performance, Engagement, Format)
 - Status dropdown (All, Unlocked, In Progress, Locked)
 - Sort dropdown (Rarity, Date Unlocked, Points, Alphabetical)
@@ -831,6 +877,7 @@ interface AchievementGridProps {
 **Purpose:** Paginated table of tournament history
 
 **Props:**
+
 ```typescript
 interface TournamentHistoryTableProps {
   history: TournamentHistoryEntry[];
@@ -848,6 +895,7 @@ interface TournamentHistoryTableProps {
 ```
 
 **Columns:**
+
 - Tournament Name (link)
 - Date (formatted: "Nov 2, 2024")
 - Format (badge with icon)
@@ -857,6 +905,7 @@ interface TournamentHistoryTableProps {
 - Prize (if applicable)
 
 **Features:**
+
 - Sortable columns (click header to sort)
 - Row hover effect
 - Click row to navigate to tournament
@@ -869,6 +918,7 @@ interface TournamentHistoryTableProps {
 **Purpose:** Reusable chart component for analytics
 
 **Props:**
+
 ```typescript
 interface PerformanceChartProps {
   type: 'line' | 'bar' | 'donut';
@@ -881,6 +931,7 @@ interface PerformanceChartProps {
 ```
 
 **Features:**
+
 - Built with Recharts library
 - Responsive (resize listener)
 - Tooltips with formatted data
@@ -896,6 +947,7 @@ interface PerformanceChartProps {
 **Purpose:** H2H record display component
 
 **Props:**
+
 ```typescript
 interface HeadToHeadRecordProps {
   player1: {
@@ -921,6 +973,7 @@ interface HeadToHeadRecordProps {
 ```
 
 **Layout:**
+
 - Side-by-side player info (responsive stacks on mobile)
 - Large record display in center
 - Match list below
@@ -933,6 +986,7 @@ interface HeadToHeadRecordProps {
 **Purpose:** Search interface with autocomplete and filters
 
 **Props:**
+
 ```typescript
 interface PlayerSearchProps {
   onSearch: (query: string, filters: any) => void;
@@ -948,6 +1002,7 @@ interface PlayerSearchProps {
 ```
 
 **Features:**
+
 - Autocomplete dropdown (200ms debounce)
 - Advanced filters (collapsible panel)
 - Search history (local storage)
@@ -974,53 +1029,45 @@ class PlayerProfileService {
     profileId: string,
     viewerId: string,
     organizationId: string
-  ): Promise<PlayerProfile | null>
+  ): Promise<PlayerProfile | null>;
 
   // Create profile for new user
   async createProfile(
     userId: string,
     organizationId: string,
     data: Partial<PlayerProfile>
-  ): Promise<PlayerProfile>
+  ): Promise<PlayerProfile>;
 
   // Update profile (owner only)
   async updateProfile(
     profileId: string,
     ownerId: string,
     data: Partial<PlayerProfile>
-  ): Promise<PlayerProfile>
+  ): Promise<PlayerProfile>;
 
   // Delete profile (soft delete, anonymize)
-  async deleteProfile(
-    profileId: string,
-    ownerId: string
-  ): Promise<void>
+  async deleteProfile(profileId: string, ownerId: string): Promise<void>;
 
   // Export profile data (GDPR compliance)
-  async exportProfile(
-    profileId: string,
-    ownerId: string
-  ): Promise<PlayerProfileExport>
+  async exportProfile(profileId: string, ownerId: string): Promise<PlayerProfileExport>;
 
   // Upload profile photo
-  async uploadPhoto(
-    profileId: string,
-    file: File
-  ): Promise<string> // Returns photo URL
+  async uploadPhoto(profileId: string, file: File): Promise<string>; // Returns photo URL
 
   // Delete profile photo
-  async deletePhoto(profileId: string): Promise<void>
+  async deletePhoto(profileId: string): Promise<void>;
 
   // Check privacy permissions
   async canViewProfile(
     profileId: string,
     viewerId: string,
     organizationId: string
-  ): Promise<boolean>
+  ): Promise<boolean>;
 }
 ```
 
 **Privacy Logic:**
+
 ```typescript
 function canViewProfile(profile, viewer, org): boolean {
   // Owner can always view own profile
@@ -1053,35 +1100,27 @@ function canViewProfile(profile, viewer, org): boolean {
 ```typescript
 class StatsCalculator {
   // Calculate all stats for a player
-  async calculateStats(
-    playerId: string,
-    organizationId: string
-  ): Promise<PlayerStatistics>
+  async calculateStats(playerId: string, organizationId: string): Promise<PlayerStatistics>;
 
   // Recalculate stats after tournament
-  async recalculateStatsForTournament(
-    tournamentId: string
-  ): Promise<void>
+  async recalculateStatsForTournament(tournamentId: string): Promise<void>;
 
   // Calculate win rate for period
-  async calculateWinRate(
-    playerId: string,
-    period: { start: Date; end: Date }
-  ): Promise<number>
+  async calculateWinRate(playerId: string, period: { start: Date; end: Date }): Promise<number>;
 
   // Calculate current streak
-  async calculateStreak(playerId: string): Promise<number>
+  async calculateStreak(playerId: string): Promise<number>;
 
   // Get stats breakdown by format
   async getStatsByFormat(
     playerId: string
-  ): Promise<Record<string, { wins: number; losses: number }>>
+  ): Promise<Record<string, { wins: number; losses: number }>>;
 
   // Get performance trend over time
   async getPerformanceTrend(
     playerId: string,
     period: '30d' | '90d' | '6m' | '1y' | 'all'
-  ): Promise<TrendData[]>
+  ): Promise<TrendData[]>;
 }
 ```
 
@@ -1117,7 +1156,7 @@ function calculateStreak(matches: Match[]): number {
 // Best finish calculation
 function calculateBestFinish(history: TournamentHistory[]): number {
   if (history.length === 0) return null;
-  return Math.min(...history.map(t => t.placement));
+  return Math.min(...history.map((t) => t.placement));
 }
 
 // Average finish calculation
@@ -1129,6 +1168,7 @@ function calculateAverageFinish(history: TournamentHistory[]): number {
 ```
 
 **Performance Optimization:**
+
 - Use database aggregation functions (COUNT, SUM, AVG) where possible
 - Cache results in Redis (5min TTL)
 - Only recalculate when tournament finalizes (not per match)
@@ -1151,32 +1191,26 @@ class AchievementEngine {
     playerId: string,
     organizationId: string,
     tournamentId?: string
-  ): Promise<Achievement[]> // Returns newly unlocked achievements
+  ): Promise<Achievement[]>; // Returns newly unlocked achievements
 
   // Evaluate specific achievement criteria
   async evaluateCriteria(
     criteria: AchievementCriteria,
     playerStats: PlayerStatistics
-  ): Promise<boolean>
+  ): Promise<boolean>;
 
   // Unlock achievement for player
   async unlockAchievement(
     playerId: string,
     achievementId: string,
     tournamentId?: string
-  ): Promise<void>
+  ): Promise<void>;
 
   // Update achievement progress
-  async updateProgress(
-    playerId: string,
-    achievementId: string,
-    progress: any
-  ): Promise<void>
+  async updateProgress(playerId: string, achievementId: string, progress: any): Promise<void>;
 
   // Get all achievements with unlock status for player
-  async getPlayerAchievements(
-    playerId: string
-  ): Promise<PlayerAchievement[]>
+  async getPlayerAchievements(playerId: string): Promise<PlayerAchievement[]>;
 }
 ```
 
@@ -1246,10 +1280,7 @@ export async function processAchievements(tournamentId: string) {
 
     // Send notifications for newly unlocked achievements
     if (unlockedAchievements.length > 0) {
-      await notificationService.sendAchievementUnlock(
-        player.userId,
-        unlockedAchievements
-      );
+      await notificationService.sendAchievementUnlock(player.userId, unlockedAchievements);
 
       // Invalidate cache
       await redis.del(`player:${player.id}:achievements`);
@@ -1287,10 +1318,10 @@ class HistoryService {
     totalCount: number;
     page: number;
     pageSize: number;
-  }>
+  }>;
 
   // Get tournament history for export (CSV)
-  async exportHistory(playerId: string): Promise<string> // CSV string
+  async exportHistory(playerId: string): Promise<string>; // CSV string
 
   // Add tournament to player history (called on tournament finalization)
   async addTournamentToHistory(
@@ -1301,7 +1332,7 @@ class HistoryService {
     losses: number,
     ratingBefore: number,
     ratingAfter: number
-  ): Promise<void>
+  ): Promise<void>;
 }
 ```
 
@@ -1321,6 +1352,7 @@ LIMIT $7 OFFSET $8;
 ```
 
 **Indexing:**
+
 ```sql
 CREATE INDEX idx_player_history_filters ON player_tournament_history (
   player_profile_id,
@@ -1347,26 +1379,26 @@ class HeadToHeadService {
     playerId: string,
     opponentId: string,
     organizationId: string
-  ): Promise<HeadToHeadRecord>
+  ): Promise<HeadToHeadRecord>;
 
   // Get recent matches vs opponent
   async getRecentMatches(
     playerId: string,
     opponentId: string,
     limit: number = 10
-  ): Promise<Match[]>
+  ): Promise<Match[]>;
 
   // Get H2H breakdown by format
   async getBreakdownByFormat(
     playerId: string,
     opponentId: string
-  ): Promise<Record<string, { playerWins: number; opponentWins: number }>>
+  ): Promise<Record<string, { playerWins: number; opponentWins: number }>>;
 
   // Get H2H breakdown by venue
   async getBreakdownByVenue(
     playerId: string,
     opponentId: string
-  ): Promise<Record<string, { playerWins: number; opponentWins: number }>>
+  ): Promise<Record<string, { playerWins: number; opponentWins: number }>>;
 
   // Record match for H2H tracking (called on match completion)
   async recordMatch(
@@ -1380,11 +1412,12 @@ class HeadToHeadService {
     format: string,
     venueId?: string,
     bracketRound?: string
-  ): Promise<void>
+  ): Promise<void>;
 }
 ```
 
 **Privacy Check:**
+
 ```typescript
 async function getHeadToHead(playerId, opponentId, orgId) {
   // Check if opponent allows H2H lookups
@@ -1394,7 +1427,8 @@ async function getHeadToHead(playerId, opponentId, orgId) {
   }
 
   // Query matches
-  const matches = await db.query(`
+  const matches = await db.query(
+    `
     SELECT * FROM player_matches
     WHERE organization_id = $1
       AND (
@@ -1402,20 +1436,18 @@ async function getHeadToHead(playerId, opponentId, orgId) {
         OR (player1_profile_id = $3 AND player2_profile_id = $2)
       )
     ORDER BY match_date DESC
-  `, [orgId, playerId, opponentId]);
+  `,
+    [orgId, playerId, opponentId]
+  );
 
   // Aggregate wins
-  const playerWins = matches.filter(m =>
-    m.winner_profile_id === playerId
-  ).length;
-  const opponentWins = matches.filter(m =>
-    m.winner_profile_id === opponentId
-  ).length;
+  const playerWins = matches.filter((m) => m.winner_profile_id === playerId).length;
+  const opponentWins = matches.filter((m) => m.winner_profile_id === opponentId).length;
 
   return {
     player: { id: playerId, wins: playerWins },
     opponent: { id: opponentId, wins: opponentWins },
-    matches
+    matches,
   };
 }
 ```
@@ -1451,20 +1483,17 @@ class SearchService {
   ): Promise<{
     players: PlayerCard[];
     totalCount: number;
-  }>
+  }>;
 
   // Autocomplete for player names
   async autocomplete(
     query: string,
     organizationId: string,
     limit: number = 10
-  ): Promise<PlayerSuggestion[]>
+  ): Promise<PlayerSuggestion[]>;
 
   // Get recent opponents (for H2H search)
-  async getRecentOpponents(
-    playerId: string,
-    limit: number = 10
-  ): Promise<PlayerSuggestion[]>
+  async getRecentOpponents(playerId: string, limit: number = 10): Promise<PlayerSuggestion[]>;
 }
 ```
 
@@ -1526,6 +1555,7 @@ LIMIT 10;
 ```
 
 **Caching Strategy:**
+
 - Cache autocomplete results for 60s (low volatility)
 - Cache search results for 30s (medium volatility)
 - Invalidate on profile creation/update
@@ -1543,55 +1573,41 @@ LIMIT 10;
 ```typescript
 class PrivacyService {
   // Get privacy settings for player
-  async getPrivacySettings(profileId: string): Promise<PrivacySettings>
+  async getPrivacySettings(profileId: string): Promise<PrivacySettings>;
 
   // Update privacy settings (owner only)
   async updatePrivacySettings(
     profileId: string,
     ownerId: string,
     settings: Partial<PrivacySettings>
-  ): Promise<PrivacySettings>
+  ): Promise<PrivacySettings>;
 
   // Check if viewer can see specific data
-  async canViewStatistics(
-    profileId: string,
-    viewerId: string
-  ): Promise<boolean>
+  async canViewStatistics(profileId: string, viewerId: string): Promise<boolean>;
 
-  async canViewTournamentHistory(
-    profileId: string,
-    viewerId: string
-  ): Promise<boolean>
+  async canViewTournamentHistory(profileId: string, viewerId: string): Promise<boolean>;
 
-  async canViewAchievements(
-    profileId: string,
-    viewerId: string
-  ): Promise<boolean>
+  async canViewAchievements(profileId: string, viewerId: string): Promise<boolean>;
 
-  async canPerformHeadToHead(
-    profileId: string,
-    viewerId: string
-  ): Promise<boolean>
+  async canPerformHeadToHead(profileId: string, viewerId: string): Promise<boolean>;
 
   // Apply privacy filters to profile data
-  async applyPrivacyFilters(
-    profile: PlayerProfile,
-    viewerId: string
-  ): Promise<PlayerProfile> // Returns filtered profile
+  async applyPrivacyFilters(profile: PlayerProfile, viewerId: string): Promise<PlayerProfile>; // Returns filtered profile
 }
 ```
 
 **Privacy Matrix:**
 
-| Data Type | Public Profile | Private Profile (Same Org) | Private Profile (Different Org) | Owner | TD (Same Org) |
-|-----------|----------------|----------------------------|--------------------------------|-------|---------------|
-| Basic Info (name, photo, bio) | ✅ | ✅ | ❌ | ✅ | ✅ |
-| Statistics | ✅ (if show_statistics) | ✅ (if show_statistics) | ❌ | ✅ | ✅ |
-| Tournament History | ✅ (if show_tournament_history) | ✅ (if show_tournament_history) | ❌ | ✅ | ✅ |
-| Achievements | ✅ (if show_achievements) | ✅ (if show_achievements) | ❌ | ✅ | ✅ |
-| Head-to-Head | ✅ (if allow_head_to_head) | ✅ (if allow_head_to_head) | ❌ | ✅ | ✅ |
+| Data Type                     | Public Profile                  | Private Profile (Same Org)      | Private Profile (Different Org) | Owner | TD (Same Org) |
+| ----------------------------- | ------------------------------- | ------------------------------- | ------------------------------- | ----- | ------------- |
+| Basic Info (name, photo, bio) | ✅                              | ✅                              | ❌                              | ✅    | ✅            |
+| Statistics                    | ✅ (if show_statistics)         | ✅ (if show_statistics)         | ❌                              | ✅    | ✅            |
+| Tournament History            | ✅ (if show_tournament_history) | ✅ (if show_tournament_history) | ❌                              | ✅    | ✅            |
+| Achievements                  | ✅ (if show_achievements)       | ✅ (if show_achievements)       | ❌                              | ✅    | ✅            |
+| Head-to-Head                  | ✅ (if allow_head_to_head)      | ✅ (if allow_head_to_head)      | ❌                              | ✅    | ✅            |
 
 **Default Settings:**
+
 - `is_public`: false (private by default)
 - `show_statistics`: true
 - `show_tournament_history`: true
@@ -1664,10 +1680,12 @@ CREATE TRIGGER update_player_profiles_updated_at
 ```
 
 **Relationships:**
+
 - `user_id` → `users(id)` (one-to-one)
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Row-Level Security (RLS):**
+
 ```sql
 -- Enable RLS
 ALTER TABLE player_profiles ENABLE ROW LEVEL SECURITY;
@@ -1767,10 +1785,12 @@ CREATE TRIGGER update_player_stats_updated_at
 ```
 
 **Relationships:**
+
 - `player_id` → `player_profiles(id)` (one-to-one)
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Sample Data:**
+
 ```json
 {
   "player_id": "uuid-123",
@@ -1844,11 +1864,13 @@ CREATE INDEX idx_player_history_date ON player_tournament_history(tournament_dat
 ```
 
 **Relationships:**
+
 - `player_id` → `player_profiles(id)` (many-to-one)
 - `tournament_id` → `tournaments(id)` (many-to-one)
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Why Denormalized:**
+
 - Avoids JOINs with `tournaments` and `venues` tables
 - Tournament name/date/format rarely change (safe to denormalize)
 - Much faster queries for pagination and filtering
@@ -1912,6 +1934,7 @@ CREATE INDEX idx_achievements_slug ON achievements(slug);
 **Relationships:** None (static reference data)
 
 **Sample Data:**
+
 ```sql
 INSERT INTO achievements (slug, name, description, category, rarity, points, unlock_criteria, sort_order) VALUES
 ('first_steps', 'First Steps', 'Complete your first tournament', 'participation', 'common', 10, '{"type": "tournament_count", "count": 1}', 1),
@@ -1962,11 +1985,13 @@ CREATE INDEX idx_player_achievements_progress ON player_achievements USING gin(p
 ```
 
 **Relationships:**
+
 - `player_id` → `player_profiles(id)` (many-to-one)
 - `achievement_id` → `achievements(id)` (many-to-one)
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Sample Data:**
+
 ```json
 {
   "player_id": "uuid-123",
@@ -2021,6 +2046,7 @@ CREATE INDEX idx_player_matches_tenant ON player_matches(tenant_id);
 ```
 
 **Relationships:**
+
 - `player_id` → `player_profiles(id)` (many-to-one)
 - `opponent_id` → `player_profiles(id)` (many-to-one)
 - `match_id` → `matches(id)` (one-to-one)
@@ -2028,11 +2054,13 @@ CREATE INDEX idx_player_matches_tenant ON player_matches(tenant_id);
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Why Two Rows Per Match:**
+
 - Insert 2 rows per match (one for each player)
 - Makes H2H queries much simpler (no complex ORs)
 - Allows easy filtering by player_id
 
 **Sample Data:**
+
 ```json
 // Match: Player A (9) vs Player B (7)
 // Row 1 (Player A's perspective):
@@ -2088,11 +2116,13 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Relationships:**
+
 - `player_id` → `player_profiles(id)` (many-to-one)
 - `tournament_id` → `tournaments(id)` (many-to-one)
 - `tenant_id` → `organizations(id)` (many-to-one)
 
 **Sample Data:**
+
 ```json
 {
   "player_id": "uuid-123",
@@ -2112,6 +2142,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Migration File:** `migrations/YYYYMMDDHHMMSS_create_player_profiles_system.sql`
 
 **Order of Execution:**
+
 1. Create `player_profiles` table
 2. Create `player_statistics` table
 3. Create `player_tournament_history` table
@@ -2124,6 +2155,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 10. Seed achievements data (20 achievements)
 
 **Rollback Plan:**
+
 - Down migration drops tables in reverse order
 - Backfill script to populate from existing tournament data (if needed)
 
@@ -2140,6 +2172,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Search/browse players
 
 **Query Params:**
+
 - `search` (string, optional): Search query
 - `skill_min` (number, optional): Minimum rating
 - `skill_max` (number, optional): Maximum rating
@@ -2151,6 +2184,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - `sort_order` (string, default: 'desc'): 'asc' | 'desc'
 
 **Response (200 OK):**
+
 ```json
 {
   "players": [
@@ -2175,6 +2209,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid query params
 - `401 Unauthorized`: Not authenticated
 - `429 Too Many Requests`: Rate limit exceeded
@@ -2188,9 +2223,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Get player profile
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Response (200 OK):**
+
 ```json
 {
   "profile": {
@@ -2221,7 +2258,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
     "avgFinish": 8.3,
     "currentWinStreak": 4,
     "longestWinStreak": 12,
-    "prizeWinnings": 1250.00,
+    "prizeWinnings": 1250.0,
     "statsByFormat": {
       "8-ball": { "wins": 78, "losses": 32 },
       "9-ball": { "wins": 54, "losses": 28 },
@@ -2258,13 +2295,14 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
       "matchesWon": 6,
       "matchesLost": 1,
       "winRate": 85.71,
-      "prizeAmount": 150.00
+      "prizeAmount": 150.0
     }
   ]
 }
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Profile is private and viewer doesn't have access
 - `404 Not Found`: Player not found
@@ -2278,9 +2316,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Update player profile (owner only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Request Body:**
+
 ```json
 {
   "displayName": "John \"Rack Attack\" Smith",
@@ -2297,6 +2337,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "profile": {
@@ -2306,12 +2347,14 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid data (bio too long, invalid location, etc.)
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not profile owner
 - `404 Not Found`: Player not found
 
 **Validation:**
+
 - `displayName`: Max 100 chars
 - `bio`: Max 500 chars
 - `location.city`: Max 100 chars
@@ -2326,9 +2369,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Delete player profile (owner only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Profile deleted successfully"
@@ -2336,11 +2381,13 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not profile owner
 - `404 Not Found`: Player not found
 
 **Behavior:**
+
 - Soft delete (set `deleted_at` timestamp)
 - Anonymize data (keep stats for historical records)
 - Remove photo from storage
@@ -2355,18 +2402,21 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Get detailed statistics
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Query Params:**
+
 - `period` (string, optional): '30d' | '90d' | '6m' | '1y' | 'all'
 
 **Response (200 OK):**
+
 ```json
 {
   "overall": {
     "winRate": 68.4,
     "totalTournaments": 47,
-    "totalMatches": 208,
+    "totalMatches": 208
     // ... (same as profile statistics)
   },
   "trends": {
@@ -2400,6 +2450,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Cannot view stats (privacy setting)
 - `404 Not Found`: Player not found
@@ -2415,9 +2466,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Get paginated tournament history
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Query Params:**
+
 - `limit` (number, default: 20, max: 100)
 - `offset` (number, default: 0)
 - `format` (string, optional): Filter by format
@@ -2428,6 +2481,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - `sort_order` (string, default: 'desc'): 'asc' | 'desc'
 
 **Response (200 OK):**
+
 ```json
 {
   "history": [
@@ -2444,7 +2498,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
       "matchesWon": 6,
       "matchesLost": 1,
       "winRate": 85.71,
-      "prizeAmount": 150.00
+      "prizeAmount": 150.0
     }
   ],
   "totalCount": 47,
@@ -2459,6 +2513,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Cannot view history (privacy setting)
 - `404 Not Found`: Player not found
@@ -2474,13 +2529,16 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Get all achievements with unlock status
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Query Params:**
+
 - `category` (string, optional): Filter by category
 - `status` (string, optional): 'all' | 'unlocked' | 'in_progress' | 'locked'
 
 **Response (200 OK):**
+
 ```json
 {
   "achievements": [
@@ -2534,6 +2592,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Cannot view achievements (privacy setting)
 - `404 Not Found`: Player not found
@@ -2547,9 +2606,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Trigger achievement check (internal, cron job only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Request Body:**
+
 ```json
 {
   "tournamentId": "uuid-tournament-1"
@@ -2557,6 +2618,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "newUnlocks": [
@@ -2570,6 +2632,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated (requires internal API key)
 - `404 Not Found`: Player not found
 
@@ -2584,10 +2647,12 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Get head-to-head record vs opponent
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 - `opponentId` (string): Opponent profile ID
 
 **Response (200 OK):**
+
 ```json
 {
   "player": {
@@ -2641,6 +2706,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Opponent has disabled H2H lookups
 - `404 Not Found`: Player or opponent not found
@@ -2656,6 +2722,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Search players with filters
 
 **Query Params:**
+
 - `q` (string): Search query
 - `skill_min` (number, optional): Minimum rating
 - `skill_max` (number, optional): Maximum rating
@@ -2679,9 +2746,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Update privacy settings (owner only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Request Body:**
+
 ```json
 {
   "privacyLevel": "public",
@@ -2693,6 +2762,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "privacySettings": {
@@ -2706,6 +2776,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: Invalid privacy settings
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not profile owner
@@ -2722,12 +2793,15 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Upload profile photo (owner only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Request:** `multipart/form-data`
+
 - `file` (File): Image file (max 5MB)
 
 **Response (200 OK):**
+
 ```json
 {
   "photoUrl": "https://cdn.example.com/photos/uuid-123.webp"
@@ -2735,6 +2809,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `400 Bad Request`: File too large, invalid format, etc.
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not profile owner
@@ -2742,6 +2817,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - `413 Payload Too Large`: File exceeds 5MB
 
 **Processing:**
+
 1. Validate file (size, format)
 2. Resize to 400x400 (Sharp)
 3. Convert to WebP (80% quality)
@@ -2759,9 +2835,11 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Purpose:** Delete profile photo (owner only)
 
 **Path Params:**
+
 - `id` (string): Player profile ID
 
 **Response (200 OK):**
+
 ```json
 {
   "message": "Photo deleted successfully"
@@ -2769,11 +2847,13 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized`: Not authenticated
 - `403 Forbidden`: Not profile owner
 - `404 Not Found`: Player not found
 
 **Behavior:**
+
 - Remove photo from R2 storage
 - Set `photo_url` to NULL in database
 - Clear CDN cache
@@ -2787,6 +2867,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Goal:** Set up database schema and basic profile pages
 
 **Tasks:**
+
 - [ ] Write database migration for all 7 tables
 - [ ] Create indexes and RLS policies
 - [ ] Seed achievements data (20 achievements)
@@ -2799,6 +2880,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - [ ] Test profile creation and viewing
 
 **Deliverables:**
+
 - ✅ Database schema fully migrated
 - ✅ Basic profile page viewable
 - ✅ Profile editing works
@@ -2813,6 +2895,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Goal:** Build stats dashboard and tournament history
 
 **Tasks:**
+
 - [ ] Create `StatsCalculator` service
 - [ ] Implement stats aggregation logic
 - [ ] Create background job for stats recalculation
@@ -2825,6 +2908,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - [ ] Test stats accuracy with sample data
 
 **Deliverables:**
+
 - ✅ Stats dashboard displays correctly
 - ✅ Tournament history paginated
 - ✅ Stats auto-update after tournament
@@ -2839,6 +2923,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Goal:** Build achievement engine and UI
 
 **Tasks:**
+
 - [ ] Create `AchievementEngine` service
 - [ ] Implement achievement criteria evaluation
 - [ ] Create background job for achievement checks
@@ -2851,6 +2936,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - [ ] Test all 20 achievements unlock correctly
 
 **Deliverables:**
+
 - ✅ All 20 achievements defined and seeded
 - ✅ Achievement unlock detection works
 - ✅ Real-time notifications on unlock
@@ -2866,6 +2952,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Goal:** Build head-to-head and player search
 
 **Tasks:**
+
 - [ ] Create `HeadToHeadService` service
 - [ ] Implement H2H record calculation
 - [ ] Create `/api/players/[id]/vs/[opponentId]` route
@@ -2880,6 +2967,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - [ ] Test cross-tenant isolation
 
 **Deliverables:**
+
 - ✅ H2H records accurate
 - ✅ Player search functional with filters
 - ✅ Autocomplete works
@@ -2895,6 +2983,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 **Goal:** Test, fix bugs, optimize performance, soft launch
 
 **Tasks:**
+
 - [ ] Unit tests for all services
 - [ ] Integration tests for API routes
 - [ ] Privacy isolation tests
@@ -2913,6 +3002,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - [ ] Post on social media
 
 **Deliverables:**
+
 - ✅ All tests passing
 - ✅ Performance targets met (<1s profile load)
 - ✅ Zero critical bugs
@@ -2928,6 +3018,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### Unit Tests
 
 **Backend Services:**
+
 - `StatsCalculator`: Win rate, streak, average finish calculations
 - `AchievementEngine`: Criteria evaluation for all 20 achievements
 - `HeadToHeadService`: Record aggregation logic
@@ -2935,6 +3026,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - `SearchService`: Query building with filters
 
 **Frontend Components:**
+
 - `PlayerCard`: Renders correctly with all props
 - `StatsOverview`: Displays stats accurately
 - `AchievementBadge`: All states (unlocked, in progress, locked, secret)
@@ -2947,6 +3039,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### Integration Tests
 
 **API Routes:**
+
 - `GET /api/players/[id]`: Returns correct data, respects privacy
 - `PATCH /api/players/[id]`: Updates profile, validates input
 - `GET /api/players/[id]/achievements`: Returns achievements with correct unlock status
@@ -2954,6 +3047,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - `GET /api/players/[id]/vs/[opponentId]`: Calculates H2H record accurately
 
 **Database:**
+
 - Multi-tenant isolation: Players cannot see other orgs' data
 - RLS policies: Users can only edit own profile
 - Generated columns: Win rate auto-calculates
@@ -2964,16 +3058,19 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### Performance Tests
 
 **Load Testing (Apache Bench or k6):**
+
 - Simulate 1000 concurrent users viewing profiles
 - Measure: p50, p95, p99 response times
 - Target: <1s for p95
 
 **Stress Testing:**
+
 - Achievement check processing for 100 tournaments (3200 players)
 - Measure: Job completion time, database load
 - Target: <5 minutes total, no timeouts
 
 **Database Query Performance:**
+
 - Profile query: <50ms
 - History query (paginated): <100ms
 - H2H query: <100ms
@@ -2981,6 +3078,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 - Search query: <200ms
 
 **Tooling:**
+
 - k6 for load testing
 - PostgreSQL EXPLAIN ANALYZE for query optimization
 - New Relic or DataDog for APM
@@ -2990,26 +3088,31 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### Security & Privacy Tests
 
 **Multi-Tenant Isolation:**
+
 - User in Org A cannot view private profile in Org B
 - User in Org A cannot search players in Org B
 - User in Org A cannot perform H2H lookup on player in Org B
 
 **Privacy Settings:**
+
 - Private profile not visible to unauthenticated users
 - Stats hidden when `show_stats = false`
 - History hidden when `show_tournaments = false`
 - H2H blocked when `allow_head_to_head = false`
 
 **Authentication:**
+
 - Cannot edit profile without being owner
 - Cannot upload photo for another user
 - Cannot delete another user's profile
 
 **SQL Injection:**
+
 - Test search query with malicious input
 - Test filter params with SQL injection attempts
 
 **CSRF Protection:**
+
 - All POST/PATCH/DELETE routes protected with CSRF tokens
 
 ---
@@ -3017,11 +3120,13 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### User Acceptance Testing (UAT)
 
 **Beta Testers:**
+
 - 10 TDs (tournament directors)
 - 20 competitive players
 - 5 casual players
 
 **Test Scenarios:**
+
 1. **Profile Creation:** Create profile, add photo, write bio
 2. **View Stats:** Check stats accuracy vs. manual calculations
 3. **Achievement Unlock:** Win tournament, verify achievement unlocks
@@ -3031,11 +3136,13 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 7. **Mobile:** Test all features on iPhone and Android
 
 **Feedback Collection:**
+
 - Post-test survey (1-10 rating, open-ended feedback)
 - Bug reports via dedicated channel
 - Feature requests logged
 
 **Success Criteria:**
+
 - 80% of testers rate 8/10 or higher
 - <5 critical bugs reported
 - Zero data privacy breaches
@@ -3047,6 +3154,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 ### Deployment Strategy
 
 **Environment Progression:**
+
 1. **Dev:** Developers test locally
 2. **Staging:** QA team tests with production-like data
 3. **Production (Soft Launch):** 5% of users (feature flag)
@@ -3054,6 +3162,7 @@ CREATE INDEX idx_rating_history_tenant ON player_rating_history(tenant_id);
 5. **Production (Full):** 100% of users
 
 **Feature Flags:**
+
 ```typescript
 const FEATURE_FLAGS = {
   playerProfiles: {
@@ -3065,6 +3174,7 @@ const FEATURE_FLAGS = {
 ```
 
 **Deployment Steps:**
+
 1. Deploy database migration (via CI/CD)
 2. Deploy backend API routes (zero-downtime)
 3. Deploy frontend pages (incremental static regeneration)
@@ -3075,6 +3185,7 @@ const FEATURE_FLAGS = {
 8. Full rollout to 100%
 
 **Rollback Plan:**
+
 - Feature flag: Instant disable (set `enabled: false`)
 - Database: Run down migration (if critical issue)
 - Code: Revert Git commit, re-deploy previous version
@@ -3086,6 +3197,7 @@ const FEATURE_FLAGS = {
 **Metrics to Track:**
 
 **Application Metrics:**
+
 - Profile page load time (p50, p95, p99)
 - API response time per endpoint
 - Achievement check processing time
@@ -3093,6 +3205,7 @@ const FEATURE_FLAGS = {
 - Cache hit rate (Redis)
 
 **Business Metrics:**
+
 - Profile view count (daily)
 - Profile edit count (daily)
 - Achievement unlock count (daily, per achievement)
@@ -3101,6 +3214,7 @@ const FEATURE_FLAGS = {
 - Photo upload count (daily)
 
 **Error Metrics:**
+
 - API error rate (per endpoint)
 - Database query errors
 - Photo upload failures
@@ -3110,18 +3224,21 @@ const FEATURE_FLAGS = {
 **Alerts:**
 
 **Critical (Page On-Call):**
+
 - API error rate > 5% for 5 minutes
 - Database connection pool exhausted
 - Redis cache down
 - Photo upload service down
 
 **Warning (Slack Notification):**
+
 - API response time p95 > 2s for 10 minutes
 - Achievement check queue backed up > 100 jobs
 - Profile page load time > 1.5s for 10 minutes
 - Disk space > 80%
 
 **Tooling:**
+
 - Application Monitoring: New Relic or DataDog
 - Error Tracking: Sentry
 - Logs: CloudWatch or Logtail
@@ -3134,6 +3251,7 @@ const FEATURE_FLAGS = {
 **Scenarios:**
 
 **1. Critical Bug (Data Corruption):**
+
 - Disable feature flag immediately
 - Identify affected users
 - Run data fix script
@@ -3141,12 +3259,14 @@ const FEATURE_FLAGS = {
 - Re-enable feature flag
 
 **2. Performance Degradation:**
+
 - Increase cache TTL temporarily
 - Add database indexes (if missing)
 - Scale up database (if needed)
 - Optimize slow queries
 
 **3. Privacy Breach:**
+
 - Disable feature flag immediately
 - Audit access logs
 - Notify affected users
@@ -3154,11 +3274,13 @@ const FEATURE_FLAGS = {
 - Security review before re-enable
 
 **4. Database Migration Issue:**
+
 - If migration fails mid-way: Run rollback migration
 - If data loss: Restore from backup (RDS snapshot)
 - If schema change breaks app: Deploy hotfix or revert
 
 **Rollback Procedure:**
+
 1. Disable feature flag (instant)
 2. Communicate to team (Slack)
 3. Identify root cause
@@ -3173,6 +3295,7 @@ const FEATURE_FLAGS = {
 ### External Dependencies
 
 **1. Cloudflare R2 (Photo Storage)**
+
 - **Version:** Latest API
 - **Purpose:** Store profile photos
 - **Why:** Cost-effective ($0.015/GB vs. S3 $0.023/GB), fast CDN
@@ -3180,30 +3303,35 @@ const FEATURE_FLAGS = {
 - **Budget:** ~$10/month for 10,000 users
 
 **2. Recharts (Chart Library)**
+
 - **Version:** ^2.10.0
 - **Purpose:** Render performance trend charts
 - **Why:** Lightweight, React-native, good TypeScript support
 - **Alternative:** Chart.js (more features, larger bundle)
 
 **3. Sharp (Image Processing)**
+
 - **Version:** ^0.33.0
 - **Purpose:** Resize and optimize profile photos
 - **Why:** Fastest image processing library for Node.js
 - **Alternative:** jimp (pure JS, slower)
 
 **4. React Query (Server State Management)**
+
 - **Version:** ^5.0.0
 - **Purpose:** Cache and manage server state (profiles, stats, achievements)
 - **Why:** Built-in caching, automatic refetching, optimistic updates
 - **Alternative:** SWR (simpler, less features)
 
 **5. Zustand (Client State Management)**
+
 - **Version:** ^4.4.0
 - **Purpose:** Manage UI state (edit mode, filters, modals)
 - **Why:** Lightweight, simple API, TypeScript support
 - **Alternative:** Redux (more boilerplate)
 
 **6. date-fns (Date Utilities)**
+
 - **Version:** ^3.0.0
 - **Purpose:** Format dates, calculate streaks, date ranges
 - **Why:** Smaller than moment.js, tree-shakeable, immutable
@@ -3214,26 +3342,31 @@ const FEATURE_FLAGS = {
 ### Internal Dependencies
 
 **1. Authentication System**
+
 - **Required For:** Profile ownership, privacy checks
 - **Dependency:** User session with `userId` and `organizationId`
 - **Impact:** Cannot identify profile owner without auth
 
 **2. Tournament System**
+
 - **Required For:** Source of player data (matches, placements, results)
 - **Dependency:** Tournament finalization webhook
 - **Impact:** Stats and achievements depend on tournament data
 
 **3. Organization System**
+
 - **Required For:** Multi-tenant isolation
 - **Dependency:** `organizationId` in all queries
 - **Impact:** Cross-tenant data leakage if missing
 
 **4. Notification System**
+
 - **Required For:** Achievement unlock notifications
 - **Dependency:** WebSocket or push notification infrastructure
 - **Impact:** Users won't know when achievements unlock (degraded UX)
 
 **5. Rating System (Elo/Fargo)**
+
 - **Required For:** Skill ratings, rating trends
 - **Dependency:** Elo/Fargo calculation service
 - **Impact:** Cannot display rating or rating progression charts
@@ -3245,12 +3378,14 @@ const FEATURE_FLAGS = {
 ### Expected Load
 
 **User Base:**
+
 - 10,000 active players (6 months post-launch)
 - 1,000 concurrent users (peak)
 - 500 tournaments per month (across all orgs)
 - 10,000 matches per month
 
 **Request Volume:**
+
 - Profile views: 50,000/day
 - Stats API calls: 20,000/day
 - Achievement checks: 500/day (background jobs)
@@ -3258,6 +3393,7 @@ const FEATURE_FLAGS = {
 - Search queries: 5,000/day
 
 **Data Volume:**
+
 - Player profiles: 10,000 rows (~10MB)
 - Player statistics: 10,000 rows (~5MB)
 - Tournament history: 100,000 rows (~50MB)
@@ -3272,6 +3408,7 @@ const FEATURE_FLAGS = {
 ### Performance Targets
 
 **API Response Times (p95):**
+
 - Profile page (full): <1000ms
 - Profile API: <200ms
 - Stats API: <300ms
@@ -3282,6 +3419,7 @@ const FEATURE_FLAGS = {
 - Photo upload: <2000ms
 
 **Database Query Times (p95):**
+
 - Profile SELECT: <50ms
 - Stats aggregation: <100ms
 - History pagination: <100ms
@@ -3289,11 +3427,13 @@ const FEATURE_FLAGS = {
 - Search query: <150ms
 
 **Background Job Processing:**
+
 - Achievement check per player: <200ms
 - Stats recalculation per player: <100ms
 - Batch processing 100 players: <30 seconds
 
 **Cache Performance:**
+
 - Redis GET: <5ms
 - Cache hit rate: >80%
 
@@ -3304,17 +3444,20 @@ const FEATURE_FLAGS = {
 **Database Scaling:**
 
 **Current Capacity (Single Instance):**
+
 - PostgreSQL (db.t3.medium): 4GB RAM, 2 vCPU
 - Can handle 1000 QPS
 - Current expected load: ~100 QPS (well within capacity)
 
 **Scaling Strategy:**
+
 1. **Optimize queries and indexes** (Day 1-100)
 2. **Add read replicas** (100-1000 QPS)
 3. **Implement connection pooling** (1000-5000 QPS)
 4. **Shard by tenant** (5000+ QPS)
 
 **When to scale:**
+
 - Monitor database CPU > 70% for 1 hour
 - Monitor active connections > 80% of max
 - Monitor query latency > 200ms p95
@@ -3322,11 +3465,13 @@ const FEATURE_FLAGS = {
 **Redis Scaling:**
 
 **Current Capacity:**
+
 - Redis (t3.small): 2GB RAM
 - Can cache 500,000 profiles (4KB each)
 - Current expected: 10,000 profiles (20MB)
 
 **Scaling Strategy:**
+
 1. **Increase TTL** (reduce cache churn)
 2. **Upgrade instance size** (more RAM)
 3. **Add Redis cluster** (horizontal scaling)
@@ -3334,17 +3479,20 @@ const FEATURE_FLAGS = {
 **Application Scaling:**
 
 **Next.js Deployment:**
+
 - Vercel serverless functions (auto-scaling)
 - Edge functions for static content
 - ISR for profile pages (cached at CDN)
 
 **Background Jobs:**
+
 - Vercel Cron (serverless, auto-scaling)
 - Queue: Redis or PostgreSQL-based queue
 - Concurrency: 10 jobs in parallel (current)
 - Scale to 100 jobs in parallel (if needed)
 
 **CDN Scaling:**
+
 - Cloudflare CDN (unlimited bandwidth)
 - Cache profile photos (1 year expiration)
 - Cache static assets (immutable)
@@ -3356,26 +3504,31 @@ const FEATURE_FLAGS = {
 **Potential Bottlenecks:**
 
 **1. Database (PostgreSQL)**
+
 - **Risk:** High read volume on player profiles, stats
 - **Mitigation:** Redis caching (60s TTL), read replicas
 - **Monitoring:** Query latency, connection pool usage
 
 **2. Photo Upload Processing**
+
 - **Risk:** Image resizing is CPU-intensive
 - **Mitigation:** Offload to background job, use Sharp (fast)
 - **Monitoring:** Upload success rate, processing time
 
 **3. Achievement Check Processing**
+
 - **Risk:** Batch processing 100+ players after large tournament
 - **Mitigation:** Queue-based system, parallel processing
 - **Monitoring:** Queue depth, job failure rate
 
 **4. Search Queries**
+
 - **Risk:** Complex filters on large datasets
 - **Mitigation:** Database indexes, autocomplete caching
 - **Monitoring:** Query latency, cache hit rate
 
 **5. WebSocket Connections (Notifications)**
+
 - **Risk:** 1000 concurrent WebSocket connections
 - **Mitigation:** Use Redis pub/sub, scale horizontally
 - **Monitoring:** Connection count, message latency
@@ -3384,18 +3537,18 @@ const FEATURE_FLAGS = {
 
 ## Risks & Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **Privacy Breach** - Player data exposed to wrong users | Critical | Low | Default privacy: private. Granular controls. RLS policies. Extensive testing. Security audit. |
-| **Performance Degradation** - Slow profile loads, timeouts | High | Medium | Aggressive caching (Redis + CDN). Database indexes. Load testing. Auto-scaling. |
-| **Achievement Gaming** - Players exploit system to unlock achievements | Medium | Medium | Careful criteria design. Manual review for suspicious unlocks. Rate limiting. |
-| **Data Inconsistency** - Stats don't match tournament results | High | Low | Automated tests for calculations. Webhook-based updates. Recalculation script. |
-| **Photo Upload Abuse** - Inappropriate images, spam | Medium | Medium | File size limits. Format validation. Content moderation. Report button. |
-| **Low Engagement** - Players don't use features | High | Medium | Gamification (achievements). Email campaigns. In-tournament prompts. Contests. |
-| **Multi-Tenant Data Leakage** - Cross-org data access | Critical | Very Low | RLS policies. All queries include `tenant_id`. Security audit. Automated tests. |
-| **Database Scaling Issues** - DB performance degrades | Medium | Low | Read replicas. Connection pooling. Monitoring. Auto-scaling. |
-| **Feature Creep** - Scope expands, launch delayed | Medium | High | Strict prioritization (P0, P1, P2). Weekly scope review. Defer P2 to post-launch. |
-| **GDPR Compliance** - Data retention, deletion issues | High | Low | Privacy policy. Data export endpoint. Hard delete option. Lawyer review. |
+| Risk                                                                   | Impact   | Probability | Mitigation                                                                                    |
+| ---------------------------------------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------------------------- |
+| **Privacy Breach** - Player data exposed to wrong users                | Critical | Low         | Default privacy: private. Granular controls. RLS policies. Extensive testing. Security audit. |
+| **Performance Degradation** - Slow profile loads, timeouts             | High     | Medium      | Aggressive caching (Redis + CDN). Database indexes. Load testing. Auto-scaling.               |
+| **Achievement Gaming** - Players exploit system to unlock achievements | Medium   | Medium      | Careful criteria design. Manual review for suspicious unlocks. Rate limiting.                 |
+| **Data Inconsistency** - Stats don't match tournament results          | High     | Low         | Automated tests for calculations. Webhook-based updates. Recalculation script.                |
+| **Photo Upload Abuse** - Inappropriate images, spam                    | Medium   | Medium      | File size limits. Format validation. Content moderation. Report button.                       |
+| **Low Engagement** - Players don't use features                        | High     | Medium      | Gamification (achievements). Email campaigns. In-tournament prompts. Contests.                |
+| **Multi-Tenant Data Leakage** - Cross-org data access                  | Critical | Very Low    | RLS policies. All queries include `tenant_id`. Security audit. Automated tests.               |
+| **Database Scaling Issues** - DB performance degrades                  | Medium   | Low         | Read replicas. Connection pooling. Monitoring. Auto-scaling.                                  |
+| **Feature Creep** - Scope expands, launch delayed                      | Medium   | High        | Strict prioritization (P0, P1, P2). Weekly scope review. Defer P2 to post-launch.             |
+| **GDPR Compliance** - Data retention, deletion issues                  | High     | Low         | Privacy policy. Data export endpoint. Hard delete option. Lawyer review.                      |
 
 ---
 
@@ -3404,17 +3557,20 @@ const FEATURE_FLAGS = {
 ### Alternative 1: Third-Party Achievement Platform (e.g., Xbox Live SDK)
 
 **Pros:**
+
 - Pre-built achievement system
 - Social features included (friends, messaging)
 - Proven at scale
 
 **Cons:**
+
 - Cost: $0.10 per user/month (~$1000/month for 10k users)
 - Vendor lock-in
 - Limited customization
 - Requires integration work
 
 **Why Not Chosen:**
+
 - Too expensive for current budget
 - We need custom achievement criteria (tournament-specific)
 - Want full control over data and UX
@@ -3424,17 +3580,20 @@ const FEATURE_FLAGS = {
 ### Alternative 2: Elasticsearch for Player Search
 
 **Pros:**
+
 - Extremely fast full-text search
 - Advanced filtering and faceting
 - Scales to millions of documents
 
 **Cons:**
+
 - Added infrastructure complexity
 - Cost: ~$50/month for managed Elasticsearch
 - Overkill for 10,000 players
 - Data sync complexity (PostgreSQL → Elasticsearch)
 
 **Why Not Chosen:**
+
 - PostgreSQL with proper indexes is fast enough for current scale
 - Can migrate to Elasticsearch later if needed (when >100k players)
 - Trigram indexes provide good autocomplete performance
@@ -3444,17 +3603,20 @@ const FEATURE_FLAGS = {
 ### Alternative 3: NoSQL Database (MongoDB) for Profiles
 
 **Pros:**
+
 - Flexible schema (easy to add fields)
 - Good for document-like data (profiles with JSONB)
 - Horizontal scaling built-in
 
 **Cons:**
+
 - No native multi-tenant RLS (manual enforcement)
 - No JOINs (need to denormalize more)
 - Team is more familiar with PostgreSQL
 - Adds another database to infrastructure
 
 **Why Not Chosen:**
+
 - PostgreSQL JSONB provides same flexibility
 - PostgreSQL RLS provides better multi-tenant security
 - Consistency with existing stack (all other data in PostgreSQL)
@@ -3464,15 +3626,18 @@ const FEATURE_FLAGS = {
 ### Alternative 4: Server-Side Rendering (SSR) Instead of ISR
 
 **Pros:**
+
 - Always fresh data (no stale cache)
 - Better SEO (real-time content)
 
 **Cons:**
+
 - Slower page loads (no CDN caching)
 - Higher server load (render on every request)
 - Worse user experience (longer TTFB)
 
 **Why Not Chosen:**
+
 - Profiles don't change frequently (ISR 60s is acceptable)
 - Performance is critical (<1s load time)
 - ISR provides best balance (fast + fresh enough)
@@ -3482,17 +3647,20 @@ const FEATURE_FLAGS = {
 ### Alternative 5: Manual Achievement Unlocks (TD Awards)
 
 **Pros:**
+
 - Simple implementation (no background jobs)
 - TDs have full control
 - No gaming/exploits
 
 **Cons:**
+
 - Manual work for TDs (overhead)
 - Inconsistent (some TDs forget)
 - Delayed gratification (not real-time)
 - Less engaging for players
 
 **Why Not Chosen:**
+
 - Automation provides better UX (instant unlock)
 - Real-time notifications create excitement
 - Reduces TD workload
@@ -3502,6 +3670,7 @@ const FEATURE_FLAGS = {
 ## Open Questions
 
 **Product Questions:**
+
 - [ ] **Achievement Rarity Distribution:** Confirmed 30% common, 25% uncommon, 25% rare, 15% epic, 5% legendary?
 - [ ] **Default Privacy:** Private confirmed (opt-in to public)?
 - [ ] **Player Search Access:** All users or TDs only? → **Decision: All users, TDs get advanced filters**
@@ -3510,6 +3679,7 @@ const FEATURE_FLAGS = {
 - [ ] **Achievement Notifications:** Toast for rare+, silent for common? → **Decision: Yes**
 
 **Technical Questions:**
+
 - [ ] **Photo Storage:** Cloudflare R2 confirmed?
 - [ ] **Background Jobs:** Vercel Cron confirmed?
 - [ ] **Chart Library:** Recharts confirmed?
@@ -3517,12 +3687,14 @@ const FEATURE_FLAGS = {
 - [ ] **Database Scaling:** When to add read replica? → **Monitor: >70% CPU for 1 hour**
 
 **Design Questions:**
+
 - [ ] **Profile Photo Placeholder:** Initials + colored background?
 - [ ] **Achievement Icons:** Icon library for v1, custom later?
 - [ ] **Mobile Navigation:** Horizontal scrollable tabs?
 - [ ] **Color Scheme:** Green/red for win/loss?
 
 **Business Questions:**
+
 - [ ] **Premium Features:** All free for v1?
 - [ ] **Advertising:** No ads on profiles?
 - [ ] **Data Licensing:** TDs can export stats for own org only?
@@ -3532,6 +3704,7 @@ const FEATURE_FLAGS = {
 ## References
 
 **Related Documents:**
+
 - Product Requirements: `product/PRDs/player-profiles-enhanced-experience.md`
 - Sprint Plan: `sprints/current/sprint-10-business-growth.md`
 - Multi-Tenant Architecture: `technical/multi-tenant-architecture.md`
@@ -3540,6 +3713,7 @@ const FEATURE_FLAGS = {
 - API Documentation: `technical/api-spec.md` (to be updated)
 
 **External Resources:**
+
 - Recharts Documentation: https://recharts.org/
 - Sharp Documentation: https://sharp.pixelplumbing.com/
 - React Query Documentation: https://tanstack.com/query/latest
@@ -3547,6 +3721,7 @@ const FEATURE_FLAGS = {
 - Cloudflare R2 Documentation: https://developers.cloudflare.com/r2/
 
 **Research:**
+
 - User Interviews (Oct 2024): 80% want stat tracking
 - Competitor Analysis: 5 platforms analyzed, none have comprehensive achievements
 - Gaming Industry Data: 60% achievement unlock rate (Xbox, PlayStation)
@@ -3556,6 +3731,6 @@ const FEATURE_FLAGS = {
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                       | Changes                                                                                                                                                                                            |
+| ---------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2025-11-06 | Claude (Technical Architect) | Initial draft - comprehensive technical specification with architecture, data model, API design, implementation plan, testing strategy, deployment plan, performance analysis, and risk mitigation |

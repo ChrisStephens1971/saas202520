@@ -81,13 +81,7 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
   );
 }
 
-export function EmptyState({
-  title,
-  description,
-}: {
-  title: string;
-  description?: string;
-}) {
+export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
     <div className="w-full h-[300px] bg-gray-50 dark:bg-gray-800/50 rounded-lg flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700">
       <svg
@@ -103,9 +97,7 @@ export function EmptyState({
           d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
         />
       </svg>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-        {title}
-      </h3>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{title}</h3>
       {description && (
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center max-w-md">
           {description}

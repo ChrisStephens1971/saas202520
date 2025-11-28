@@ -12,6 +12,7 @@
 This document provides detailed index strategy, query optimization techniques, and performance recommendations for the player profiles database schema.
 
 **Key Goals:**
+
 - Player profile loads in <10ms
 - Leaderboards render in <20ms
 - Match history pagination in <15ms
@@ -42,6 +43,7 @@ CREATE INDEX player_profiles_tenant_id_skill_level_idx
 ```
 
 **Usage:**
+
 - `player_id_key` - Fast 1:1 lookup from players table (most common)
 - `tenant_id_idx` - Tenant-scoped queries
 - `tenant_id_skill_level_idx` - Filter players by skill level
@@ -75,6 +77,7 @@ CREATE INDEX player_statistics_tenant_id_total_prize_won_idx
 ```
 
 **Usage:**
+
 - `player_id_key` - Fast 1:1 lookup (most common)
 - `tenant_id_win_rate_idx` - Win rate leaderboards
 - `tenant_id_total_tournaments_idx` - Participation rankings
@@ -107,6 +110,7 @@ CREATE INDEX achievement_definitions_is_active_idx ON achievement_definitions(is
 ```
 
 **Usage:**
+
 - `code_key` - Lookup by achievement code (FIRST_STEPS, WINNER, etc.)
 - `category_idx` - Filter achievements by category
 - `tier_idx` - Filter by tier (BRONZE, SILVER, GOLD, PLATINUM)
@@ -140,6 +144,7 @@ CREATE INDEX player_achievements_unlocked_at_idx
 ```
 
 **Usage:**
+
 - `player_id_achievement_id_key` - Prevent duplicate unlocks + fast checks
 - `tenant_id_player_id_idx` - Get all achievements for a player
 - `tenant_id_achievement_id_idx` - Find who has a specific achievement
@@ -172,6 +177,7 @@ CREATE INDEX match_history_tenant_id_tournament_id_player_id_idx
 ```
 
 **Usage:**
+
 - `match_id_idx` - Link back to matches table
 - `tenant_id_player_id_played_at_idx` - Player match history timeline (most common query)
 - `tenant_id_player_id_opponent_id_idx` - Head-to-head match lookups
@@ -207,6 +213,7 @@ CREATE INDEX head_to_head_records_tenant_id_last_played_at_idx
 ```
 
 **Usage:**
+
 - `tenant_id_player1_id_player2_id_key` - Fast H2H lookup + prevent duplicates
 - `tenant_id_player1_id_idx` - Find all opponents for player1
 - `tenant_id_player2_id_idx` - Find all opponents for player2
@@ -234,6 +241,7 @@ CREATE INDEX player_settings_tenant_id_idx ON player_settings(tenant_id);
 ```
 
 **Usage:**
+
 - `player_id_key` - Fast 1:1 lookup
 - `tenant_id_player_id_key` - Tenant-scoped unique constraint
 - `tenant_id_idx` - Tenant-wide settings queries
@@ -247,6 +255,7 @@ CREATE INDEX player_settings_tenant_id_idx ON player_settings(tenant_id);
 ### Pattern 1: Load Player Profile (Most Common)
 
 **Query:**
+
 ```sql
 SELECT
   p.id, p.name, p.email,
@@ -261,6 +270,7 @@ WHERE p.id = $1 AND p.tenant_id = $2;
 ```
 
 **Index Usage:**
+
 1. `players_pkey` on players(id) - Primary lookup
 2. `player_profiles_player_id_key` - 1:1 join
 3. `player_statistics_player_id_key` - 1:1 join
@@ -269,6 +279,7 @@ WHERE p.id = $1 AND p.tenant_id = $2;
 **Performance:** 5-8ms
 
 **Optimization Tips:**
+
 - Consider denormalizing `achievement_count` to `player_statistics`
 - Cache profile data in Redis (5-minute TTL)
 
@@ -277,6 +288,7 @@ WHERE p.id = $1 AND p.tenant_id = $2;
 ### Pattern 2: Leaderboard Query
 
 **Query:**
+
 ```sql
 -- Top 100 players by win rate
 SELECT
@@ -293,6 +305,7 @@ LIMIT 100;
 ```
 
 **Index Usage:**
+
 1. `player_statistics_tenant_id_win_rate_idx` - Main sort (DESC)
 2. `players_pkey` - Join to players
 3. `player_profiles_player_id_key` - Join to profiles
@@ -300,11 +313,13 @@ LIMIT 100;
 **Performance:** 12-18ms
 
 **Optimization Tips:**
+
 - Add materialized view for top 1000 players
 - Cache top 100 in Redis (5-minute TTL)
 - Consider partial index: `WHERE total_tournaments >= 10`
 
 **Materialized View:**
+
 ```sql
 CREATE MATERIALIZED VIEW leaderboard_top_1000 AS
 SELECT
@@ -326,6 +341,7 @@ REFRESH MATERIALIZED VIEW leaderboard_top_1000;
 ### Pattern 3: Match History Timeline
 
 **Query:**
+
 ```sql
 -- Last 20 matches for player
 SELECT
@@ -345,6 +361,7 @@ LIMIT 20;
 ```
 
 **Index Usage:**
+
 1. `match_history_tenant_id_player_id_played_at_idx` (DESC) - Main query
 2. `tournaments_pkey` - Join tournaments
 3. `players_pkey` - Join opponents
@@ -353,6 +370,7 @@ LIMIT 20;
 **Performance:** 8-12ms
 
 **Optimization Tips:**
+
 - Use cursor-based pagination (played_at < cursor)
 - Denormalize opponent_name to match_history (trade-off: storage vs. joins)
 - Cache recent 20 matches in Redis
@@ -362,6 +380,7 @@ LIMIT 20;
 ### Pattern 4: Head-to-Head Lookup
 
 **Query:**
+
 ```sql
 -- Get H2H record between two players
 SELECT
@@ -381,12 +400,14 @@ WHERE h.tenant_id = $1
 ```
 
 **Index Usage:**
+
 1. `head_to_head_records_tenant_id_player1_id_player2_id_key` - Unique constraint index
 2. `players_pkey` - Join player names
 
 **Performance:** 2-4ms
 
 **Optimization Tips:**
+
 - Always order player IDs (player1_id < player2_id) before query
 - Cache H2H records for active rivalries
 
@@ -395,6 +416,7 @@ WHERE h.tenant_id = $1
 ### Pattern 5: Achievement Progress Check
 
 **Query:**
+
 ```sql
 -- Check if player has achievement
 SELECT
@@ -408,12 +430,14 @@ WHERE pa.player_id = $1
 ```
 
 **Index Usage:**
+
 1. `player_achievements_player_id_achievement_id_key` - Unique constraint
 2. `achievement_definitions_pkey` - Join definition
 
 **Performance:** 2-3ms
 
 **Optimization Tips:**
+
 - Cache player's unlocked achievements in Redis
 - Batch check multiple achievements in one query
 
@@ -422,6 +446,7 @@ WHERE pa.player_id = $1
 ### Pattern 6: Player Search
 
 **Query:**
+
 ```sql
 -- Search players by name or location
 SELECT
@@ -441,6 +466,7 @@ LIMIT 20;
 ```
 
 **Index Usage:**
+
 - `players_tenant_id_idx` - Tenant filter
 - Full table scan on name/location (ILIKE doesn't use B-tree indexes)
 
@@ -449,6 +475,7 @@ LIMIT 20;
 **Optimization Tips:**
 
 **Option 1: Full-Text Search Indexes (PostgreSQL)**
+
 ```sql
 -- Add tsvector column
 ALTER TABLE players ADD COLUMN search_vector tsvector;
@@ -469,6 +496,7 @@ LIMIT 20;
 ```
 
 **Option 2: Trigram Indexes (pg_trgm)**
+
 ```sql
 -- Enable pg_trgm extension
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
@@ -491,19 +519,20 @@ CREATE INDEX player_profiles_location_trgm_idx ON player_profiles USING GIN(loca
 
 **Per 1,000 Players:**
 
-| Table | Data Size | Index Size | Ratio |
-|-------|-----------|------------|-------|
-| player_profiles | 500 KB | 100 KB | 20% |
-| player_statistics | 200 KB | 150 KB | 75% |
-| achievement_definitions | 10 KB | 5 KB | 50% |
-| player_achievements | 1 MB | 200 KB | 20% |
-| match_history | 25 MB | 2 MB | 8% |
-| head_to_head_records | 2 MB | 400 KB | 20% |
-| player_settings | 300 KB | 100 KB | 33% |
+| Table                   | Data Size | Index Size | Ratio |
+| ----------------------- | --------- | ---------- | ----- |
+| player_profiles         | 500 KB    | 100 KB     | 20%   |
+| player_statistics       | 200 KB    | 150 KB     | 75%   |
+| achievement_definitions | 10 KB     | 5 KB       | 50%   |
+| player_achievements     | 1 MB      | 200 KB     | 20%   |
+| match_history           | 25 MB     | 2 MB       | 8%    |
+| head_to_head_records    | 2 MB      | 400 KB     | 20%   |
+| player_settings         | 300 KB    | 100 KB     | 33%   |
 
 **Total:** ~29 MB data + ~3 MB indexes = 32 MB per 1,000 players
 
 **Scaling:**
+
 - 10,000 players: ~320 MB (easily fits in memory)
 - 100,000 players: ~3.2 GB (requires proper memory allocation)
 - 1,000,000 players: ~32 GB (consider partitioning)
@@ -571,6 +600,7 @@ REINDEX INDEX player_statistics_tenant_id_win_rate_idx;
 ### Redis Cache Patterns
 
 **1. Player Profile Cache**
+
 ```typescript
 const CACHE_KEY = `player:${tenantId}:${playerId}:profile`;
 const TTL = 300; // 5 minutes
@@ -585,6 +615,7 @@ const TTL = 300; // 5 minutes
 ```
 
 **2. Leaderboard Cache**
+
 ```typescript
 const CACHE_KEY = `leaderboard:${tenantId}:winrate:top100`;
 const TTL = 300; // 5 minutes
@@ -597,18 +628,19 @@ const TTL = 300; // 5 minutes
 ```
 
 **3. Head-to-Head Cache**
+
 ```typescript
 const CACHE_KEY = `h2h:${tenantId}:${player1Id}:${player2Id}`;
 const TTL = 600; // 10 minutes (less frequent updates)
 
 // Cache structure
 {
-  player1Wins, player2Wins, draws,
-  totalMatches, lastPlayedAt, favorsPlayer1
+  (player1Wins, player2Wins, draws, totalMatches, lastPlayedAt, favorsPlayer1);
 }
 ```
 
 **Cache Invalidation:**
+
 - After match completion → Invalidate player stats, leaderboard
 - After tournament completion → Invalidate achievements, H2H records
 - After settings update → Invalidate profile cache
@@ -618,11 +650,13 @@ const TTL = 600; // 10 minutes (less frequent updates)
 ## Partitioning Strategy (Future)
 
 **When to Partition:**
+
 - 1M+ players per tenant
 - match_history table >100 GB
 - Query performance degrades despite indexes
 
 **Partition match_history by played_at:**
+
 ```sql
 -- Create partitioned table
 CREATE TABLE match_history_partitioned (
@@ -640,6 +674,7 @@ CREATE TABLE match_history_2025_02 PARTITION OF match_history_partitioned
 ```
 
 **Benefits:**
+
 - Faster queries on recent history
 - Easier archival of old data
 - Improved vacuum performance
@@ -699,6 +734,7 @@ pgbench -c 50 -j 10 -T 60 -f benchmark_player_profiles.sql tournament_db
 ```
 
 **Target Metrics:**
+
 - Throughput: >1000 TPS
 - Latency (p95): <50ms
 - Latency (p99): <100ms
@@ -708,6 +744,7 @@ pgbench -c 50 -j 10 -T 60 -f benchmark_player_profiles.sql tournament_db
 ## Conclusion
 
 **Index Strategy Summary:**
+
 1. **Primary lookups** - Use unique indexes on foreign keys
 2. **Leaderboards** - Composite indexes with DESC ordering
 3. **Timelines** - Composite indexes with timestamp DESC
@@ -715,12 +752,14 @@ pgbench -c 50 -j 10 -T 60 -f benchmark_player_profiles.sql tournament_db
 5. **Aggregates** - Pre-computed in separate tables
 
 **Performance Targets:**
+
 - Profile loads: <10ms ✓
 - Leaderboards: <20ms ✓
 - Match history: <15ms ✓
 - H2H lookups: <5ms ✓
 
 **Monitoring:**
+
 - Weekly index health checks
 - Monthly index rebuilds
 - Quarterly partitioning review (if needed)

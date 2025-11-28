@@ -44,7 +44,7 @@ export function BottomSheet({
   height = 'auto',
   className,
   snapPoints = [90],
-  enableDrag = true
+  enableDrag = true,
 }: BottomSheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const y = useMotionValue(0);
@@ -128,7 +128,7 @@ export function BottomSheet({
             )}
             style={{
               y,
-              height: getSheetHeight()
+              height: getSheetHeight(),
             }}
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
@@ -136,7 +136,7 @@ export function BottomSheet({
             transition={{
               type: 'spring',
               stiffness: 300,
-              damping: 30
+              damping: 30,
             }}
             drag={enableDrag ? 'y' : false}
             dragConstraints={{ top: 0, bottom: 0 }}
@@ -179,7 +179,7 @@ export function BottomSheet({
                     aria-label="Close bottom sheet"
                     style={{
                       minWidth: '44px',
-                      minHeight: '44px'
+                      minHeight: '44px',
                     }}
                   >
                     <X className="w-6 h-6" />
@@ -189,9 +189,7 @@ export function BottomSheet({
             )}
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-4">
-              {children}
-            </div>
+            <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-4">{children}</div>
           </motion.div>
         </>
       )}

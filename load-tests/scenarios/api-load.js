@@ -60,9 +60,9 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 0,
       stages: [
-        { duration: '2m', target: 50 },   // Ramp up
-        { duration: '5m', target: 100 },  // Normal load
-        { duration: '2m', target: 0 },    // Ramp down
+        { duration: '2m', target: 50 }, // Ramp up
+        { duration: '5m', target: 100 }, // Normal load
+        { duration: '2m', target: 0 }, // Ramp down
       ],
       startTime: '2m',
       tags: { test_type: 'load' },
@@ -88,14 +88,14 @@ export const options = {
 
   thresholds: {
     ...responseTimeThresholds(500, 1000),
-    'auth_time': ['p(95)<800', 'p(99)<1500'],
-    'create_time': ['p(95)<1000', 'p(99)<2000'],
-    'read_time': ['p(95)<300', 'p(99)<500'],
-    'update_time': ['p(95)<500', 'p(99)<1000'],
-    'delete_time': ['p(95)<300', 'p(99)<500'],
-    'list_time': ['p(95)<400', 'p(99)<800'],
-    'filter_time': ['p(95)<600', 'p(99)<1200'],
-    'errors': ['rate<0.01'],
+    auth_time: ['p(95)<800', 'p(99)<1500'],
+    create_time: ['p(95)<1000', 'p(99)<2000'],
+    read_time: ['p(95)<300', 'p(99)<500'],
+    update_time: ['p(95)<500', 'p(99)<1000'],
+    delete_time: ['p(95)<300', 'p(99)<500'],
+    list_time: ['p(95)<400', 'p(99)<800'],
+    filter_time: ['p(95)<600', 'p(99)<1200'],
+    errors: ['rate<0.01'],
   },
 };
 
@@ -221,10 +221,7 @@ function testAuthentication() {
     const token = loginResponse.json('token');
 
     // Verify token
-    const verifyResponse = http.get(
-      `${BASE_URL}/api/auth/me`,
-      getAuthHeaders(token)
-    );
+    const verifyResponse = http.get(`${BASE_URL}/api/auth/me`, getAuthHeaders(token));
 
     checkResponse(verifyResponse, {
       'verify token - status 200': (r) => r.status === 200,
@@ -232,11 +229,7 @@ function testAuthentication() {
     });
 
     // Refresh token (if endpoint exists)
-    const refreshResponse = http.post(
-      `${BASE_URL}/api/auth/refresh`,
-      null,
-      getAuthHeaders(token)
-    );
+    const refreshResponse = http.post(`${BASE_URL}/api/auth/refresh`, null, getAuthHeaders(token));
 
     if (refreshResponse.status !== 404) {
       checkResponse(refreshResponse, {
@@ -365,9 +358,7 @@ function testReadOperations(token) {
     checkResponse(response, {
       'read - status 200': (r) => r.status === 200,
       'read - has complete data': (r) =>
-        r.json('id') !== undefined &&
-        r.json('name') !== undefined &&
-        r.json('type') !== undefined,
+        r.json('id') !== undefined && r.json('name') !== undefined && r.json('type') !== undefined,
     });
   });
 }
@@ -561,7 +552,7 @@ export function handleSummary(data) {
   console.log(`  Filter: ${data.metrics.filter_time.values['p(95)'].toFixed(2)}ms`);
 
   return {
-    'stdout': '',
+    stdout: '',
     'api-summary.json': JSON.stringify(data, null, 2),
   };
 }

@@ -8,10 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -26,10 +23,7 @@ export async function PATCH(
     });
 
     if (!notification) {
-      return NextResponse.json(
-        { error: 'Notification not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Notification not found' }, { status: 404 });
     }
 
     // TODO: Check if user has permission to mark this notification as read
@@ -43,15 +37,9 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(
-      { success: true, notification: updatedNotification },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, notification: updatedNotification }, { status: 200 });
   } catch (error) {
     console.error('Error marking notification as read:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

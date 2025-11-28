@@ -10,9 +10,11 @@ Implemented mobile-specific navigation and comprehensive performance optimizatio
 ## 1. Mobile Components
 
 ### Bottom Navigation Bar
+
 **File:** `components/mobile/BottomNav.tsx`
 
 Features:
+
 - 5 main tabs: Tournaments, Scoring, Leaderboards, Profile, More
 - Active state indication with visual feedback
 - Icon + label design
@@ -22,9 +24,11 @@ Features:
 - Hidden on desktop (>1024px)
 
 ### Floating Action Button (FAB)
+
 **File:** `components/mobile/FloatingActionButton.tsx`
 
 Features:
+
 - Context-aware actions:
   - Tournaments page: "New Tournament"
   - Bracket page: "Record Score"
@@ -36,9 +40,11 @@ Features:
 - Haptic feedback (15ms vibration)
 
 ### Pull-to-Refresh
+
 **File:** `components/mobile/PullToRefresh.tsx`
 
 Features:
+
 - Native-like pull gesture
 - Resistance at boundaries
 - Visual feedback with spinner
@@ -47,9 +53,11 @@ Features:
 - Works only when scrolled to top
 
 ### Swipeable Views
+
 **File:** `components/mobile/SwipeableViews.tsx`
 
 Features:
+
 - Smooth swipe between tabs
 - Resistance at boundaries
 - Pagination dots indicator
@@ -62,6 +70,7 @@ Features:
 **File:** `app/(mobile)/layout.tsx`
 
 Features:
+
 - Bottom navigation integration
 - No top nav on mobile (<768px)
 - Safe area insets for notched devices
@@ -74,9 +83,11 @@ Features:
 ## 3. Performance Optimizations
 
 ### Image Optimization
+
 **File:** `lib/performance/image-optimizer.ts`
 
 Features:
+
 - WebP and AVIF format support
 - Responsive image srcset generation
 - Blur placeholder generation
@@ -88,9 +99,11 @@ Features:
 - Preload critical images
 
 ### Lazy Loading
+
 **File:** `lib/performance/lazy-load.ts`
 
 Features:
+
 - Intersection Observer-based lazy loading
 - Component code splitting
 - Route prefetching
@@ -100,9 +113,11 @@ Features:
 - RequestIdleCallback support
 
 ### Performance Metrics
+
 **File:** `lib/performance/metrics.ts`
 
 Tracks:
+
 - First Contentful Paint (FCP)
 - Largest Contentful Paint (LCP)
 - First Input Delay (FID)
@@ -111,9 +126,11 @@ Tracks:
 - Time to Interactive (TTI)
 
 ### Performance Monitoring
+
 **File:** `lib/performance/monitor.ts`
 
 Features:
+
 - Automatic Core Web Vitals tracking
 - Real-time performance reporting
 - Session-based analytics
@@ -127,6 +144,7 @@ Features:
 **File:** `next.config.ts`
 
 Enhancements:
+
 - Image optimization (WebP, AVIF)
 - Device-specific image sizes
 - Webpack optimizations:
@@ -140,9 +158,11 @@ Enhancements:
 ## 5. Lighthouse CI Configuration
 
 ### Desktop Configuration
+
 **File:** `lighthouserc.json`
 
 Targets:
+
 - Performance score: 90+
 - FCP: <2000ms
 - LCP: <2500ms
@@ -155,15 +175,18 @@ Targets:
   - Total: <1MB
 
 ### Mobile Configuration (3G)
+
 **File:** `lighthouserc.mobile.json`
 
 Network throttling:
+
 - RTT: 150ms
 - Download: 1.6 Mbps
 - Upload: 768 Kbps
 - CPU slowdown: 4x
 
 Targets:
+
 - Performance score: 85+
 - FCP: <3000ms
 - LCP: <4000ms
@@ -174,6 +197,7 @@ Targets:
 ## 6. Performance Testing Scripts
 
 Added to `package.json`:
+
 ```json
 {
   "lighthouse": "lhci autorun",
@@ -198,24 +222,26 @@ Added to `package.json`:
 ## Performance Metrics Targets vs Current
 
 ### Desktop Performance
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| FCP | 1000ms | TBD | ⏳ |
-| LCP | 2500ms | TBD | ⏳ |
-| FID | 100ms | TBD | ⏳ |
-| CLS | 0.1 | TBD | ⏳ |
-| TTI | 3000ms | TBD | ⏳ |
-| Bundle Size | <200KB | TBD | ⏳ |
+
+| Metric      | Target | Current | Status |
+| ----------- | ------ | ------- | ------ |
+| FCP         | 1000ms | TBD     | ⏳     |
+| LCP         | 2500ms | TBD     | ⏳     |
+| FID         | 100ms  | TBD     | ⏳     |
+| CLS         | 0.1    | TBD     | ⏳     |
+| TTI         | 3000ms | TBD     | ⏳     |
+| Bundle Size | <200KB | TBD     | ⏳     |
 
 ### Mobile Performance (3G)
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| FCP | 3000ms | TBD | ⏳ |
-| LCP | 4000ms | TBD | ⏳ |
-| FID | 100ms | TBD | ⏳ |
-| CLS | 0.1 | TBD | ⏳ |
-| TTI | 5000ms | TBD | ⏳ |
-| Initial Load | 2000ms | TBD | ⏳ |
+
+| Metric       | Target | Current | Status |
+| ------------ | ------ | ------- | ------ |
+| FCP          | 3000ms | TBD     | ⏳     |
+| LCP          | 4000ms | TBD     | ⏳     |
+| FID          | 100ms  | TBD     | ⏳     |
+| CLS          | 0.1    | TBD     | ⏳     |
+| TTI          | 5000ms | TBD     | ⏳     |
+| Initial Load | 2000ms | TBD     | ⏳     |
 
 ## Usage Examples
 
@@ -250,7 +276,10 @@ if (img) {
 ### Optimizing Images
 
 ```typescript
-import { getOptimizedImageUrl, generateResponsiveImageSet } from '@/lib/performance/image-optimizer';
+import {
+  getOptimizedImageUrl,
+  generateResponsiveImageSet,
+} from '@/lib/performance/image-optimizer';
 
 // Get optimized image URL
 const optimizedUrl = getOptimizedImageUrl('/path/to/image.jpg', {
@@ -380,6 +409,7 @@ apps/web/
 ## Conclusion
 
 Sprint 10 Week 4 successfully implemented:
+
 - ✅ Mobile-specific navigation (Bottom Nav, FAB)
 - ✅ Mobile gestures (Pull-to-Refresh, Swipeable Views)
 - ✅ Performance optimization utilities

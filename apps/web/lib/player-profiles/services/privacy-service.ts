@@ -9,7 +9,12 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { PrivacySettings, UpdateSettingsRequest, PlayerProfileError, NotificationPreferences } from '../types';
+import {
+  PrivacySettings,
+  UpdateSettingsRequest,
+  PlayerProfileError,
+  NotificationPreferences,
+} from '../types';
 
 const prisma = new PrismaClient();
 
@@ -146,7 +151,10 @@ export async function canViewField(
  * @param tenantId - Tenant ID
  * @returns Privacy settings
  */
-export async function getPlayerSettings(playerId: string, tenantId: string): Promise<PrivacySettings> {
+export async function getPlayerSettings(
+  playerId: string,
+  tenantId: string
+): Promise<PrivacySettings> {
   try {
     const profile = await prisma.playerProfile.findFirst({
       where: {
@@ -181,7 +189,11 @@ export async function getPlayerSettings(playerId: string, tenantId: string): Pro
  * @param request - Settings update request
  * @returns Updated profile
  */
-export async function updatePlayerSettings(playerId: string, tenantId: string, request: UpdateSettingsRequest): Promise<any> {
+export async function updatePlayerSettings(
+  playerId: string,
+  tenantId: string,
+  request: UpdateSettingsRequest
+): Promise<any> {
   try {
     // Get existing profile or create new one
     let profile = await prisma.playerProfile.findFirst({
@@ -225,7 +237,9 @@ export async function updatePlayerSettings(playerId: string, tenantId: string, r
 
       if (request.privacySettings) {
         // Merge with existing privacy settings
-        const currentSettings = (profile.privacySettings as unknown as PrivacySettings) || {} as unknown as PrivacySettings;
+        const currentSettings =
+          (profile.privacySettings as unknown as PrivacySettings) ||
+          ({} as unknown as PrivacySettings);
         updateData.privacySettings = {
           ...currentSettings,
           ...request.privacySettings,
@@ -234,7 +248,9 @@ export async function updatePlayerSettings(playerId: string, tenantId: string, r
 
       if (request.notificationPreferences) {
         // Merge with existing notification preferences
-        const currentPreferences = (profile.notificationPreferences as unknown as NotificationPreferences) || {} as unknown as NotificationPreferences;
+        const currentPreferences =
+          (profile.notificationPreferences as unknown as NotificationPreferences) ||
+          ({} as unknown as NotificationPreferences);
         updateData.notificationPreferences = {
           ...currentPreferences,
           ...request.notificationPreferences,
@@ -275,7 +291,11 @@ export async function updatePlayerSettings(playerId: string, tenantId: string, r
  * @param isPublic - Whether profile should be public by default
  * @returns Created profile
  */
-export async function setDefaultPrivacySettings(playerId: string, tenantId: string, isPublic: boolean = true): Promise<any> {
+export async function setDefaultPrivacySettings(
+  playerId: string,
+  tenantId: string,
+  isPublic: boolean = true
+): Promise<any> {
   try {
     const profile = await prisma.playerProfile.upsert({
       where: {
@@ -309,7 +329,10 @@ export async function setDefaultPrivacySettings(playerId: string, tenantId: stri
     return profile;
   } catch (error) {
     console.error('[setDefaultPrivacySettings] Error:', error);
-    throw new PlayerProfileError('Failed to set default privacy settings', 'SET_DEFAULT_SETTINGS_ERROR');
+    throw new PlayerProfileError(
+      'Failed to set default privacy settings',
+      'SET_DEFAULT_SETTINGS_ERROR'
+    );
   }
 }
 
@@ -354,7 +377,10 @@ export async function getPublicProfiles(tenantId: string, limit: number = 100): 
  * @param settings - Privacy settings to validate
  * @returns Validation result
  */
-export function validatePrivacySettings(settings: Partial<PrivacySettings>): { valid: boolean; errors: string[] } {
+export function validatePrivacySettings(settings: Partial<PrivacySettings>): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   // Check that all boolean fields are actually booleans
@@ -374,7 +400,11 @@ export function validatePrivacySettings(settings: Partial<PrivacySettings>): { v
 
   // Validate logic: if profile is private, other settings don't matter
   if (settings.profilePublic === false) {
-    if (settings.showStats === true || settings.showHistory === true || settings.showAchievements === true) {
+    if (
+      settings.showStats === true ||
+      settings.showHistory === true ||
+      settings.showAchievements === true
+    ) {
       errors.push('When profile is private, other visibility settings should be false');
     }
   }

@@ -20,6 +20,7 @@ This document describes the Settings and Leaderboard API endpoints implemented f
 These endpoints provide access to player leaderboards and user settings with full multi-tenant isolation. All endpoints require authentication and filter data by tenant ID from the session.
 
 **Key Features:**
+
 - Multi-tenant data isolation
 - Zod validation for all inputs
 - Comprehensive error handling
@@ -35,12 +36,14 @@ These endpoints provide access to player leaderboards and user settings with ful
 Retrieves leaderboard data for different performance metrics.
 
 **Supported Types:**
+
 - `win-rate` - Players ranked by win percentage
 - `tournaments` - Players ranked by tournament participation
 - `prize-money` - Players ranked by total earnings
 - `achievements` - Players ranked by achievement count
 
 **Query Parameters:**
+
 ```typescript
 {
   limit?: number;      // 1-500, default: 100
@@ -49,11 +52,13 @@ Retrieves leaderboard data for different performance metrics.
 ```
 
 **Example Request:**
+
 ```bash
 GET /api/leaderboards/win-rate?limit=50&timeframe=all-time
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "type": "win-rate",
@@ -85,6 +90,7 @@ GET /api/leaderboards/win-rate?limit=50&timeframe=all-time
 **Error Responses:**
 
 **400 Bad Request** - Invalid type or parameters:
+
 ```json
 {
   "error": "Invalid leaderboard type",
@@ -94,6 +100,7 @@ GET /api/leaderboards/win-rate?limit=50&timeframe=all-time
 ```
 
 **401 Unauthorized** - Not authenticated:
+
 ```json
 {
   "error": "Unauthorized",
@@ -102,6 +109,7 @@ GET /api/leaderboards/win-rate?limit=50&timeframe=all-time
 ```
 
 **500 Internal Server Error** - Server error:
+
 ```json
 {
   "error": "Failed to fetch leaderboard",
@@ -118,11 +126,13 @@ GET /api/leaderboards/win-rate?limit=50&timeframe=all-time
 Retrieves current user's settings. Creates default settings if none exist.
 
 **Example Request:**
+
 ```bash
 GET /api/players/settings
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "settings": {
@@ -183,6 +193,7 @@ GET /api/players/settings
 **Error Responses:**
 
 **401 Unauthorized** - Not authenticated:
+
 ```json
 {
   "error": "Unauthorized",
@@ -191,6 +202,7 @@ GET /api/players/settings
 ```
 
 **500 Internal Server Error** - Server error:
+
 ```json
 {
   "error": "Failed to fetch settings",
@@ -205,6 +217,7 @@ GET /api/players/settings
 Updates current user's settings. Only provided fields are updated.
 
 **Request Body:**
+
 ```typescript
 {
   // Privacy settings (optional)
@@ -236,6 +249,7 @@ Updates current user's settings. Only provided fields are updated.
 ```
 
 **Example Request:**
+
 ```bash
 PUT /api/players/settings
 Content-Type: application/json
@@ -256,6 +270,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "settings": {
@@ -268,6 +283,7 @@ Content-Type: application/json
 **Error Responses:**
 
 **400 Bad Request** - Invalid request body:
+
 ```json
 {
   "error": "Invalid request body",
@@ -281,6 +297,7 @@ Content-Type: application/json
 ```
 
 **401 Unauthorized** - Not authenticated:
+
 ```json
 {
   "error": "Unauthorized",
@@ -289,6 +306,7 @@ Content-Type: application/json
 ```
 
 **409 Conflict** - Settings conflict:
+
 ```json
 {
   "error": "Conflict",
@@ -297,6 +315,7 @@ Content-Type: application/json
 ```
 
 **500 Internal Server Error** - Server error:
+
 ```json
 {
   "error": "Failed to update settings",
@@ -315,6 +334,7 @@ All endpoints enforce multi-tenant isolation:
 3. **Data Isolation**: Users can only access data from their organization
 
 **Example (Internal):**
+
 ```typescript
 // Get tenant from session
 const tenantId = await getTenantId(); // Returns 'org_123'
@@ -322,7 +342,7 @@ const tenantId = await getTenantId(); // Returns 'org_123'
 // All queries filter by tenant
 const leaderboard = await getPlayerLeaderboard(tenantId, 'winRate', 100);
 const settings = await prisma.playerSettings.findFirst({
-  where: { playerId, tenantId }
+  where: { playerId, tenantId },
 });
 ```
 
@@ -339,6 +359,7 @@ All endpoints follow consistent error handling patterns:
 5. **Server Errors (500)**: Unexpected errors with generic messages
 
 **Error Response Format:**
+
 ```typescript
 {
   error: string;      // Error type
@@ -355,16 +376,19 @@ All endpoints follow consistent error handling patterns:
 ### Unit Tests
 
 **Location:**
+
 - `apps/web/app/api/leaderboards/__tests__/route.test.ts`
 - `apps/web/app/api/players/settings/__tests__/route.test.ts`
 
 **Run Tests:**
+
 ```bash
 npm test apps/web/app/api/leaderboards/__tests__/route.test.ts
 npm test apps/web/app/api/players/settings/__tests__/route.test.ts
 ```
 
 **Test Coverage:**
+
 - ✅ Input validation (types, limits, formats)
 - ✅ Success scenarios (200 responses)
 - ✅ Error scenarios (400, 401, 500 responses)
@@ -375,6 +399,7 @@ npm test apps/web/app/api/players/settings/__tests__/route.test.ts
 ### Manual Testing
 
 **Test Leaderboard Endpoint:**
+
 ```bash
 # Valid request
 curl -X GET "http://localhost:3000/api/leaderboards/win-rate?limit=10"
@@ -387,6 +412,7 @@ curl -X GET "http://localhost:3000/api/leaderboards/win-rate?limit=1000"
 ```
 
 **Test Settings Endpoints:**
+
 ```bash
 # Get settings
 curl -X GET "http://localhost:3000/api/players/settings"
@@ -412,18 +438,22 @@ curl -X PUT "http://localhost:3000/api/players/settings" \
 ## Files Created
 
 ### API Routes
+
 - `apps/web/app/api/leaderboards/[type]/route.ts` - Leaderboard GET handler
 - `apps/web/app/api/players/settings/route.ts` - Settings GET/PUT handlers
 
 ### Types & Validation
+
 - `apps/web/app/api/leaderboards/types.ts` - Leaderboard type definitions
 - `apps/web/app/api/players/settings/types.ts` - Settings type definitions
 
 ### Tests
+
 - `apps/web/app/api/leaderboards/__tests__/route.test.ts` - Leaderboard tests
 - `apps/web/app/api/players/settings/__tests__/route.test.ts` - Settings tests
 
 ### Documentation
+
 - `apps/web/app/api/README-SETTINGS-LEADERBOARDS.md` - This file
 
 ---
@@ -433,6 +463,7 @@ curl -X PUT "http://localhost:3000/api/players/settings" \
 When connecting to actual authentication:
 
 1. **Update Session Handling:**
+
    ```typescript
    // Replace mock with actual session
    const session = await getServerSession();
@@ -452,6 +483,7 @@ When connecting to actual authentication:
    - Update to use actual database queries
 
 3. **Add Caching (Optional):**
+
    ```typescript
    // Cache leaderboard data
    if (redis) {
@@ -469,6 +501,7 @@ When connecting to actual authentication:
 ## Support
 
 For issues or questions:
+
 - Check test files for usage examples
 - Review existing API routes in `apps/web/app/api/`
 - Refer to player profile service: `apps/web/lib/player-profiles/services/player-profile-service.ts`

@@ -5,6 +5,7 @@ Comprehensive integration tests for Stripe payment workflows in the tournament p
 ## Overview
 
 This test suite covers complete payment workflows including:
+
 - Stripe Connect account onboarding
 - Payment intent creation and confirmation
 - Full and partial refunds
@@ -35,6 +36,7 @@ pnpm install
 ```
 
 Required packages:
+
 - `vitest` - Test runner
 - `@vitest/ui` - UI dashboard for tests
 - `@vitest/coverage-v8` - Code coverage reporting
@@ -280,6 +282,7 @@ vi.mock('stripe', () => {
 ```
 
 **Benefits:**
+
 - No real Stripe API calls during tests
 - Fast test execution
 - Deterministic test results
@@ -309,6 +312,7 @@ const orgPayments = await prisma.payment.findMany({
 ```
 
 **Ensures:**
+
 - Payments scoped to organization
 - No cross-tenant data leakage
 - Proper relationship constraints
@@ -383,6 +387,7 @@ pnpm test:ui
 ```
 
 Features:
+
 - Inspect test state
 - View mock call history
 - Step through test execution
@@ -465,6 +470,7 @@ Error: Database schema is not in sync
 ```
 
 **Solution:** Run migrations:
+
 ```bash
 pnpm db:migrate
 ```
@@ -484,10 +490,15 @@ Error: Test timed out after 5000ms
 ```
 
 **Solution:** Increase timeout or optimize test:
+
 ```typescript
-test('slow test', async () => {
-  // test code
-}, { timeout: 10000 }); // 10 second timeout
+test(
+  'slow test',
+  async () => {
+    // test code
+  },
+  { timeout: 10000 }
+); // 10 second timeout
 ```
 
 ## Performance
@@ -497,6 +508,7 @@ test('slow test', async () => {
 Target: < 30 seconds for full suite
 
 Current performance:
+
 - Complete Payment Flow: ~2s
 - Refund Flow: ~3s
 - Payout Calculation: ~2s
@@ -516,6 +528,7 @@ Current performance:
 ## Support
 
 For questions or issues:
+
 - Review test output and error messages
 - Check `tests/fixtures/` for available mocks
 - Consult Vitest documentation: https://vitest.dev
@@ -524,6 +537,7 @@ For questions or issues:
 ## Summary
 
 **Total Tests:** 23
+
 - Complete Payment Flow: 4 tests
 - Refund Flow: 5 tests
 - Payout Calculation: 4 tests
@@ -531,6 +545,7 @@ For questions or issues:
 - Error Handling: 6 tests
 
 **Test Coverage:**
+
 - Stripe Connect onboarding ✓
 - Payment creation and confirmation ✓
 - Full and partial refunds ✓

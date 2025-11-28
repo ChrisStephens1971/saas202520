@@ -156,8 +156,7 @@ class InstallPromptManager {
     // Check time since last shown
     if (this.state.lastShown) {
       const lastShownDate = new Date(this.state.lastShown);
-      const daysSinceLastShown =
-        (Date.now() - lastShownDate.getTime()) / (1000 * 60 * 60 * 24);
+      const daysSinceLastShown = (Date.now() - lastShownDate.getTime()) / (1000 * 60 * 60 * 24);
 
       if (daysSinceLastShown < DAYS_BETWEEN_PROMPTS) {
         this.state.shouldShow = false;
@@ -318,7 +317,7 @@ class InstallPromptManager {
           'Confirm installation',
         ];
       default:
-        return ['Follow your browser\'s install instructions'];
+        return ["Follow your browser's install instructions"];
     }
   }
 }

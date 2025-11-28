@@ -252,9 +252,7 @@ describe('Match Progression', () => {
         score: { playerA: 5, playerB: 3 },
       };
 
-      expect(() => validateMatchCompletion(match, completion)).toThrow(
-        'Match must be active'
-      );
+      expect(() => validateMatchCompletion(match, completion)).toThrow('Match must be active');
     });
 
     it('should reject invalid winner', () => {

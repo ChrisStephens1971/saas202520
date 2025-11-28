@@ -10,10 +10,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import UserTable from '@/components/admin/UserTable';
-import {
-  UserWithActivity,
-  ModerationRequest,
-} from '@tournament/shared/types/user';
+import { UserWithActivity, ModerationRequest } from '@tournament/shared/types/user';
+import { useConfirm } from '@/hooks/use-confirm';
+import { toast } from 'sonner';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -21,12 +20,11 @@ export default function UsersPage() {
   const router = useRouter();
   const [showModerationModal, setShowModerationModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [moderationAction, setModerationAction] = useState<
-    'warn' | 'suspend' | 'ban' | null
-  >(null);
+  const [moderationAction, setModerationAction] = useState<'warn' | 'suspend' | 'ban' | null>(null);
   const [moderationReason, setModerationReason] = useState('');
   const [suspensionDays, setSuspensionDays] = useState(7);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Fetch users
   const { data, error, isLoading, mutate } = useSWR<{
@@ -52,10 +50,7 @@ export default function UsersPage() {
     // Role change functionality to be implemented
   };
 
-  const openModerationModal = (
-    userId: string,
-    action: 'warn' | 'suspend' | 'ban'
-  ) => {
+  const openModerationModal = (userId: string, action: 'warn' | 'suspend' | 'ban') => {
     setSelectedUserId(userId);
     setModerationAction(action);
     setModerationReason('');
@@ -75,7 +70,12 @@ export default function UsersPage() {
   };
 
   const handleUnban = async (userId: string) => {
-    if (!confirm('Are you sure you want to unban this user?')) return;
+    const ok = await confirm({
+      title: 'Unban User',
+      description: 'Are you sure you want to unban this user?',
+      actionLabel: 'Unban',
+    });
+    if (!ok) return;
 
     try {
       const response = await fetch(`/api/admin/users/${userId}/moderate`, {
@@ -94,12 +94,17 @@ export default function UsersPage() {
       mutate();
     } catch (error) {
       console.error('Error unbanning user:', error);
-      alert('Failed to unban user. Please try again.');
+      toast.error('Failed to unban user. Please try again.');
     }
   };
 
   const handleUnsuspend = async (userId: string) => {
-    if (!confirm('Are you sure you want to unsuspend this user?')) return;
+    const ok = await confirm({
+      title: 'Unsuspend User',
+      description: 'Are you sure you want to unsuspend this user?',
+      actionLabel: 'Unsuspend',
+    });
+    if (!ok) return;
 
     try {
       const response = await fetch(`/api/admin/users/${userId}/moderate`, {
@@ -118,14 +123,14 @@ export default function UsersPage() {
       mutate();
     } catch (error) {
       console.error('Error unsuspending user:', error);
-      alert('Failed to unsuspend user. Please try again.');
+      toast.error('Failed to unsuspend user. Please try again.');
     }
   };
 
   const handleModerationSubmit = async () => {
     if (!selectedUserId || !moderationAction) return;
     if (!moderationReason.trim()) {
-      alert('Please provide a reason for this action');
+      toast.error('Please provide a reason for this action');
       return;
     }
 
@@ -142,14 +147,11 @@ export default function UsersPage() {
         payload.duration = suspensionDays;
       }
 
-      const response = await fetch(
-        `/api/admin/users/${selectedUserId}/moderate`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`/api/admin/users/${selectedUserId}/moderate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to perform moderation action');
@@ -161,7 +163,7 @@ export default function UsersPage() {
       setModerationAction(null);
     } catch (error) {
       console.error('Error performing moderation action:', error);
-      alert('Failed to perform action. Please try again.');
+      toast.error('Failed to perform action. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -194,9 +196,7 @@ export default function UsersPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-              <p className="text-gray-600 mt-1">
-                Manage users, roles, and permissions
-              </p>
+              <p className="text-gray-600 mt-1">Manage users, roles, and permissions</p>
             </div>
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-600">
@@ -255,9 +255,7 @@ export default function UsersPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Reason *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Reason *</label>
                 <textarea
                   value={moderationReason}
                   onChange={(e) => setModerationReason(e.target.value)}
@@ -270,8 +268,8 @@ export default function UsersPage() {
 
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p className="text-sm text-yellow-800">
-                  <strong>Warning:</strong> This action will be logged and the user will
-                  be notified.
+                  <strong>Warning:</strong> This action will be logged and the user will be
+                  notified.
                 </p>
               </div>
             </div>
@@ -291,8 +289,8 @@ export default function UsersPage() {
                   moderationAction === 'warn'
                     ? 'bg-yellow-600 hover:bg-yellow-700'
                     : moderationAction === 'suspend'
-                    ? 'bg-orange-600 hover:bg-orange-700'
-                    : 'bg-red-600 hover:bg-red-700'
+                      ? 'bg-orange-600 hover:bg-orange-700'
+                      : 'bg-red-600 hover:bg-red-700'
                 } text-white disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {isSubmitting ? 'Processing...' : 'Confirm'}
@@ -301,6 +299,7 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+      {ConfirmDialog}
     </div>
   );
 }

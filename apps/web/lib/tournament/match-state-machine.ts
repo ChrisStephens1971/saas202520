@@ -23,28 +23,28 @@ import type { Match, Player, Tournament } from '@prisma/client';
  * Valid match states
  */
 export type MatchState =
-  | 'pending'      // Match created, waiting for players
-  | 'ready'        // Both players assigned, waiting to start
-  | 'assigned'     // Assigned to table, not started yet
-  | 'active'       // Match in progress
-  | 'paused'       // Temporarily paused
-  | 'completed'    // Match finished normally
-  | 'cancelled'    // Match cancelled before completion
-  | 'abandoned'    // Match abandoned (e.g., player left)
-  | 'forfeited';   // One player forfeited
+  | 'pending' // Match created, waiting for players
+  | 'ready' // Both players assigned, waiting to start
+  | 'assigned' // Assigned to table, not started yet
+  | 'active' // Match in progress
+  | 'paused' // Temporarily paused
+  | 'completed' // Match finished normally
+  | 'cancelled' // Match cancelled before completion
+  | 'abandoned' // Match abandoned (e.g., player left)
+  | 'forfeited'; // One player forfeited
 
 /**
  * Match state transition events
  */
 export type MatchTransitionEvent =
-  | 'assign_table'    // pending → ready
-  | 'start'           // ready → active
-  | 'pause'           // active → paused
-  | 'resume'          // paused → active
-  | 'complete'        // active → completed
-  | 'cancel'          // any → cancelled
-  | 'abandon'         // active/paused → abandoned
-  | 'forfeit';        // active/paused → forfeited
+  | 'assign_table' // pending → ready
+  | 'start' // ready → active
+  | 'pause' // active → paused
+  | 'resume' // paused → active
+  | 'complete' // active → completed
+  | 'cancel' // any → cancelled
+  | 'abandon' // active/paused → abandoned
+  | 'forfeit'; // active/paused → forfeited
 
 /**
  * State transition definition
@@ -274,9 +274,7 @@ export async function canTransition(
   );
 
   if (!transition) {
-    violations.push(
-      `Invalid transition: ${match.state} → ${event} (no rule exists)`
-    );
+    violations.push(`Invalid transition: ${match.state} → ${event} (no rule exists)`);
     return { allowed: false, violations };
   }
 
@@ -355,12 +353,8 @@ export async function transition(
         where: { id: matchId },
         data: {
           state: newState,
-          ...(newState === 'active' && !match.startedAt
-            ? { startedAt: new Date() }
-            : {}),
-          ...(newState === 'completed' && !match.completedAt
-            ? { completedAt: new Date() }
-            : {}),
+          ...(newState === 'active' && !match.startedAt ? { startedAt: new Date() } : {}),
+          ...(newState === 'completed' && !match.completedAt ? { completedAt: new Date() } : {}),
         },
       });
 
@@ -589,10 +583,7 @@ export async function forfeitMatch(
     }
 
     // Determine winner (opposite of forfeiting player)
-    const winnerId =
-      forfeitingPlayerId === match.playerAId
-        ? match.playerBId
-        : match.playerAId;
+    const winnerId = forfeitingPlayerId === match.playerAId ? match.playerBId : match.playerAId;
 
     if (!winnerId) {
       return { success: false, error: 'Cannot determine winner' };
@@ -653,10 +644,7 @@ export async function getMatchState(matchId: string): Promise<MatchState | null>
 /**
  * Get all matches in a specific state for a tournament
  */
-export async function getMatchesByState(
-  tournamentId: string,
-  state: MatchState
-): Promise<Match[]> {
+export async function getMatchesByState(tournamentId: string, state: MatchState): Promise<Match[]> {
   return prisma.match.findMany({
     where: {
       tournamentId,

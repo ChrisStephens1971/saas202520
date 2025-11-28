@@ -41,11 +41,7 @@ export function generateSignature(payload: string, secret: string): string {
  *   webhookSecret
  * );
  */
-export function verifySignature(
-  payload: string,
-  signature: string,
-  secret: string
-): boolean {
+export function verifySignature(payload: string, signature: string, secret: string): boolean {
   try {
     const expectedSignature = generateSignature(payload, secret);
 
@@ -55,10 +51,7 @@ export function verifySignature(
     }
 
     // Use constant-time comparison to prevent timing attacks
-    return crypto.timingSafeEqual(
-      Buffer.from(signature),
-      Buffer.from(expectedSignature)
-    );
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
   } catch {
     // If comparison fails (e.g., invalid encoding), return false
     return false;
@@ -130,10 +123,7 @@ export function createWebhookHeaders(
  *   throw new Error('Webhook timestamp too old');
  * }
  */
-export function verifyTimestamp(
-  timestamp: number,
-  maxAgeSeconds: number = 300
-): boolean {
+export function verifyTimestamp(timestamp: number, maxAgeSeconds: number = 300): boolean {
   const currentTime = Math.floor(Date.now() / 1000);
   const age = Math.abs(currentTime - timestamp);
   return age <= maxAgeSeconds;

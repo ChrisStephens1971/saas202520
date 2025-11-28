@@ -46,8 +46,8 @@ const mockPrismaClient = {
     findUnique: vi.fn(),
   },
 };
-n// Mock @/lib/prisma module
-vi.mock("@/lib/prisma", () => ({
+n; // Mock @/lib/prisma module
+vi.mock('@/lib/prisma', () => ({
   prisma: mockPrismaClient,
 }));
 
@@ -118,7 +118,9 @@ describe('Player Profile Service', () => {
     it('should throw error for non-existent profile', async () => {
       mockPrismaClient.playerProfile.findFirst.mockResolvedValue(null);
 
-      await expect(getPlayerProfile('non-existent', mockTenantId, mockViewerId)).rejects.toThrow('Player profile not found');
+      await expect(getPlayerProfile('non-existent', mockTenantId, mockViewerId)).rejects.toThrow(
+        'Player profile not found'
+      );
     });
 
     it('should respect privacy settings for non-owner', async () => {
@@ -134,7 +136,9 @@ describe('Player Profile Service', () => {
 
       mockPrismaClient.playerProfile.findFirst.mockResolvedValue(privateProfile);
 
-      await expect(getPlayerProfile(mockPlayerId, mockTenantId, mockViewerId)).rejects.toThrow('Profile is private');
+      await expect(getPlayerProfile(mockPlayerId, mockTenantId, mockViewerId)).rejects.toThrow(
+        'Profile is private'
+      );
     });
 
     it('should hide achievements when privacy setting is false', async () => {

@@ -6,15 +6,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  validateApiKey,
-  validateApiKeyFormat,
-  updateLastUsed,
-} from '../services/api-key.service';
-import {
-  checkRateLimit,
-  type RateLimitResult,
-} from '../services/rate-limiter.service';
+import { validateApiKey, validateApiKeyFormat, updateLastUsed } from '../services/api-key.service';
+import { checkRateLimit, type RateLimitResult } from '../services/rate-limiter.service';
 import {
   apiUnauthorized,
   apiRateLimitExceeded,
@@ -77,9 +70,7 @@ function extractApiKey(request: NextRequest): string | null {
  * @param request - Next.js request object
  * @returns Authentication result with API key and rate limit info
  */
-async function authenticateRequest(
-  request: NextRequest
-): Promise<ApiAuthResult> {
+async function authenticateRequest(request: NextRequest): Promise<ApiAuthResult> {
   // Extract API key from Authorization header
   const apiKey = extractApiKey(request);
 
@@ -88,10 +79,9 @@ async function authenticateRequest(
       success: false,
       error: {
         status: 401,
-        response: NextResponse.json(
-          apiUnauthorized('Missing API key in Authorization header'),
-          { status: 401 }
-        ),
+        response: NextResponse.json(apiUnauthorized('Missing API key in Authorization header'), {
+          status: 401,
+        }),
       },
     };
   }
@@ -102,10 +92,7 @@ async function authenticateRequest(
       success: false,
       error: {
         status: 401,
-        response: NextResponse.json(
-          apiUnauthorized('Invalid API key format'),
-          { status: 401 }
-        ),
+        response: NextResponse.json(apiUnauthorized('Invalid API key format'), { status: 401 }),
       },
     };
   }
@@ -118,10 +105,7 @@ async function authenticateRequest(
       success: false,
       error: {
         status: 401,
-        response: NextResponse.json(
-          apiUnauthorized('Invalid or expired API key'),
-          { status: 401 }
-        ),
+        response: NextResponse.json(apiUnauthorized('Invalid or expired API key'), { status: 401 }),
       },
     };
   }
@@ -143,30 +127,20 @@ async function authenticateRequest(
   }
 
   // Check rate limit
-  const rateLimit = await checkRateLimit(
-    validatedKey.id,
-    validatedKey.tier as ApiTier
-  );
+  const rateLimit = await checkRateLimit(validatedKey.id, validatedKey.tier as ApiTier);
 
   if (!rateLimit.allowed) {
     return {
       success: false,
       error: {
         status: 429,
-        response: NextResponse.json(
-          apiRateLimitExceeded(rateLimit.limit, rateLimit.reset),
-          {
-            status: 429,
-            headers: {
-              ...formatRateLimitHeaders(
-                rateLimit.limit,
-                rateLimit.remaining,
-                rateLimit.reset
-              ),
-              'Retry-After': (rateLimit.reset - Math.floor(Date.now() / 1000)).toString(),
-            },
-          }
-        ),
+        response: NextResponse.json(apiRateLimitExceeded(rateLimit.limit, rateLimit.reset), {
+          status: 429,
+          headers: {
+            ...formatRateLimitHeaders(rateLimit.limit, rateLimit.remaining, rateLimit.reset),
+            'Retry-After': (rateLimit.reset - Math.floor(Date.now() / 1000)).toString(),
+          },
+        }),
       },
     };
   }
@@ -205,10 +179,7 @@ export function withApiAuth<T = any>(
     context: ApiContext & { params?: T }
   ) => Promise<NextResponse> | NextResponse
 ) {
-  return async (
-    request: NextRequest,
-    routeContext?: { params: T }
-  ): Promise<NextResponse> => {
+  return async (request: NextRequest, routeContext?: { params: T }): Promise<NextResponse> => {
     try {
       // Authenticate request
       const authResult = await authenticateRequest(request);
@@ -234,18 +205,9 @@ export function withApiAuth<T = any>(
 
       // Add rate limit headers to response
       const headers = new Headers(response.headers);
-      headers.set(
-        'X-RateLimit-Limit',
-        apiContext.rateLimit.limit.toString()
-      );
-      headers.set(
-        'X-RateLimit-Remaining',
-        apiContext.rateLimit.remaining.toString()
-      );
-      headers.set(
-        'X-RateLimit-Reset',
-        apiContext.rateLimit.reset.toString()
-      );
+      headers.set('X-RateLimit-Limit', apiContext.rateLimit.limit.toString());
+      headers.set('X-RateLimit-Remaining', apiContext.rateLimit.remaining.toString());
+      headers.set('X-RateLimit-Reset', apiContext.rateLimit.reset.toString());
       headers.set('X-API-Version', '1.0');
 
       return new NextResponse(response.body, {
@@ -260,9 +222,7 @@ export function withApiAuth<T = any>(
         apiInternalError(
           'Authentication error',
           process.env.NODE_ENV === 'development',
-          error instanceof Error
-            ? { message: error.message, name: error.name }
-            : undefined
+          error instanceof Error ? { message: error.message, name: error.name } : undefined
         ),
         { status: 500 }
       );
@@ -284,10 +244,7 @@ export function withApiAuthCustomError<T = any>(
   ) => Promise<NextResponse> | NextResponse,
   onError: (error: Error) => NextResponse
 ) {
-  return async (
-    request: NextRequest,
-    routeContext?: { params: T }
-  ): Promise<NextResponse> => {
+  return async (request: NextRequest, routeContext?: { params: T }): Promise<NextResponse> => {
     try {
       // Authenticate request
       const authResult = await authenticateRequest(request);
@@ -313,18 +270,9 @@ export function withApiAuthCustomError<T = any>(
 
       // Add rate limit headers
       const headers = new Headers(response.headers);
-      headers.set(
-        'X-RateLimit-Limit',
-        apiContext.rateLimit.limit.toString()
-      );
-      headers.set(
-        'X-RateLimit-Remaining',
-        apiContext.rateLimit.remaining.toString()
-      );
-      headers.set(
-        'X-RateLimit-Reset',
-        apiContext.rateLimit.reset.toString()
-      );
+      headers.set('X-RateLimit-Limit', apiContext.rateLimit.limit.toString());
+      headers.set('X-RateLimit-Remaining', apiContext.rateLimit.remaining.toString());
+      headers.set('X-RateLimit-Reset', apiContext.rateLimit.reset.toString());
       headers.set('X-API-Version', '1.0');
 
       return new NextResponse(response.body, {

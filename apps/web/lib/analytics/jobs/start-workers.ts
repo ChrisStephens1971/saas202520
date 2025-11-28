@@ -260,9 +260,7 @@ async function main(): Promise<void> {
 
     // Register error handlers
     process.on('uncaughtException', (error) => handleUncaughtError(error));
-    process.on('unhandledRejection', (error) =>
-      handleUncaughtError(error as Error)
-    );
+    process.on('unhandledRejection', (error) => handleUncaughtError(error as Error));
 
     console.log('='.repeat(60));
     console.log('[Workers] All systems started successfully');

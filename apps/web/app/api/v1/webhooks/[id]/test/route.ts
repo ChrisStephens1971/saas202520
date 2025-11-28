@@ -16,10 +16,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * Test webhook endpoint
  * Sends a test event synchronously
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -27,10 +24,7 @@ export async function POST(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -39,10 +33,7 @@ export async function POST(
     // Get webhook details
     const webhook = await getWebhook(webhookId, tenantId);
     if (!webhook) {
-      return NextResponse.json(
-        { error: 'Webhook not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Webhook not found' }, { status: 404 });
     }
 
     // Create test payload
@@ -101,18 +92,24 @@ export async function POST(
     } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
 
-      if (((fetchError as Error)?.name || "") === 'AbortError') {
-        return NextResponse.json({
-          success: false,
-          error: 'Request timeout (>5 seconds)',
-          duration: '5000ms+',
-        }, { status: 408 });
+      if (((fetchError as Error)?.name || '') === 'AbortError') {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Request timeout (>5 seconds)',
+            duration: '5000ms+',
+          },
+          { status: 408 }
+        );
       }
 
-      return NextResponse.json({
-        success: false,
-        error: `Network error: ${((fetchError as Error)?.message || "Network error")}`,
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Network error: ${(fetchError as Error)?.message || 'Network error'}`,
+        },
+        { status: 500 }
+      );
     }
   } catch (error: unknown) {
     console.error('[Webhook Test] Error:', error);

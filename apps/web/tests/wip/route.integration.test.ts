@@ -55,18 +55,10 @@ describe('Health Check Endpoint - Integration Tests', () => {
     it('should bypass authentication middleware', () => {
       // This test verifies middleware configuration:
       // /api/health must be in the public routes list
-      const publicRoutes = [
-        '/login',
-        '/signup',
-        '/',
-        '/api/auth',
-        '/api/health',
-      ];
+      const publicRoutes = ['/login', '/signup', '/', '/api/auth', '/api/health'];
 
       const healthRoute = '/api/health';
-      const isPublic = publicRoutes.some((route) =>
-        healthRoute.startsWith(route)
-      );
+      const isPublic = publicRoutes.some((route) => healthRoute.startsWith(route));
 
       expect(isPublic).toBe(true);
     });

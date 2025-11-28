@@ -25,7 +25,10 @@ const prisma = new PrismaClient();
  * @param tenantId - Tenant ID
  * @returns Updated player statistics
  */
-export async function recalculatePlayerStatistics(playerId: string, tenantId: string): Promise<any> {
+export async function recalculatePlayerStatistics(
+  playerId: string,
+  tenantId: string
+): Promise<any> {
   try {
     console.log(`[recalculatePlayerStatistics] Starting for player ${playerId}`);
 
@@ -68,7 +71,8 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
         finishes.push(metadata.finish);
       }
     });
-    const averageFinish = finishes.length > 0 ? finishes.reduce((a, b) => a + b, 0) / finishes.length : null;
+    const averageFinish =
+      finishes.length > 0 ? finishes.reduce((a, b) => a + b, 0) / finishes.length : null;
 
     // Calculate favorite format
     const formatCounts = matches.reduce(
@@ -80,7 +84,8 @@ export async function recalculatePlayerStatistics(playerId: string, tenantId: st
       {} as Record<string, number>
     );
 
-    const favoriteFormat = Object.entries(formatCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || null;
+    const favoriteFormat =
+      Object.entries(formatCounts).sort(([, a], [, b]) => b - a)[0]?.[0] || null;
 
     // Calculate total prizes won (from match metadata)
     const totalPrizeWon = matches.reduce((sum, match) => {
@@ -202,7 +207,9 @@ export async function updateStatisticsAfterMatch(
       if (averageFinish) {
         // Calculate new average
         const currentTotal = parseFloat(averageFinish.toString()) * stats.totalTournaments;
-        averageFinish = new Prisma.Decimal((currentTotal + update.finish) / (stats.totalTournaments + 1));
+        averageFinish = new Prisma.Decimal(
+          (currentTotal + update.finish) / (stats.totalTournaments + 1)
+        );
       } else {
         averageFinish = new Prisma.Decimal(update.finish);
       }
@@ -420,7 +427,10 @@ export async function updateHeadToHeadRecord(
  * @param playerIds - Array of player IDs (optional, defaults to all)
  * @returns Number of players processed
  */
-export async function batchRecalculateStatistics(tenantId: string, playerIds?: string[]): Promise<number> {
+export async function batchRecalculateStatistics(
+  tenantId: string,
+  playerIds?: string[]
+): Promise<number> {
   try {
     // Get all players if not specified
     let players: string[];
@@ -444,7 +454,9 @@ export async function batchRecalculateStatistics(tenantId: string, playerIds?: s
 
         // Log progress every 10 players
         if (processed % 10 === 0) {
-          console.log(`[batchRecalculateStatistics] Processed ${processed}/${players.length} players`);
+          console.log(
+            `[batchRecalculateStatistics] Processed ${processed}/${players.length} players`
+          );
         }
       } catch (error) {
         console.error(`[batchRecalculateStatistics] Error for player ${playerId}:`, error);
@@ -455,7 +467,10 @@ export async function batchRecalculateStatistics(tenantId: string, playerIds?: s
     return processed;
   } catch (error) {
     console.error('[batchRecalculateStatistics] Error:', error);
-    throw new PlayerProfileError('Failed to batch recalculate statistics', 'BATCH_RECALCULATE_ERROR');
+    throw new PlayerProfileError(
+      'Failed to batch recalculate statistics',
+      'BATCH_RECALCULATE_ERROR'
+    );
   }
 }
 
@@ -496,12 +511,17 @@ export async function incrementTournamentCount(playerId: string, tenantId: strin
       });
     }
 
-    console.log(`[incrementTournamentCount] Player ${playerId} now has ${stats.totalTournaments} tournaments`);
+    console.log(
+      `[incrementTournamentCount] Player ${playerId} now has ${stats.totalTournaments} tournaments`
+    );
 
     return stats;
   } catch (error) {
     console.error('[incrementTournamentCount] Error:', error);
-    throw new PlayerProfileError('Failed to increment tournament count', 'INCREMENT_TOURNAMENT_ERROR');
+    throw new PlayerProfileError(
+      'Failed to increment tournament count',
+      'INCREMENT_TOURNAMENT_ERROR'
+    );
   }
 }
 

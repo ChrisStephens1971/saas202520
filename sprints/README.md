@@ -19,17 +19,20 @@ This directory contains all sprint-related planning documents, including sprint 
 ## Sprint Workflow
 
 ### 1. Sprint Planning
+
 - Review and prioritize backlog
 - Create sprint plan using `sprint-plan-template.md`
 - Break down user stories
 - Estimate effort
 
 ### 2. During Sprint
+
 - Track progress in sprint plan
 - Log blockers and decisions
 - Update story status
 
 ### 3. End of Sprint
+
 - Conduct retrospective
 - Archive sprint documents
 - Review completed work

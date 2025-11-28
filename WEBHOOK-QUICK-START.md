@@ -15,6 +15,7 @@ npx prisma generate
 ```
 
 **Verify:**
+
 ```bash
 # Check tables were created
 npx prisma studio
@@ -36,6 +37,7 @@ REDIS_DB=0
 ```
 
 **If you don't have Redis:**
+
 ```bash
 # Install Redis locally
 # macOS:
@@ -62,6 +64,7 @@ node -r tsx apps/web/lib/api/workers/webhook-delivery.worker.ts
 ```
 
 Or add to `package.json`:
+
 ```json
 {
   "scripts": {
@@ -71,6 +74,7 @@ Or add to `package.json`:
 ```
 
 Then run:
+
 ```bash
 npm run worker:webhooks
 ```
@@ -140,6 +144,7 @@ console.log('Event published! Check webhook.site for delivery.');
 ```
 
 **Expected Result:**
+
 - Event appears in Bull queue
 - Worker processes it within seconds
 - Request appears on webhook.site
@@ -214,7 +219,7 @@ console.log('Queue stats:', stats);
 import { getDeliveryLogs } from '@/lib/api/services/webhook.service';
 
 const logs = await getDeliveryLogs(webhookId, tenantId, 20);
-logs.forEach(log => {
+logs.forEach((log) => {
   console.log(`${log.eventType}: ${log.statusCode || 'pending'}`);
 });
 ```
@@ -228,6 +233,7 @@ logs.forEach(log => {
 **Problem:** Can't connect to Redis
 
 **Solution:**
+
 ```bash
 # Check Redis is running
 redis-cli ping
@@ -243,6 +249,7 @@ echo $REDIS_PORT
 **Problem:** Worker not running
 
 **Solution:**
+
 ```bash
 # Check worker is running
 ps aux | grep webhook-delivery
@@ -259,6 +266,7 @@ npm run worker:webhooks
 **Problem:** Webhook URL is unreachable
 
 **Solution:**
+
 ```typescript
 // Use test endpoint to debug
 POST /api/v1/webhooks/{id}/test

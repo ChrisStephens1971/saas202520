@@ -128,9 +128,7 @@ export async function GET(request: NextRequest) {
       totalUsers > 0 ? ((newUsersLast30Days / totalUsers) * 100).toFixed(2) : '0';
 
     const tournamentGrowthRate =
-      totalTournaments > 0
-        ? ((newTournamentsLast30Days / totalTournaments) * 100).toFixed(2)
-        : '0';
+      totalTournaments > 0 ? ((newTournamentsLast30Days / totalTournaments) * 100).toFixed(2) : '0';
 
     // TODO: Add payment tracking when Payment model is created
     // Format revenue by status (placeholder until Payment model exists)
@@ -180,9 +178,7 @@ export async function GET(request: NextRequest) {
           players: {
             total: totalPlayers,
             averagePerTournament:
-              totalTournaments > 0
-                ? parseFloat((totalPlayers / totalTournaments).toFixed(2))
-                : 0,
+              totalTournaments > 0 ? parseFloat((totalPlayers / totalTournaments).toFixed(2)) : 0,
           },
           revenue: {
             total: revenueMetrics.total,
@@ -192,9 +188,9 @@ export async function GET(request: NextRequest) {
             refunded: revenueMetrics.refunded,
             totalPayments: 0, // totalPayments - TODO: Add when Payment model exists
             averagePayment: 0, // TODO: Calculate when Payment model exists
-              // totalPayments > 0
-              //   ? parseFloat((revenueMetrics.total / totalPayments / 100).toFixed(2))
-              //   : 0, // Convert cents to dollars
+            // totalPayments > 0
+            //   ? parseFloat((revenueMetrics.total / totalPayments / 100).toFixed(2))
+            //   : 0, // Convert cents to dollars
           },
         },
         generatedAt: now.toISOString(),

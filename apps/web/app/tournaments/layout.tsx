@@ -9,10 +9,6 @@
 
 export const dynamic = 'force-dynamic';
 
-export default function TournamentsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function TournamentsLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

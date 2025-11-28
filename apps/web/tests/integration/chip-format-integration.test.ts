@@ -376,7 +376,9 @@ describe('Chip Format Integration Tests', () => {
       const finalStandings = await getChipStandings(testTournamentId);
       console.log('\n📊 Final Standings:');
       finalStandings.forEach((s) => {
-        console.log(`  ${s.rank}. ${s.playerName}: ${s.chipCount} chips (${s.matchesPlayed} matches)`);
+        console.log(
+          `  ${s.rank}. ${s.playerName}: ${s.chipCount} chips (${s.matchesPlayed} matches)`
+        );
       });
 
       // Apply finals cutoff

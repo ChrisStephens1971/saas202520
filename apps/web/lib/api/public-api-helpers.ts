@@ -25,10 +25,7 @@ import type {
  * @param headers - Optional additional headers
  * @returns NextResponse with formatted data
  */
-export function apiSuccess<T>(
-  data: T,
-  headers?: Record<string, string>
-): NextResponse {
+export function apiSuccess<T>(data: T, headers?: Record<string, string>): NextResponse {
   const response: ApiSuccessResponse<T> = { data };
 
   return NextResponse.json(response, {
@@ -221,26 +218,14 @@ export function forbiddenError(message: string = 'Access forbidden'): NextRespon
  * Return 404 Not Found error
  */
 export function notFoundError(resource: string = 'Resource'): NextResponse {
-  return apiError(
-    ApiErrorCode.NOT_FOUND,
-    `${resource} not found`,
-    404
-  );
+  return apiError(ApiErrorCode.NOT_FOUND, `${resource} not found`, 404);
 }
 
 /**
  * Return 400 Validation Error
  */
-export function validationError(
-  message: string,
-  details?: Record<string, any>
-): NextResponse {
-  return apiError(
-    ApiErrorCode.VALIDATION_ERROR,
-    message,
-    400,
-    details
-  );
+export function validationError(message: string, details?: Record<string, any>): NextResponse {
+  return apiError(ApiErrorCode.VALIDATION_ERROR, message, 400, details);
 }
 
 /**
@@ -271,9 +256,5 @@ export function internalError(
     console.error('[API Error]', message, details);
   }
 
-  return apiError(
-    ApiErrorCode.INTERNAL_ERROR,
-    message,
-    500
-  );
+  return apiError(ApiErrorCode.INTERNAL_ERROR, message, 500);
 }

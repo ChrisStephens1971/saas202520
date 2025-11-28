@@ -31,6 +31,7 @@ components/analytics/
 **Purpose:** Display key performance indicators with trend indicators
 
 **Features:**
+
 - 4 metric cards: MRR, ARR, Active Tournaments, Active Players
 - Color-coded trend indicators (green/red)
 - Percentage change from previous period
@@ -39,6 +40,7 @@ components/analytics/
 - Loading skeleton states
 
 **Props:**
+
 ```typescript
 interface KPICardsProps {
   metrics: KPIMetric[];
@@ -56,6 +58,7 @@ interface KPIMetric {
 ```
 
 **Usage:**
+
 ```tsx
 import { KPICards } from '@/components/analytics';
 
@@ -67,10 +70,10 @@ import { KPICards } from '@/components/analytics';
       trend: 12.5,
       previousValue: 40000,
       format: 'currency',
-      icon: 'dollar'
-    }
+      icon: 'dollar',
+    },
   ]}
-/>
+/>;
 ```
 
 ### 2. Date Range Picker (`DateRangePicker.tsx`)
@@ -78,12 +81,14 @@ import { KPICards } from '@/components/analytics';
 **Purpose:** Allow users to select date ranges for filtering analytics
 
 **Features:**
+
 - Predefined ranges (Last 7/30/90 days)
 - Custom date picker
 - Dropdown interface
 - URL param persistence (future)
 
 **Props:**
+
 ```typescript
 interface DateRangePickerProps {
   value: DateRange;
@@ -98,12 +103,13 @@ interface DateRange {
 ```
 
 **Usage:**
+
 ```tsx
 import { DateRangePicker } from '@/components/analytics';
 
 const [dateRange, setDateRange] = useState(getDefaultDateRange());
 
-<DateRangePicker value={dateRange} onChange={setDateRange} />
+<DateRangePicker value={dateRange} onChange={setDateRange} />;
 ```
 
 ### 3. Chart Container (`ChartContainer.tsx`)
@@ -111,6 +117,7 @@ const [dateRange, setDateRange] = useState(getDefaultDateRange());
 **Purpose:** Reusable wrapper for all charts with consistent styling
 
 **Features:**
+
 - Title and description
 - Loading states
 - Error handling
@@ -119,6 +126,7 @@ const [dateRange, setDateRange] = useState(getDefaultDateRange());
 - Responsive design
 
 **Props:**
+
 ```typescript
 interface ChartContainerProps {
   title: string;
@@ -132,6 +140,7 @@ interface ChartContainerProps {
 ```
 
 **Usage:**
+
 ```tsx
 import { ChartContainer } from '@/components/analytics';
 
@@ -142,10 +151,8 @@ import { ChartContainer } from '@/components/analytics';
   error={error}
   onRefresh={() => mutate()}
 >
-  <ResponsiveContainer>
-    {/* Chart component */}
-  </ResponsiveContainer>
-</ChartContainer>
+  <ResponsiveContainer>{/* Chart component */}</ResponsiveContainer>
+</ChartContainer>;
 ```
 
 ### 4. Revenue Analytics (`RevenueAnalytics.tsx`)
@@ -153,6 +160,7 @@ import { ChartContainer } from '@/components/analytics';
 **Purpose:** Display revenue metrics and visualizations
 
 **Visualizations:**
+
 1. **Line Chart** - Revenue trend over time
 2. **Bar Chart** - Revenue by payment type
 3. **Pie Chart** - Revenue by tournament format
@@ -161,6 +169,7 @@ import { ChartContainer } from '@/components/analytics';
 **Data Source:** `/api/analytics/revenue`
 
 **Features:**
+
 - Responsive Recharts visualizations
 - Interactive tooltips
 - Legend toggles
@@ -168,6 +177,7 @@ import { ChartContainer } from '@/components/analytics';
 - Real-time data with SWR
 
 **Props:**
+
 ```typescript
 interface RevenueAnalyticsProps {
   dateRange: DateRange;
@@ -175,10 +185,11 @@ interface RevenueAnalyticsProps {
 ```
 
 **Usage:**
+
 ```tsx
 import { RevenueAnalytics } from '@/components/analytics';
 
-<RevenueAnalytics dateRange={dateRange} />
+<RevenueAnalytics dateRange={dateRange} />;
 ```
 
 ### 5. User Analytics (`UserAnalytics.tsx`)
@@ -186,22 +197,26 @@ import { RevenueAnalytics } from '@/components/analytics';
 **Purpose:** Display user growth and cohort retention analysis
 
 **Visualizations:**
+
 1. **Area Chart** - User growth over time
 2. **Cohort Heatmap** - Retention matrix (D3.js)
 3. **Line Chart** - LTV by cohort
 4. **Summary Cards** - Total/Active users, Retention rate
 
 **Data Sources:**
+
 - `/api/analytics/users`
 - `/api/analytics/cohorts`
 
 **Features:**
+
 - D3.js heatmap for cohort retention
 - Interactive tooltips with retention percentages
 - Cohort comparison
 - Real-time updates
 
 **Props:**
+
 ```typescript
 interface UserAnalyticsProps {
   dateRange: DateRange;
@@ -209,10 +224,11 @@ interface UserAnalyticsProps {
 ```
 
 **Usage:**
+
 ```tsx
 import { UserAnalytics } from '@/components/analytics';
 
-<UserAnalytics dateRange={dateRange} />
+<UserAnalytics dateRange={dateRange} />;
 ```
 
 ### 6. Tournament Analytics (`TournamentAnalytics.tsx`)
@@ -220,6 +236,7 @@ import { UserAnalytics } from '@/components/analytics';
 **Purpose:** Display tournament performance and activity patterns
 
 **Visualizations:**
+
 1. **Bar Chart** - Attendance by format
 2. **Line Chart** - Completion rate trend
 3. **Activity Heatmap** - Day/time activity matrix (D3.js)
@@ -228,12 +245,14 @@ import { UserAnalytics } from '@/components/analytics';
 **Data Source:** `/api/analytics/tournaments`
 
 **Features:**
+
 - D3.js heatmap for activity patterns
 - Format comparison
 - Day of week analysis
 - Time of day patterns
 
 **Props:**
+
 ```typescript
 interface TournamentAnalyticsProps {
   dateRange: DateRange;
@@ -241,10 +260,11 @@ interface TournamentAnalyticsProps {
 ```
 
 **Usage:**
+
 ```tsx
 import { TournamentAnalytics } from '@/components/analytics';
 
-<TournamentAnalytics dateRange={dateRange} />
+<TournamentAnalytics dateRange={dateRange} />;
 ```
 
 ### 7. Cohort Heatmap (`CohortHeatmap.tsx`)
@@ -252,6 +272,7 @@ import { TournamentAnalytics } from '@/components/analytics';
 **Purpose:** D3.js-based heatmap for cohort retention visualization
 
 **Features:**
+
 - Color-coded retention percentages
 - Interactive tooltips
 - Cohort size display
@@ -259,6 +280,7 @@ import { TournamentAnalytics } from '@/components/analytics';
 - Responsive design
 
 **Props:**
+
 ```typescript
 interface CohortHeatmapProps {
   data: CohortData[];
@@ -275,10 +297,11 @@ interface CohortData {
 ```
 
 **Usage:**
+
 ```tsx
 import { CohortHeatmap } from '@/components/analytics';
 
-<CohortHeatmap data={cohortData} width={800} height={400} />
+<CohortHeatmap data={cohortData} width={800} height={400} />;
 ```
 
 ### 8. Activity Heatmap (`ActivityHeatmap.tsx`)
@@ -286,6 +309,7 @@ import { CohortHeatmap } from '@/components/analytics';
 **Purpose:** D3.js-based heatmap for tournament activity by day/time
 
 **Features:**
+
 - 7 days x 24 hours grid
 - Color scale based on activity
 - Interactive tooltips
@@ -293,6 +317,7 @@ import { CohortHeatmap } from '@/components/analytics';
 - Responsive design
 
 **Props:**
+
 ```typescript
 interface ActivityHeatmapProps {
   data: HeatmapCell[];
@@ -301,18 +326,19 @@ interface ActivityHeatmapProps {
 }
 
 interface HeatmapCell {
-  row: number;    // Day of week (0-6)
-  col: number;    // Hour of day (0-23)
-  value: number;  // Activity count
+  row: number; // Day of week (0-6)
+  col: number; // Hour of day (0-23)
+  value: number; // Activity count
   label?: string;
 }
 ```
 
 **Usage:**
+
 ```tsx
 import { ActivityHeatmap } from '@/components/analytics';
 
-<ActivityHeatmap data={activityData} width={900} height={300} />
+<ActivityHeatmap data={activityData} width={900} height={300} />;
 ```
 
 ### 9. Loading States (`LoadingStates.tsx`)
@@ -320,6 +346,7 @@ import { ActivityHeatmap } from '@/components/analytics';
 **Purpose:** Skeleton loaders and error states
 
 **Components:**
+
 - `ChartSkeleton` - Animated placeholder for charts
 - `KPISkeleton` - Skeleton for KPI cards
 - `GridSkeleton` - Grid of skeleton cards
@@ -327,12 +354,19 @@ import { ActivityHeatmap } from '@/components/analytics';
 - `EmptyState` - No data placeholder
 
 **Usage:**
+
 ```tsx
 import { ChartSkeleton, ErrorState, EmptyState } from '@/components/analytics';
 
-{isLoading && <ChartSkeleton />}
-{error && <ErrorState error={error} onRetry={mutate} />}
-{!data && <EmptyState title="No data available" />}
+{
+  isLoading && <ChartSkeleton />;
+}
+{
+  error && <ErrorState error={error} onRetry={mutate} />;
+}
+{
+  !data && <EmptyState title="No data available" />;
+}
 ```
 
 ## Data Fetching Pattern
@@ -387,9 +421,7 @@ All charts use fixed height of 300px within ResponsiveContainer:
 
 ```tsx
 <ResponsiveContainer width="100%" height={300}>
-  <LineChart data={data}>
-    {/* Chart config */}
-  </LineChart>
+  <LineChart data={data}>{/* Chart config */}</LineChart>
 </ResponsiveContainer>
 ```
 
@@ -413,6 +445,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 **File:** `app/(dashboard)/analytics/page.tsx`
 
 **Features:**
+
 - Tab navigation (Overview, Revenue, Users, Tournaments)
 - KPI cards visible on all tabs
 - Date range picker in header
@@ -421,6 +454,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 - Real-time updates
 
 **Usage:**
+
 ```tsx
 // Navigate to /analytics
 // Select date range
@@ -441,6 +475,7 @@ GET /api/analytics/tournaments?startDate=...&endDate=...
 ### Expected Response Formats
 
 **Revenue API:**
+
 ```typescript
 {
   mrr: number;
@@ -448,24 +483,43 @@ GET /api/analytics/tournaments?startDate=...&endDate=...
   mrrTrend: number;
   arrTrend: number;
   paymentSuccessRate: number;
-  revenueByType: { type: string; amount: number }[];
-  revenueByFormat: { format: string; amount: number }[];
-  revenueOverTime: { date: string; revenue: number; transactions: number }[];
+  revenueByType: {
+    type: string;
+    amount: number;
+  }
+  [];
+  revenueByFormat: {
+    format: string;
+    amount: number;
+  }
+  [];
+  revenueOverTime: {
+    date: string;
+    revenue: number;
+    transactions: number;
+  }
+  [];
 }
 ```
 
 **Users API:**
+
 ```typescript
 {
   totalUsers: number;
   activeUsers: number;
   newUsers: number;
   retentionRate: number;
-  userGrowth: { date: string; count: number }[];
+  userGrowth: {
+    date: string;
+    count: number;
+  }
+  [];
 }
 ```
 
 **Cohorts API:**
+
 ```typescript
 {
   cohorts: {
@@ -478,6 +532,7 @@ GET /api/analytics/tournaments?startDate=...&endDate=...
 ```
 
 **Tournaments API:**
+
 ```typescript
 {
   activeTournaments: number;
@@ -485,8 +540,17 @@ GET /api/analytics/tournaments?startDate=...&endDate=...
   averageAttendance: number;
   completionRate: number;
   completionRateTrend: number;
-  attendanceByFormat: { format: string; attendance: number }[];
-  activityHeatmap: { row: number; col: number; value: number }[];
+  attendanceByFormat: {
+    format: string;
+    attendance: number;
+  }
+  [];
+  activityHeatmap: {
+    row: number;
+    col: number;
+    value: number;
+  }
+  [];
 }
 ```
 
@@ -503,7 +567,7 @@ import type {
   UserMetrics,
   TournamentMetrics,
   CohortData,
-  HeatmapCell
+  HeatmapCell,
 } from '@/components/analytics/types';
 ```
 

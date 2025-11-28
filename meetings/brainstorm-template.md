@@ -21,10 +21,12 @@ What are we trying to brainstorm or solve?
 [Describe the current state]
 
 **Constraints:**
+
 - Constraint 1
 - Constraint 2
 
 **Success Criteria:**
+
 - What good looks like
 - What we want to achieve
 
@@ -79,7 +81,9 @@ What are we trying to brainstorm or solve?
 ## Evaluation & Prioritization
 
 ### Criteria
+
 Rate each idea on:
+
 1. Impact (1-5)
 2. Feasibility (1-5)
 3. Cost (1-5, lower is better)
@@ -87,11 +91,11 @@ Rate each idea on:
 
 ### Top Ideas
 
-| Idea | Impact | Feasibility | Cost | Time | Total Score | Priority |
-|------|--------|-------------|------|------|-------------|----------|
-| [Idea 1] | 5 | 4 | 2 | 3 | 12 | High |
-| [Idea 2] | 4 | 5 | 2 | 2 | 13 | High |
-| [Idea 3] | 4 | 3 | 3 | 4 | 10 | Medium |
+| Idea     | Impact | Feasibility | Cost | Time | Total Score | Priority |
+| -------- | ------ | ----------- | ---- | ---- | ----------- | -------- |
+| [Idea 1] | 5      | 4           | 2    | 3    | 12          | High     |
+| [Idea 2] | 4      | 5           | 2    | 2    | 13          | High     |
+| [Idea 3] | 4      | 3           | 3    | 4    | 10          | Medium   |
 
 ---
 
@@ -103,6 +107,7 @@ Rate each idea on:
 [Why we chose this approach]
 
 **Variations to Consider:**
+
 - Variation 1
 - Variation 2
 
@@ -111,14 +116,17 @@ Rate each idea on:
 ## Next Steps
 
 ### Immediate Actions
+
 - [ ] [Action 1] - Owner: [Name] - Due: [Date]
 - [ ] [Action 2] - Owner: [Name] - Due: [Date]
 
 ### Research Needed
+
 - [ ] [Research question 1]
 - [ ] [Research question 2]
 
 ### Prototyping/Testing
+
 - [ ] [Prototype to build]
 - [ ] [Hypothesis to test]
 
@@ -127,6 +135,7 @@ Rate each idea on:
 ## Parking Lot
 
 Ideas to revisit later:
+
 - [Idea that's interesting but not for now]
 - [Idea that needs more research]
 
@@ -135,14 +144,17 @@ Ideas to revisit later:
 ## Insights & Learnings
 
 **Key Insights:**
+
 - Insight 1
 - Insight 2
 
 **Questions Raised:**
+
 - [ ] Question 1
 - [ ] Question 2
 
 **Assumptions to Validate:**
+
 - [ ] Assumption 1
 - [ ] Assumption 2
 

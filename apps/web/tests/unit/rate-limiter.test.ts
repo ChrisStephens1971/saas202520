@@ -98,9 +98,7 @@ describe('rate-limiter', () => {
         { status: 'pending', type: 'in_app' },
       ];
 
-      vi.mocked(prisma.notification.findMany).mockResolvedValueOnce(
-        mockNotifications as never
-      );
+      vi.mocked(prisma.notification.findMany).mockResolvedValueOnce(mockNotifications as never);
 
       const start = new Date('2025-01-01');
       const end = new Date('2025-01-07');
@@ -194,9 +192,7 @@ describe('rate-limiter', () => {
     });
 
     it('should return false when no preferences found', async () => {
-      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
-        null
-      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(null);
 
       const result = await isPlayerOptedOut('player-123');
 
@@ -236,9 +232,7 @@ describe('rate-limiter', () => {
     });
 
     it('should return false when no preferences found', async () => {
-      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
-        null
-      );
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(null);
 
       const result = await isWithinQuietHours('player-123');
 

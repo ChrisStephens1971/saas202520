@@ -12,6 +12,7 @@
 Tournament Directors (TDs) need to run "chip format" tournaments, a popular format in foosball and other table sports where players accumulate chips through matches rather than competing in a traditional bracket. Current system only supports bracket-based formats (single/double elimination, round robin).
 
 **User Pain Points:**
+
 - Cannot run chip format tournaments without manual chip tracking
 - No automated match assignment for queue-based formats
 - Manual selection of finalists based on chip counts
@@ -22,12 +23,14 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 ## Goals & Success Metrics
 
 ### Goals
+
 1. Enable TDs to create and run chip format tournaments
 2. Automate chip tracking and match assignment
 3. Automatically determine finalists based on chip counts
 4. Maintain offline-first architecture for tournament day
 
 ### Success Metrics
+
 - ✅ TDs can create chip format tournaments
 - ✅ Chip counts update automatically after each match
 - ✅ Top N players automatically identified for finals
@@ -39,22 +42,26 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 ## User Stories
 
 ### CHIP-001: Queue Engine
+
 **As a** Tournament Director
 **I want** matches to be assigned from a queue without a bracket structure
 **So that** players can play continuously without waiting for bracket progression
 
 **Acceptance Criteria:**
+
 - Queue-based match assignment (no bracket tree)
 - Configurable pairing logic (random, rating-based, round-robin)
 - Tables assigned automatically to available players
 - Match history prevents duplicate pairings (optional)
 
 ### CHIP-002: Chip Counter Tracking
+
 **As a** Tournament Director
 **I want** chip counts to update automatically when matches complete
 **So that** I don't have to manually track chips for each player
 
 **Acceptance Criteria:**
+
 - Chip count stored per player
 - Configurable chip values (winner/loser chips)
 - Automatic increment on match completion
@@ -62,11 +69,13 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 - TD can manually adjust chips if needed
 
 ### CHIP-003: Finals Cutoff Logic
+
 **As a** Tournament Director
 **I want** the system to automatically select top N players by chip count
 **So that** I can easily transition from qualification to finals bracket
 
 **Acceptance Criteria:**
+
 - Configurable cutoff (top 4, 8, 16, etc.)
 - Automatic ranking by chip count
 - Tiebreaker rules (head-to-head, rating, random)
@@ -124,6 +133,7 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 ### Data Model
 
 #### Tournament Configuration
+
 ```typescript
 {
   format: 'chip_format',
@@ -140,6 +150,7 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 ```
 
 #### Player Extensions
+
 ```typescript
 {
   chipCount: number,    // Current chip total
@@ -155,6 +166,7 @@ Tournament Directors (TDs) need to run "chip format" tournaments, a popular form
 ### API Endpoints
 
 #### Create Chip Format Tournament
+
 ```
 POST /api/tournaments
 {
@@ -164,6 +176,7 @@ POST /api/tournaments
 ```
 
 #### Assign Next Match (Queue Engine)
+
 ```
 POST /api/tournaments/[id]/matches/assign-next
 Response: {
@@ -175,6 +188,7 @@ Response: {
 ```
 
 #### Award Chips (Match Completion Hook)
+
 ```
 POST /api/tournaments/[id]/matches/[matchId]/complete
 Body: { "winnerId": "player-a", "score": { ... } }
@@ -182,6 +196,7 @@ Side Effect: Automatically awards chips to players
 ```
 
 #### Get Chip Standings
+
 ```
 GET /api/tournaments/[id]/chip-standings
 Response: {
@@ -193,6 +208,7 @@ Response: {
 ```
 
 #### Apply Finals Cutoff
+
 ```
 POST /api/tournaments/[id]/apply-finals-cutoff
 Body: { "finalistsCount": 8 }
@@ -255,43 +271,55 @@ model Tournament {
 ## Edge Cases & Considerations
 
 ### 1. Tiebreakers
+
 **Problem:** Multiple players with same chip count
 **Solution:**
+
 1. Head-to-head record (if they played each other)
 2. Fargo rating (if available)
 3. Random selection (fair coin flip)
 
 ### 2. Odd Number of Players
+
 **Problem:** One player left unpaired in queue
 **Solution:**
+
 - Assign "bye" match (automatic chip award)
 - Wait for next available player
 - Allow TD to manually pair with another player
 
 ### 3. Match Assignment Fairness
+
 **Problem:** Same players paired multiple times
 **Solution:**
+
 - Track match history per player pair
 - Prevent duplicate pairings (configurable)
 - Round-robin strategy ensures everyone plays everyone
 
 ### 4. Late Entries
+
 **Problem:** Player joins after qualification started
 **Solution:**
+
 - Start with 0 chips
 - TD can manually award "catch-up" chips
 - Late entry fee adjustment
 
 ### 5. No-Shows During Qualification
+
 **Problem:** Player no-shows after being paired
 **Solution:**
+
 - Award chips to present player (forfeit win)
 - Mark absent player for penalty/elimination
 - Return present player to queue
 
 ### 6. Finals Bracket Format
+
 **Problem:** Top 8 could use single or double elimination
 **Solution:**
+
 - TD chooses finals bracket format (separate from chip format)
 - Standard bracket generation using top N players
 - Seeding based on chip count (highest seed = most chips)
@@ -301,17 +329,20 @@ model Tournament {
 ## Testing Strategy
 
 ### Unit Tests
+
 - ✅ Pairing algorithm (random, rating, round-robin)
 - ✅ Chip award calculations
 - ✅ Ranking with tiebreakers
 - ✅ Finals cutoff selection
 
 ### Integration Tests
+
 - ✅ Full qualification phase (multiple rounds)
 - ✅ Finals cutoff transition
 - ✅ Chip count consistency across match completions
 
 ### Manual Testing Scenarios
+
 1. Create chip format tournament (8 players)
 2. Run 5 qualification rounds
 3. Verify chip counts match expected results
@@ -340,11 +371,13 @@ model Tournament {
 ## Launch Plan
 
 ### Phase 1: MVP (Sprint 4)
+
 - ✅ CHIP-001: Queue engine with random pairing
 - ✅ CHIP-002: Basic chip tracking (winner/loser chips)
 - ✅ CHIP-003: Finals cutoff with simple tiebreaker
 
 ### Phase 2: Enhancements (Sprint 5+)
+
 - ⏳ Round-robin pairing strategy
 - ⏳ Advanced tiebreakers (head-to-head)
 - ⏳ Time-based qualification phases
@@ -356,6 +389,7 @@ model Tournament {
 ## Success Criteria
 
 **Must Have (MVP):**
+
 - ✅ Create chip format tournament
 - ✅ Automatic match assignment (random pairing)
 - ✅ Chip counts update on match completion
@@ -363,6 +397,7 @@ model Tournament {
 - ✅ Generate finals bracket from finalists
 
 **Nice to Have (v2):**
+
 - ⏳ Multiple pairing strategies
 - ⏳ Live chip leaderboard
 - ⏳ Manual chip adjustments
@@ -373,7 +408,9 @@ model Tournament {
 ## Appendix
 
 ### Chip Format in Foosball
+
 Chip format is a popular tournament structure in foosball where:
+
 - Players earn chips by winning matches during qualification
 - Typical chip awards: 3 chips for win, 1 chip for loss (3-1 format)
 - After qualification rounds (e.g., 5 rounds), top N players advance
@@ -381,6 +418,7 @@ Chip format is a popular tournament structure in foosball where:
 - Promotes continuous play and rewards consistency
 
 ### Example Tournament Flow
+
 1. **Registration:** 16 players register
 2. **Qualification:** Each player plays 5 matches (random opponents)
 3. **Chip Awards:** Winners get 3 chips, losers get 1 chip per match

@@ -82,10 +82,7 @@ export async function addToCache(
 /**
  * Get a resource from cache
  */
-export async function getFromCache(
-  url: string,
-  cacheName?: string
-): Promise<Response | undefined> {
+export async function getFromCache(url: string, cacheName?: string): Promise<Response | undefined> {
   if (!isCacheSupported()) {
     return undefined;
   }
@@ -107,10 +104,7 @@ export async function getFromCache(
 /**
  * Remove a resource from cache
  */
-export async function removeFromCache(
-  url: string,
-  cacheName?: string
-): Promise<boolean> {
+export async function removeFromCache(url: string, cacheName?: string): Promise<boolean> {
   if (!isCacheSupported()) {
     return false;
   }
@@ -268,9 +262,7 @@ export async function getCacheStats(): Promise<CacheStats> {
 
   try {
     const cacheNames = await caches.keys();
-    const cacheInfos = await Promise.all(
-      cacheNames.map((name) => getCacheInfo(name))
-    );
+    const cacheInfos = await Promise.all(cacheNames.map((name) => getCacheInfo(name)));
 
     const totalSize = cacheInfos.reduce((sum, info) => sum + info.size, 0);
 
@@ -401,12 +393,7 @@ export async function warmCache(): Promise<void> {
   console.log('[CacheManager] Warming cache...');
 
   // Preload critical app resources
-  await preloadCriticalResources([
-    '/',
-    '/tournaments',
-    '/offline.html',
-    '/manifest.json',
-  ]);
+  await preloadCriticalResources(['/', '/tournaments', '/offline.html', '/manifest.json']);
 
   console.log('[CacheManager] Cache warmed');
 }

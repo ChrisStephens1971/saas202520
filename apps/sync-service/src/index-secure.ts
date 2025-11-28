@@ -129,9 +129,7 @@ server.register(async function (fastify) {
         // STEP 2: Verify room access token
         const roomTokenParam = request.query.room;
         if (!roomTokenParam) {
-          console.warn(
-            `[WebSocket] Rejected: No room token from user ${userToken.userId}`
-          );
+          console.warn(`[WebSocket] Rejected: No room token from user ${userToken.userId}`);
           socket.close(1008, 'Room access token required');
           return;
         }
@@ -139,9 +137,7 @@ server.register(async function (fastify) {
         // Extract tournament ID from room token
         const roomToken = verifyRoomToken(roomTokenParam, ''); // We'll validate tournament ID next
         if (!roomToken) {
-          console.warn(
-            `[WebSocket] Rejected: Invalid room token from user ${userToken.userId}`
-          );
+          console.warn(`[WebSocket] Rejected: Invalid room token from user ${userToken.userId}`);
           socket.close(1008, 'Invalid room access token');
           return;
         }
@@ -161,9 +157,7 @@ server.register(async function (fastify) {
 
         const room = roomManager.getOrCreateRoom(secureRoomId, tournamentId, roomToken.orgId);
         if (!room) {
-          console.warn(
-            `[WebSocket] Rejected: Room quota exceeded for org ${roomToken.orgId}`
-          );
+          console.warn(`[WebSocket] Rejected: Room quota exceeded for org ${roomToken.orgId}`);
           socket.close(1008, 'Room quota exceeded');
           return;
         }
@@ -215,10 +209,7 @@ server.register(async function (fastify) {
         });
 
         socket.on('error', (error) => {
-          console.error(
-            `[WebSocket] Socket error for user ${userToken.userId}:`,
-            error
-          );
+          console.error(`[WebSocket] Socket error for user ${userToken.userId}:`, error);
           room.removeConnection(socket);
         });
       } catch (error) {

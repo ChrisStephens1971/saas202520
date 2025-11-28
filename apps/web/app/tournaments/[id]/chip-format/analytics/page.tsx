@@ -15,9 +15,21 @@
 import { use } from 'react';
 import useSWR from 'swr';
 import {
-  LineChart, Line, BarChart, Bar, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, PieChart, Pie, Cell
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
 } from 'recharts';
 
 // Types
@@ -51,13 +63,23 @@ interface StatisticsResponse {
 }
 
 // Fetcher
-const fetcher = (url: string) => fetch(url).then(res => {
-  if (!res.ok) throw new Error('Failed to fetch');
-  return res.json();
-});
+const fetcher = (url: string) =>
+  fetch(url).then((res) => {
+    if (!res.ok) throw new Error('Failed to fetch');
+    return res.json();
+  });
 
 // Color palette for charts
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const COLORS = [
+  '#3b82f6',
+  '#10b981',
+  '#f59e0b',
+  '#ef4444',
+  '#8b5cf6',
+  '#ec4899',
+  '#14b8a6',
+  '#f97316',
+];
 
 export default function AnalyticsDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: tournamentId } = use(params);
@@ -133,19 +155,19 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
 
   // Export functions
   const exportToCSV = () => {
-    const csvData = progression.flatMap(player =>
-      player.data.map(point => ({
+    const csvData = progression.flatMap((player) =>
+      player.data.map((point) => ({
         Player: player.playerName,
         'Match Number': point.matchNumber,
         Chips: point.chips,
-        Timestamp: point.timestamp
+        Timestamp: point.timestamp,
       }))
     );
 
     const headers = Object.keys(csvData[0] || {});
     const csvContent = [
       headers.join(','),
-      ...csvData.map(row => headers.map(h => row[h as keyof typeof row]).join(','))
+      ...csvData.map((row) => headers.map((h) => row[h as keyof typeof row]).join(',')),
     ].join('\n');
 
     downloadFile(csvContent, `tournament-${tournamentId}-analytics.csv`, 'text/csv');
@@ -156,7 +178,7 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
       tournamentId: tournamentId,
       exportedAt: new Date().toISOString(),
       statistics,
-      chipProgression: progression
+      chipProgression: progression,
     };
 
     downloadFile(
@@ -195,7 +217,12 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
               Export CSV
             </button>
@@ -204,7 +231,12 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
               Export JSON
             </button>
@@ -213,18 +245,8 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <StatCard
-            title="Total Players"
-            value={statistics.totalPlayers}
-            icon="👥"
-            color="blue"
-          />
-          <StatCard
-            title="Total Matches"
-            value={statistics.totalMatches}
-            icon="🎯"
-            color="green"
-          />
+          <StatCard title="Total Players" value={statistics.totalPlayers} icon="👥" color="blue" />
+          <StatCard title="Total Matches" value={statistics.totalMatches} icon="🎯" color="green" />
           <StatCard
             title="Chips Awarded"
             value={statistics.totalChipsAwarded}
@@ -237,18 +259,15 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
             icon="📊"
             color="orange"
           />
-          <StatCard
-            title="Max Chips"
-            value={statistics.maxChips}
-            icon="🏆"
-            color="yellow"
-          />
+          <StatCard title="Max Chips" value={statistics.maxChips} icon="🏆" color="yellow" />
         </div>
 
         {/* Chip Progression Line Chart */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <h2 className="text-xl font-bold text-slate-900 mb-4">Chip Progression Over Time</h2>
-          <p className="text-slate-600 mb-6">Track how chip counts changed throughout the tournament</p>
+          <p className="text-slate-600 mb-6">
+            Track how chip counts changed throughout the tournament
+          </p>
 
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={chipProgressionChartData}>
@@ -263,7 +282,11 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                 stroke="#64748b"
               />
               <Tooltip
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                }}
                 labelFormatter={(value) => `Match ${value}`}
               />
               <Legend />
@@ -298,16 +321,14 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
             <ResponsiveContainer width="100%" height={350}>
               <BarChart data={playerPerformanceData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis
-                  dataKey="name"
-                  angle={-45}
-                  textAnchor="end"
-                  height={100}
-                  stroke="#64748b"
-                />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} stroke="#64748b" />
                 <YAxis stroke="#64748b" />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                  contentStyle={{
+                    backgroundColor: '#fff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                  }}
                 />
                 <Bar dataKey="chips" fill="#3b82f6" radius={[8, 8, 0, 0]} />
               </BarChart>
@@ -336,7 +357,11 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                  contentStyle={{
+                    backgroundColor: '#fff',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                  }}
                   formatter={(value: number) => `${value} chips`}
                 />
               </PieChart>
@@ -356,19 +381,28 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                   <th className="text-left py-3 px-4 text-slate-700 font-semibold">Rank</th>
                   <th className="text-left py-3 px-4 text-slate-700 font-semibold">Player</th>
                   <th className="text-right py-3 px-4 text-slate-700 font-semibold">Final Chips</th>
-                  <th className="text-right py-3 px-4 text-slate-700 font-semibold">Matches Played</th>
-                  <th className="text-right py-3 px-4 text-slate-700 font-semibold">Avg per Match</th>
+                  <th className="text-right py-3 px-4 text-slate-700 font-semibold">
+                    Matches Played
+                  </th>
+                  <th className="text-right py-3 px-4 text-slate-700 font-semibold">
+                    Avg per Match
+                  </th>
                   <th className="text-right py-3 px-4 text-slate-700 font-semibold">Progress</th>
                 </tr>
               </thead>
               <tbody>
                 {playerPerformanceData.map((player, index) => {
-                  const avgPerMatch = player.matches > 0 ? Math.round(player.chips / player.matches) : 0;
+                  const avgPerMatch =
+                    player.matches > 0 ? Math.round(player.chips / player.matches) : 0;
                   const maxChips = statistics.maxChips;
-                  const progressPercent = maxChips > 0 ? Math.round((player.chips / maxChips) * 100) : 0;
+                  const progressPercent =
+                    maxChips > 0 ? Math.round((player.chips / maxChips) * 100) : 0;
 
                   return (
-                    <tr key={player.name} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <tr
+                      key={player.name}
+                      className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                    >
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-2">
                           {index < 3 && (
@@ -393,7 +427,9 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                               style={{ width: `${progressPercent}%` }}
                             ></div>
                           </div>
-                          <span className="text-sm text-slate-600 w-12 text-right">{progressPercent}%</span>
+                          <span className="text-sm text-slate-600 w-12 text-right">
+                            {progressPercent}%
+                          </span>
                         </div>
                       </td>
                     </tr>
@@ -422,7 +458,11 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
                 stroke="#64748b"
               />
               <Tooltip
-                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}
+                contentStyle={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                }}
                 labelFormatter={(value) => `After Match ${value}`}
               />
               <Area
@@ -442,7 +482,12 @@ export default function AnalyticsDashboardPage({ params }: { params: Promise<{ i
 }
 
 // Helper Components
-function StatCard({ title, value, icon, color }: {
+function StatCard({
+  title,
+  value,
+  icon,
+  color,
+}: {
   title: string;
   value: number;
   icon: string;
@@ -472,15 +517,15 @@ function prepareChipProgressionData(progression: ChipProgressionData[]) {
   if (progression.length === 0) return [];
 
   // Find max match number
-  const maxMatches = Math.max(...progression.flatMap(p => p.data.map(d => d.matchNumber)));
+  const maxMatches = Math.max(...progression.flatMap((p) => p.data.map((d) => d.matchNumber)));
 
   // Create data points for each match
   const chartData: Array<Record<string, number>> = [];
   for (let i = 0; i <= maxMatches; i++) {
     const dataPoint: Record<string, number> = { matchNumber: i };
 
-    progression.slice(0, 8).forEach(player => {
-      const matchData = player.data.find(d => d.matchNumber === i);
+    progression.slice(0, 8).forEach((player) => {
+      const matchData = player.data.find((d) => d.matchNumber === i);
       dataPoint[player.playerName] = matchData?.chips || 0;
     });
 
@@ -492,7 +537,7 @@ function prepareChipProgressionData(progression: ChipProgressionData[]) {
 
 function preparePlayerPerformanceData(progression: ChipProgressionData[]) {
   return progression
-    .map(player => {
+    .map((player) => {
       const lastPoint = player.data[player.data.length - 1];
       return {
         name: player.playerName,
@@ -506,14 +551,14 @@ function preparePlayerPerformanceData(progression: ChipProgressionData[]) {
 
 function prepareChipDistributionData(progression: ChipProgressionData[]) {
   return progression
-    .map(player => {
+    .map((player) => {
       const lastPoint = player.data[player.data.length - 1];
       return {
         name: player.playerName,
         value: lastPoint?.chips || 0,
       };
     })
-    .filter(p => p.value > 0)
+    .filter((p) => p.value > 0)
     .sort((a, b) => b.value - a.value)
     .slice(0, 8); // Top 8 for pie chart readability
 }
@@ -521,13 +566,13 @@ function prepareChipDistributionData(progression: ChipProgressionData[]) {
 function prepareMatchActivityData(progression: ChipProgressionData[]) {
   if (progression.length === 0) return [];
 
-  const maxMatches = Math.max(...progression.flatMap(p => p.data.map(d => d.matchNumber)));
+  const maxMatches = Math.max(...progression.flatMap((p) => p.data.map((d) => d.matchNumber)));
 
   const activityData: Array<{ matchNumber: number; totalChips: number }> = [];
   for (let i = 0; i <= maxMatches; i++) {
     let totalChips = 0;
-    progression.forEach(player => {
-      const matchData = player.data.find(d => d.matchNumber === i);
+    progression.forEach((player) => {
+      const matchData = player.data.find((d) => d.matchNumber === i);
       if (matchData) {
         totalChips += matchData.chips;
       }
@@ -553,7 +598,14 @@ interface PieChartLabelProps {
 }
 
 // Custom label for pie chart
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: PieChartLabelProps) => {
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+}: PieChartLabelProps) => {
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);

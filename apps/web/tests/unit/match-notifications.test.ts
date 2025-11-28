@@ -76,16 +76,12 @@ describe('match-notifications', () => {
         },
       };
 
-      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(
-        mockMatch as never
-      );
+      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(mockMatch as never);
 
       await notifyMatchReady('match-123');
 
       // Verify in-app notifications sent to both players
-      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(
-        2
-      );
+      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(2);
       expect(notificationService.createInAppNotification).toHaveBeenCalledWith(
         'org-123',
         'player-a',
@@ -108,9 +104,7 @@ describe('match-notifications', () => {
         table: null,
       };
 
-      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(
-        mockMatch as never
-      );
+      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(mockMatch as never);
 
       await notifyMatchReady('match-123');
 
@@ -147,9 +141,7 @@ describe('match-notifications', () => {
         },
       };
 
-      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(
-        mockMatch as never
-      );
+      vi.mocked(prisma.match.findUnique).mockResolvedValueOnce(mockMatch as never);
 
       await notifyMatchCompleted('match-123');
 
@@ -201,9 +193,7 @@ describe('match-notifications', () => {
         },
       };
 
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
 
       await sendCheckInReminder('player-123', 'tournament-123');
 
@@ -237,9 +227,7 @@ describe('match-notifications', () => {
         tournament: { orgId: 'org-123' },
       };
 
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
 
       await sendCheckInReminder('player-123', 'tournament-123');
 
@@ -257,9 +245,7 @@ describe('match-notifications', () => {
         { id: 'player-3', status: 'registered' },
       ];
 
-      vi.mocked(prisma.player.findMany).mockResolvedValueOnce(
-        mockPlayers as never
-      );
+      vi.mocked(prisma.player.findMany).mockResolvedValueOnce(mockPlayers as never);
 
       // Mock findUnique for each player
       vi.mocked(prisma.player.findUnique)
@@ -308,9 +294,7 @@ describe('match-notifications', () => {
       });
 
       // Verify notifications sent to all players (3 in-app + 3 email + 3 SMS = 9 total)
-      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(
-        3
-      );
+      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(3);
     });
   });
 
@@ -339,16 +323,12 @@ describe('match-notifications', () => {
         ],
       };
 
-      vi.mocked(prisma.tournament.findUnique).mockResolvedValueOnce(
-        mockTournament as never
-      );
+      vi.mocked(prisma.tournament.findUnique).mockResolvedValueOnce(mockTournament as never);
 
       await notifyTournamentStarting('tournament-123');
 
       // Verify in-app notifications sent to all checked-in players
-      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(
-        2
-      );
+      expect(notificationService.createInAppNotification).toHaveBeenCalledTimes(2);
 
       // Verify template notifications sent
       expect(notificationService.sendNotificationWithTemplate).toHaveBeenCalledTimes(2);

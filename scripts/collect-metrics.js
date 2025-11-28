@@ -18,7 +18,7 @@ class MetricsCollector {
       timestamp: new Date().toISOString(),
       agents: await this.getAgentMetrics(),
       prs: await this.getPRMetrics(),
-      costs: await this.getCostMetrics()
+      costs: await this.getCostMetrics(),
     };
 
     await this.saveMetrics(metrics);
@@ -59,18 +59,18 @@ class MetricsCollector {
   async getPRMetrics() {
     try {
       const openPRs = execSync('gh pr list --json number,title,createdAt,labels', {
-        encoding: 'utf8'
+        encoding: 'utf8',
       });
 
       const prs = JSON.parse(openPRs);
-      const agentPRs = prs.filter(pr =>
-        pr.labels.some(label => label.name.startsWith('lane:'))
+      const agentPRs = prs.filter((pr) =>
+        pr.labels.some((label) => label.name.startsWith('lane:'))
       );
 
       return {
         total: prs.length,
         agentCreated: agentPRs.length,
-        manual: prs.length - agentPRs.length
+        manual: prs.length - agentPRs.length,
       };
     } catch (error) {
       console.error('Error collecting PR metrics:', error.message);
@@ -92,7 +92,7 @@ class MetricsCollector {
         total: costData.totalCost,
         budget,
         percent: percent.toFixed(1),
-        byLane: costData.byLane || {}
+        byLane: costData.byLane || {},
       };
     } catch (error) {
       return { total: 0, budget: 500, percent: 0, byLane: {} };

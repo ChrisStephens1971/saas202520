@@ -9,10 +9,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
-import type {
-  ServerToClientEvents,
-  ClientToServerEvents,
-} from '@/lib/socket/events';
+import type { ServerToClientEvents, ClientToServerEvents } from '@/lib/socket/events';
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
@@ -44,11 +41,7 @@ interface SocketProviderProps {
   autoConnect?: boolean;
 }
 
-export function SocketProvider({
-  children,
-  token,
-  autoConnect = true,
-}: SocketProviderProps) {
+export function SocketProvider({ children, token, autoConnect = true }: SocketProviderProps) {
   const [socket, setSocket] = useState<SocketType | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -142,9 +135,5 @@ export function SocketProvider({
     error,
   };
 
-  return (
-    <SocketContext.Provider value={value}>
-      {children}
-    </SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 }

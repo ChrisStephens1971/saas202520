@@ -76,6 +76,7 @@ This PWA module provides comprehensive offline-first capabilities for the Tourna
 ### 5. UI Components
 
 **OfflineIndicator** (`components/mobile/OfflineIndicator.tsx`):
+
 - Visual offline status banner
 - Queued actions count
 - Sync progress indicator
@@ -172,9 +173,7 @@ function MyComponent() {
     <div>
       <p>Status: {state.isOnline ? 'Online' : 'Offline'}</p>
       <p>Pending: {state.queueStats.pending}</p>
-      {state.hasPendingActions && (
-        <button onClick={actions.sync}>Sync Now</button>
-      )}
+      {state.hasPendingActions && <button onClick={actions.sync}>Sync Now</button>}
     </div>
   );
 }
@@ -206,13 +205,7 @@ async function handleScoreUpdate(matchId: string, scores: any) {
 
   if (!navigator.onLine) {
     // Queue for later sync
-    await queueAction(
-      'score_update',
-      endpoint,
-      'POST',
-      { scores },
-      tenantId
-    );
+    await queueAction('score_update', endpoint, 'POST', { scores }, tenantId);
 
     console.log('Score queued for sync');
   } else {
@@ -234,11 +227,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html>
       <body>
-        <OfflineIndicator
-          showCacheStats={true}
-          autoHide={true}
-          position="top"
-        />
+        <OfflineIndicator showCacheStats={true} autoHide={true} position="top" />
         {children}
       </body>
     </html>
@@ -261,11 +250,7 @@ await prefetchPlayerData(playerId);
 ### 6. Manual Cache Management
 
 ```tsx
-import {
-  getCacheStats,
-  clearOldCaches,
-  invalidateTournamentCache
-} from '@/lib/pwa';
+import { getCacheStats, clearOldCaches, invalidateTournamentCache } from '@/lib/pwa';
 
 // Get cache statistics
 const stats = await getCacheStats();
@@ -330,25 +315,25 @@ invalidateApiCache(pattern?)
 
 ```typescript
 // Sync operations
-startSync()
-forceSync()
-cancelSync()
+startSync();
+forceSync();
+cancelSync();
 
 // Strategy
-setSyncStrategy(strategy)
-getSyncStrategy()
+setSyncStrategy(strategy);
+getSyncStrategy();
 
 // Auto-sync
-startAutoSync()
-stopAutoSync()
+startAutoSync();
+stopAutoSync();
 
 // Status
-getSyncStatus()
-addSyncStatusListener(callback)
+getSyncStatus();
+addSyncStatusListener(callback);
 
 // Conflicts
-getConflicts()
-resolveConflict(id, resolution)
+getConflicts();
+resolveConflict(id, resolution);
 ```
 
 ### PWA Utilities API
@@ -433,6 +418,7 @@ await invalidateTournamentCache(tournamentId);
 ### 1. Queue Actions Strategically
 
 Only queue actions that make sense offline:
+
 - ✅ Score updates
 - ✅ Player registrations
 - ✅ Check-ins
@@ -447,7 +433,7 @@ const conflicts = getConflicts();
 
 if (conflicts.length > 0) {
   // Prompt user to resolve
-  conflicts.forEach(conflict => {
+  conflicts.forEach((conflict) => {
     // Show UI to user
     resolveConflict(conflict.id, 'use-local');
   });
@@ -467,7 +453,7 @@ useEffect(() => {
 // When director opens the app, prefetch their tournaments
 useEffect(() => {
   if (isDirector) {
-    directorTournaments.forEach(t => {
+    directorTournaments.forEach((t) => {
       prefetchTournamentData(t.id);
     });
   }
@@ -479,8 +465,9 @@ useEffect(() => {
 ```typescript
 // Warn if cache is getting large
 useEffect(() => {
-  getCacheStats().then(stats => {
-    if (stats.totalSize > 40 * 1024 * 1024) { // 40MB
+  getCacheStats().then((stats) => {
+    if (stats.totalSize > 40 * 1024 * 1024) {
+      // 40MB
       console.warn('Cache approaching size limit');
       clearOldCaches();
     }
@@ -493,17 +480,19 @@ useEffect(() => {
 Always inform users about offline state:
 
 ```tsx
-{!isOnline && (
-  <div className="alert alert-warning">
-    You're offline. Your changes will sync when you reconnect.
-  </div>
-)}
+{
+  !isOnline && (
+    <div className="alert alert-warning">
+      You're offline. Your changes will sync when you reconnect.
+    </div>
+  );
+}
 
-{hasPendingActions && (
-  <div className="alert alert-info">
-    {pendingCount} actions waiting to sync
-  </div>
-)}
+{
+  hasPendingActions && (
+    <div className="alert alert-info">{pendingCount} actions waiting to sync</div>
+  );
+}
 ```
 
 ### 6. Test Multi-Tenant Isolation

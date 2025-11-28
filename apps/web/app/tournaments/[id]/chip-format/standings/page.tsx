@@ -41,10 +41,7 @@ export default async function StandingsPage({ params }: PageProps) {
           Tournaments
         </Link>
         <span>/</span>
-        <Link
-          href={`/tournaments/${id}/chip-format`}
-          className="hover:text-gray-900"
-        >
+        <Link href={`/tournaments/${id}/chip-format`} className="hover:text-gray-900">
           {tournament.name}
         </Link>
         <span>/</span>
@@ -68,10 +65,7 @@ export default async function StandingsPage({ params }: PageProps) {
       {/* Standings Table */}
       <div className="bg-white rounded-lg shadow">
         <Suspense fallback={<div className="h-96 bg-gray-100 animate-pulse" />}>
-          <ChipStandingsTable
-            tournamentId={id}
-            finalsCount={chipConfig.finalsCount}
-          />
+          <ChipStandingsTable tournamentId={id} finalsCount={chipConfig.finalsCount} />
         </Suspense>
       </div>
     </div>

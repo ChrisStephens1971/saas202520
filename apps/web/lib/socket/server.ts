@@ -36,12 +36,9 @@ export function getIO(): SocketIOServer<
   return io;
 }
 
-export function initializeSocketServer(httpServer: HTTPServer): SocketIOServer<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
-> {
+export function initializeSocketServer(
+  httpServer: HTTPServer
+): SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData> {
   if (io) {
     console.log('Socket.io server already initialized');
     return io;
@@ -90,7 +87,9 @@ export function initializeSocketServer(httpServer: HTTPServer): SocketIOServer<
 
   // Connection handler
   io.on(SocketEvent.CONNECTION, (socket) => {
-    console.log(`Client connected: ${socket.id} (user: ${socket.data.userId || 'anonymous'}, role: ${socket.data.role})`);
+    console.log(
+      `Client connected: ${socket.id} (user: ${socket.data.userId || 'anonymous'}, role: ${socket.data.role})`
+    );
 
     // Join tournament room
     socket.on(SocketEvent.JOIN_TOURNAMENT, ({ tournamentId, userId }: JoinTournamentPayload) => {
@@ -109,18 +108,20 @@ export function initializeSocketServer(httpServer: HTTPServer): SocketIOServer<
       });
 
       // Send current users in tournament
-      io?.in(`tournament:${tournamentId}`).fetchSockets().then((sockets) => {
-        const users = sockets.map(s => ({
-          userId: s.data.userId || s.id,
-          username: s.data.username || 'Anonymous',
-          role: s.data.role || 'player',
-        }));
+      io?.in(`tournament:${tournamentId}`)
+        .fetchSockets()
+        .then((sockets) => {
+          const users = sockets.map((s) => ({
+            userId: s.data.userId || s.id,
+            username: s.data.username || 'Anonymous',
+            role: s.data.role || 'player',
+          }));
 
-        socket.emit(SocketEvent.USERS_IN_TOURNAMENT, {
-          tournamentId,
-          users,
+          socket.emit(SocketEvent.USERS_IN_TOURNAMENT, {
+            tournamentId,
+            users,
+          });
         });
-      });
     });
 
     // Leave tournament room
@@ -209,17 +210,19 @@ export function emitToUser<K extends keyof ServerToClientEvents>(
   });
 }
 
-export async function getTournamentUsers(tournamentId: string): Promise<Array<{
-  userId: string;
-  username: string;
-  role: string;
-}>> {
+export async function getTournamentUsers(tournamentId: string): Promise<
+  Array<{
+    userId: string;
+    username: string;
+    role: string;
+  }>
+> {
   if (!io) {
     return [];
   }
 
   const sockets = await io.in(`tournament:${tournamentId}`).fetchSockets();
-  return sockets.map(socket => ({
+  return sockets.map((socket) => ({
     userId: socket.data.userId || socket.id,
     username: socket.data.username || 'Anonymous',
     role: socket.data.role || 'player',

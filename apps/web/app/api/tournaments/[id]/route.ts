@@ -30,10 +30,7 @@ import {
  * @param {string} id - Tournament ID (from URL)
  * @returns {GetTournamentResponse} Tournament details with stats
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -101,8 +98,19 @@ export async function GET(
         name: tournament.name,
         slug: tournament.name.toLowerCase().replace(/\s+/g, '-'),
         description: tournament.description,
-        status: tournament.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
-        format: tournament.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
+        status: tournament.status as
+          | 'draft'
+          | 'registration'
+          | 'active'
+          | 'paused'
+          | 'completed'
+          | 'cancelled',
+        format: tournament.format as
+          | 'single_elimination'
+          | 'double_elimination'
+          | 'round_robin'
+          | 'modified_single'
+          | 'chip_format',
         sport: 'pool' as const,
         gameType: 'eight-ball' as const,
         raceToWins: 7,
@@ -154,10 +162,7 @@ export async function GET(
  * @param {string} id - Tournament ID (from URL)
  * @returns {UpdateTournamentResponse} Updated tournament
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authenticate user
     const session = await auth();
@@ -329,8 +334,19 @@ export async function PUT(
         name: updated.name,
         slug: updateData.slug || updated.name.toLowerCase().replace(/\s+/g, '-'),
         description: updated.description,
-        status: updated.status as 'draft' | 'registration' | 'active' | 'paused' | 'completed' | 'cancelled',
-        format: updated.format as 'single_elimination' | 'double_elimination' | 'round_robin' | 'modified_single' | 'chip_format',
+        status: updated.status as
+          | 'draft'
+          | 'registration'
+          | 'active'
+          | 'paused'
+          | 'completed'
+          | 'cancelled',
+        format: updated.format as
+          | 'single_elimination'
+          | 'double_elimination'
+          | 'round_robin'
+          | 'modified_single'
+          | 'chip_format',
         sport: 'pool' as const,
         gameType: 'eight-ball' as const,
         raceToWins: 7,

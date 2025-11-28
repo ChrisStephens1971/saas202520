@@ -14,7 +14,14 @@
 
 import { Job } from 'bullmq';
 import { PrismaClient } from '@prisma/client';
-import { subDays, startOfMonth, endOfMonth, subMonths, startOfQuarter, endOfQuarter } from 'date-fns';
+import {
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  startOfQuarter,
+  endOfQuarter,
+} from 'date-fns';
 import type { ScheduledReportJobData } from './queue';
 import * as ScheduledReportsService from '../services/scheduled-reports-service';
 import * as AnalyticsService from '../services/analytics-service';
@@ -67,11 +74,7 @@ export async function processReportJob(
     await job.updateProgress(30);
 
     // Fetch analytics data based on sections
-    const analyticsData = await fetchAnalyticsData(
-      tenantId,
-      reportConfig.sections,
-      dateRange
-    );
+    const analyticsData = await fetchAnalyticsData(tenantId, reportConfig.sections, dateRange);
 
     await job.updateProgress(50);
 
@@ -84,9 +87,7 @@ export async function processReportJob(
     const organizationName = organization?.name || 'Unknown Organization';
 
     // Generate report in requested format
-    console.log(
-      `[ReportJob] Generating ${reportConfig.format} report for ${reportConfig.name}`
-    );
+    console.log(`[ReportJob] Generating ${reportConfig.format} report for ${reportConfig.name}`);
 
     let fileBuffer: Buffer | undefined;
     let filename: string | undefined;
@@ -94,7 +95,10 @@ export async function processReportJob(
     if (reportConfig.format === 'csv') {
       // Generate CSV
       const csvData = prepareCSVData(analyticsData as any); // Type assertion needed - analytics types don't match CSV export structure
-      const csv = ExportService.exportToCSV(csvData as Record<string, unknown>[], reportConfig.name);
+      const csv = ExportService.exportToCSV(
+        csvData as Record<string, unknown>[],
+        reportConfig.name
+      );
       fileBuffer = Buffer.from(csv, 'utf-8');
       filename = ExportService.generateFilename('revenue', 'csv', tenantId);
     } else if (reportConfig.format === 'excel') {
@@ -204,13 +208,11 @@ export async function processReportJob(
 /**
  * Calculate date range based on report configuration
  */
-function calculateDateRange(
-  dateRangeConfig?: {
-    type: 'last7days' | 'last30days' | 'lastMonth' | 'lastQuarter' | 'custom';
-    customStart?: Date;
-    customEnd?: Date;
-  }
-): { start: Date; end: Date } {
+function calculateDateRange(dateRangeConfig?: {
+  type: 'last7days' | 'last30days' | 'lastMonth' | 'lastQuarter' | 'custom';
+  customStart?: Date;
+  customEnd?: Date;
+}): { start: Date; end: Date } {
   const now = new Date();
 
   if (!dateRangeConfig || dateRangeConfig.type === 'last30days') {
@@ -393,8 +395,23 @@ interface CSVRowData {
  */
 function prepareCSVData(analyticsData: {
   revenue?: { breakdown?: Array<{ date: string; type: string; source: string; amount: number }> };
-  tournaments?: { details?: Array<{ date: string; format: string; players: number; revenue: number | null; status: string }> };
-  cohorts?: { cohorts?: Array<{ cohort: string; cohortSize: number; metrics: { month1Retention: number }; revenue: { ltv: number } }> };
+  tournaments?: {
+    details?: Array<{
+      date: string;
+      format: string;
+      players: number;
+      revenue: number | null;
+      status: string;
+    }>;
+  };
+  cohorts?: {
+    cohorts?: Array<{
+      cohort: string;
+      cohortSize: number;
+      metrics: { month1Retention: number };
+      revenue: { ltv: number };
+    }>;
+  };
 }): CSVRowData[] {
   const rows: CSVRowData[] = [];
 

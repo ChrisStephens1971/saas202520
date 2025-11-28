@@ -7,6 +7,7 @@
 ## 👥 Primary User Persona
 
 ### Demographics
+
 - **Age range:**
 - **Job title/role:**
 - **Industry:**
@@ -14,33 +15,39 @@
 - **Tech savviness:**
 
 ### Pain Points
+
 1.
 2.
 3.
 
 ### Goals
+
 1.
 2.
 3.
 
 ### How They'll Use This Product
-*(Describe a typical day/workflow)*
+
+_(Describe a typical day/workflow)_
 
 ---
 
 ## 👥 Secondary User Persona (If Applicable)
 
 ### Demographics
+
 - **Age range:**
 - **Job title/role:**
 - **Industry:**
 - **Company size:**
 
 ### Pain Points
+
 1.
 2.
 
 ### Goals
+
 1.
 2.
 
@@ -48,20 +55,20 @@
 
 ## 🎯 Who This is NOT For
 
-*(Being specific about who you're NOT serving helps focus the product)*
+_(Being specific about who you're NOT serving helps focus the product)_
 
 ---
 
 ## 📊 Market Size
 
 **Total Addressable Market (TAM):**
-*(How many potential users/customers exist?)*
+_(How many potential users/customers exist?)_
 
 **Serviceable Available Market (SAM):**
-*(How many could realistically use your product?)*
+_(How many could realistically use your product?)_
 
 **Serviceable Obtainable Market (SOM):**
-*(How many could you realistically reach in 1-2 years?)*
+_(How many could you realistically reach in 1-2 years?)_
 
 ---
 

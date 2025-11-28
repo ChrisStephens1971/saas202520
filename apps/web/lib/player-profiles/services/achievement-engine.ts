@@ -70,7 +70,12 @@ export async function checkAchievements(
       }
 
       // Check if requirements are met
-      const meetsRequirements = await checkAchievementRequirements(playerId, tenantId, definition as any, event);
+      const meetsRequirements = await checkAchievementRequirements(
+        playerId,
+        tenantId,
+        definition as any,
+        event
+      );
 
       if (meetsRequirements) {
         // Unlock the achievement
@@ -208,7 +213,11 @@ export async function getAchievementProgress(
     }
 
     // Calculate progress
-    const progress = await calculateAchievementProgress(playerId, tenantId, definition.requirements as any as AchievementRequirements);
+    const progress = await calculateAchievementProgress(
+      playerId,
+      tenantId,
+      definition.requirements as any as AchievementRequirements
+    );
 
     return {
       achievementCode,
@@ -306,7 +315,8 @@ export async function calculateAchievementProgress(
             id: true,
           },
         });
-        current = formatWins.length > 0 ? Math.max(...formatWins.map((f) => ((f._count as any).id))) : 0;
+        current =
+          formatWins.length > 0 ? Math.max(...formatWins.map((f) => (f._count as any).id)) : 0;
       }
       break;
 
@@ -324,7 +334,7 @@ export async function calculateAchievementProgress(
         });
 
         for (const formatStat of formatStats) {
-          if (((formatStat._count as any).id) >= requirements.min_matches) {
+          if ((formatStat._count as any).id >= requirements.min_matches) {
             const wins = await prisma.matchHistory.count({
               where: {
                 playerId,
@@ -333,7 +343,7 @@ export async function calculateAchievementProgress(
                 result: 'WIN',
               },
             });
-            const winRate = (wins / ((formatStat._count as any).id)) * 100;
+            const winRate = (wins / (formatStat._count as any).id) * 100;
             current = Math.max(current, winRate);
           }
         }
@@ -442,14 +452,22 @@ async function checkAchievementRequirements(
 // SPECIFIC REQUIREMENT CHECKS
 // ============================================================================
 
-async function checkTournamentCount(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkTournamentCount(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const stats = await prisma.playerStatistics.findFirst({
     where: { playerId, tenantId },
   });
   return (stats?.totalTournaments || 0) >= required;
 }
 
-async function checkTournamentWins(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkTournamentWins(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const wins = await prisma.matchHistory.count({
     where: {
       playerId,
@@ -460,7 +478,11 @@ async function checkTournamentWins(playerId: string, tenantId: string, required:
   return wins >= required;
 }
 
-async function checkPerfectTournament(playerId: string, tenantId: string, event: AchievementEvent): Promise<boolean> {
+async function checkPerfectTournament(
+  playerId: string,
+  tenantId: string,
+  event: AchievementEvent
+): Promise<boolean> {
   if (!event.data.tournamentId) return false;
 
   const matches = await prisma.matchHistory.findMany({
@@ -498,12 +520,18 @@ function checkLowestSeedWin(event: AchievementEvent): boolean {
 function checkEarlyRegistration(event: AchievementEvent, hoursBefore: number): boolean {
   if (!event.data.registrationTime || !event.data.tournamentStartTime) return false;
 
-  const hoursDiff = (event.data.tournamentStartTime.getTime() - event.data.registrationTime.getTime()) / (1000 * 60 * 60);
+  const hoursDiff =
+    (event.data.tournamentStartTime.getTime() - event.data.registrationTime.getTime()) /
+    (1000 * 60 * 60);
 
   return hoursDiff >= hoursBefore;
 }
 
-async function checkUniqueOpponents(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkUniqueOpponents(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const uniqueOpponents = await prisma.matchHistory.findMany({
     where: {
       playerId,
@@ -518,7 +546,11 @@ async function checkUniqueOpponents(playerId: string, tenantId: string, required
   return uniqueOpponents.length >= required;
 }
 
-async function checkRepeatedOpponent(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkRepeatedOpponent(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const opponentCounts = await prisma.matchHistory.groupBy({
     by: ['opponentId'],
     where: {
@@ -530,10 +562,14 @@ async function checkRepeatedOpponent(playerId: string, tenantId: string, require
     },
   });
 
-  return opponentCounts.some((count) => ((count._count as any).id) >= required);
+  return opponentCounts.some((count) => (count._count as any).id >= required);
 }
 
-async function checkUniqueVenues(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkUniqueVenues(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const uniqueVenues = await prisma.$queryRaw<{ count: bigint }[]>`
     SELECT COUNT(DISTINCT t.venue_id) as count
     FROM match_history mh
@@ -552,7 +588,11 @@ function checkExactPlacement(event: AchievementEvent, placement: number): boolea
   return event.data.finish === placement;
 }
 
-async function checkFormatWins(playerId: string, tenantId: string, requirements: AchievementRequirements): Promise<boolean> {
+async function checkFormatWins(
+  playerId: string,
+  tenantId: string,
+  requirements: AchievementRequirements
+): Promise<boolean> {
   const formatWins = await prisma.matchHistory.groupBy({
     by: ['format'],
     where: {
@@ -565,10 +605,14 @@ async function checkFormatWins(playerId: string, tenantId: string, requirements:
     },
   });
 
-  return formatWins.some((fw) => ((fw._count as any).id) >= (requirements.value || 0));
+  return formatWins.some((fw) => (fw._count as any).id >= (requirements.value || 0));
 }
 
-async function checkFormatWinRate(playerId: string, tenantId: string, requirements: AchievementRequirements): Promise<boolean> {
+async function checkFormatWinRate(
+  playerId: string,
+  tenantId: string,
+  requirements: AchievementRequirements
+): Promise<boolean> {
   const formatStats = await prisma.matchHistory.groupBy({
     by: ['format'],
     where: {
@@ -581,7 +625,7 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
   });
 
   for (const formatStat of formatStats) {
-    if (((formatStat._count as any).id) >= (requirements.min_matches || 0)) {
+    if ((formatStat._count as any).id >= (requirements.min_matches || 0)) {
       const wins = await prisma.matchHistory.count({
         where: {
           playerId,
@@ -590,7 +634,7 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
           result: 'WIN',
         },
       });
-      const winRate = (wins / ((formatStat._count as any).id)) * 100;
+      const winRate = (wins / (formatStat._count as any).id) * 100;
       if (winRate >= (requirements.win_rate || 0)) {
         return true;
       }
@@ -600,7 +644,11 @@ async function checkFormatWinRate(playerId: string, tenantId: string, requiremen
   return false;
 }
 
-async function checkUniqueFormats(playerId: string, tenantId: string, required: number): Promise<boolean> {
+async function checkUniqueFormats(
+  playerId: string,
+  tenantId: string,
+  required: number
+): Promise<boolean> {
   const uniqueFormats = await prisma.matchHistory.findMany({
     where: {
       playerId,

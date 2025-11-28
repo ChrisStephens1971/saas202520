@@ -125,10 +125,7 @@ describe('TournamentAnalyzer', () => {
           { createdAt: new Date('2024-11-20') },
         ]);
 
-      const result = await TournamentAnalyzer.analyzeTournamentTrends(
-        'tenant-001',
-        6
-      );
+      const result = await TournamentAnalyzer.analyzeTournamentTrends('tenant-001', 6);
 
       expect(result).toBeDefined();
       expect(result.trend).toBeDefined();
@@ -137,17 +134,10 @@ describe('TournamentAnalyzer', () => {
 
     it('should identify declining trends', async () => {
       mockTournamentModel.findMany
-        .mockResolvedValueOnce([
-          {},
-          {},
-          {},
-        ]) // Previous period: 3
+        .mockResolvedValueOnce([{}, {}, {}]) // Previous period: 3
         .mockResolvedValueOnce([{}]); // Current period: 1
 
-      const result = await TournamentAnalyzer.analyzeTournamentTrends(
-        'tenant-001',
-        2
-      );
+      const result = await TournamentAnalyzer.analyzeTournamentTrends('tenant-001', 2);
 
       expect(result.growthRate).toBeLessThan(0);
     });
@@ -186,18 +176,12 @@ describe('TournamentAnalyzer', () => {
       );
 
       expect(result.confidenceInterval).toBeDefined();
-      expect(result.confidenceInterval.lower).toBeLessThan(
-        result.predictedPlayers
-      );
-      expect(result.confidenceInterval.upper).toBeGreaterThan(
-        result.predictedPlayers
-      );
+      expect(result.confidenceInterval.lower).toBeLessThan(result.predictedPlayers);
+      expect(result.confidenceInterval.upper).toBeGreaterThan(result.predictedPlayers);
     });
 
     it('should handle insufficient data', async () => {
-      mockTournamentModel.findMany.mockResolvedValue([
-        { registeredPlayers: 20 },
-      ]);
+      mockTournamentModel.findMany.mockResolvedValue([{ registeredPlayers: 20 }]);
 
       const result = await TournamentAnalyzer.predictTournamentAttendance(
         'tenant-001',
@@ -267,9 +251,7 @@ describe('TournamentAnalyzer', () => {
         _min: { registeredPlayers: 16 },
       });
 
-      const result = await TournamentAnalyzer.getTournamentBenchmarks(
-        'tenant-001'
-      );
+      const result = await TournamentAnalyzer.getTournamentBenchmarks('tenant-001');
 
       expect(result).toBeDefined();
       expect(result.averagePlayers).toBe(24);
@@ -282,9 +264,7 @@ describe('TournamentAnalyzer', () => {
         _avg: { registeredPlayers: 28 },
       });
 
-      const result = await TournamentAnalyzer.getTournamentBenchmarks(
-        'tenant-001'
-      );
+      const result = await TournamentAnalyzer.getTournamentBenchmarks('tenant-001');
 
       if (result.industryComparison) {
         expect(result.industryComparison).toBeDefined();
@@ -296,16 +276,10 @@ describe('TournamentAnalyzer', () => {
 
   describe('error handling', () => {
     it('should handle database errors', async () => {
-      mockTournamentModel.findMany.mockRejectedValue(
-        new Error('Database error')
-      );
+      mockTournamentModel.findMany.mockRejectedValue(new Error('Database error'));
 
       await expect(
-        TournamentAnalyzer.analyzeTournamentPerformance(
-          'tenant-001',
-          new Date(),
-          new Date()
-        )
+        TournamentAnalyzer.analyzeTournamentPerformance('tenant-001', new Date(), new Date())
       ).rejects.toThrow('Database error');
     });
 
@@ -314,21 +288,13 @@ describe('TournamentAnalyzer', () => {
       const endDate = new Date('2024-10-01'); // Before start
 
       await expect(
-        TournamentAnalyzer.analyzeTournamentPerformance(
-          'tenant-001',
-          startDate,
-          endDate
-        )
+        TournamentAnalyzer.analyzeTournamentPerformance('tenant-001', startDate, endDate)
       ).rejects.toThrow();
     });
 
     it('should validate tenant ID', async () => {
       await expect(
-        TournamentAnalyzer.analyzeTournamentPerformance(
-          '',
-          new Date(),
-          new Date()
-        )
+        TournamentAnalyzer.analyzeTournamentPerformance('', new Date(), new Date())
       ).rejects.toThrow();
     });
   });

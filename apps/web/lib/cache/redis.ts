@@ -13,7 +13,9 @@
 import Redis, { RedisOptions } from 'ioredis';
 
 // Performance tracking (optional - falls back gracefully if not available)
-let trackCacheOperation: ((requestId: string, operation: 'hit' | 'miss', key: string, duration: number) => void) | undefined;
+let trackCacheOperation:
+  | ((requestId: string, operation: 'hit' | 'miss', key: string, duration: number) => void)
+  | undefined;
 
 // Try to import performance middleware if available (async initialization)
 import('../monitoring/performance-middleware')
@@ -141,11 +143,7 @@ class CacheService {
    * @param requestId - Optional request ID for performance tracking
    * @returns Cached value or null if not found
    */
-  async get<T>(
-    tenantId: string,
-    key: string,
-    requestId?: string
-  ): Promise<T | null> {
+  async get<T>(tenantId: string, key: string, requestId?: string): Promise<T | null> {
     if (!this.isAvailable()) {
       console.warn('[Cache] Redis unavailable, cache miss');
       return null;
@@ -194,12 +192,7 @@ class CacheService {
    * @param ttl - Time to live in seconds (default: 300 = 5 minutes)
    * @returns True if successful, false otherwise
    */
-  async set(
-    tenantId: string,
-    key: string,
-    value: any,
-    ttl: number = 300
-  ): Promise<boolean> {
+  async set(tenantId: string, key: string, value: any, ttl: number = 300): Promise<boolean> {
     if (!this.isAvailable()) {
       console.warn('[Cache] Redis unavailable, skipping cache set');
       return false;
@@ -291,10 +284,7 @@ class CacheService {
    * @param keys - Array of cache keys
    * @returns Map of key to value (null if not found)
    */
-  async mget<T>(
-    tenantId: string,
-    keys: string[]
-  ): Promise<Map<string, T | null>> {
+  async mget<T>(tenantId: string, keys: string[]): Promise<Map<string, T | null>> {
     const result = new Map<string, T | null>();
 
     if (!this.isAvailable() || keys.length === 0) {
@@ -335,11 +325,7 @@ class CacheService {
    * @param ttl - Time to live in seconds
    * @returns Number of successfully set keys
    */
-  async mset(
-    tenantId: string,
-    entries: Map<string, any>,
-    ttl: number = 300
-  ): Promise<number> {
+  async mset(tenantId: string, entries: Map<string, any>, ttl: number = 300): Promise<number> {
     if (!this.isAvailable() || entries.size === 0) {
       return 0;
     }

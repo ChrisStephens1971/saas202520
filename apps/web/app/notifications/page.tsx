@@ -42,9 +42,7 @@ export default function NotificationsPage() {
     async function fetchNotifications() {
       try {
         const orgId = session!.user.orgId;
-        const response = await fetch(
-          `/api/notifications?orgId=${orgId}&type=in_app&limit=50`
-        );
+        const response = await fetch(`/api/notifications?orgId=${orgId}&type=in_app&limit=50`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch notifications');
@@ -104,9 +102,7 @@ export default function NotificationsPage() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Notifications</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            View your in-app notifications and updates
-          </p>
+          <p className="mt-2 text-sm text-gray-600">View your in-app notifications and updates</p>
         </div>
 
         {notifications.length === 0 ? (

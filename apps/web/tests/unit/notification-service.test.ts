@@ -111,9 +111,7 @@ describe('notification-service', () => {
         createdAt: new Date(),
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
       vi.mocked(prisma.notification.update).mockResolvedValueOnce({
         ...mockNotification,
         status: 'sent',
@@ -151,9 +149,7 @@ describe('notification-service', () => {
     });
 
     it('should handle notification send failure', async () => {
-      vi.mocked(prisma.notification.create).mockRejectedValueOnce(
-        new Error('Database error')
-      );
+      vi.mocked(prisma.notification.create).mockRejectedValueOnce(new Error('Database error'));
 
       const input: NotificationInput = {
         orgId: 'org-123',
@@ -183,9 +179,7 @@ describe('notification-service', () => {
         status: 'pending',
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
       vi.mocked(prisma.notification.update).mockResolvedValueOnce({
         ...mockNotification,
         status: 'sent',
@@ -229,18 +223,10 @@ describe('notification-service', () => {
         status: 'pending',
       };
 
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
-      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
-        null
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
+      vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(null);
       // First update: stores Twilio SID
       vi.mocked(prisma.notification.update).mockResolvedValueOnce({
         ...mockNotification,
@@ -270,11 +256,7 @@ describe('notification-service', () => {
         phone: null,
       } as never);
 
-      const result = await sendSMSToPlayer(
-        'org-123',
-        'player-123',
-        'Your match is ready'
-      );
+      const result = await sendSMSToPlayer('org-123', 'player-123', 'Your match is ready');
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Player has no phone number');
@@ -291,13 +273,12 @@ describe('notification-service', () => {
         channel: 'email',
         recipient: 'player@example.com',
         subject: 'Your Match is Ready - Test Tournament',
-        message: 'Hi John,\n\nYour match is ready at Table 1.\n\nOpponent: Jane Doe\n\nGood luck!\n\n- Tournament Platform',
+        message:
+          'Hi John,\n\nYour match is ready at Table 1.\n\nOpponent: Jane Doe\n\nGood luck!\n\n- Tournament Platform',
         status: 'pending',
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
       vi.mocked(prisma.notification.update).mockResolvedValueOnce({
         ...mockNotification,
         status: 'sent',
@@ -324,12 +305,7 @@ describe('notification-service', () => {
     it('should handle unknown template', async () => {
       // Unknown templates throw an error (fail fast)
       await expect(
-        sendEmailWithTemplate(
-          'org-123',
-          'player@example.com',
-          'unknown-template',
-          {}
-        )
+        sendEmailWithTemplate('org-123', 'player@example.com', 'unknown-template', {})
       ).rejects.toThrow('Email template not found');
     });
   });
@@ -489,21 +465,13 @@ describe('notification-service', () => {
         quietHoursEnd: null,
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
         mockPreference as never
       );
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
-      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(mockNotification as never);
 
       // Mock Redis: key doesn't exist (first send)
       mockRedisGet.mockResolvedValueOnce(null);
@@ -547,15 +515,9 @@ describe('notification-service', () => {
         twilioPhoneNumber: '+15559876543',
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
-      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(mockNotification as never);
 
       // Mock Redis: key exists (duplicate detected)
       mockRedisGet.mockResolvedValueOnce('1');
@@ -609,21 +571,13 @@ describe('notification-service', () => {
         quietHoursEnd: null,
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
         mockPreference as never
       );
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
-      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(mockNotification as never);
 
       // Mock Redis: different message hash, key doesn't exist
       mockRedisGet.mockResolvedValueOnce(null);
@@ -676,21 +630,13 @@ describe('notification-service', () => {
         quietHoursEnd: null,
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
         mockPreference as never
       );
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
-      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(mockNotification as never);
 
       // Mock Redis: different recipient, key doesn't exist
       mockRedisGet.mockResolvedValueOnce(null);
@@ -743,21 +689,13 @@ describe('notification-service', () => {
         quietHoursEnd: null,
       };
 
-      vi.mocked(prisma.notification.create).mockResolvedValueOnce(
-        mockNotification as never
-      );
-      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(
-        mockOrg as never
-      );
+      vi.mocked(prisma.notification.create).mockResolvedValueOnce(mockNotification as never);
+      vi.mocked(prisma.organization.findUnique).mockResolvedValueOnce(mockOrg as never);
       vi.mocked(prisma.notificationPreference.findUnique).mockResolvedValueOnce(
         mockPreference as never
       );
-      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(
-        mockPlayer as never
-      );
-      vi.mocked(prisma.notification.update).mockResolvedValueOnce(
-        mockNotification as never
-      );
+      vi.mocked(prisma.player.findUnique).mockResolvedValueOnce(mockPlayer as never);
+      vi.mocked(prisma.notification.update).mockResolvedValueOnce(mockNotification as never);
 
       // Mock Redis failure - should fail open and allow SMS
       mockRedisGet.mockRejectedValueOnce(new Error('Redis connection failed'));

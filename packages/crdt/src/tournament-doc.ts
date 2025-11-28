@@ -192,11 +192,13 @@ export class TournamentDoc {
   // ============================================================================
 
   private addEvent(event: { kind: string; payload: unknown; timestamp: string }): void {
-    this.eventsArray.push([{
-      id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ...event,
-      clientId: this.doc.clientID,
-    }]);
+    this.eventsArray.push([
+      {
+        id: `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        ...event,
+        clientId: this.doc.clientID,
+      },
+    ]);
   }
 
   getEvents(): unknown[] {

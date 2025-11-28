@@ -8,14 +8,7 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  addMonths,
-  
-  format,
-} from 'date-fns';
+import { startOfMonth, endOfMonth, subMonths, addMonths, format } from 'date-fns';
 
 const prisma = new PrismaClient();
 
@@ -150,9 +143,7 @@ export async function calculateMRR(
   });
 
   if (!currentAggregate) {
-    throw new Error(
-      `No revenue data found for tenant ${tenantId} in ${format(date, 'yyyy-MM')}`
-    );
+    throw new Error(`No revenue data found for tenant ${tenantId} in ${format(date, 'yyyy-MM')}`);
   }
 
   const mrr = currentAggregate.mrr ? parseFloat(currentAggregate.mrr.toString()) : 0;
@@ -175,12 +166,8 @@ export async function calculateMRR(
   let growthRate: number | undefined;
 
   if (previousAggregate) {
-    previousMRR = previousAggregate.mrr
-      ? parseFloat(previousAggregate.mrr.toString())
-      : 0;
-    previousARR = previousAggregate.arr
-      ? parseFloat(previousAggregate.arr.toString())
-      : 0;
+    previousMRR = previousAggregate.mrr ? parseFloat(previousAggregate.mrr.toString()) : 0;
+    previousARR = previousAggregate.arr ? parseFloat(previousAggregate.arr.toString()) : 0;
 
     if (previousMRR > 0) {
       growthRate = ((mrr - previousMRR) / previousMRR) * 100;
@@ -192,8 +179,8 @@ export async function calculateMRR(
     currentAggregate.paymentCount && currentAggregate.paymentCount > 10
       ? 'high'
       : currentAggregate.paymentCount && currentAggregate.paymentCount > 3
-      ? 'medium'
-      : 'low';
+        ? 'medium'
+        : 'low';
 
   return {
     mrr,
@@ -268,9 +255,7 @@ export async function calculateChurnRate(
   ]);
 
   if (!currentAggregate || !previousAggregate) {
-    throw new Error(
-      `Missing revenue data for churn calculation: tenant ${tenantId}`
-    );
+    throw new Error(`Missing revenue data for churn calculation: tenant ${tenantId}`);
   }
 
   // Calculate current churn rate
@@ -282,9 +267,7 @@ export async function calculateChurnRate(
     : 0;
 
   const currentChurnRate =
-    currentTotalRevenue > 0
-      ? (currentChurnedRevenue / currentTotalRevenue) * 100
-      : 0;
+    currentTotalRevenue > 0 ? (currentChurnedRevenue / currentTotalRevenue) * 100 : 0;
 
   // Calculate previous churn rate
   const previousChurnedRevenue = previousAggregate.churnedRevenue
@@ -295,9 +278,7 @@ export async function calculateChurnRate(
     : 0;
 
   const previousChurnRate =
-    previousTotalRevenue > 0
-      ? (previousChurnedRevenue / previousTotalRevenue) * 100
-      : 0;
+    previousTotalRevenue > 0 ? (previousChurnedRevenue / previousTotalRevenue) * 100 : 0;
 
   // Determine trend
   let trend: 'increasing' | 'decreasing' | 'stable';
@@ -422,8 +403,7 @@ export async function calculateRevenueProjection(
     }
   }
 
-  const avgGrowthRate =
-    growthRateCount > 0 ? totalGrowthRate / growthRateCount : 0;
+  const avgGrowthRate = growthRateCount > 0 ? totalGrowthRate / growthRateCount : 0;
 
   // Get last month's revenue as baseline
   const lastAggregate = aggregates[aggregates.length - 1].totalRevenue;
@@ -502,19 +482,12 @@ export async function getRevenueBreakdown(
 
   if (!aggregate) {
     throw new Error(
-      `No revenue data found for tenant ${tenantId} in ${format(
-        startDate,
-        'yyyy-MM'
-      )}`
+      `No revenue data found for tenant ${tenantId} in ${format(startDate, 'yyyy-MM')}`
     );
   }
 
-  const totalRevenue = aggregate.totalRevenue
-    ? parseFloat(aggregate.totalRevenue.toString())
-    : 0;
-  const newRevenue = aggregate.newRevenue
-    ? parseFloat(aggregate.newRevenue.toString())
-    : null;
+  const totalRevenue = aggregate.totalRevenue ? parseFloat(aggregate.totalRevenue.toString()) : 0;
+  const newRevenue = aggregate.newRevenue ? parseFloat(aggregate.newRevenue.toString()) : null;
   const expansionRevenue = aggregate.expansionRevenue
     ? parseFloat(aggregate.expansionRevenue.toString())
     : null;
@@ -524,21 +497,15 @@ export async function getRevenueBreakdown(
 
   // Calculate existing revenue (total - new - expansion)
   const existingRevenue =
-    totalRevenue -
-    (newRevenue || 0) -
-    (expansionRevenue || 0) +
-    (churnedRevenue || 0);
+    totalRevenue - (newRevenue || 0) - (expansionRevenue || 0) + (churnedRevenue || 0);
 
   // Calculate payment metrics
   const totalPayments = aggregate.paymentCount || 0;
   const successfulPayments = aggregate.paymentSuccessCount || 0;
   const successRate = totalPayments > 0 ? (successfulPayments / totalPayments) * 100 : 0;
-  const avgTransactionValue =
-    successfulPayments > 0 ? totalRevenue / successfulPayments : 0;
+  const avgTransactionValue = successfulPayments > 0 ? totalRevenue / successfulPayments : 0;
 
-  const refundAmount = aggregate.refundAmount
-    ? parseFloat(aggregate.refundAmount.toString())
-    : 0;
+  const refundAmount = aggregate.refundAmount ? parseFloat(aggregate.refundAmount.toString()) : 0;
   const refundRate = totalRevenue > 0 ? (refundAmount / totalRevenue) * 100 : 0;
 
   return {
@@ -588,10 +555,7 @@ export async function calculateLifetimeValue(
 
   if (cohortData.length === 0) {
     throw new Error(
-      `No cohort data found for tenant ${tenantId}, cohort ${format(
-        cohort,
-        'yyyy-MM'
-      )}`
+      `No cohort data found for tenant ${tenantId}, cohort ${format(cohort, 'yyyy-MM')}`
     );
   }
 
@@ -608,9 +572,7 @@ export async function calculateLifetimeValue(
   // Calculate projected LTV based on retention curve
   // Get the latest LTV value if available
   const latestData = cohortData[cohortData.length - 1];
-  const calculatedLTV = latestData.ltv
-    ? parseFloat(latestData.ltv.toString())
-    : avgRevenuePerUser;
+  const calculatedLTV = latestData.ltv ? parseFloat(latestData.ltv.toString()) : avgRevenuePerUser;
 
   // Project LTV based on current trend (simple multiplication)
   const monthsActive = cohortData.length;

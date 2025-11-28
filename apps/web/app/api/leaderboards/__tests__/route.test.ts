@@ -121,7 +121,9 @@ describe('GET /api/leaderboards/[type]', () => {
         totalPlayers: 150,
       };
 
-      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockResolvedValueOnce(mockLeaderboard);
+      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockResolvedValueOnce(
+        mockLeaderboard
+      );
 
       const request = new NextRequest('http://localhost/api/leaderboards/win-rate?limit=10');
       const response = await GET(request, { params: { type: 'win-rate' } });
@@ -172,7 +174,9 @@ describe('GET /api/leaderboards/[type]', () => {
         totalPlayers: 50,
       };
 
-      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockResolvedValueOnce(mockLeaderboard);
+      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockResolvedValueOnce(
+        mockLeaderboard
+      );
 
       const request = new NextRequest('http://localhost/api/leaderboards/win-rate');
       await GET(request, { params: { type: 'win-rate' } });
@@ -188,7 +192,9 @@ describe('GET /api/leaderboards/[type]', () => {
 
   describe('Error Handling', () => {
     it('should handle service errors', async () => {
-      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockRejectedValueOnce(new Error('Database error'));
+      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockRejectedValueOnce(
+        new Error('Database error')
+      );
 
       const request = new NextRequest('http://localhost/api/leaderboards/win-rate');
       const response = await GET(request, { params: { type: 'win-rate' } });
@@ -199,7 +205,9 @@ describe('GET /api/leaderboards/[type]', () => {
     });
 
     it('should handle unauthorized access', async () => {
-      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockRejectedValueOnce(new Error('Unauthorized'));
+      (getPlayerLeaderboard as unknown as MockedGetPlayerLeaderboard).mockRejectedValueOnce(
+        new Error('Unauthorized')
+      );
 
       const request = new NextRequest('http://localhost/api/leaderboards/win-rate');
       const response = await GET(request, { params: { type: 'win-rate' } });

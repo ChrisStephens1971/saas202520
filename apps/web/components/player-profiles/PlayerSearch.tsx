@@ -12,7 +12,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Search, Filter, MapPin, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { debounce } from 'lodash';
@@ -92,7 +98,9 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
   }, [query, skillLevel, sortBy, sortOrder, performSearch]);
 
   const toggleSkillLevel = (level: string) => {
-    setSkillLevel((prev) => (prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]));
+    setSkillLevel((prev) =>
+      prev.includes(level) ? prev.filter((l) => l !== level) : [...prev, level]
+    );
   };
 
   return (
@@ -139,7 +147,12 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Sort By</label>
-              <Select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'name' | 'winRate' | 'tournaments' | 'lastPlayed')}>
+              <Select
+                value={sortBy}
+                onChange={(e) =>
+                  setSortBy(e.target.value as 'name' | 'winRate' | 'tournaments' | 'lastPlayed')
+                }
+              >
                 <SelectItem value="name">Name</SelectItem>
                 <SelectItem value="winRate">Win Rate</SelectItem>
                 <SelectItem value="tournaments">Tournaments</SelectItem>
@@ -148,7 +161,10 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">Order</label>
-              <Select value={sortOrder} onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}>
+              <Select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+              >
                 <SelectItem value="asc">Ascending</SelectItem>
                 <SelectItem value="desc">Descending</SelectItem>
               </Select>
@@ -214,7 +230,9 @@ export function PlayerSearch({ tenantId, onPlayerSelect, className }: PlayerSear
               {player.lastPlayed && (
                 <div className="text-right text-sm text-muted-foreground">
                   <div>Last played</div>
-                  <div className="font-medium">{new Date(player.lastPlayed).toLocaleDateString()}</div>
+                  <div className="font-medium">
+                    {new Date(player.lastPlayed).toLocaleDateString()}
+                  </div>
                 </div>
               )}
             </div>

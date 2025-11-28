@@ -6,7 +6,11 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { checkAchievements, unlockAchievement, getAchievementProgress } from '../achievement-engine';
+import {
+  checkAchievements,
+  unlockAchievement,
+  getAchievementProgress,
+} from '../achievement-engine';
 
 // Mock Prisma
 const mockPrisma = {
@@ -89,9 +93,7 @@ describe('Achievement Engine', () => {
 
     it('should not unlock already unlocked achievements', async () => {
       mockPrisma.achievementDefinition.findMany.mockResolvedValue(achievementDefs);
-      mockPrisma.playerAchievement.findMany.mockResolvedValue([
-        { achievementId: 'ach-1' },
-      ]);
+      mockPrisma.playerAchievement.findMany.mockResolvedValue([{ achievementId: 'ach-1' }]);
 
       const event = {
         type: 'TOURNAMENT_COMPLETE' as any,

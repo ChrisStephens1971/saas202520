@@ -9,9 +9,11 @@ Claude will automatically read ALL `.md` files in this directory when starting p
 ## 📝 What Goes Here
 
 **Core file:**
+
 - `brief.md` - Main project description (what, why, who)
 
 **Optional files (add as needed):**
+
 - `vision.md` - Long-term vision and mission
 - `target-users.md` - User personas and target audience
 - `competitive-analysis.md` - Competitor research
@@ -33,6 +35,7 @@ Leave files empty and say "help me get started" - Claude will ask questions to u
 ### Option 3: Add Multiple Files
 
 Create as many `.md` files as you want:
+
 ```
 project-brief/
 ├── brief.md (main description)
@@ -57,6 +60,7 @@ Claude will read ALL of them automatically!
 ## 🔒 Privacy
 
 This directory is tracked in git and will be pushed to GitHub. Don't include:
+
 - Sensitive business data
 - Unreleased features (if repo is public)
 - Confidential information

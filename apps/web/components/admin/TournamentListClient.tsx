@@ -14,6 +14,8 @@ import type { TournamentWithStats, TournamentStatus } from '@tournament/api-cont
 import { TournamentTable } from './TournamentTable';
 import { useSocketEvent } from '@/hooks/useSocket';
 import { SocketEvent } from '@/lib/socket/events';
+import { useConfirm } from '@/hooks/use-confirm';
+import { toast } from 'sonner';
 
 interface TournamentListClientProps {
   initialTournaments: TournamentWithStats[];
@@ -28,8 +30,10 @@ export function TournamentListClient({
 }: TournamentListClientProps) {
   const router = useRouter();
   const [tournaments, setTournaments] = useState<TournamentWithStats[]>(initialTournaments);
-  const [filteredTournaments, setFilteredTournaments] = useState<TournamentWithStats[]>(initialTournaments);
+  const [filteredTournaments, setFilteredTournaments] =
+    useState<TournamentWithStats[]>(initialTournaments);
   const [statusFilter, setStatusFilter] = useState<TournamentStatus | 'all'>('all');
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Apply status filter
   useEffect(() => {
@@ -59,9 +63,7 @@ export function TournamentListClient({
 
   useSocketEvent(SocketEvent.TOURNAMENT_UPDATED, (payload: any) => {
     setTournaments((prev) =>
-      prev.map((t) =>
-        t.id === payload.tournamentId ? { ...t, ...payload.updates } : t
-      )
+      prev.map((t) => (t.id === payload.tournamentId ? { ...t, ...payload.updates } : t))
     );
   });
 
@@ -71,13 +73,14 @@ export function TournamentListClient({
 
   // Handle delete tournament
   async function handleDelete(tournamentId: string, tournamentName: string) {
-    if (
-      !confirm(
-        `Are you sure you want to delete "${tournamentName}"? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: 'Delete Tournament',
+      description: `Are you sure you want to delete "${tournamentName}"? This action cannot be undone.`,
+      actionLabel: 'Delete',
+      cancelLabel: 'Cancel',
+    });
+
+    if (!ok) return;
 
     try {
       const response = await fetch(`/api/tournaments/${tournamentId}`, {
@@ -91,9 +94,10 @@ export function TournamentListClient({
 
       // Remove from local state
       setTournaments((prev) => prev.filter((t) => t.id !== tournamentId));
+      toast.success('Tournament deleted successfully');
     } catch (err) {
       console.error('Error deleting tournament:', err);
-      alert(err instanceof Error ? err.message : 'Failed to delete tournament');
+      toast.error(err instanceof Error ? err.message : 'Failed to delete tournament');
     }
   }
 
@@ -113,9 +117,10 @@ export function TournamentListClient({
 
       // Remove from local state
       setTournaments((prev) => prev.filter((t) => !tournamentIds.includes(t.id)));
+      toast.success('Tournaments deleted successfully');
     } catch (err) {
       console.error('Bulk delete error:', err);
-      alert(err instanceof Error ? err.message : 'Failed to delete some tournaments');
+      toast.error(err instanceof Error ? err.message : 'Failed to delete some tournaments');
       throw err;
     }
   }
@@ -166,9 +171,7 @@ export function TournamentListClient({
             }
           `}
         >
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
-            {statusCounts.all}
-          </div>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">{statusCounts.all}</div>
           <div className="text-sm text-gray-600 dark:text-gray-400">All</div>
         </div>
         {(
@@ -196,9 +199,7 @@ export function TournamentListClient({
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {statusCounts[status]}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-              {status}
-            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">{status}</div>
           </div>
         ))}
       </div>
@@ -248,6 +249,7 @@ export function TournamentListClient({
         canEdit={canEdit}
         canDelete={canDelete}
       />
+      {ConfirmDialog}
     </div>
   );
 }

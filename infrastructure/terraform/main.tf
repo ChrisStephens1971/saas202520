@@ -1,5 +1,5 @@
 # Main Terraform Configuration
-# Azure SaaS Project: {{PROJECT_NAME}}
+# Azure SaaS Project: saas202520 (Tournament Platform)
 
 terraform {
   required_version = ">= 1.5"
@@ -13,10 +13,10 @@ terraform {
 
   # Uncomment for remote state
   # backend "azurerm" {
-  #   resource_group_name  = "rg-{{AZURE_ORG}}-terraform-prd-{{AZURE_PRIMARY_REGION}}-ops"
-  #   storage_account_name = "st{{AZURE_ORG}}tfstateprd{{AZURE_PRIMARY_REGION}}01"
+  #   resource_group_name  = "rg-vrd-terraform-prd-eus2-ops"
+  #   storage_account_name = "stvrdtfstateprdeus201"
   #   container_name       = "tfstate"
-  #   key                  = "{{PROJECT_NAME}}.terraform.tfstate"
+  #   key                  = "saas202520.terraform.tfstate"
   # }
 }
 

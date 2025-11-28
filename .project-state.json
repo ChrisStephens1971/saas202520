@@ -22,8 +22,7 @@
     "postgres": "5420",
     "redis": "6420",
     "mongo": "27020"
-  }
-  ,
+  },
   "workflow": {
     "currentPhase": "development",
     "phasesCompleted": [],

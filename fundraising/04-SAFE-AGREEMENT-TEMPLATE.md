@@ -1,4 +1,5 @@
 # SAFE Agreement Template
+
 ## Simple Agreement for Future Equity
 
 **IMPORTANT:** This is a template for reference. Use Clerky.com ($799) or consult a lawyer for actual legal documents.
@@ -12,6 +13,7 @@
 A **SAFE (Simple Agreement for Future Equity)** is an investment instrument created by Y Combinator that allows investors to invest money now and receive equity later (at a future priced round).
 
 ### Key Benefits
+
 - ✅ **Fast:** Close in days/weeks vs. months for priced equity
 - ✅ **Cheap:** $500-$1K legal fees vs. $10K-$20K for priced round
 - ✅ **Simple:** 5-page document vs. 50+ pages for priced equity
@@ -24,21 +26,22 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 
 ### Basic Terms
 
-| Term | Value | Notes |
-|------|-------|-------|
-| **Investor Name** | [Investor Name] | Person or entity investing |
-| **Company Name** | [Your Company Legal Name] | Delaware C-Corp recommended |
-| **Investment Amount** | $10,000 - $500,000 | Amount investor is contributing |
-| **SAFE Type** | Valuation Cap + Discount | Most investor-friendly option |
-| **Valuation Cap** | $1,500,000 - $2,000,000 | Maximum valuation for conversion |
-| **Discount Rate** | 20% | Discount at next priced round |
-| **Pro Rata Rights** | Yes (optional) | Investor can maintain % in future rounds |
+| Term                  | Value                     | Notes                                    |
+| --------------------- | ------------------------- | ---------------------------------------- |
+| **Investor Name**     | [Investor Name]           | Person or entity investing               |
+| **Company Name**      | [Your Company Legal Name] | Delaware C-Corp recommended              |
+| **Investment Amount** | $10,000 - $500,000        | Amount investor is contributing          |
+| **SAFE Type**         | Valuation Cap + Discount  | Most investor-friendly option            |
+| **Valuation Cap**     | $1,500,000 - $2,000,000   | Maximum valuation for conversion         |
+| **Discount Rate**     | 20%                       | Discount at next priced round            |
+| **Pro Rata Rights**   | Yes (optional)            | Investor can maintain % in future rounds |
 
 ---
 
 ## How a SAFE Works
 
 ### Investment Today
+
 1. Investor gives you **$100,000**
 2. You give investor a **SAFE note** (not equity yet!)
 3. SAFE has two key terms:
@@ -48,16 +51,19 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### Conversion at Next Round (Example)
 
 **Scenario: 18 months later, you raise Series A**
+
 - Series A price: $10,000,000 pre-money valuation
 - Series A share price: $10.00/share
 
 **Investor's conversion options:**
+
 1. **Use the cap:** $100,000 / $2M cap = **5% of company** (better for investor)
 2. **Use the discount:** $100,000 at 20% discount = $100,000 / $8.00/share (not as good)
 
 **Investor chooses:** Option 1 (the cap), gets 5% equity
 
 **Your dilution:**
+
 - Investor got 5% for $100K investment
 - If they invested at Series A ($10M), they would only get 1%
 - **Investor's benefit:** 5x better deal for taking early risk
@@ -69,10 +75,12 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### 1. Valuation Cap ONLY (Most Common)
 
 **Terms:**
+
 - Valuation cap: $2M
 - No discount
 
 **Conversion:**
+
 - Investor converts at the cap OR the next round price, whichever is LOWER
 
 **Use when:** You want simplicity, willing to give cap but not discount
@@ -82,10 +90,12 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### 2. Discount ONLY
 
 **Terms:**
+
 - No valuation cap
 - Discount: 20%
 
 **Conversion:**
+
 - Investor converts at 20% discount to next round price
 
 **Use when:** Very early stage, can't estimate valuation yet
@@ -95,10 +105,12 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### 3. Valuation Cap + Discount (Recommended for You)
 
 **Terms:**
+
 - Valuation cap: $2M
 - Discount: 20%
 
 **Conversion:**
+
 - Investor uses whichever is BETTER for them (cap or discount)
 
 **Use when:** Investor taking significant risk, you want to reward them
@@ -108,10 +120,12 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### 4. MFN (Most Favored Nation)
 
 **Terms:**
+
 - No cap, no discount
 - Investor gets same terms as next SAFE investor
 
 **Conversion:**
+
 - If you sell another SAFE with better terms, this investor gets those terms too
 
 **Use when:** Friends & family, very early, uncertain terms
@@ -123,17 +137,20 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### For a $10,000 Investment
 
 **Recommended Structure:**
+
 - **Type:** Valuation Cap + Discount
 - **Valuation Cap:** $1,500,000
 - **Discount:** 20%
 - **Pro Rata Rights:** Yes (optional)
 
 **Why these terms:**
+
 - $1.5M cap is fair for pre-revenue (lower than my optimistic $3.5M)
 - 20% discount is standard (rewards early risk)
 - Pro rata lets investor maintain % (investor-friendly)
 
 **What investor gets:**
+
 - If next round at $5M → Investor converts at $1.5M cap (better)
 - If next round at $1M → Investor converts at 20% discount (better)
 - Investor always gets best deal available
@@ -143,12 +160,14 @@ A **SAFE (Simple Agreement for Future Equity)** is an investment instrument crea
 ### For a $100K-$500K Round
 
 **Recommended Structure:**
+
 - **Type:** Valuation Cap + Discount
 - **Valuation Cap:** $2,000,000
 - **Discount:** 20%
 - **Pro Rata Rights:** Yes
 
 **Why these terms:**
+
 - $2M cap is reasonable for larger round
 - Still rewards early investors significantly
 - Standard YC terms
@@ -240,9 +259,9 @@ Date: _______________
 
 ### Step 1: Decide on Terms
 
-- [ ] Investment amount: $________
-- [ ] Valuation cap: $________
-- [ ] Discount rate: ____%
+- [ ] Investment amount: $**\_\_\_\_**
+- [ ] Valuation cap: $**\_\_\_\_**
+- [ ] Discount rate: \_\_\_\_%
 - [ ] Pro rata rights: Yes / No
 - [ ] Type: Cap only / Discount only / Cap + Discount / MFN
 
@@ -251,17 +270,20 @@ Date: _______________
 ### Step 2: Use Clerky or Lawyer
 
 **Option A: Clerky.com (Recommended for <$500K)**
+
 - Cost: $799 flat fee
 - Time: 15-30 minutes to complete
 - Includes: SAFE docs, board consent, stock ledger updates
 - Link: https://www.clerky.com
 
 **Option B: Law Firm**
+
 - Cost: $2,000-$5,000
 - Time: 1-2 weeks
 - Use when: Investment >$500K, complex terms, need legal review
 
 **Option C: Y Combinator Template (DIY - Not Recommended)**
+
 - Cost: Free
 - Risk: Miss legal requirements, mistakes costly
 - Only if: Friends & family, very small amount (<$25K)
@@ -289,6 +311,7 @@ Date: _______________
 ### Step 5: Track on Cap Table
 
 **Add to cap table:**
+
 - Investor name
 - Investment amount
 - SAFE terms (cap, discount)
@@ -296,6 +319,7 @@ Date: _______________
 - Conversion status (unconverted)
 
 **Use:**
+
 - Carta (https://carta.com) - $2K-$5K/year, industry standard
 - Spreadsheet template (free, see 06-CAP-TABLE-TEMPLATE.md)
 
@@ -306,6 +330,7 @@ Date: _______________
 ### Q: What if I never raise another round?
 
 **A:** The SAFE doesn't convert. Investor doesn't get equity unless there's:
+
 1. Equity financing (priced round)
 2. Liquidity event (acquisition)
 3. IPO
@@ -319,6 +344,7 @@ Date: _______________
 **A:** Investor still converts at the lower valuation (SAFE cap doesn't help them in down rounds, but discount does).
 
 **Example:**
+
 - SAFE cap: $2M, discount 20%
 - Next round: $1M valuation
 - Investor converts at: $800K (1M × 80% discount) - gets 12.5% equity
@@ -329,11 +355,13 @@ Date: _______________
 ### Q: Can I have multiple SAFEs with different terms?
 
 **A:** Yes, but be careful:
+
 - Each investor can have different cap/discount
 - Later SAFEs should have SAME or HIGHER caps (don't give better deal to later investors)
 - Track all SAFEs on cap table
 
 **Example:**
+
 - First SAFE: $100K at $1.5M cap
 - Second SAFE: $200K at $2M cap (fair - higher cap)
 - Third SAFE: $50K at $1M cap (BAD - better deal than first investor, unless MFN clause)
@@ -345,12 +373,14 @@ Date: _______________
 **A:** SAFEs automatically convert to equity at the Series A.
 
 **Sequence:**
+
 1. Series A lead sets price (e.g., $10M pre-money, $1.00/share)
 2. SAFEs convert FIRST using their caps/discounts
 3. THEN Series A investors get their shares
 4. All shares issued together in one transaction
 
 **Post-Series A cap table:**
+
 - Founders: X%
 - SAFE investors: Y% (converted)
 - Series A investors: Z%
@@ -361,6 +391,7 @@ Date: _______________
 ## When NOT to Use a SAFE
 
 **Use priced equity round instead if:**
+
 - Investor demands board seat
 - Investor wants immediate equity (not future conversion)
 - Investment >$1M (institutional investors may want priced round)
@@ -368,6 +399,7 @@ Date: _______________
 - You're raising your Series A (use priced equity)
 
 **SAFEs are best for:**
+
 - Friends & family
 - Angels
 - Pre-seed / seed rounds <$500K
@@ -379,10 +411,10 @@ Date: _______________
 
 ### Before SAFE
 
-| Shareholder | Shares | % |
-|-------------|--------|---|
-| Founder | 10,000,000 | 100% |
-| **Total** | **10,000,000** | **100%** |
+| Shareholder | Shares         | %        |
+| ----------- | -------------- | -------- |
+| Founder     | 10,000,000     | 100%     |
+| **Total**   | **10,000,000** | **100%** |
 
 ---
 
@@ -390,11 +422,11 @@ Date: _______________
 
 **SAFE not converted yet** (doesn't show on cap table until priced round)
 
-| Shareholder | Shares | % | Notes |
-|-------------|--------|---|-------|
-| Founder | 10,000,000 | 100% | |
-| SAFE Investor | - | - | $100K SAFE at $2M cap (unconverted) |
-| **Total** | **10,000,000** | **100%** | |
+| Shareholder   | Shares         | %        | Notes                               |
+| ------------- | -------------- | -------- | ----------------------------------- |
+| Founder       | 10,000,000     | 100%     |                                     |
+| SAFE Investor | -              | -        | $100K SAFE at $2M cap (unconverted) |
+| **Total**     | **10,000,000** | **100%** |                                     |
 
 ---
 
@@ -403,23 +435,25 @@ Date: _______________
 **SAFEs convert, then Series A investors get shares**
 
 **Step 1: SAFE Conversion**
+
 - SAFE investor converts at $2M cap (better than $5M round)
 - Gets: $100K / $2M = **5% of fully diluted**
 - Shares: 526,316 shares
 
 **Step 2: Series A Investment**
+
 - Series A: $1M at $5M pre-money
 - Gets: $1M / $6M post-money = **16.67%**
 - Shares: 1,000,000 shares
 
 **Final Cap Table:**
 
-| Shareholder | Shares | % |
-|-------------|--------|---|
-| Founder | 10,000,000 | 78.33% |
-| SAFE Investor | 526,316 | 5.00% |
-| Series A Investor | 2,133,333 | 16.67% |
-| **Total** | **12,659,649** | **100%** |
+| Shareholder       | Shares         | %        |
+| ----------------- | -------------- | -------- |
+| Founder           | 10,000,000     | 78.33%   |
+| SAFE Investor     | 526,316        | 5.00%    |
+| Series A Investor | 2,133,333      | 16.67%   |
+| **Total**         | **12,659,649** | **100%** |
 
 ---
 
@@ -441,19 +475,23 @@ Date: _______________
 ## Resources
 
 **Official SAFE Documents:**
+
 - Y Combinator SAFE templates: https://www.ycombinator.com/documents
 
 **SAFE Issuance Services:**
+
 - Clerky: https://www.clerky.com ($799)
 - Gust Launch: https://gust.com/launch ($300-$500)
 - AngelList: https://angellist.com (varies)
 
 **Cap Table Management:**
+
 - Carta: https://carta.com ($2K-$5K/year)
 - Pulley: https://pulley.com ($500-$2K/year)
 - Spreadsheet: See 06-CAP-TABLE-TEMPLATE.md
 
 **Learning Resources:**
+
 - YC Startup School (SAFE explained): https://www.startupschool.org
 - Investopedia SAFE guide: https://www.investopedia.com/terms/s/simple-agreement-future-equity-safe.asp
 - TechCrunch SAFE explainer: Search "TechCrunch SAFE explained"

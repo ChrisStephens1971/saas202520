@@ -3,12 +3,7 @@
  * Reusable test data for integration tests
  */
 
-import type {
-  StripeAccount,
-  Payment,
-  Refund,
-  Payout
-} from '@tournament/shared/types/payment';
+import type { StripeAccount, Payment, Refund, Payout } from '@tournament/shared/types/payment';
 
 /**
  * Create test organization data
@@ -98,7 +93,8 @@ export function createTestPayment(
     tournamentId,
     playerId: overrides?.playerId || 'player_test_1',
     stripeAccountId,
-    stripePaymentIntent: overrides?.stripePaymentIntent || `pi_test_${Math.floor(Math.random() * 1000)}`,
+    stripePaymentIntent:
+      overrides?.stripePaymentIntent || `pi_test_${Math.floor(Math.random() * 1000)}`,
     amount: overrides?.amount || 5000, // $50.00
     currency: overrides?.currency || 'usd',
     status: overrides?.status || 'succeeded',
@@ -174,9 +170,7 @@ export const prizeStructures = {
     { placement: 2, percentage: 40 },
   ],
   // Winner takes all
-  winnerTakesAll: [
-    { placement: 1, percentage: 100 },
-  ],
+  winnerTakesAll: [{ placement: 1, percentage: 100 }],
   // 40/25/20/15 split
   fourPlace: [
     { placement: 1, percentage: 40 },

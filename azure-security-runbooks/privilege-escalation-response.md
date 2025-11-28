@@ -10,6 +10,7 @@
 ## Overview
 
 This runbook covers response to unauthorized privilege escalation in Azure:
+
 - User granted Global Admin role unexpectedly
 - Service principal elevated to Owner role
 - PIM activation without proper approval
@@ -22,6 +23,7 @@ This runbook covers response to unauthorized privilege escalation in Azure:
 ## Detection Indicators
 
 ### Automated Alerts (Sentinel)
+
 - "Privileged role assigned outside PIM"
 - "User added to Global Administrator role"
 - "Service principal granted Owner permissions"
@@ -30,6 +32,7 @@ This runbook covers response to unauthorized privilege escalation in Azure:
 - "Role assignment by non-privileged user"
 
 ### Manual Discovery
+
 - User reports access to resources they shouldn't have
 - Unexpected role visible in "My roles"
 - Audit log shows role assignment not requested
@@ -251,6 +254,7 @@ AzureActivity
 ```
 
 **Look for:**
+
 - VM creation (cryptomining)
 - Storage account creation (data exfiltration)
 - Role assignments (persistence)
@@ -278,6 +282,7 @@ az role definition create --role-definition @custom-role.json
 ```
 
 **Custom Role Example:**
+
 ```json
 {
   "Name": "VM Operator - Read Only",
@@ -310,6 +315,7 @@ az role definition create --role-definition @custom-role.json
 ### 3. Implement Conditional Access for Privileged Roles
 
 **Create CA policy:**
+
 ```json
 {
   "displayName": "CA-PIM: Require MFA and compliant device for PIM activation",
@@ -317,9 +323,9 @@ az role definition create --role-definition @custom-role.json
   "conditions": {
     "users": {
       "includeRoles": [
-        "62e90394-69f5-4237-9190-012177145e10",  // Global Admin
-        "e8611ab8-c189-46e8-94e1-60213ab1f814",  // Privileged Role Admin
-        "194ae4cb-b126-40b2-bd5b-6091b380977d"   // Security Admin
+        "62e90394-69f5-4237-9190-012177145e10", // Global Admin
+        "e8611ab8-c189-46e8-94e1-60213ab1f814", // Privileged Role Admin
+        "194ae4cb-b126-40b2-bd5b-6091b380977d" // Security Admin
       ]
     },
     "applications": {
@@ -341,6 +347,7 @@ az role definition create --role-definition @custom-role.json
 
 # KQL query:
 ```
+
 ```kusto
 AzureActivity
 | where OperationNameValue == "Microsoft.Authorization/roleAssignments/write"
@@ -356,6 +363,7 @@ AzureActivity
 ### Impact Assessment
 
 **Questions:**
+
 1. What resources did the attacker access?
 2. Was data exfiltrated?
 3. Were resources created/modified/deleted?
@@ -420,6 +428,7 @@ az monitor activity-log list \
 ## Prevention Checklist
 
 **Immediate (Week 1):**
+
 - [ ] Enable PIM for all privileged roles
 - [ ] Remove all standing Owner/Global Admin assignments
 - [ ] Implement approval workflow for PIM
@@ -428,6 +437,7 @@ az monitor activity-log list \
 - [ ] Enable Sentinel analytics rules for role changes
 
 **Short-term (Month 1):**
+
 - [ ] Implement least privilege RBAC
 - [ ] Create custom roles (no Owner grants)
 - [ ] Enable Conditional Access for admin roles
@@ -436,6 +446,7 @@ az monitor activity-log list \
 - [ ] Service principal secret rotation (monthly)
 
 **Long-term (Quarter 1):**
+
 - [ ] Zero standing privileges (all PIM)
 - [ ] Just-in-time access for all admin tasks
 - [ ] SIEM integration (real-time monitoring)
@@ -448,6 +459,7 @@ az monitor activity-log list \
 ## Azure RBAC Best Practices
 
 **Deny List:**
+
 - ❌ Never grant Owner at subscription scope (except break-glass)
 - ❌ Never grant User Access Administrator alone (always with specific resource role)
 - ❌ Never use service principals with Owner
@@ -455,6 +467,7 @@ az monitor activity-log list \
 - ❌ Never bypass PIM approval
 
 **Allow List:**
+
 - ✅ Use Contributor + specific resource roles
 - ✅ Use custom roles for fine-grained control
 - ✅ Use managed identities (not service principals)
@@ -483,6 +496,7 @@ az ad user update --id <user-id> --force-change-password-next-sign-in true
 ```
 
 **Sentinel KQL:**
+
 ```kusto
 // Role assignment changes
 AzureActivity

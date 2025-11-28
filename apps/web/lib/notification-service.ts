@@ -80,10 +80,7 @@ const rateLimiters = {
  * Check if SMS was recently sent to prevent duplicates within 2-minute window
  * Returns true if duplicate, false if okay to send
  */
-async function checkSMSDuplicate(
-  recipient: string,
-  message: string
-): Promise<boolean> {
+async function checkSMSDuplicate(recipient: string, message: string): Promise<boolean> {
   try {
     // Create deduplication key from recipient + message hash
     const messageHash = Buffer.from(message).toString('base64').substring(0, 32);
@@ -141,9 +138,7 @@ function getEmailTransporter() {
 /**
  * Send a notification (in-app, email, or SMS)
  */
-export async function sendNotification(
-  input: NotificationInput
-): Promise<NotificationResult> {
+export async function sendNotification(input: NotificationInput): Promise<NotificationResult> {
   try {
     // Create notification record (status: pending)
     const notification = await prisma.notification.create({
@@ -203,9 +198,7 @@ export async function sendNotification(
 /**
  * Send in-app notification (just mark as sent, no external delivery)
  */
-async function sendInAppNotification(
-  notificationId: string
-): Promise<NotificationResult> {
+async function sendInAppNotification(notificationId: string): Promise<NotificationResult> {
   // In-app notifications are "sent" immediately (stored in database)
   // The frontend will poll or use websockets to retrieve them
   return {
@@ -223,9 +216,7 @@ async function sendEmailNotification(
 ): Promise<NotificationResult> {
   try {
     // Check rate limit
-    const { success: rateLimitOk } = await rateLimiters.email.limit(
-      input.orgId
-    );
+    const { success: rateLimitOk } = await rateLimiters.email.limit(input.orgId);
     if (!rateLimitOk) {
       return {
         success: false,
@@ -299,11 +290,7 @@ async function sendSMSNotification(
       },
     });
 
-    if (
-      !org?.twilioAccountSid ||
-      !org.twilioAuthToken ||
-      !org.twilioPhoneNumber
-    ) {
+    if (!org?.twilioAccountSid || !org.twilioAuthToken || !org.twilioPhoneNumber) {
       return {
         success: false,
         error: 'Twilio not configured for this organization',

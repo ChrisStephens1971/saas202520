@@ -26,40 +26,39 @@ export interface HapticPattern {
 const HAPTIC_PATTERNS: Record<HapticFeedbackType, HapticPattern> = {
   light: {
     vibrate: [10],
-    description: 'Light tap feedback'
+    description: 'Light tap feedback',
   },
   medium: {
     vibrate: [20],
-    description: 'Medium tap feedback'
+    description: 'Medium tap feedback',
   },
   heavy: {
     vibrate: [40],
-    description: 'Heavy tap feedback'
+    description: 'Heavy tap feedback',
   },
   success: {
     vibrate: [10, 50, 10],
-    description: 'Success confirmation'
+    description: 'Success confirmation',
   },
   warning: {
     vibrate: [20, 100, 20, 100, 20],
-    description: 'Warning alert'
+    description: 'Warning alert',
   },
   error: {
     vibrate: [50, 100, 50],
-    description: 'Error alert'
+    description: 'Error alert',
   },
   selection: {
     vibrate: [5],
-    description: 'Selection change'
-  }
+    description: 'Selection change',
+  },
 };
 
 /**
  * Check if haptic feedback is supported
  */
 export function isHapticSupported(): boolean {
-  return typeof window !== 'undefined' &&
-         'vibrate' in navigator;
+  return typeof window !== 'undefined' && 'vibrate' in navigator;
 }
 
 /**
@@ -141,7 +140,7 @@ export const gameHaptics = {
   swipe: () => triggerHaptic('selection'),
   refresh: () => triggerHaptic('medium'),
   error: () => triggerHaptic('error'),
-  warning: () => triggerHaptic('warning')
+  warning: () => triggerHaptic('warning'),
 };
 
 /**
@@ -157,6 +156,6 @@ export function useHaptic() {
     trigger: triggerHaptic,
     cancel: cancelHaptic,
     setEnabled: setHapticEnabled,
-    game: gameHaptics
+    game: gameHaptics,
   };
 }

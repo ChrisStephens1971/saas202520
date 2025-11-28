@@ -30,9 +30,7 @@ import { format } from 'date-fns';
  * @param job - BullMQ job instance
  * @returns Job result with download information
  */
-export async function processExportJob(
-  job: Job<ExportJobData>
-): Promise<{
+export async function processExportJob(job: Job<ExportJobData>): Promise<{
   success: boolean;
   format: string;
   filename: string;
@@ -420,9 +418,7 @@ function getMimeType(filename: string): string {
 /**
  * Job processor with timing wrapper
  */
-export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(
-  processor: T
-): T {
+export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(processor: T): T {
   return (async (...args: unknown[]) => {
     const startTime = Date.now();
     try {

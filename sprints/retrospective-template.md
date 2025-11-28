@@ -88,17 +88,20 @@ Specific, actionable improvements for next sprint:
 ## Metrics Review
 
 ### Velocity
+
 - **Planned capacity:** [X points/hours]
 - **Actual completed:** [Y points/hours]
 - **Velocity:** [Y points/hours]
 - **Trend:** [↑ Increased / → Stable / ↓ Decreased from last sprint]
 
 ### Quality
+
 - **Bugs introduced:** [N]
 - **Technical debt added:** [Low | Medium | High]
 - **Code review iterations:** [Average N per PR]
 
 ### Focus
+
 - **Context switches:** [How many times switched between tasks?]
 - **Unplanned work:** [% of time on unplanned items]
 - **Scope changes:** [Number of changes mid-sprint]
@@ -108,14 +111,17 @@ Specific, actionable improvements for next sprint:
 ## Process Improvements
 
 ### Keep Doing ✅
+
 - Practice 1
 - Practice 2
 
 ### Start Doing ➕
+
 - New practice 1
 - New practice 2
 
 ### Stop Doing ❌
+
 - Old practice 1
 - Old practice 2
 
@@ -124,11 +130,13 @@ Specific, actionable improvements for next sprint:
 ## Personal Reflections
 
 ### Energy & Well-being
+
 - **Energy level:** [1-10]
 - **Burnout risk:** [Low | Medium | High]
 - **Work-life balance:** [Good | Needs improvement]
 
 ### Motivation
+
 - **What energized me:**
   - Item 1
   - Item 2
@@ -142,14 +150,17 @@ Specific, actionable improvements for next sprint:
 ## Looking Ahead
 
 ### Concerns for Next Sprint
+
 - Concern 1
 - Concern 2
 
 ### Opportunities
+
 - Opportunity 1
 - Opportunity 2
 
 ### Commitments
+
 - I commit to [specific behavior/practice]
 - I will experiment with [new approach]
 

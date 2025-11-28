@@ -21,6 +21,7 @@
 These are ALWAYS available in every Claude Code session:
 
 ### Core File Operations
+
 - **Read** - Read any file
 - **Write** - Create or overwrite files
 - **Edit** - Make targeted edits to existing files
@@ -28,15 +29,18 @@ These are ALWAYS available in every Claude Code session:
 - **Grep** - Search file contents with regex
 
 ### System Operations
+
 - **Bash** - Execute shell commands
 - **BashOutput** - Monitor background processes
 - **KillShell** - Terminate background processes
 
 ### Web & Research
+
 - **WebSearch** - Search the web for current information
 - **WebFetch** - Fetch and analyze web pages
 
 ### Specialized Agents (Task Tool)
+
 - **Task tool with subagent_type parameter** - Launches specialized agents
   - `subagent_type: "Explore"` - Fast codebase exploration
   - `subagent_type: "Plan"` - Fast planning and analysis
@@ -46,6 +50,7 @@ These are ALWAYS available in every Claude Code session:
 **⚠️ IMPORTANT:** Task tool's specialized agents are **BUILT-IN**. They do NOT require installation!
 
 ### Interactive Tools
+
 - **AskUserQuestion** - Ask user for input/decisions
 - **TodoWrite** - Manage task lists
 
@@ -60,6 +65,7 @@ These require one-time setup before use:
 **What:** Pre-built capabilities for document processing, testing, etc.
 
 **Examples:**
+
 - `xlsx` - Excel spreadsheet processing
 - `docx` - Word document processing
 - `pdf` - PDF document processing
@@ -68,6 +74,7 @@ These require one-time setup before use:
 - `mcp-builder` - Build MCP servers
 
 **Installation:**
+
 ```bash
 # Browse marketplace
 /plugin marketplace add anthropics/skills
@@ -88,12 +95,14 @@ These require one-time setup before use:
 **What:** Specialized agents for specific frameworks/languages
 
 **Examples:**
+
 - `full-stack-orchestration` - Coordinate full-stack development
 - `python-development` - Python/FastAPI specialist
 - `react-typescript` - React/TypeScript specialist
 - `database-design` - Database architecture
 
 **Installation:**
+
 ```bash
 # Add marketplace
 /plugin marketplace add wshobson/agents
@@ -114,12 +123,14 @@ These require one-time setup before use:
 **What:** Pre-built agent templates for common roles
 
 **Examples:**
+
 - `frontend-developer` - Frontend specialist
 - `backend-architect` - Backend architecture
 - `code-reviewer` - Code review workflows
 - `test-engineer` - Testing specialist
 
 **Installation:**
+
 ```bash
 # Install specific template
 npx claude-code-templates@latest --agent development-team/frontend-developer
@@ -137,6 +148,7 @@ npx claude-code-templates@latest --agent development-team/frontend-developer
 **What:** Connect to external services (APIs, databases, analytics)
 
 **Examples:**
+
 - Socket MCP - Dependency security scanning
 - Clarity MCP - Web analytics integration
 - Figma MCP - Design system tokens
@@ -150,26 +162,28 @@ npx claude-code-templates@latest --agent development-team/frontend-developer
 
 ## 🔍 Quick Reference Table
 
-| Capability | Type | Installation Required? | Example |
-|------------|------|------------------------|---------|
-| Read file | Built-in | ❌ No | `Read("path/to/file.js")` |
-| Search code | Built-in | ❌ No | `Grep("pattern", "*.ts")` |
-| Explore codebase | Built-in | ❌ No | `Task(subagent_type="Explore")` |
-| Plan implementation | Built-in | ❌ No | `Task(subagent_type="Plan")` |
-| Process Excel | Skill | ✅ Yes | Install: `/plugin add xlsx` |
-| React specialist | WSHobson | ✅ Yes | Install: `/plugin install react-typescript` |
-| Frontend dev | Template | ✅ Yes | Install: `npx claude-code-templates...` |
-| External API | MCP | ✅ Yes | Install: (varies by MCP) |
+| Capability          | Type     | Installation Required? | Example                                     |
+| ------------------- | -------- | ---------------------- | ------------------------------------------- |
+| Read file           | Built-in | ❌ No                  | `Read("path/to/file.js")`                   |
+| Search code         | Built-in | ❌ No                  | `Grep("pattern", "*.ts")`                   |
+| Explore codebase    | Built-in | ❌ No                  | `Task(subagent_type="Explore")`             |
+| Plan implementation | Built-in | ❌ No                  | `Task(subagent_type="Plan")`                |
+| Process Excel       | Skill    | ✅ Yes                 | Install: `/plugin add xlsx`                 |
+| React specialist    | WSHobson | ✅ Yes                 | Install: `/plugin install react-typescript` |
+| Frontend dev        | Template | ✅ Yes                 | Install: `npx claude-code-templates...`     |
+| External API        | MCP      | ✅ Yes                 | Install: (varies by MCP)                    |
 
 ---
 
 ## 🚀 When to Install Extensions
 
 **For planning and documentation:** NO installation needed
+
 - Virtual agents in CLAUDE.md use built-in tools only
 - Can create roadmaps, PRDs, sprint plans immediately
 
 **When ready to code:** Consider installing extensions
+
 - Framework-specific work → WSHobson agents
 - Document processing → Claude Skills
 - External integrations → MCP servers
@@ -177,22 +191,23 @@ npx claude-code-templates@latest --agent development-team/frontend-developer
 
 **Decision Matrix:**
 
-| Your Situation | Recommended Extensions |
-|----------------|------------------------|
-| Solo MVP, planning only | None (built-ins sufficient) |
-| Solo MVP, coding | Claude Code Templates (minimal) |
-| Small team, planning | None (built-ins sufficient) |
-| Small team, coding | Claude Code Templates + Skills |
-| Enterprise, planning | None (built-ins sufficient) |
-| Enterprise, full dev | All three tiers |
-| Framework-specific | WSHobson + Claude Code Templates |
-| External integrations | Relevant MCP servers |
+| Your Situation          | Recommended Extensions           |
+| ----------------------- | -------------------------------- |
+| Solo MVP, planning only | None (built-ins sufficient)      |
+| Solo MVP, coding        | Claude Code Templates (minimal)  |
+| Small team, planning    | None (built-ins sufficient)      |
+| Small team, coding      | Claude Code Templates + Skills   |
+| Enterprise, planning    | None (built-ins sufficient)      |
+| Enterprise, full dev    | All three tiers                  |
+| Framework-specific      | WSHobson + Claude Code Templates |
+| External integrations   | Relevant MCP servers             |
 
 ---
 
 ## ✅ Verification: What Do I Have?
 
 **Check built-in tools:** Try using them (they always work)
+
 ```bash
 # These always work without installation
 Read("CLAUDE.md")
@@ -201,6 +216,7 @@ Task(subagent_type="Explore", prompt="Find all components")
 ```
 
 **Check installed Skills:**
+
 ```bash
 # Look in settings file
 cat .claude/settings.local.json
@@ -208,12 +224,14 @@ cat .claude/settings.local.json
 ```
 
 **Check installed WSHobson plugins:**
+
 ```bash
 /plugin list
 # Shows all installed plugins
 ```
 
 **Check installed Claude Code Templates:**
+
 ```bash
 ls .claude/
 # Templates create files in .claude/ directory

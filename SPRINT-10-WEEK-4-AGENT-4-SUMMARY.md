@@ -14,6 +14,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ### 1. Mobile Navigation Components ✅
 
 #### Bottom Navigation Bar
+
 - **File:** `apps/web/components/mobile/BottomNav.tsx`
 - **Features:**
   - 5 main tabs: Tournaments, Scoring, Leaderboards, Profile, More
@@ -23,6 +24,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - Responsive (hidden on >1024px desktop)
 
 #### Floating Action Button (FAB)
+
 - **File:** `apps/web/components/mobile/FloatingActionButton.tsx`
 - **Features:**
   - Context-aware actions per page:
@@ -36,6 +38,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - Positioned above bottom nav
 
 #### Pull-to-Refresh
+
 - **File:** `apps/web/components/mobile/PullToRefresh.tsx`
 - **Features:**
   - Native-like pull gesture
@@ -46,6 +49,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - Only triggers when scrolled to top
 
 #### Swipeable Views
+
 - **File:** `apps/web/components/mobile/SwipeableViews.tsx`
 - **Features:**
   - Smooth swipe between tabs
@@ -74,6 +78,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ### 3. Performance Optimization Utilities ✅
 
 #### Image Optimizer
+
 - **File:** `apps/web/lib/performance/image-optimizer.ts`
 - **Functions:**
   - `generateResponsiveImageSet()` - Creates srcset for 6 breakpoints
@@ -89,6 +94,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - Full: 1920x1080px, max 500KB
 
 #### Lazy Loading
+
 - **File:** `apps/web/lib/performance/lazy-load.ts`
 - **Functions:**
   - `createLazyObserver()` - Intersection Observer wrapper
@@ -104,6 +110,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - `isInViewport()` - Viewport detection
 
 #### Performance Metrics
+
 - **File:** `apps/web/lib/performance/metrics.ts`
 - **Metrics Tracked:**
   - FCP (First Contentful Paint)
@@ -125,6 +132,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - `sendPerformanceMetrics()` - Analytics integration
 
 #### Performance Monitor
+
 - **File:** `apps/web/lib/performance/monitor.ts`
 - **Features:**
   - Automatic Core Web Vitals tracking
@@ -145,6 +153,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 **File:** `apps/web/next.config.ts`
 
 **Added:**
+
 - **Image Optimization:**
   - Formats: WebP, AVIF
   - Device sizes: 8 breakpoints (640-3840)
@@ -164,6 +173,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ### 5. Lighthouse CI Configuration ✅
 
 #### Desktop Configuration
+
 - **File:** `apps/web/lighthouserc.json`
 - **Updated URLs:** 4 routes (home, tournaments, leaderboard, profile)
 - **Port:** 3020
@@ -177,6 +187,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
   - Bundle: <200KB
 
 #### Mobile Configuration (3G)
+
 - **File:** `apps/web/lighthouserc.mobile.json`
 - **Network Throttling:**
   - RTT: 150ms
@@ -198,6 +209,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ### 6. Package.json Updates ✅
 
 **Scripts Added:**
+
 ```json
 {
   "lighthouse": "lhci autorun",
@@ -208,6 +220,7 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ```
 
 **Dependencies Added:**
+
 ```json
 {
   "@next/bundle-analyzer": "^16.0.1",
@@ -226,28 +239,30 @@ Successfully implemented comprehensive mobile navigation and performance optimiz
 ## Performance Targets
 
 ### Desktop
-| Metric | Target | Threshold | Rationale |
-|--------|--------|-----------|-----------|
-| Performance Score | 90+ | 80 | Lighthouse recommended |
-| FCP | 1000ms | 2000ms | Fast initial paint |
-| LCP | 2500ms | 4000ms | Core Web Vital |
-| FID | 100ms | 300ms | Core Web Vital |
-| CLS | 0.1 | 0.25 | Core Web Vital |
-| TTI | 3000ms | 7300ms | Quick interactivity |
-| TBT | 300ms | - | Low blocking time |
-| Bundle Size | 200KB | - | Fast download |
+
+| Metric            | Target | Threshold | Rationale              |
+| ----------------- | ------ | --------- | ---------------------- |
+| Performance Score | 90+    | 80        | Lighthouse recommended |
+| FCP               | 1000ms | 2000ms    | Fast initial paint     |
+| LCP               | 2500ms | 4000ms    | Core Web Vital         |
+| FID               | 100ms  | 300ms     | Core Web Vital         |
+| CLS               | 0.1    | 0.25      | Core Web Vital         |
+| TTI               | 3000ms | 7300ms    | Quick interactivity    |
+| TBT               | 300ms  | -         | Low blocking time      |
+| Bundle Size       | 200KB  | -         | Fast download          |
 
 ### Mobile (3G)
-| Metric | Target | Threshold | Rationale |
-|--------|--------|-----------|-----------|
-| Performance Score | 85+ | 75 | Realistic for 3G |
-| FCP | 3000ms | 4000ms | Acceptable on 3G |
-| LCP | 4000ms | 5000ms | Reasonable on slow networks |
-| FID | 100ms | 300ms | Same as desktop |
-| CLS | 0.1 | 0.25 | Same as desktop |
-| TTI | 5000ms | 8000ms | Acceptable on 3G |
-| TBT | 600ms | 1000ms | Higher tolerance on mobile |
-| Initial Load | 2000ms | 3000ms | Requirements |
+
+| Metric            | Target | Threshold | Rationale                   |
+| ----------------- | ------ | --------- | --------------------------- |
+| Performance Score | 85+    | 75        | Realistic for 3G            |
+| FCP               | 3000ms | 4000ms    | Acceptable on 3G            |
+| LCP               | 4000ms | 5000ms    | Reasonable on slow networks |
+| FID               | 100ms  | 300ms     | Same as desktop             |
+| CLS               | 0.1    | 0.25      | Same as desktop             |
+| TTI               | 5000ms | 8000ms    | Acceptable on 3G            |
+| TBT               | 600ms  | 1000ms    | Higher tolerance on mobile  |
+| Initial Load      | 2000ms | 3000ms    | Requirements                |
 
 ## File Structure
 
@@ -277,6 +292,7 @@ apps/web/
 ## Testing
 
 ### Automated Testing Scripts
+
 ```bash
 # Desktop performance audit
 pnpm lighthouse
@@ -292,6 +308,7 @@ pnpm perf:analyze
 ```
 
 ### Manual Testing Checklist
+
 - [x] Bottom nav on different screen sizes
 - [x] FAB context-aware actions
 - [x] Pull-to-refresh gesture
@@ -348,7 +365,10 @@ function MobileApp() {
 ### Optimize Images
 
 ```typescript
-import { getOptimizedImageUrl, generateResponsiveImageSet } from '@/lib/performance/image-optimizer';
+import {
+  getOptimizedImageUrl,
+  generateResponsiveImageSet,
+} from '@/lib/performance/image-optimizer';
 
 // Single optimized image
 const url = getOptimizedImageUrl('/image.jpg', { width: 800, format: 'webp' });
@@ -360,23 +380,27 @@ const { srcSet, sizes } = generateResponsiveImageSet('/image.jpg');
 ## Next Steps
 
 ### Phase 1: Baseline Measurement (Week 5 Day 1)
+
 1. Run Lighthouse audits on production build
 2. Measure actual Core Web Vitals
 3. Identify performance bottlenecks
 4. Document baseline metrics
 
 ### Phase 2: Optimization (Week 5 Day 2-3)
+
 1. Lazy load analytics dashboard
 2. Code split heavy components
 3. Convert images to WebP
 4. Implement virtual scrolling
 
 ### Phase 3: Monitoring (Week 5 Day 4)
+
 1. Set up performance analytics dashboard
 2. Create alerts for poor metrics
 3. Monitor performance trends
 
 ### Phase 4: Testing (Week 5 Day 5)
+
 1. Test on real 3G networks
 2. Test on low-end devices
 3. Verify Core Web Vitals

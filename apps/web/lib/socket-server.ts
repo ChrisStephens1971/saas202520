@@ -93,7 +93,9 @@ export function emitQueueUpdate(io: Server, tournamentId: string) {
  */
 export function emitMatchAssigned(io: Server, tournamentId: string, matchId: string) {
   io.to(`tournament:${tournamentId}`).emit(SocketEvent.MATCH_ASSIGNED, { tournamentId, matchId });
-  console.log(`[Socket.io] Emitted match:assigned for tournament:${tournamentId}, match:${matchId}`);
+  console.log(
+    `[Socket.io] Emitted match:assigned for tournament:${tournamentId}, match:${matchId}`
+  );
 }
 
 /**
@@ -101,7 +103,9 @@ export function emitMatchAssigned(io: Server, tournamentId: string, matchId: str
  */
 export function emitFinalsApplied(io: Server, tournamentId: string, finalistsCount: number) {
   io.to(`tournament:${tournamentId}`).emit('finals:applied', { tournamentId, finalistsCount });
-  console.log(`[Socket.io] Emitted finals:applied for tournament:${tournamentId}, finalists:${finalistsCount}`);
+  console.log(
+    `[Socket.io] Emitted finals:applied for tournament:${tournamentId}, finalists:${finalistsCount}`
+  );
 }
 
 /**
@@ -109,5 +113,7 @@ export function emitFinalsApplied(io: Server, tournamentId: string, finalistsCou
  */
 export function emitChipsAdjusted(io: Server, tournamentId: string, playerId: string) {
   io.to(`tournament:${tournamentId}`).emit('chips:adjusted', { tournamentId, playerId });
-  console.log(`[Socket.io] Emitted chips:adjusted for tournament:${tournamentId}, player:${playerId}`);
+  console.log(
+    `[Socket.io] Emitted chips:adjusted for tournament:${tournamentId}, player:${playerId}`
+  );
 }

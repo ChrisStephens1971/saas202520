@@ -41,9 +41,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   };
 
   const updateResolvedTheme = (newTheme: Theme, prefersDark: boolean) => {
-    const resolved = newTheme === 'system'
-      ? (prefersDark ? 'dark' : 'light')
-      : newTheme;
+    const resolved = newTheme === 'system' ? (prefersDark ? 'dark' : 'light') : newTheme;
 
     setResolvedTheme(resolved);
     applyTheme(resolved);

@@ -33,13 +33,16 @@ A practical, boring-on-purpose convention for large multi-project Azure estates.
 ## Global Pattern
 
 **Format**
+
 ```
 {type}-{org}-{proj}-{env}-{region}-{slice}-{seq}
 ```
+
 - **Required:** `type`, `org`, `proj`, `env`, `region`
 - **Optional:** `slice` (layer like `app|data|net|sec|ops`) and `seq` (`01–99`)
 
 **Rules**
+
 - Lowercase only. Hyphens as separators.
 - Keep total length under service limits (see constraints table below).
 - Prefer ≤ 60 chars where applicable.
@@ -50,30 +53,30 @@ A practical, boring-on-purpose convention for large multi-project Azure estates.
 
 ## Token Dictionary
 
-| Token   | Meaning                                   | Examples / Allowed values |
-|---------|-------------------------------------------|---------------------------|
-| `type`  | Resource abbreviation (see reference)     | `rg`, `app`, `sqlsvr`, `st`, `kv`, `acr`, `vnet`, `snet`, `nsg`, `la`, `appi`, `sb`, `eh`, `redis`, `aks`, `agw`, `bastion`, `pe` |
-| `org`   | Holding company or LLC code (2–4 chars)   | `vrd`, `mls`, `arm`, `acm` |
-| `proj`  | ProjectID-based code (6 chars: YYYYMM)    | `202501`, `202505`, `202512` (last 6 chars of projectID like `saas202505`) |
-| `env`   | Deployment stage                           | `prd`, `stg`, `dev`, `tst`, `sbx` |
-| `region`| Azure region short code                    | `eus`, `eus2`, `wus2`, `scus`, `neu`, `weu` |
-| `slice` | Logical layer                              | `app`, `data`, `net`, `sec`, `ops` |
-| `seq`   | Sequence when multiples exist              | `01` … `99` |
+| Token    | Meaning                                 | Examples / Allowed values                                                                                                         |
+| -------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `type`   | Resource abbreviation (see reference)   | `rg`, `app`, `sqlsvr`, `st`, `kv`, `acr`, `vnet`, `snet`, `nsg`, `la`, `appi`, `sb`, `eh`, `redis`, `aks`, `agw`, `bastion`, `pe` |
+| `org`    | Holding company or LLC code (2–4 chars) | `vrd`, `mls`, `arm`, `acm`                                                                                                        |
+| `proj`   | ProjectID-based code (6 chars: YYYYMM)  | `202501`, `202505`, `202512` (last 6 chars of projectID like `saas202505`)                                                        |
+| `env`    | Deployment stage                        | `prd`, `stg`, `dev`, `tst`, `sbx`                                                                                                 |
+| `region` | Azure region short code                 | `eus`, `eus2`, `wus2`, `scus`, `neu`, `weu`                                                                                       |
+| `slice`  | Logical layer                           | `app`, `data`, `net`, `sec`, `ops`                                                                                                |
+| `seq`    | Sequence when multiples exist           | `01` … `99`                                                                                                                       |
 
 ---
 
 ## Region Codes
 
-| Region            | Code  | Paired Region | Paired Code |
-|-------------------|-------|---------------|-------------|
-| East US           | `eus` | West US       | `wus`       |
-| East US 2         | `eus2`| Central US    | `cus`       |
-| West US 2         | `wus2`| West Central US | `wcus`    |
-| South Central US  | `scus`| North Central US | `ncus`   |
-| North Europe      | `neu` | West Europe   | `weu`       |
-| West Europe       | `weu` | North Europe  | `neu`       |
-| UK South          | `uks` | UK West       | `ukw`       |
-| Southeast Asia    | `sea` | East Asia     | `ea`        |
+| Region           | Code   | Paired Region    | Paired Code |
+| ---------------- | ------ | ---------------- | ----------- |
+| East US          | `eus`  | West US          | `wus`       |
+| East US 2        | `eus2` | Central US       | `cus`       |
+| West US 2        | `wus2` | West Central US  | `wcus`      |
+| South Central US | `scus` | North Central US | `ncus`      |
+| North Europe     | `neu`  | West Europe      | `weu`       |
+| West Europe      | `weu`  | North Europe     | `neu`       |
+| UK South         | `uks`  | UK West          | `ukw`       |
+| Southeast Asia   | `sea`  | East Asia        | `ea`        |
 
 > Add more as needed, but keep the compact style (3-4 chars max).
 
@@ -83,42 +86,42 @@ A practical, boring-on-purpose convention for large multi-project Azure estates.
 
 Complete reference of resource type abbreviations:
 
-| Abbreviation | Full Name | Azure Service | Max Length |
-|--------------|-----------|---------------|------------|
-| `rg` | Resource Group | Microsoft.Resources/resourceGroups | 90 |
-| `vnet` | Virtual Network | Microsoft.Network/virtualNetworks | 64 |
-| `snet` | Subnet | Microsoft.Network/virtualNetworks/subnets | 80 |
-| `nsg` | Network Security Group | Microsoft.Network/networkSecurityGroups | 80 |
-| `rt` | Route Table | Microsoft.Network/routeTables | 80 |
-| `pip` | Public IP Address | Microsoft.Network/publicIPAddresses | 80 |
-| `kv` | Key Vault | Microsoft.KeyVault/vaults | 24 |
-| `acr` | Azure Container Registry | Microsoft.ContainerRegistry/registries | 50 |
-| `asp` | App Service Plan | Microsoft.Web/serverfarms | 60 |
-| `app` | Web App | Microsoft.Web/sites | 60 |
-| `func` | Function App | Microsoft.Web/sites | 60 |
-| `appi` | Application Insights | Microsoft.Insights/components | 260 |
-| `la` | Log Analytics Workspace | Microsoft.OperationalInsights/workspaces | 63 |
-| `st` | Storage Account | Microsoft.Storage/storageAccounts | 24 |
-| `sqlsvr` | SQL Server | Microsoft.Sql/servers | 63 |
-| `sqldb` | SQL Database | Microsoft.Sql/servers/databases | 128 |
-| `cosmos` | Cosmos DB | Microsoft.DocumentDB/databaseAccounts | 44 |
-| `sb` | Service Bus Namespace | Microsoft.ServiceBus/namespaces | 50 |
-| `eh` | Event Hub Namespace | Microsoft.EventHub/namespaces | 50 |
-| `redis` | Azure Cache for Redis | Microsoft.Cache/redis | 63 |
-| `azfw` | Azure Firewall | Microsoft.Network/azureFirewalls | 80 |
-| `pe` | Private Endpoint | Microsoft.Network/privateEndpoints | 80 |
-| `pvtlink` | Private Link Service | Microsoft.Network/privateLinkServices | 80 |
-| `agw` | Application Gateway | Microsoft.Network/applicationGateways | 80 |
-| `bastion` | Azure Bastion | Microsoft.Network/bastionHosts | 80 |
-| `aks` | Azure Kubernetes Service | Microsoft.ContainerService/managedClusters | 63 |
-| `vm` | Virtual Machine | Microsoft.Compute/virtualMachines | 64 |
-| `vmss` | Virtual Machine Scale Set | Microsoft.Compute/virtualMachineScaleSets | 64 |
-| `disk` | Managed Disk | Microsoft.Compute/disks | 80 |
-| `nic` | Network Interface | Microsoft.Network/networkInterfaces | 80 |
-| `lb` | Load Balancer | Microsoft.Network/loadBalancers | 80 |
-| `tm` | Traffic Manager | Microsoft.Network/trafficManagerProfiles | 63 |
-| `fd` | Front Door | Microsoft.Network/frontDoors | 64 |
-| `cdn` | CDN Profile | Microsoft.Cdn/profiles | 260 |
+| Abbreviation | Full Name                 | Azure Service                              | Max Length |
+| ------------ | ------------------------- | ------------------------------------------ | ---------- |
+| `rg`         | Resource Group            | Microsoft.Resources/resourceGroups         | 90         |
+| `vnet`       | Virtual Network           | Microsoft.Network/virtualNetworks          | 64         |
+| `snet`       | Subnet                    | Microsoft.Network/virtualNetworks/subnets  | 80         |
+| `nsg`        | Network Security Group    | Microsoft.Network/networkSecurityGroups    | 80         |
+| `rt`         | Route Table               | Microsoft.Network/routeTables              | 80         |
+| `pip`        | Public IP Address         | Microsoft.Network/publicIPAddresses        | 80         |
+| `kv`         | Key Vault                 | Microsoft.KeyVault/vaults                  | 24         |
+| `acr`        | Azure Container Registry  | Microsoft.ContainerRegistry/registries     | 50         |
+| `asp`        | App Service Plan          | Microsoft.Web/serverfarms                  | 60         |
+| `app`        | Web App                   | Microsoft.Web/sites                        | 60         |
+| `func`       | Function App              | Microsoft.Web/sites                        | 60         |
+| `appi`       | Application Insights      | Microsoft.Insights/components              | 260        |
+| `la`         | Log Analytics Workspace   | Microsoft.OperationalInsights/workspaces   | 63         |
+| `st`         | Storage Account           | Microsoft.Storage/storageAccounts          | 24         |
+| `sqlsvr`     | SQL Server                | Microsoft.Sql/servers                      | 63         |
+| `sqldb`      | SQL Database              | Microsoft.Sql/servers/databases            | 128        |
+| `cosmos`     | Cosmos DB                 | Microsoft.DocumentDB/databaseAccounts      | 44         |
+| `sb`         | Service Bus Namespace     | Microsoft.ServiceBus/namespaces            | 50         |
+| `eh`         | Event Hub Namespace       | Microsoft.EventHub/namespaces              | 50         |
+| `redis`      | Azure Cache for Redis     | Microsoft.Cache/redis                      | 63         |
+| `azfw`       | Azure Firewall            | Microsoft.Network/azureFirewalls           | 80         |
+| `pe`         | Private Endpoint          | Microsoft.Network/privateEndpoints         | 80         |
+| `pvtlink`    | Private Link Service      | Microsoft.Network/privateLinkServices      | 80         |
+| `agw`        | Application Gateway       | Microsoft.Network/applicationGateways      | 80         |
+| `bastion`    | Azure Bastion             | Microsoft.Network/bastionHosts             | 80         |
+| `aks`        | Azure Kubernetes Service  | Microsoft.ContainerService/managedClusters | 63         |
+| `vm`         | Virtual Machine           | Microsoft.Compute/virtualMachines          | 64         |
+| `vmss`       | Virtual Machine Scale Set | Microsoft.Compute/virtualMachineScaleSets  | 64         |
+| `disk`       | Managed Disk              | Microsoft.Compute/disks                    | 80         |
+| `nic`        | Network Interface         | Microsoft.Network/networkInterfaces        | 80         |
+| `lb`         | Load Balancer             | Microsoft.Network/loadBalancers            | 80         |
+| `tm`         | Traffic Manager           | Microsoft.Network/trafficManagerProfiles   | 63         |
+| `fd`         | Front Door                | Microsoft.Network/frontDoors               | 64         |
+| `cdn`        | CDN Profile               | Microsoft.Cdn/profiles                     | 260        |
 
 ---
 
@@ -126,21 +129,22 @@ Complete reference of resource type abbreviations:
 
 Critical services with strict naming limits:
 
-| Service | Max Length | Characters Allowed | Global Unique? |
-|---------|-----------|-------------------|----------------|
-| **Storage Account** | 24 | Lowercase letters, numbers only | ✅ Yes |
-| **Key Vault** | 24 | Alphanumeric + hyphens | ✅ Yes |
-| **Azure Container Registry** | 50 | Alphanumeric only | ✅ Yes |
-| **App Service / Function** | 60 | Alphanumeric + hyphens | ✅ Yes |
-| **Service Bus Namespace** | 50 | Alphanumeric + hyphens | ✅ Yes |
-| **Event Hub Namespace** | 50 | Alphanumeric + hyphens | ✅ Yes |
-| **Cosmos DB** | 44 | Lowercase, alphanumeric + hyphens | ✅ Yes |
-| **SQL Server** | 63 | Lowercase, alphanumeric + hyphens | ✅ Yes |
-| **Redis Cache** | 63 | Alphanumeric + hyphens | ✅ Yes |
-| **AKS Cluster** | 63 | Alphanumeric + hyphens | ❌ No |
-| **Log Analytics** | 63 | Alphanumeric + hyphens | ❌ No |
+| Service                      | Max Length | Characters Allowed                | Global Unique? |
+| ---------------------------- | ---------- | --------------------------------- | -------------- |
+| **Storage Account**          | 24         | Lowercase letters, numbers only   | ✅ Yes         |
+| **Key Vault**                | 24         | Alphanumeric + hyphens            | ✅ Yes         |
+| **Azure Container Registry** | 50         | Alphanumeric only                 | ✅ Yes         |
+| **App Service / Function**   | 60         | Alphanumeric + hyphens            | ✅ Yes         |
+| **Service Bus Namespace**    | 50         | Alphanumeric + hyphens            | ✅ Yes         |
+| **Event Hub Namespace**      | 50         | Alphanumeric + hyphens            | ✅ Yes         |
+| **Cosmos DB**                | 44         | Lowercase, alphanumeric + hyphens | ✅ Yes         |
+| **SQL Server**               | 63         | Lowercase, alphanumeric + hyphens | ✅ Yes         |
+| **Redis Cache**              | 63         | Alphanumeric + hyphens            | ✅ Yes         |
+| **AKS Cluster**              | 63         | Alphanumeric + hyphens            | ❌ No          |
+| **Log Analytics**            | 63         | Alphanumeric + hyphens            | ❌ No          |
 
 **Planning tip:** With 6-char projectID codes, all names fit within Azure constraints:
+
 - Key Vault: `kv-vrd-202505-prd-eus2-01` = 23 chars (24 max) ✅
 - Storage: `stvrd202505prdeus201` = 18 chars (24 max) ✅
 
@@ -151,6 +155,7 @@ Critical services with strict naming limits:
 Many Azure services require **globally unique** names across all Azure tenants:
 
 ### Services Requiring Global Uniqueness
+
 - Storage Accounts
 - Key Vaults
 - Azure Container Registries
@@ -162,24 +167,28 @@ Many Azure services require **globally unique** names across all Azure tenants:
 ### Uniqueness Strategies
 
 **Strategy 1: Sequential suffix (Recommended)**
+
 ```
 kv-vrd-202505-prd-eus2-01
 kv-vrd-202505-prd-eus2-02
 ```
 
 **Strategy 2: Subscription ID fragment**
+
 ```
 kv-vrd-202505-prd-eus2-a1b2
 # where a1b2 = last 4 chars of subscription ID
 ```
 
 **Strategy 3: Random suffix (for automation)**
+
 ```
 kv-vrd-202505-prd-eus2-x7k9
 # generated during provisioning
 ```
 
 **Collision handling:**
+
 1. Attempt name with `{seq}=01`
 2. If exists, increment: `02`, `03`, etc.
 3. Document actual name in IaC outputs
@@ -192,6 +201,7 @@ kv-vrd-202505-prd-eus2-x7k9
 Most resources follow the base pattern with service-specific adjustments:
 
 ### Resource Groups
+
 ```
 rg-{org}-{proj}-{env}-{region}-{slice}
 # e.g., rg-vrd-202505-prd-eus2-app
@@ -200,6 +210,7 @@ rg-{org}-{proj}-{env}-{region}-{slice}
 **Best practice:** One RG per slice per env per region for blast radius control.
 
 ### Networking
+
 ```
 vnet-{org}-{proj}-{env}-{region}
 snet-{org}-{proj}-{env}-{region}-{purpose}
@@ -214,6 +225,7 @@ nsg-vrd-202505-prd-eus2-app
 ```
 
 ### Compute / Runtime
+
 ```
 asp-{org}-{proj}-{env}-{region}
 app-{org}-{proj}-{env}-{region}-{seq}
@@ -228,6 +240,7 @@ vm-vrd-202505-prd-eus2-web-01
 ```
 
 ### Secrets & Registries
+
 ```
 kv-{org}-{proj}-{env}-{region}-{seq}
 acr{org}{proj}{env}{region}
@@ -238,6 +251,7 @@ acrvrd202505prdeus2          (19 chars - alphanumeric only)
 ```
 
 ### Observability
+
 ```
 appi-{org}-{proj}-{env}-{region}
 la-{org}-{proj}-{env}-{region}
@@ -248,6 +262,7 @@ la-vrd-202505-prd-eus2
 ```
 
 ### Data Services
+
 ```
 sqlsvr-{org}-{proj}-{env}-{region}
 sqldb-{org}-{proj}-{env}-{region}-{name}
@@ -262,7 +277,9 @@ redis-vrd-202505-prd-eus2-01
 ```
 
 ### Storage (strict constraints)
+
 Storage account names must be **3–24 chars**, **alphanumeric only**, **globally unique**.
+
 ```
 st{org}{proj}{env}{region}{seq}
 # e.g., stvrd202505prdeus201 (18 chars)
@@ -273,6 +290,7 @@ st{org}{proj}{env}{region}{purpose}{seq}
 ```
 
 ### Messaging
+
 ```
 sb-{org}-{proj}-{env}-{region}
 eh-{org}-{proj}-{env}-{region}
@@ -283,6 +301,7 @@ eh-vrd-202505-prd-eus2
 ```
 
 ### Edge Security & Connectivity
+
 ```
 azfw-{org}-{proj}-{env}-{region}
 agw-{org}-{proj}-{env}-{region}
@@ -297,6 +316,7 @@ pe-vrd-202505-prd-eus2-sqlsvr
 ```
 
 ### Kubernetes
+
 ```
 aks-{org}-{proj}-{env}-{region}
 
@@ -311,6 +331,7 @@ aks-vrd-202505-prd-eus2
 For disaster recovery, high availability, or geo-distributed workloads:
 
 ### Primary-Secondary (Active-Passive DR)
+
 ```
 # Primary region
 vnet-vrd-202505-prd-eus2-primary
@@ -324,6 +345,7 @@ sqlsvr-vrd-202505-prd-wus2-secondary
 ```
 
 ### Active-Active (Multi-region load balancing)
+
 ```
 # Region 1
 app-vrd-202505-prd-eus2-01
@@ -335,6 +357,7 @@ sqlsvr-vrd-202505-prd-wus2
 ```
 
 ### Global Services (region-agnostic)
+
 ```
 # Traffic Manager, Front Door, CDN
 tm-vrd-202505-prd-global
@@ -343,6 +366,7 @@ cdn-vrd-202505-prd-global
 ```
 
 **Tagging for multi-region:**
+
 - Add `RegionRole` tag: `primary`, `secondary`, `dr`, `active`
 - Add `PairedRegion` tag: `wus2`, `eus2`, etc.
 
@@ -351,6 +375,7 @@ cdn-vrd-202505-prd-global
 ## DNS & Public Names
 
 ### Public-Facing Endpoints
+
 ```
 # API endpoints
 api.{proj}-{env}.{orgroot}.com
@@ -366,6 +391,7 @@ acme.tmt.verdaio.com
 ```
 
 ### Private DNS Zones
+
 ```
 pdns-{org}-{proj}-{env}-{region}-{zone}
 
@@ -386,47 +412,47 @@ Apply these tags to **every resource and resource group**:
 
 ### Core Tags (Required)
 
-| Tag Key | Example Value | Notes |
-|---------|---------------|-------|
-| `Org` | `vrd` | Holding company / LLC |
-| `Project` | `202505` | ProjectID code (6 chars: YYYYMM) |
-| `Environment` | `prd` | `prd\|stg\|dev\|tst\|sbx` |
-| `Region` | `eus2` | Match short code |
-| `Owner` | `ops@verdaio.com` | Distribution list preferred |
+| Tag Key       | Example Value     | Notes                            |
+| ------------- | ----------------- | -------------------------------- |
+| `Org`         | `vrd`             | Holding company / LLC            |
+| `Project`     | `202505`          | ProjectID code (6 chars: YYYYMM) |
+| `Environment` | `prd`             | `prd\|stg\|dev\|tst\|sbx`        |
+| `Region`      | `eus2`            | Match short code                 |
+| `Owner`       | `ops@verdaio.com` | Distribution list preferred      |
 
 ### Financial Tags (Required)
 
-| Tag Key | Example Value | Notes |
-|---------|---------------|-------|
-| `CostCenter` | `tmt-llc` | Billing/chargeback unit |
-| `BusinessUnit` | `marketing` | Department/division |
-| `Application` | `tournament-mgmt` | Service tree mapping |
+| Tag Key        | Example Value     | Notes                   |
+| -------------- | ----------------- | ----------------------- |
+| `CostCenter`   | `tmt-llc`         | Billing/chargeback unit |
+| `BusinessUnit` | `marketing`       | Department/division     |
+| `Application`  | `tournament-mgmt` | Service tree mapping    |
 
 ### Security & Compliance Tags (Required)
 
-| Tag Key | Example Value | Notes |
-|---------|---------------|-------|
+| Tag Key           | Example Value  | Notes                                       |
+| ----------------- | -------------- | ------------------------------------------- |
 | `DataSensitivity` | `confidential` | `public\|internal\|confidential\|regulated` |
-| `Compliance` | `none` | `none\|pci\|hipaa\|sox\|gdpr` |
+| `Compliance`      | `none`         | `none\|pci\|hipaa\|sox\|gdpr`               |
 
 ### Operational Tags (Recommended)
 
-| Tag Key | Example Value | Notes |
-|---------|---------------|-------|
-| `DRTier` | `rpo15m-rto4h` | Recovery objectives |
-| `BackupRetention` | `30d` | Backup policy (7d, 30d, 90d, 1y) |
-| `AutoShutdown` | `true` | Dev/test resource management |
-| `MaintenanceWindow` | `sun-02:00-06:00` | Allowed maintenance time |
-| `CreatedBy` | `pipeline` | `pipeline\|human\|terraform\|bicep` |
-| `CreatedDate` | `2025-11-05` | ISO 8601 format |
-| `ManagedBy` | `terraform` | IaC tool used |
+| Tag Key             | Example Value     | Notes                               |
+| ------------------- | ----------------- | ----------------------------------- |
+| `DRTier`            | `rpo15m-rto4h`    | Recovery objectives                 |
+| `BackupRetention`   | `30d`             | Backup policy (7d, 30d, 90d, 1y)    |
+| `AutoShutdown`      | `true`            | Dev/test resource management        |
+| `MaintenanceWindow` | `sun-02:00-06:00` | Allowed maintenance time            |
+| `CreatedBy`         | `pipeline`        | `pipeline\|human\|terraform\|bicep` |
+| `CreatedDate`       | `2025-11-05`      | ISO 8601 format                     |
+| `ManagedBy`         | `terraform`       | IaC tool used                       |
 
 ### Multi-Region Tags (When Applicable)
 
-| Tag Key | Example Value | Notes |
-|---------|---------------|-------|
-| `RegionRole` | `primary` | `primary\|secondary\|dr\|active` |
-| `PairedRegion` | `wus2` | DR/HA paired region |
+| Tag Key        | Example Value | Notes                            |
+| -------------- | ------------- | -------------------------------- |
+| `RegionRole`   | `primary`     | `primary\|secondary\|dr\|active` |
+| `PairedRegion` | `wus2`        | DR/HA paired region              |
 
 ---
 
@@ -790,6 +816,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 Assume `org=vrd`, `proj=202505` (from saas202505), `env=prd`, `region=eus2`.
 
 ### Resource Groups
+
 ```
 rg-vrd-202505-prd-eus2-app
 rg-vrd-202505-prd-eus2-data
@@ -798,6 +825,7 @@ rg-vrd-202505-prd-eus2-sec
 ```
 
 ### Networking
+
 ```
 vnet-vrd-202505-prd-eus2
 snet-vrd-202505-prd-eus2-app
@@ -808,6 +836,7 @@ nsg-vrd-202505-prd-eus2-data
 ```
 
 ### Compute
+
 ```
 asp-vrd-202505-prd-eus2
 app-vrd-202505-prd-eus2-01
@@ -817,6 +846,7 @@ vm-vrd-202505-prd-eus2-web-01
 ```
 
 ### Data & Storage
+
 ```
 sqlsvr-vrd-202505-prd-eus2
 sqldb-vrd-202505-prd-eus2-core
@@ -828,6 +858,7 @@ stvrd202505prdeus2app01
 ```
 
 ### Secrets & Observability
+
 ```
 kv-vrd-202505-prd-eus2-01
 acrvrd202505prdeus2
@@ -836,12 +867,14 @@ la-vrd-202505-prd-eus2
 ```
 
 ### Messaging
+
 ```
 sb-vrd-202505-prd-eus2
 eh-vrd-202505-prd-eus2
 ```
 
 ### Security & Connectivity
+
 ```
 azfw-vrd-202505-prd-eus2
 agw-vrd-202505-prd-eus2
@@ -857,6 +890,7 @@ pe-vrd-202505-prd-eus2-st
 For consistency across your Azure ecosystem:
 
 ### Repositories
+
 ```
 {proj}-{service}-{env}
 {proj}-infra
@@ -868,6 +902,7 @@ For consistency across your Azure ecosystem:
 ```
 
 ### Entra ID (Azure AD) Groups
+
 ```
 grp-{proj}-{role}-{env}
 
@@ -878,6 +913,7 @@ grp-202505-readers-dev
 ```
 
 ### Service Principals
+
 ```
 spn-{proj}-{service}-{env}
 
@@ -887,6 +923,7 @@ spn-202505-terraform-prd
 ```
 
 ### Azure DevOps / GitHub Pipelines
+
 ```
 pipe-{proj}-{service}-{env}
 
@@ -896,6 +933,7 @@ pipe-202505-infra-deploy
 ```
 
 ### Key Vault Secrets
+
 ```
 {service}-{purpose}-{env}
 
@@ -918,21 +956,23 @@ In your IaC repository root, create `EXCEPTIONS.md`:
 ```markdown
 # Azure Naming Standard Exceptions
 
-| Resource Name | Standard Name | Reason | Approved By | Date | Sunset Date |
-|---------------|---------------|--------|-------------|------|-------------|
-| mylegacystorage | stvrdtmtprdeus201 | Pre-dates standard, migration in Q2 | John Doe | 2025-01-15 | 2025-06-30 |
-| specialapp | app-vrd-tmt-prd-eus2-01 | Third-party integration requires specific name | Jane Smith | 2025-02-01 | Permanent |
+| Resource Name   | Standard Name           | Reason                                         | Approved By | Date       | Sunset Date |
+| --------------- | ----------------------- | ---------------------------------------------- | ----------- | ---------- | ----------- |
+| mylegacystorage | stvrdtmtprdeus201       | Pre-dates standard, migration in Q2            | John Doe    | 2025-01-15 | 2025-06-30  |
+| specialapp      | app-vrd-tmt-prd-eus2-01 | Third-party integration requires specific name | Jane Smith  | 2025-02-01 | Permanent   |
 ```
 
 ### Exception Criteria
 
 **Valid reasons for exceptions:**
+
 - Pre-existing resources (with migration plan)
 - Third-party integration requirements
 - Service-specific technical limitations
 - Temporary resources (clearly marked)
 
 **Invalid reasons:**
+
 - "It's easier this way"
 - "We've always done it like this"
 - Personal preference
@@ -955,6 +995,7 @@ For existing Azure environments:
 ### Phase 1: Assessment (Week 1-2)
 
 1. **Inventory current resources**
+
    ```bash
    # Export all resource names
    az resource list --query "[].{name:name, type:type, rg:resourceGroup}" -o table > azure-inventory.txt
@@ -989,17 +1030,18 @@ az resource list --query "[?resourceGroup=='myapp-rg'].id" -o tsv | \
 
 **Renaming strategy by resource type:**
 
-| Resource Type | Rename Method | Downtime? |
-|---------------|---------------|-----------|
-| Resource Groups | Can't rename - recreate | ✅ Yes |
-| Storage Accounts | Can't rename - recreate | ✅ Yes |
-| Key Vaults | Can rename (via portal/CLI) | ❌ No |
-| App Services | Can rename (DNS change) | ⚠️ Minimal |
-| SQL Databases | Can rename (T-SQL) | ⚠️ Minimal |
-| VNets/Subnets | Can't rename easily | ✅ Yes |
-| NSGs | Can rename | ❌ No |
+| Resource Type    | Rename Method               | Downtime?  |
+| ---------------- | --------------------------- | ---------- |
+| Resource Groups  | Can't rename - recreate     | ✅ Yes     |
+| Storage Accounts | Can't rename - recreate     | ✅ Yes     |
+| Key Vaults       | Can rename (via portal/CLI) | ❌ No      |
+| App Services     | Can rename (DNS change)     | ⚠️ Minimal |
+| SQL Databases    | Can rename (T-SQL)          | ⚠️ Minimal |
+| VNets/Subnets    | Can't rename easily         | ✅ Yes     |
+| NSGs             | Can rename                  | ❌ No      |
 
 **Migration order:**
+
 1. **Low-risk environments first** (dev, test, sbx)
 2. **Observability resources** (Log Analytics, App Insights)
 3. **Security resources** (Key Vaults, NSGs)
@@ -1047,6 +1089,7 @@ az group delete --name "$OLD_RG" --yes --no-wait
 ### Resources That Can't Be Renamed
 
 For resources that **can't be renamed** without recreation:
+
 - Document as exception with sunset date
 - Plan recreation during next maintenance cycle
 - Use Blue/Green deployment strategy where possible
@@ -1057,11 +1100,11 @@ For resources that **can't be renamed** without recreation:
 
 ### Version History
 
-| Version | Date | Changes | Breaking? |
-|---------|------|---------|-----------|
-| 1.2 | 2025-11-06 | **Changed `proj` to 6-char projectID-based codes (YYYYMM format)** - systematic mapping from project IDs like `saas202505` → `202505`. Updated all examples, Terraform/Bicep validation, and documentation. | ⚠️ Yes - breaking change for new projects, legacy codes can coexist |
-| 1.1 | 2025-11-05 | Added length constraints, uniqueness strategy, IaC examples, migration guide | ❌ No |
-| 1.0 | 2025-10-28 | Initial release | - |
+| Version | Date       | Changes                                                                                                                                                                                                     | Breaking?                                                           |
+| ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 1.2     | 2025-11-06 | **Changed `proj` to 6-char projectID-based codes (YYYYMM format)** - systematic mapping from project IDs like `saas202505` → `202505`. Updated all examples, Terraform/Bicep validation, and documentation. | ⚠️ Yes - breaking change for new projects, legacy codes can coexist |
+| 1.1     | 2025-11-05 | Added length constraints, uniqueness strategy, IaC examples, migration guide                                                                                                                                | ❌ No                                                               |
+| 1.0     | 2025-10-28 | Initial release                                                                                                                                                                                             | -                                                                   |
 
 ### Version Format
 
@@ -1152,6 +1195,7 @@ Automation: /scripts/azure-name-*.py
 ## Support & Feedback
 
 **Questions?** Contact the platform team:
+
 - Email: ops@verdaio.com
 - Slack: #azure-platform
 

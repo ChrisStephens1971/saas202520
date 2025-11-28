@@ -38,7 +38,8 @@ export default function ConsoleError({
           </h2>
 
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-6">
-            An error occurred in the tournament console. Please try again or return to the console home.
+            An error occurred in the tournament console. Please try again or return to the console
+            home.
           </p>
 
           {process.env.NODE_ENV === 'development' && (

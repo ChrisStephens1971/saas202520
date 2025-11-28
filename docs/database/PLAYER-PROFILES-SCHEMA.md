@@ -12,6 +12,7 @@
 This document describes the database schema additions for Sprint 10 Week 2, which implements comprehensive player profiles, statistics tracking, achievements system, match history, and enhanced player experience features.
 
 **Key Features:**
+
 - Extended player profiles with bio, photos, and social links
 - Aggregated player statistics for fast profile loading
 - Achievement system with 20 predefined achievements
@@ -20,6 +21,7 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 - Granular player settings and privacy controls
 
 **Architecture:**
+
 - Multi-tenant: All tables include `tenant_id` for row-level isolation
 - Performance: Pre-computed aggregates for fast queries
 - Scalability: Indexed for common query patterns
@@ -35,29 +37,31 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| player_id | TEXT | NO | - | Foreign key to players table (unique) |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| bio | TEXT | YES | NULL | Player biography or description |
-| photo_url | VARCHAR(500) | YES | NULL | URL to player profile photo |
-| location | VARCHAR(255) | YES | NULL | Player location (city, state, country) |
-| skill_level | VARCHAR(50) | NO | 'BEGINNER' | Skill classification (BEGINNER, INTERMEDIATE, ADVANCED, EXPERT) |
-| privacy_settings | JSONB | NO | {} | Privacy controls (profilePublic, showStats, showHistory) |
-| notification_preferences | JSONB | NO | {} | Notification preferences (email, sms, push, categories) |
-| social_links | JSONB | YES | NULL | Social media links (twitter, facebook, instagram, website) |
-| custom_fields | JSONB | YES | NULL | Tenant-specific custom fields |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
-| updated_at | TIMESTAMP | NO | now() | Record last update timestamp |
+| Column                   | Type         | Nullable | Default    | Description                                                     |
+| ------------------------ | ------------ | -------- | ---------- | --------------------------------------------------------------- |
+| id                       | TEXT         | NO       | cuid()     | Primary key                                                     |
+| player_id                | TEXT         | NO       | -          | Foreign key to players table (unique)                           |
+| tenant_id                | TEXT         | NO       | -          | Organization/tenant identifier                                  |
+| bio                      | TEXT         | YES      | NULL       | Player biography or description                                 |
+| photo_url                | VARCHAR(500) | YES      | NULL       | URL to player profile photo                                     |
+| location                 | VARCHAR(255) | YES      | NULL       | Player location (city, state, country)                          |
+| skill_level              | VARCHAR(50)  | NO       | 'BEGINNER' | Skill classification (BEGINNER, INTERMEDIATE, ADVANCED, EXPERT) |
+| privacy_settings         | JSONB        | NO       | {}         | Privacy controls (profilePublic, showStats, showHistory)        |
+| notification_preferences | JSONB        | NO       | {}         | Notification preferences (email, sms, push, categories)         |
+| social_links             | JSONB        | YES      | NULL       | Social media links (twitter, facebook, instagram, website)      |
+| custom_fields            | JSONB        | YES      | NULL       | Tenant-specific custom fields                                   |
+| created_at               | TIMESTAMP    | NO       | now()      | Record creation timestamp                                       |
+| updated_at               | TIMESTAMP    | NO       | now()      | Record last update timestamp                                    |
 
 **Indexes:**
+
 - `player_profiles_player_id_key` (UNIQUE) - Fast player lookup
 - `player_profiles_tenant_id_idx` - Tenant-scoped queries
 - `player_profiles_tenant_id_skill_level_idx` - Filtering by skill level
 - `player_profiles_player_id_idx` - Player lookups
 
 **Relationships:**
+
 - `player_id` → `players.id` (one-to-one)
 
 **JSON Structures:**
@@ -95,26 +99,27 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| player_id | TEXT | NO | - | Foreign key to players table (unique) |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| total_tournaments | INTEGER | NO | 0 | Total tournaments played |
-| total_matches | INTEGER | NO | 0 | Total matches played |
-| total_wins | INTEGER | NO | 0 | Total matches won |
-| total_losses | INTEGER | NO | 0 | Total matches lost |
-| win_rate | DECIMAL(5,2) | NO | 0 | Win percentage (0.00 to 100.00) |
-| current_streak | INTEGER | NO | 0 | Current win/loss streak (positive = wins, negative = losses) |
-| longest_streak | INTEGER | NO | 0 | Longest win streak ever |
-| average_finish | DECIMAL(6,2) | YES | NULL | Average tournament placement |
-| favorite_format | VARCHAR(100) | YES | NULL | Most frequently played format |
-| total_prize_won | DECIMAL(10,2) | NO | 0 | Cumulative prize winnings |
-| last_played_at | TIMESTAMP | YES | NULL | Last tournament participation date |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
-| updated_at | TIMESTAMP | NO | now() | Record last update timestamp |
+| Column            | Type          | Nullable | Default | Description                                                  |
+| ----------------- | ------------- | -------- | ------- | ------------------------------------------------------------ |
+| id                | TEXT          | NO       | cuid()  | Primary key                                                  |
+| player_id         | TEXT          | NO       | -       | Foreign key to players table (unique)                        |
+| tenant_id         | TEXT          | NO       | -       | Organization/tenant identifier                               |
+| total_tournaments | INTEGER       | NO       | 0       | Total tournaments played                                     |
+| total_matches     | INTEGER       | NO       | 0       | Total matches played                                         |
+| total_wins        | INTEGER       | NO       | 0       | Total matches won                                            |
+| total_losses      | INTEGER       | NO       | 0       | Total matches lost                                           |
+| win_rate          | DECIMAL(5,2)  | NO       | 0       | Win percentage (0.00 to 100.00)                              |
+| current_streak    | INTEGER       | NO       | 0       | Current win/loss streak (positive = wins, negative = losses) |
+| longest_streak    | INTEGER       | NO       | 0       | Longest win streak ever                                      |
+| average_finish    | DECIMAL(6,2)  | YES      | NULL    | Average tournament placement                                 |
+| favorite_format   | VARCHAR(100)  | YES      | NULL    | Most frequently played format                                |
+| total_prize_won   | DECIMAL(10,2) | NO       | 0       | Cumulative prize winnings                                    |
+| last_played_at    | TIMESTAMP     | YES      | NULL    | Last tournament participation date                           |
+| created_at        | TIMESTAMP     | NO       | now()   | Record creation timestamp                                    |
+| updated_at        | TIMESTAMP     | NO       | now()   | Record last update timestamp                                 |
 
 **Indexes:**
+
 - `player_statistics_player_id_key` (UNIQUE) - Fast player lookup
 - `player_statistics_tenant_id_player_id_idx` - Tenant-scoped player queries
 - `player_statistics_tenant_id_win_rate_idx` (DESC) - Leaderboards by win rate
@@ -122,9 +127,11 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 - `player_statistics_tenant_id_total_prize_won_idx` (DESC) - Earnings leaderboards
 
 **Relationships:**
+
 - `player_id` → `players.id` (one-to-one)
 
 **Update Triggers:**
+
 - After match completion → Recalculate statistics
 - After tournament completion → Update averages
 - Background job: Nightly statistics recalculation
@@ -137,23 +144,24 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| code | VARCHAR(100) | NO | - | Unique achievement code (e.g., FIRST_STEPS) |
-| name | VARCHAR(255) | NO | - | Display name |
-| description | TEXT | NO | - | Achievement description |
-| icon_url | VARCHAR(500) | YES | NULL | Icon image URL |
-| badge_url | VARCHAR(500) | YES | NULL | Badge image URL |
-| category | VARCHAR(50) | NO | - | Category (PARTICIPATION, PERFORMANCE, ENGAGEMENT, FORMAT_MASTERY) |
-| tier | VARCHAR(50) | NO | - | Tier (BRONZE, SILVER, GOLD, PLATINUM) |
-| requirements | JSONB | NO | - | Unlock requirements (see below) |
-| points | INTEGER | NO | 0 | Achievement point value |
-| is_active | BOOLEAN | NO | true | Active status |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
-| updated_at | TIMESTAMP | NO | now() | Record last update timestamp |
+| Column       | Type         | Nullable | Default | Description                                                       |
+| ------------ | ------------ | -------- | ------- | ----------------------------------------------------------------- |
+| id           | TEXT         | NO       | cuid()  | Primary key                                                       |
+| code         | VARCHAR(100) | NO       | -       | Unique achievement code (e.g., FIRST_STEPS)                       |
+| name         | VARCHAR(255) | NO       | -       | Display name                                                      |
+| description  | TEXT         | NO       | -       | Achievement description                                           |
+| icon_url     | VARCHAR(500) | YES      | NULL    | Icon image URL                                                    |
+| badge_url    | VARCHAR(500) | YES      | NULL    | Badge image URL                                                   |
+| category     | VARCHAR(50)  | NO       | -       | Category (PARTICIPATION, PERFORMANCE, ENGAGEMENT, FORMAT_MASTERY) |
+| tier         | VARCHAR(50)  | NO       | -       | Tier (BRONZE, SILVER, GOLD, PLATINUM)                             |
+| requirements | JSONB        | NO       | -       | Unlock requirements (see below)                                   |
+| points       | INTEGER      | NO       | 0       | Achievement point value                                           |
+| is_active    | BOOLEAN      | NO       | true    | Active status                                                     |
+| created_at   | TIMESTAMP    | NO       | now()   | Record creation timestamp                                         |
+| updated_at   | TIMESTAMP    | NO       | now()   | Record last update timestamp                                      |
 
 **Indexes:**
+
 - `achievement_definitions_code_key` (UNIQUE) - Fast code lookup
 - `achievement_definitions_category_idx` - Filter by category
 - `achievement_definitions_tier_idx` - Filter by tier
@@ -197,12 +205,14 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 ```
 
 **Categories:**
+
 - `PARTICIPATION` - Playing and showing up (10-60 points)
 - `PERFORMANCE` - Winning and competitive achievements (25-100 points)
 - `ENGAGEMENT` - Social and community engagement (13-55 points)
 - `FORMAT_MASTERY` - Mastering specific formats (45-90 points)
 
 **Tiers:**
+
 - `BRONZE` - Entry-level achievements (10-30 points)
 - `SILVER` - Intermediate achievements (35-50 points)
 - `GOLD` - Advanced achievements (55-75 points)
@@ -216,24 +226,26 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| player_id | TEXT | NO | - | Foreign key to players table |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| achievement_id | TEXT | NO | - | Foreign key to achievement_definitions |
-| unlocked_at | TIMESTAMP | NO | now() | Achievement unlock timestamp |
-| progress | INTEGER | NO | 100 | Progress percentage (0-100) |
-| metadata | JSONB | YES | NULL | Additional unlock data (tournamentId, matchId, etc.) |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
+| Column         | Type      | Nullable | Default | Description                                          |
+| -------------- | --------- | -------- | ------- | ---------------------------------------------------- |
+| id             | TEXT      | NO       | cuid()  | Primary key                                          |
+| player_id      | TEXT      | NO       | -       | Foreign key to players table                         |
+| tenant_id      | TEXT      | NO       | -       | Organization/tenant identifier                       |
+| achievement_id | TEXT      | NO       | -       | Foreign key to achievement_definitions               |
+| unlocked_at    | TIMESTAMP | NO       | now()   | Achievement unlock timestamp                         |
+| progress       | INTEGER   | NO       | 100     | Progress percentage (0-100)                          |
+| metadata       | JSONB     | YES      | NULL    | Additional unlock data (tournamentId, matchId, etc.) |
+| created_at     | TIMESTAMP | NO       | now()   | Record creation timestamp                            |
 
 **Indexes:**
+
 - `player_achievements_player_id_achievement_id_key` (UNIQUE) - One achievement per player
 - `player_achievements_tenant_id_player_id_idx` - Player's achievements
 - `player_achievements_tenant_id_achievement_id_idx` - Achievement holders
 - `player_achievements_unlocked_at_idx` (DESC) - Recent unlocks
 
 **Relationships:**
+
 - `player_id` → `players.id` (many-to-one)
 - `achievement_id` → `achievement_definitions.id` (many-to-one)
 
@@ -256,31 +268,33 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| match_id | TEXT | NO | - | Foreign key to matches table |
-| player_id | TEXT | NO | - | Foreign key to players table |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| tournament_id | TEXT | NO | - | Foreign key to tournaments table |
-| opponent_id | TEXT | NO | - | Opponent player ID |
-| result | VARCHAR(20) | NO | - | Match result (WIN, LOSS, DRAW) |
-| score | JSONB | NO | - | Detailed score data |
-| match_number | INTEGER | NO | - | Match number in tournament |
-| round_number | INTEGER | NO | - | Round number |
-| duration_minutes | INTEGER | YES | NULL | Match duration in minutes |
-| skill_rating_before | DECIMAL(10,2) | YES | NULL | Player rating before match |
-| skill_rating_after | DECIMAL(10,2) | YES | NULL | Player rating after match |
-| played_at | TIMESTAMP | NO | - | Match play timestamp |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
+| Column              | Type          | Nullable | Default | Description                      |
+| ------------------- | ------------- | -------- | ------- | -------------------------------- |
+| id                  | TEXT          | NO       | cuid()  | Primary key                      |
+| match_id            | TEXT          | NO       | -       | Foreign key to matches table     |
+| player_id           | TEXT          | NO       | -       | Foreign key to players table     |
+| tenant_id           | TEXT          | NO       | -       | Organization/tenant identifier   |
+| tournament_id       | TEXT          | NO       | -       | Foreign key to tournaments table |
+| opponent_id         | TEXT          | NO       | -       | Opponent player ID               |
+| result              | VARCHAR(20)   | NO       | -       | Match result (WIN, LOSS, DRAW)   |
+| score               | JSONB         | NO       | -       | Detailed score data              |
+| match_number        | INTEGER       | NO       | -       | Match number in tournament       |
+| round_number        | INTEGER       | NO       | -       | Round number                     |
+| duration_minutes    | INTEGER       | YES      | NULL    | Match duration in minutes        |
+| skill_rating_before | DECIMAL(10,2) | YES      | NULL    | Player rating before match       |
+| skill_rating_after  | DECIMAL(10,2) | YES      | NULL    | Player rating after match        |
+| played_at           | TIMESTAMP     | NO       | -       | Match play timestamp             |
+| created_at          | TIMESTAMP     | NO       | now()   | Record creation timestamp        |
 
 **Indexes:**
+
 - `match_history_tenant_id_player_id_played_at_idx` (DESC) - Player history timeline
 - `match_history_tenant_id_player_id_opponent_id_idx` - Head-to-head queries
 - `match_history_tenant_id_tournament_id_player_id_idx` - Tournament player history
 - `match_history_match_id_idx` - Match lookup
 
 **Relationships:**
+
 - `match_id` → `matches.id` (many-to-one)
 - `player_id` → `players.id` (many-to-one)
 - `tournament_id` → `tournaments.id` (many-to-one)
@@ -308,22 +322,23 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| player1_id | TEXT | NO | - | First player ID (always lower ID) |
-| player2_id | TEXT | NO | - | Second player ID (always higher ID) |
-| player1_wins | INTEGER | NO | 0 | Number of wins for player1 |
-| player2_wins | INTEGER | NO | 0 | Number of wins for player2 |
-| draws | INTEGER | NO | 0 | Number of draws |
-| total_matches | INTEGER | NO | 0 | Total matches played |
-| last_played_at | TIMESTAMP | NO | - | Last match date |
-| favors_player1 | BOOLEAN | NO | true | True if player1 has more wins |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
-| updated_at | TIMESTAMP | NO | now() | Record last update timestamp |
+| Column         | Type      | Nullable | Default | Description                         |
+| -------------- | --------- | -------- | ------- | ----------------------------------- |
+| id             | TEXT      | NO       | cuid()  | Primary key                         |
+| tenant_id      | TEXT      | NO       | -       | Organization/tenant identifier      |
+| player1_id     | TEXT      | NO       | -       | First player ID (always lower ID)   |
+| player2_id     | TEXT      | NO       | -       | Second player ID (always higher ID) |
+| player1_wins   | INTEGER   | NO       | 0       | Number of wins for player1          |
+| player2_wins   | INTEGER   | NO       | 0       | Number of wins for player2          |
+| draws          | INTEGER   | NO       | 0       | Number of draws                     |
+| total_matches  | INTEGER   | NO       | 0       | Total matches played                |
+| last_played_at | TIMESTAMP | NO       | -       | Last match date                     |
+| favors_player1 | BOOLEAN   | NO       | true    | True if player1 has more wins       |
+| created_at     | TIMESTAMP | NO       | now()   | Record creation timestamp           |
+| updated_at     | TIMESTAMP | NO       | now()   | Record last update timestamp        |
 
 **Indexes:**
+
 - `head_to_head_records_tenant_id_player1_id_player2_id_key` (UNIQUE) - One record per pair
 - `head_to_head_records_tenant_id_player1_id_idx` - Player1 records
 - `head_to_head_records_tenant_id_player2_id_idx` - Player2 records
@@ -332,6 +347,7 @@ This document describes the database schema additions for Sprint 10 Week 2, whic
 **Important:** Player IDs are always ordered (player1_id < player2_id) to ensure single record per pair.
 
 **Update Logic:**
+
 ```sql
 -- Ensure player1_id < player2_id
 CASE
@@ -348,30 +364,32 @@ END
 
 **Columns:**
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | TEXT | NO | cuid() | Primary key |
-| player_id | TEXT | NO | - | Foreign key to players table (unique) |
-| tenant_id | TEXT | NO | - | Organization/tenant identifier |
-| is_profile_public | BOOLEAN | NO | true | Profile visibility |
-| show_statistics | BOOLEAN | NO | true | Statistics visibility |
-| show_achievements | BOOLEAN | NO | true | Achievements visibility |
-| show_history | BOOLEAN | NO | true | History visibility |
-| email_notifications | JSONB | NO | {} | Email notification preferences |
-| push_notifications | JSONB | NO | {} | Push notification preferences |
-| sms_notifications | JSONB | NO | {} | SMS notification preferences |
-| theme | VARCHAR(20) | NO | 'LIGHT' | UI theme (LIGHT, DARK, AUTO) |
-| language | VARCHAR(10) | NO | 'en' | Language preference |
-| timezone | VARCHAR(100) | YES | NULL | Timezone (e.g., America/New_York) |
-| created_at | TIMESTAMP | NO | now() | Record creation timestamp |
-| updated_at | TIMESTAMP | NO | now() | Record last update timestamp |
+| Column              | Type         | Nullable | Default | Description                           |
+| ------------------- | ------------ | -------- | ------- | ------------------------------------- |
+| id                  | TEXT         | NO       | cuid()  | Primary key                           |
+| player_id           | TEXT         | NO       | -       | Foreign key to players table (unique) |
+| tenant_id           | TEXT         | NO       | -       | Organization/tenant identifier        |
+| is_profile_public   | BOOLEAN      | NO       | true    | Profile visibility                    |
+| show_statistics     | BOOLEAN      | NO       | true    | Statistics visibility                 |
+| show_achievements   | BOOLEAN      | NO       | true    | Achievements visibility               |
+| show_history        | BOOLEAN      | NO       | true    | History visibility                    |
+| email_notifications | JSONB        | NO       | {}      | Email notification preferences        |
+| push_notifications  | JSONB        | NO       | {}      | Push notification preferences         |
+| sms_notifications   | JSONB        | NO       | {}      | SMS notification preferences          |
+| theme               | VARCHAR(20)  | NO       | 'LIGHT' | UI theme (LIGHT, DARK, AUTO)          |
+| language            | VARCHAR(10)  | NO       | 'en'    | Language preference                   |
+| timezone            | VARCHAR(100) | YES      | NULL    | Timezone (e.g., America/New_York)     |
+| created_at          | TIMESTAMP    | NO       | now()   | Record creation timestamp             |
+| updated_at          | TIMESTAMP    | NO       | now()   | Record last update timestamp          |
 
 **Indexes:**
+
 - `player_settings_player_id_key` (UNIQUE) - One settings record per player
 - `player_settings_tenant_id_player_id_key` (UNIQUE) - Tenant-scoped unique
 - `player_settings_tenant_id_idx` - Tenant queries
 
 **Relationships:**
+
 - `player_id` → `players.id` (one-to-one)
 
 **Notification JSON Structures:**
@@ -434,24 +452,29 @@ head_to_head_records
 ### Performance Optimization
 
 **1. Tenant Isolation**
+
 - All tables indexed on `tenant_id` for multi-tenant queries
 - Composite indexes include `tenant_id` first for RLS performance
 
 **2. Player Lookups**
+
 - `player_id` indexed on all tables for fast player data retrieval
 - Unique indexes on one-to-one relationships
 
 **3. Leaderboards**
+
 - `player_statistics.win_rate` (DESC) - Win rate leaderboard
 - `player_statistics.total_tournaments` (DESC) - Participation rankings
 - `player_statistics.total_prize_won` (DESC) - Earnings leaderboard
 
 **4. Timeline Queries**
+
 - `match_history.played_at` (DESC) - Recent match history
 - `player_achievements.unlocked_at` (DESC) - Recent achievement unlocks
 - `head_to_head_records.last_played_at` (DESC) - Recent rivalries
 
 **5. Head-to-Head Queries**
+
 - Composite index on (tenant_id, player_id, opponent_id) for fast H2H lookups
 - Unique constraint on (tenant_id, player1_id, player2_id) prevents duplicates
 
@@ -596,6 +619,7 @@ npx ts-node prisma/seeds/achievement-definitions.ts
 ```
 
 **Expected Output:**
+
 ```
 🌱 Seeding achievement definitions...
    Deleted 0 existing achievement definitions
@@ -654,6 +678,7 @@ ALTER TABLE "player_profiles" ADD CONSTRAINT "player_profiles_player_id_fkey"
 **Solution:** Pre-computed aggregates in `player_statistics`
 
 **Update Strategy:**
+
 - Increment counters after each match
 - Recalculate win_rate after each match
 - Daily batch job for consistency checks
@@ -667,6 +692,7 @@ ALTER TABLE "player_profiles" ADD CONSTRAINT "player_profiles_player_id_fkey"
 **Solution:** Composite indexes on (tenant_id, win_rate DESC)
 
 **Additional Optimization:**
+
 - Materialized views for global leaderboards
 - Redis cache for top 100 players (5-minute TTL)
 
@@ -679,6 +705,7 @@ ALTER TABLE "player_profiles" ADD CONSTRAINT "player_profiles_player_id_fkey"
 **Solution:** Pre-computed `head_to_head_records` table
 
 **Update Logic:**
+
 ```typescript
 async function updateHeadToHead(player1Id, player2Id, winnerId, tenantId) {
   // Ensure player1_id < player2_id
@@ -717,6 +744,7 @@ async function updateHeadToHead(player1Id, player2Id, winnerId, tenantId) {
 **Solution:** Event-driven achievement checks
 
 **Strategy:**
+
 - Only check relevant achievements based on event type
 - Use Redis cache for achievement progress
 - Background worker for batch achievement processing
@@ -743,14 +771,14 @@ async function getMatchHistory(playerId, cursor?, limit = 20) {
   return await prisma.matchHistory.findMany({
     where: {
       playerId,
-      ...(cursor && { playedAt: { lt: cursor } })
+      ...(cursor && { playedAt: { lt: cursor } }),
     },
     orderBy: { playedAt: 'desc' },
     take: limit,
     include: {
       tournament: true,
-      opponent: { select: { name: true, photoUrl: true } }
-    }
+      opponent: { select: { name: true, photoUrl: true } },
+    },
   });
 }
 ```
@@ -764,6 +792,7 @@ async function getMatchHistory(playerId, cursor?, limit = 20) {
 **Challenge:** Ensuring `player_statistics` matches actual match data
 
 **Solution:**
+
 - Transactional updates (match completion + stats update)
 - Daily consistency checks
 - Audit log for stat changes
@@ -775,6 +804,7 @@ async function getMatchHistory(playerId, cursor?, limit = 20) {
 **Challenge:** Preventing duplicate achievement unlocks
 
 **Solution:**
+
 - Unique constraint on (player_id, achievement_id)
 - Idempotent achievement unlock function
 
@@ -782,11 +812,12 @@ async function getMatchHistory(playerId, cursor?, limit = 20) {
 async function unlockAchievement(playerId, achievementId, metadata) {
   try {
     await prisma.playerAchievement.create({
-      data: { playerId, achievementId, metadata }
+      data: { playerId, achievementId, metadata },
     });
     return true; // Newly unlocked
   } catch (error) {
-    if (error.code === 'P2002') { // Unique constraint violation
+    if (error.code === 'P2002') {
+      // Unique constraint violation
       return false; // Already unlocked
     }
     throw error;
@@ -801,6 +832,7 @@ async function unlockAchievement(playerId, achievementId, metadata) {
 **Challenge:** Ensuring H2H records match match_history
 
 **Solution:**
+
 - Update H2H atomically with match completion
 - Periodic reconciliation job
 - Rebuild function for data fixes
@@ -859,6 +891,7 @@ WHERE player_id = $1;
 ### 3. Data Export Controls
 
 **Restrict bulk data exports:**
+
 - Rate limit leaderboard queries
 - Require authentication for player searches
 - Log all data exports for audit
@@ -869,26 +902,26 @@ WHERE player_id = $1;
 
 **Target Performance (with proper indexes):**
 
-| Query Type | Target | With Indexes | Without Indexes |
-|------------|--------|--------------|-----------------|
-| Load player profile | <10ms | 5-8ms | 50-100ms |
-| Leaderboard (top 100) | <20ms | 12-18ms | 200-500ms |
-| Match history (20 items) | <15ms | 8-12ms | 100-300ms |
-| Head-to-head lookup | <5ms | 2-4ms | 50-150ms |
-| Achievement check | <5ms | 2-3ms | 20-50ms |
-| Player search (20 results) | <50ms | 25-40ms | 500ms+ |
+| Query Type                 | Target | With Indexes | Without Indexes |
+| -------------------------- | ------ | ------------ | --------------- |
+| Load player profile        | <10ms  | 5-8ms        | 50-100ms        |
+| Leaderboard (top 100)      | <20ms  | 12-18ms      | 200-500ms       |
+| Match history (20 items)   | <15ms  | 8-12ms       | 100-300ms       |
+| Head-to-head lookup        | <5ms   | 2-4ms        | 50-150ms        |
+| Achievement check          | <5ms   | 2-3ms        | 20-50ms         |
+| Player search (20 results) | <50ms  | 25-40ms      | 500ms+          |
 
 **Database Size Estimates:**
 
-| Table | Rows (per 1000 players) | Storage (estimate) |
-|-------|-------------------------|-------------------|
-| player_profiles | 1,000 | ~500 KB |
-| player_statistics | 1,000 | ~200 KB |
-| achievement_definitions | 20 | ~10 KB |
-| player_achievements | 5,000 (avg 5 per player) | ~1 MB |
-| match_history | 50,000 (avg 50 per player) | ~25 MB |
-| head_to_head_records | 10,000 (10 rivals per player) | ~2 MB |
-| player_settings | 1,000 | ~300 KB |
+| Table                   | Rows (per 1000 players)       | Storage (estimate) |
+| ----------------------- | ----------------------------- | ------------------ |
+| player_profiles         | 1,000                         | ~500 KB            |
+| player_statistics       | 1,000                         | ~200 KB            |
+| achievement_definitions | 20                            | ~10 KB             |
+| player_achievements     | 5,000 (avg 5 per player)      | ~1 MB              |
+| match_history           | 50,000 (avg 50 per player)    | ~25 MB             |
+| head_to_head_records    | 10,000 (10 rivals per player) | ~2 MB              |
+| player_settings         | 1,000                         | ~300 KB            |
 
 **Total:** ~29 MB per 1,000 players
 
@@ -899,12 +932,14 @@ WHERE player_id = $1;
 ### If Issues Arise
 
 **1. Disable Foreign Keys**
+
 ```sql
 ALTER TABLE player_profiles DROP CONSTRAINT IF EXISTS player_profiles_player_id_fkey;
 -- ... (drop all foreign keys)
 ```
 
 **2. Drop Tables (in reverse order)**
+
 ```sql
 DROP TABLE IF EXISTS player_settings;
 DROP TABLE IF EXISTS head_to_head_records;
@@ -916,6 +951,7 @@ DROP TABLE IF EXISTS achievement_definitions;
 ```
 
 **3. Restore from Backup**
+
 ```bash
 # Restore database from pre-migration backup
 pg_restore -U postgres -d tournament_platform backup_pre_sprint10.dump

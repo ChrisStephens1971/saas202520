@@ -63,3 +63,6 @@ build/
 *.zip
 *.tar.gz
 *.rar
+
+# Turbo
+.turbo/

@@ -98,15 +98,15 @@ This ensures complete data isolation between tenants.
 
 ### 3. Cache Strategies
 
-| Strategy | TTL | Use Case |
-|----------|-----|----------|
-| Tournament | 5 min | Tournament data |
-| Tournament List | 3 min | List views |
-| Matches | 1 min | Real-time updates |
-| Leaderboard | 1 min | Live scores |
-| User Session | 24 hr | Long-lived sessions |
-| Analytics | 15 min | Computed data |
-| Static Config | 1 hr | Rarely changes |
+| Strategy        | TTL    | Use Case            |
+| --------------- | ------ | ------------------- |
+| Tournament      | 5 min  | Tournament data     |
+| Tournament List | 3 min  | List views          |
+| Matches         | 1 min  | Real-time updates   |
+| Leaderboard     | 1 min  | Live scores         |
+| User Session    | 24 hr  | Long-lived sessions |
+| Analytics       | 15 min | Computed data       |
+| Static Config   | 1 hr   | Rarely changes      |
 
 ### 4. Cache Patterns
 
@@ -118,6 +118,7 @@ This ensures complete data isolation between tenants.
 ### 5. Intelligent Invalidation
 
 #### Event-Based (14 events)
+
 - Tournament: created, updated, deleted, started, completed
 - Match: created, updated, completed
 - Player: registered, eliminated
@@ -126,6 +127,7 @@ This ensures complete data isolation between tenants.
 - Analytics: recalculated
 
 #### Pattern-Based
+
 - Invalidate by wildcard pattern
 - Bulk invalidation for multiple resources
 - Clear all cache for tenant
@@ -268,11 +270,13 @@ REDIS_DB="0"
 ```
 
 **Local Development:**
+
 ```bash
 docker run -d -p 6379:6379 redis:alpine
 ```
 
 **Production:**
+
 - AWS ElastiCache
 - Redis Cloud
 - Upstash Redis
@@ -475,6 +479,7 @@ if (!health.connected) {
 ### Alerts
 
 Set up alerts for:
+
 - Cache hit rate < 50%
 - Response time > 100ms
 - Memory usage > 80%
@@ -485,21 +490,25 @@ Set up alerts for:
 ## Migration Strategy
 
 ### Phase 1: Read-Heavy Endpoints (Week 1)
+
 - Tournament lists
 - Leaderboards
 - Analytics dashboards
 
 ### Phase 2: User Data (Week 2)
+
 - User sessions
 - User profiles
 - Permissions
 
 ### Phase 3: API Responses (Week 3)
+
 - All GET endpoints
 - Search results
 - Filtered lists
 
 ### Phase 4: Optimization (Week 4)
+
 - Cache warming
 - Fine-tune TTLs
 - Optimize invalidation

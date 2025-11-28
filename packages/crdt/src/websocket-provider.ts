@@ -31,16 +31,11 @@ export class TournamentSyncProvider {
     this.serverUrl = config.serverUrl;
 
     // Initialize WebSocket provider
-    this.provider = new WebsocketProvider(
-      config.serverUrl,
-      config.roomName,
-      config.doc,
-      {
-        connect: config.connect !== false,
-        awareness: config.awareness,
-        params: config.params || {},
-      }
-    );
+    this.provider = new WebsocketProvider(config.serverUrl, config.roomName, config.doc, {
+      connect: config.connect !== false,
+      awareness: config.awareness,
+      params: config.params || {},
+    });
 
     this.setupEventHandlers();
   }

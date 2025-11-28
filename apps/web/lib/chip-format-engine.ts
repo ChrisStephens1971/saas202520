@@ -90,9 +90,9 @@ export async function getAvailableQueue(tournamentId: string): Promise<QueuedPla
         },
       });
 
-      const opponentIds = matches.map((match) =>
-        match.playerAId === player.id ? match.playerBId : match.playerAId
-      ).filter((id): id is string => id !== null);
+      const opponentIds = matches
+        .map((match) => (match.playerAId === player.id ? match.playerBId : match.playerAId))
+        .filter((id): id is string => id !== null);
 
       return {
         id: player.id,
@@ -178,9 +178,7 @@ export function pairByRating(
  * Round-robin pairing strategy
  * Pairs players to ensure everyone plays everyone
  */
-export function pairRoundRobin(
-  queue: QueuedPlayer[]
-): [QueuedPlayer, QueuedPlayer] | null {
+export function pairRoundRobin(queue: QueuedPlayer[]): [QueuedPlayer, QueuedPlayer] | null {
   if (queue.length < 2) return null;
 
   // Find player who has played the fewest opponents
@@ -191,8 +189,7 @@ export function pairRoundRobin(
   // Find an opponent they haven't played yet
   const availableOpponents = queue.filter(
     (p) =>
-      p.id !== playerWithFewestMatches.id &&
-      !playerWithFewestMatches.matchHistory.includes(p.id)
+      p.id !== playerWithFewestMatches.id && !playerWithFewestMatches.matchHistory.includes(p.id)
   );
 
   if (availableOpponents.length === 0) {
@@ -264,9 +261,7 @@ export async function assignNextMatch(
   const [playerA, playerB] = pairing;
 
   // Find available table
-  const availableTable = tournament.tables.find(
-    (table) => table.status === 'available'
-  );
+  const availableTable = tournament.tables.find((table) => table.status === 'available');
 
   // Determine next round number
   const lastMatch = await prisma.match.findFirst({

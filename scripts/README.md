@@ -11,6 +11,7 @@ Utility scripts for the project.
 Fast conversion of markdown files to professional Word documents.
 
 **Files:**
+
 - `install-pandoc.ps1` - One-time Pandoc installation
 - `convert-to-docx.bat` - Batch conversion script
 
@@ -36,6 +37,7 @@ cd fundraising/
 The script will convert all `.md` files in the current directory to `.docx` format.
 
 **Performance:**
+
 - Converts 7 documents in **seconds** vs 3-5 hours of manual coding
 - ~95% time savings over manual JavaScript approach
 - Basic formatting (can be refined in Word if needed)
@@ -51,6 +53,7 @@ pandoc document.md -o document.docx --reference-doc=template.docx
 ```
 
 **Quality Notes:**
+
 - Default Pandoc output: 7-8/10 quality
 - Manual refinement in Word: Add 10-15 minutes per doc
 - Result: Professional documents in a fraction of the time
@@ -62,6 +65,7 @@ pandoc document.md -o document.docx --reference-doc=template.docx
 Place utility scripts here and document them in this README.
 
 Common script types:
+
 - Data processing scripts
 - Build automation
 - Testing utilities

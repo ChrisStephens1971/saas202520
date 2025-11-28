@@ -19,6 +19,7 @@ Authorization: Bearer YOUR_API_KEY
 ### Error Responses
 
 **401 Unauthorized**
+
 ```json
 {
   "error": "Missing API key"
@@ -26,6 +27,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 **401 Unauthorized**
+
 ```json
 {
   "error": "Invalid API key"
@@ -33,6 +35,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 **401 Unauthorized**
+
 ```json
 {
   "error": "API key has expired"
@@ -40,6 +43,7 @@ Authorization: Bearer YOUR_API_KEY
 ```
 
 ### Security Features
+
 - API keys are hashed using bcrypt
 - Keys can have expiration dates
 - Keys can be activated/deactivated
@@ -51,17 +55,20 @@ Authorization: Bearer YOUR_API_KEY
 ### Tournaments
 
 #### List Tournaments
+
 ```http
 GET /api/v1/tournaments
 ```
 
 **Query Parameters:**
+
 - `status` (string): Filter by tournament status (registration, active, completed, cancelled)
 - `format` (string): Filter by tournament format (single_elimination, double_elimination, etc.)
 - `page` (number): Page number (default: 1)
 - `limit` (number): Items per page (default: 20, max: 100)
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -85,11 +92,13 @@ GET /api/v1/tournaments
 ```
 
 #### Get Tournament Details
+
 ```http
 GET /api/v1/tournaments/{tournamentId}
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -115,11 +124,13 @@ GET /api/v1/tournaments/{tournamentId}
 ```
 
 #### Get Tournament Bracket
+
 ```http
 GET /api/v1/tournaments/{tournamentId}/bracket
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -159,41 +170,49 @@ GET /api/v1/tournaments/{tournamentId}/bracket
 ```
 
 #### Get Tournament Matches
+
 ```http
 GET /api/v1/tournaments/{tournamentId}/matches
 ```
 
 **Query Parameters:**
+
 - `status` (string): Filter by match status
 - `page`, `limit`: Pagination
 
 #### Get Tournament Players
+
 ```http
 GET /api/v1/tournaments/{tournamentId}/players
 ```
 
 **Query Parameters:**
+
 - `page`, `limit`: Pagination
 
 ### Matches
 
 #### List Matches
+
 ```http
 GET /api/v1/matches
 ```
 
 **Query Parameters:**
+
 - `tournament_id` (string): Filter by tournament
 - `status` (string): Filter by match status
 - `player_id` (string): Filter by player participation
 - `page`, `limit`: Pagination
 
 #### Get Match Details
+
 ```http
 GET /api/v1/matches/{matchId}
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -224,20 +243,24 @@ GET /api/v1/matches/{matchId}
 ### Players
 
 #### List Players
+
 ```http
 GET /api/v1/players
 ```
 
 **Query Parameters:**
+
 - `search` (string): Search by name
 - `page`, `limit`: Pagination
 
 #### Get Player Profile
+
 ```http
 GET /api/v1/players/{playerId}
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -249,7 +272,7 @@ GET /api/v1/players/{playerId}
     "win_rate": 66.18,
     "tournaments_played": 12,
     "tournaments_won": 3,
-    "total_prize_money": 5000.00,
+    "total_prize_money": 5000.0,
     "achievements": [
       {
         "id": "ach1",
@@ -262,35 +285,42 @@ GET /api/v1/players/{playerId}
 ```
 
 #### Get Player Tournament History
+
 ```http
 GET /api/v1/players/{playerId}/history
 ```
 
 **Query Parameters:**
+
 - `page`, `limit`: Pagination
 
 #### Get Player Statistics
+
 ```http
 GET /api/v1/players/{playerId}/stats
 ```
 
 **Query Parameters:**
+
 - `period` (string): Time period (all_time, year, month)
 - `game_type` (string): Filter by game type
 
 ### Leaderboards
 
 #### Get Global Leaderboards
+
 ```http
 GET /api/v1/leaderboards
 ```
 
 **Query Parameters:**
+
 - `type` (string): Leaderboard type (win-rate, tournaments, prize-money, achievements)
 - `game_type` (string): Filter by game type
 - `limit` (number): Max entries (default: 10, max: 100)
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -312,14 +342,17 @@ GET /api/v1/leaderboards
 ```
 
 #### Get Format-Specific Leaderboard
+
 ```http
 GET /api/v1/leaderboards/format/{format}
 ```
 
 **Path Parameters:**
+
 - `format` (string): Tournament format
 
 #### Get Venue-Specific Leaderboard
+
 ```http
 GET /api/v1/leaderboards/venue/{venueId}
 ```
@@ -327,14 +360,17 @@ GET /api/v1/leaderboards/venue/{venueId}
 ### Venues
 
 #### List Venues
+
 ```http
 GET /api/v1/venues
 ```
 
 **Query Parameters:**
+
 - `page`, `limit`: Pagination
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -357,27 +393,32 @@ GET /api/v1/venues
 ```
 
 #### Get Venue Details
+
 ```http
 GET /api/v1/venues/{venueId}
 ```
 
 #### Get Venue Tournaments
+
 ```http
 GET /api/v1/venues/{venueId}/tournaments
 ```
 
 **Query Parameters:**
+
 - `status` (string): Filter by tournament status
 - `page`, `limit`: Pagination
 
 ### Webhooks
 
 #### Test Webhook
+
 ```http
 POST /api/v1/webhooks/{webhookId}/test
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -396,6 +437,7 @@ POST /api/v1/webhooks/{webhookId}/test
 ## Error Handling
 
 ### Standard Error Response
+
 ```json
 {
   "error": {
@@ -406,6 +448,7 @@ POST /api/v1/webhooks/{webhookId}/test
 ```
 
 ### Common HTTP Status Codes
+
 - `200 OK`: Request successful
 - `400 Bad Request`: Invalid query parameters or request body
 - `401 Unauthorized`: Missing or invalid API key
@@ -423,6 +466,7 @@ Rate limits are enforced based on API key tier:
 - **Enterprise Tier**: Custom limits
 
 Rate limit headers included in responses:
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 987
@@ -434,11 +478,13 @@ X-RateLimit-Reset: 1710518400
 All list endpoints support pagination:
 
 **Request:**
+
 ```http
 GET /api/v1/tournaments?page=2&limit=20
 ```
 
 **Response Meta:**
+
 ```json
 {
   "meta": {
@@ -469,6 +515,7 @@ GET /api/v1/tournaments?page=2&limit=20
 ## Code Examples
 
 ### JavaScript/TypeScript
+
 ```typescript
 const API_KEY = 'your_api_key';
 const BASE_URL = 'https://your-domain.com/api/v1';
@@ -476,7 +523,7 @@ const BASE_URL = 'https://your-domain.com/api/v1';
 async function getTournaments() {
   const response = await fetch(`${BASE_URL}/tournaments`, {
     headers: {
-      'Authorization': `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${API_KEY}`,
       'Content-Type': 'application/json',
     },
   });
@@ -491,6 +538,7 @@ async function getTournaments() {
 ```
 
 ### Python
+
 ```python
 import requests
 
@@ -508,6 +556,7 @@ data = response.json()
 ```
 
 ### cURL
+
 ```bash
 curl -X GET "https://your-domain.com/api/v1/tournaments" \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -517,6 +566,7 @@ curl -X GET "https://your-domain.com/api/v1/tournaments" \
 ## Support
 
 For API support:
+
 - **Documentation**: This file and inline endpoint documentation
 - **Issues**: GitHub Issues
 - **Email**: api-support@your-domain.com
@@ -524,6 +574,7 @@ For API support:
 ## Changelog
 
 ### v1.0.0 (2025-11-08)
+
 - Initial public API release
 - Authentication middleware with bcrypt validation
 - 17 endpoints across 5 resource categories

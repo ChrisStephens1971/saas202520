@@ -74,15 +74,18 @@ export async function logAdminAction(entry: AuditLogEntry): Promise<void> {
     });
 
     // Also log to console for real-time monitoring
-    console.log('[AUDIT]', JSON.stringify({
-      timestamp: new Date().toISOString(),
-      orgId: entry.orgId,
-      userId: entry.userId,
-      userEmail: entry.userEmail,
-      action: entry.action,
-      resource: entry.resource,
-      resourceId: entry.resourceId,
-    }));
+    console.log(
+      '[AUDIT]',
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        orgId: entry.orgId,
+        userId: entry.userId,
+        userEmail: entry.userEmail,
+        action: entry.action,
+        resource: entry.resource,
+        resourceId: entry.resourceId,
+      })
+    );
   } catch (error) {
     // Never fail the main operation due to audit logging errors
     console.error('Failed to log audit entry:', error);

@@ -25,11 +25,7 @@ export function createLazyObserver(
     return null;
   }
 
-  const {
-    rootMargin = '50px',
-    threshold = 0.01,
-    triggerOnce = true,
-  } = options;
+  const { rootMargin = '50px', threshold = 0.01, triggerOnce = true } = options;
 
   const observer = new IntersectionObserver(
     (entries) => {

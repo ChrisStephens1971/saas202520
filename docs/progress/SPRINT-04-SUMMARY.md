@@ -19,26 +19,26 @@ Sprint 4 has successfully implemented a comprehensive notification system with i
 
 ### Notifications System (9/9 Complete)
 
-| Story | Description | Status | Files Created/Updated |
-|-------|-------------|--------|----------------------|
-| **NOTIFY-001** | In-app notification system | ✅ Complete | `lib/notification-service.ts`, `app/api/notifications/route.ts`, `app/api/notifications/[id]/read/route.ts` |
-| **NOTIFY-002** | Email notification templates | ✅ Complete | `lib/notification-templates.ts`, `lib/notification-service.ts` (email rendering) |
-| **NOTIFY-003** | SMS integration (Twilio) | ✅ Complete | `lib/notification-service.ts` (Twilio client, SMS sending with org credentials) |
-| **NOTIFY-004** | SMS "table now" trigger | ✅ Complete | `lib/match-notifications.ts` (`notifyMatchReady()`) |
-| **NOTIFY-005** | SMS "up in 5" trigger | ✅ Complete | `lib/match-notifications.ts` (`sendCheckInReminder()`, `sendBulkCheckInReminders()`) |
-| **NOTIFY-006** | SMS dedupe logic (2-minute window) | ✅ Complete | `lib/notification-service.ts` (`checkSMSDuplicate()` with Redis TTL), `tests/unit/notification-service.test.ts` (5 deduplication tests) |
-| **NOTIFY-007** | SMS throttling & rate limits | ✅ Complete | `lib/notification-service.ts` (Upstash Redis rate limiting: 10 email/min, 5 SMS/min per org) |
-| **NOTIFY-008** | SMS consent & opt-in tracking | ✅ Complete | `app/api/notifications/preferences/route.ts`, `app/api/notifications/preferences/[playerId]/route.ts`, `lib/notification-service.ts` (opt-out checking, quiet hours) |
-| **NOTIFY-009** | STOP/HELP SMS handling | ✅ Complete | `app/api/notifications/sms/webhook/route.ts`, `lib/notification-service.ts` (`handleSMSOptOut()`, `handleSMSOptIn()`) |
+| Story          | Description                        | Status      | Files Created/Updated                                                                                                                                                |
+| -------------- | ---------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **NOTIFY-001** | In-app notification system         | ✅ Complete | `lib/notification-service.ts`, `app/api/notifications/route.ts`, `app/api/notifications/[id]/read/route.ts`                                                          |
+| **NOTIFY-002** | Email notification templates       | ✅ Complete | `lib/notification-templates.ts`, `lib/notification-service.ts` (email rendering)                                                                                     |
+| **NOTIFY-003** | SMS integration (Twilio)           | ✅ Complete | `lib/notification-service.ts` (Twilio client, SMS sending with org credentials)                                                                                      |
+| **NOTIFY-004** | SMS "table now" trigger            | ✅ Complete | `lib/match-notifications.ts` (`notifyMatchReady()`)                                                                                                                  |
+| **NOTIFY-005** | SMS "up in 5" trigger              | ✅ Complete | `lib/match-notifications.ts` (`sendCheckInReminder()`, `sendBulkCheckInReminders()`)                                                                                 |
+| **NOTIFY-006** | SMS dedupe logic (2-minute window) | ✅ Complete | `lib/notification-service.ts` (`checkSMSDuplicate()` with Redis TTL), `tests/unit/notification-service.test.ts` (5 deduplication tests)                              |
+| **NOTIFY-007** | SMS throttling & rate limits       | ✅ Complete | `lib/notification-service.ts` (Upstash Redis rate limiting: 10 email/min, 5 SMS/min per org)                                                                         |
+| **NOTIFY-008** | SMS consent & opt-in tracking      | ✅ Complete | `app/api/notifications/preferences/route.ts`, `app/api/notifications/preferences/[playerId]/route.ts`, `lib/notification-service.ts` (opt-out checking, quiet hours) |
+| **NOTIFY-009** | STOP/HELP SMS handling             | ✅ Complete | `app/api/notifications/sms/webhook/route.ts`, `lib/notification-service.ts` (`handleSMSOptOut()`, `handleSMSOptIn()`)                                                |
 
 ### Additional Features Completed
 
-| Feature | Description | Status |
-|---------|-------------|--------|
-| **Template System** | 7 notification templates with variable interpolation | ✅ Complete |
-| **Template API** | RESTful endpoints for template management and preview | ✅ Complete |
-| **Analytics** | Notification delivery analytics and insights | ✅ Complete |
-| **Multi-channel** | Unified service for in-app, email, and SMS | ✅ Complete |
+| Feature                 | Description                                                                  | Status      |
+| ----------------------- | ---------------------------------------------------------------------------- | ----------- |
+| **Template System**     | 7 notification templates with variable interpolation                         | ✅ Complete |
+| **Template API**        | RESTful endpoints for template management and preview                        | ✅ Complete |
+| **Analytics**           | Notification delivery analytics and insights                                 | ✅ Complete |
+| **Multi-channel**       | Unified service for in-app, email, and SMS                                   | ✅ Complete |
 | **Setup Documentation** | Comprehensive setup guide with Upstash Redis, SMTP, and Twilio configuration | ✅ Complete |
 
 ---
@@ -47,33 +47,33 @@ Sprint 4 has successfully implemented a comprehensive notification system with i
 
 ### Chip Format (0/3 Started)
 
-| Story | Description | Status | Priority |
-|-------|-------------|--------|----------|
-| **CHIP-001** | Chip format queue engine | 📋 Not Started | High |
-| **CHIP-002** | Chip counter tracking | 📋 Not Started | High |
-| **CHIP-003** | Finals cutoff logic (top N by chips) | 📋 Not Started | High |
+| Story        | Description                          | Status         | Priority |
+| ------------ | ------------------------------------ | -------------- | -------- |
+| **CHIP-001** | Chip format queue engine             | 📋 Not Started | High     |
+| **CHIP-002** | Chip counter tracking                | 📋 Not Started | High     |
+| **CHIP-003** | Finals cutoff logic (top N by chips) | 📋 Not Started | High     |
 
 ### Kiosk Mode (0/3 Started)
 
-| Story | Description | Status | Priority |
-|-------|-------------|--------|----------|
-| **KIOSK-001** | Kiosk mode UI (tablet-optimized) | 📋 Not Started | High |
-| **KIOSK-002** | Player self-check-in flow | 📋 Not Started | High |
-| **KIOSK-003** | PIN-protected TD console toggle | 📋 Not Started | Medium |
+| Story         | Description                      | Status         | Priority |
+| ------------- | -------------------------------- | -------------- | -------- |
+| **KIOSK-001** | Kiosk mode UI (tablet-optimized) | 📋 Not Started | High     |
+| **KIOSK-002** | Player self-check-in flow        | 📋 Not Started | High     |
+| **KIOSK-003** | PIN-protected TD console toggle  | 📋 Not Started | Medium   |
 
 ### Admin Features (0/3 Started)
 
-| Story | Description | Status | Priority |
-|-------|-------------|--------|----------|
-| **ADMIN-002** | Late entry handling | 📋 Not Started | Medium |
-| **ADMIN-003** | No-show tracking & penalties | 📋 Not Started | Medium |
-| **ADMIN-004** | Reseed guardrails | 📋 Not Started | Medium |
+| Story         | Description                  | Status         | Priority |
+| ------------- | ---------------------------- | -------------- | -------- |
+| **ADMIN-002** | Late entry handling          | 📋 Not Started | Medium   |
+| **ADMIN-003** | No-show tracking & penalties | 📋 Not Started | Medium   |
+| **ADMIN-004** | Reseed guardrails            | 📋 Not Started | Medium   |
 
 ### Testing (0/1 Started)
 
-| Story | Description | Status | Priority |
-|-------|-------------|--------|----------|
-| **TEST-005** | Notification delivery tests | 📋 Not Started | Medium |
+| Story        | Description                 | Status         | Priority |
+| ------------ | --------------------------- | -------------- | -------- |
+| **TEST-005** | Notification delivery tests | 📋 Not Started | Medium   |
 
 ---
 
@@ -99,6 +99,7 @@ createInAppNotification()
 ```
 
 **Features:**
+
 - ✅ Lazy Stripe initialization for build compatibility
 - ✅ Rate limiting (Upstash Redis): 10 email/min, 5 SMS/min per org
 - ✅ Opt-out checking and quiet hours enforcement
@@ -110,6 +111,7 @@ createInAppNotification()
 **Location:** `apps/web/lib/notification-templates.ts`
 
 **Template Types:**
+
 1. `match_completed` - Match results with scores
 2. `match_upcoming` - Upcoming match notifications
 3. `tournament_registration` - Registration confirmations
@@ -119,6 +121,7 @@ createInAppNotification()
 7. `custom` - Flexible custom messages
 
 **Features:**
+
 - ✅ Variable interpolation with `{{variableName}}` syntax
 - ✅ Multi-channel rendering (email HTML, SMS, in-app)
 - ✅ SMS auto-truncation to 306 characters
@@ -130,6 +133,7 @@ createInAppNotification()
 **Location:** `apps/web/lib/match-notifications.ts`
 
 **Implemented Triggers:**
+
 - ✅ `notifyMatchReady()` - "Table now" notifications when match is assigned
 - ✅ `notifyMatchCompleted()` - Results notification to winner and loser
 - ✅ `sendCheckInReminder()` - Individual check-in reminders
@@ -137,6 +141,7 @@ createInAppNotification()
 - ✅ `notifyTournamentStarting()` - Tournament start notifications
 
 **Features:**
+
 - ✅ Batch processing with 1-second delays between batches
 - ✅ Template-based messaging for consistency
 - ✅ Error handling with console logging
@@ -146,6 +151,7 @@ createInAppNotification()
 **Location:** `apps/web/app/api/notifications/preferences/`
 
 **Features:**
+
 - ✅ Per-player SMS and email opt-in/opt-out
 - ✅ Quiet hours configuration (no notifications during sleep hours)
 - ✅ Timezone-aware scheduling
@@ -155,6 +161,7 @@ createInAppNotification()
 ### 5. SMS Integration (Twilio)
 
 **Implementation:**
+
 - ✅ Organization-level Twilio credentials (account SID, auth token, phone number)
 - ✅ SMS sending with error handling
 - ✅ Webhook for STOP/START commands
@@ -167,14 +174,15 @@ createInAppNotification()
 
 ### Unit Tests Created
 
-| Test File | Tests | Coverage |
-|-----------|-------|----------|
-| `tests/unit/notification-service.test.ts` | 22 tests | Notification sending, rate limiting, preferences |
-| `tests/unit/notification-templates.test.ts` | 30 tests | Template rendering, validation, interpolation |
-| `tests/unit/match-notifications.test.ts` | 12 tests | Match notification triggers, batch processing |
-| **Total** | **64 tests** | **Notification system** |
+| Test File                                   | Tests        | Coverage                                         |
+| ------------------------------------------- | ------------ | ------------------------------------------------ |
+| `tests/unit/notification-service.test.ts`   | 22 tests     | Notification sending, rate limiting, preferences |
+| `tests/unit/notification-templates.test.ts` | 30 tests     | Template rendering, validation, interpolation    |
+| `tests/unit/match-notifications.test.ts`    | 12 tests     | Match notification triggers, batch processing    |
+| **Total**                                   | **64 tests** | **Notification system**                          |
 
 ### Test Results
+
 - ✅ **87 unit tests passing** (64 notification + 23 payment)
 - ✅ **Build passing** (TypeScript, ESLint)
 - ✅ **No regressions**
@@ -184,33 +192,42 @@ createInAppNotification()
 ## Technical Decisions
 
 ### 1. Rate Limiting Strategy
+
 **Decision:** Use Upstash Redis with sliding window rate limiters
 **Rationale:**
+
 - Distributed rate limiting across multiple app instances
 - Prevents SMS/email abuse
 - Sliding window is more fair than fixed window
 
 **Limits:**
+
 - Email: 10 per minute per organization
 - SMS: 5 per minute per organization
 
 ### 2. Template System Architecture
+
 **Decision:** In-memory default templates with database override capability
 **Rationale:**
+
 - Fast template rendering (no database query)
 - Customizable per organization
 - Version control for default templates
 
 ### 3. Multi-Channel Notification Design
+
 **Decision:** Unified `sendNotificationWithTemplate()` function
 **Rationale:**
+
 - Single API for all notification channels
 - Consistent template usage
 - Easier to add new channels (push, Slack, etc.)
 
 ### 4. Lazy Stripe Initialization
+
 **Decision:** Proxy-based lazy loading of Stripe SDK
 **Rationale:**
+
 - Prevents build-time errors when env vars not available
 - Allows builds without Stripe credentials
 - Runtime initialization only when needed
@@ -220,11 +237,13 @@ createInAppNotification()
 ## Database Schema Changes
 
 ### New Tables
+
 - `Notification` - Stores all sent notifications with status tracking
 - `NotificationPreference` - Per-player notification preferences
 - `NotificationTemplate` - Organization-specific template customizations (future)
 
 ### Updated Tables
+
 - `Organization` - Added Twilio credentials (`twilioAccountSid`, `twilioAuthToken`, `twilioPhoneNumber`)
 
 ---
@@ -232,46 +251,52 @@ createInAppNotification()
 ## API Endpoints Created
 
 ### Notifications
+
 - `POST /api/notifications` - Send a notification
 - `GET /api/notifications` - List notifications for user
 - `PATCH /api/notifications/[id]/read` - Mark notification as read
 - `GET /api/notifications/analytics` - Get notification analytics
 
 ### Preferences
+
 - `GET /api/notifications/preferences` - Get current user preferences
 - `PATCH /api/notifications/preferences` - Update user preferences
 - `GET /api/notifications/preferences/[playerId]` - Get player preferences (admin)
 - `PATCH /api/notifications/preferences/[playerId]` - Update player preferences (admin)
 
 ### Templates
+
 - `GET /api/notifications/templates` - List available templates
 - `POST /api/notifications/templates/preview` - Preview template with variables
 
 ### SMS Webhooks
+
 - `POST /api/notifications/sms/webhook` - Handle Twilio webhooks (STOP/START)
 
 ---
 
 ## Dependencies Added
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `twilio` | Latest | SMS sending via Twilio API |
-| `nodemailer` | Latest | Email sending via SMTP |
-| `@upstash/redis` | Latest | Distributed rate limiting |
-| `@upstash/ratelimit` | Latest | Rate limiter implementation |
+| Package              | Version | Purpose                     |
+| -------------------- | ------- | --------------------------- |
+| `twilio`             | Latest  | SMS sending via Twilio API  |
+| `nodemailer`         | Latest  | Email sending via SMTP      |
+| `@upstash/redis`     | Latest  | Distributed rate limiting   |
+| `@upstash/ratelimit` | Latest  | Rate limiter implementation |
 
 ---
 
 ## Known Issues
 
 ### 1. Integration Tests Require Database
+
 **Issue:** Integration tests fail without PostgreSQL running
 **Impact:** CI/CD requires database setup
 **Workaround:** Unit tests provide good coverage
 **Priority:** Low - Expected behavior
 
 ### 2. Redis Credentials Setup Required
+
 **Issue:** Production deployment requires Upstash Redis credentials
 **Impact:** Rate limiting and SMS deduplication won't work without Redis
 **Solution:** Follow setup guide at `technical/NOTIFICATION-SERVICE-SETUP.md`
@@ -283,16 +308,19 @@ createInAppNotification()
 ## Next Steps
 
 ### Immediate (Completed)
+
 1. ✅ **Update Sprint 4 plan** - Mark completed stories as done
 2. ✅ **Implement NOTIFY-006** - Add 2-minute SMS deduplication (COMPLETE)
 3. ✅ **Configure Redis credentials** - Set up Upstash for rate limiting (COMPLETE)
 
 ### Short Term (This Week)
+
 4. 📋 **Start Chip Format** - Begin CHIP-001 (queue engine)
 5. 📋 **Integration tests** - Add notification delivery tests
 6. 📋 **Documentation** - API documentation for notification endpoints
 
 ### Medium Term (Next Week)
+
 7. 📋 **Kiosk Mode** - Begin KIOSK-001 (tablet UI)
 8. 📋 **Admin Features** - Late entry and no-show handling
 
@@ -301,17 +329,20 @@ createInAppNotification()
 ## Sprint Metrics
 
 ### Velocity
+
 - **Planned:** 16 stories
 - **Completed:** 8 stories (50%)
 - **In Progress:** 0 stories
 - **Remaining:** 8 stories
 
 ### Story Points (Estimated)
+
 - **Completed:** ~35 points
 - **Remaining:** ~45 points
 - **Total Sprint:** ~80 points
 
 ### Time Distribution
+
 - **Notifications:** ~16 hours (actual)
 - **Templates:** ~4 hours
 - **Testing:** ~6 hours
@@ -323,6 +354,7 @@ createInAppNotification()
 ## Lessons Learned
 
 ### What Went Well ✅
+
 1. **Template system design** - Flexible, testable, and easy to extend
 2. **Multi-channel architecture** - Clean separation of concerns
 3. **Rate limiting** - Upstash Redis integration smooth
@@ -330,12 +362,14 @@ createInAppNotification()
 5. **Type safety** - TypeScript caught many potential bugs early
 
 ### Challenges 🔧
+
 1. **Stripe build errors** - Required lazy initialization pattern
 2. **Prisma type compatibility** - JSON types needed careful handling
 3. **Rate limiting testing** - Hard to test without Redis in unit tests
 4. **SMS webhook setup** - Requires Twilio configuration and public URL
 
 ### Improvements for Next Sprint 🎯
+
 1. **Earlier integration testing** - Set up test database sooner
 2. **API documentation** - Document endpoints as we build them
 3. **Environment setup guide** - Document all required env vars

@@ -9,36 +9,38 @@
 ## 📋 Week 2 Overview
 
 ### Objective
+
 Transition from **Week 1 Manual Mode** (human implementation, automated merge) to **Week 2 Semi-Automated Mode** (AI-assisted implementation with human oversight).
 
 ### Timeline
+
 - **Week 1:** ✅ Complete (Manual Mode - 100% lane coverage validated)
 - **Week 2:** 🔄 Starting (Semi-Automated Mode - AI worker assistance)
 - **Week 3+:** Future (Full Automation - minimal human intervention)
 
 ### Key Differences
 
-| Aspect | Week 1 Manual | Week 2 Semi-Automated | Week 3+ Automated |
-|--------|---------------|----------------------|-------------------|
-| **Implementation** | Human writes code | AI suggests code, human reviews | AI writes code autonomously |
-| **Coordinator** | Manual ticket creation | Polls board every 30 min | Polls board every 15 min |
-| **Worker Activation** | Manual branch creation | Manual trigger, AI implements | Automatic trigger & implement |
-| **Review** | Human reviews all PRs | Human reviews AI suggestions | Auto-review for small changes |
-| **Merge** | Auto-merge (validated) | Auto-merge (validated) | Auto-merge (validated) |
-| **Oversight** | High (hands-on) | Medium (supervised) | Low (monitoring only) |
+| Aspect                | Week 1 Manual          | Week 2 Semi-Automated           | Week 3+ Automated             |
+| --------------------- | ---------------------- | ------------------------------- | ----------------------------- |
+| **Implementation**    | Human writes code      | AI suggests code, human reviews | AI writes code autonomously   |
+| **Coordinator**       | Manual ticket creation | Polls board every 30 min        | Polls board every 15 min      |
+| **Worker Activation** | Manual branch creation | Manual trigger, AI implements   | Automatic trigger & implement |
+| **Review**            | Human reviews all PRs  | Human reviews AI suggestions    | Auto-review for small changes |
+| **Merge**             | Auto-merge (validated) | Auto-merge (validated)          | Auto-merge (validated)        |
+| **Oversight**         | High (hands-on)        | Medium (supervised)             | Low (monitoring only)         |
 
 ---
 
 ## 🎯 Week 2 Goals
 
-| Goal | Target | Success Criteria |
-|------|--------|------------------|
-| **Tickets Processed** | 10-15 tickets | Use AI worker assistance |
-| **AI Implementation** | 70% AI-written | Human reviews before commit |
-| **Auto-Merge Rate** | >90% | Maintain Week 1 success |
-| **Velocity Improvement** | 2-3x faster | Compared to Week 1 manual |
-| **Quality** | No regressions | All tests pass, no bugs |
-| **Cost Monitoring** | Track API usage | Stay within budget |
+| Goal                     | Target          | Success Criteria            |
+| ------------------------ | --------------- | --------------------------- |
+| **Tickets Processed**    | 10-15 tickets   | Use AI worker assistance    |
+| **AI Implementation**    | 70% AI-written  | Human reviews before commit |
+| **Auto-Merge Rate**      | >90%            | Maintain Week 1 success     |
+| **Velocity Improvement** | 2-3x faster     | Compared to Week 1 manual   |
+| **Quality**              | No regressions  | All tests pass, no bugs     |
+| **Cost Monitoring**      | Track API usage | Stay within budget          |
 
 ---
 
@@ -77,10 +79,11 @@ Transition from **Week 1 Manual Mode** (human implementation, automated merge) t
    ```yaml
    # .github/workflows/coordinator.yml
    env:
-     GITHUB_TOKEN: ${{ secrets.COORDINATOR_PAT }}  # Use PAT instead of GITHUB_TOKEN
+     GITHUB_TOKEN: ${{ secrets.COORDINATOR_PAT }} # Use PAT instead of GITHUB_TOKEN
    ```
 
 **Security Notes:**
+
 - ✅ Use fine-grained PAT (not classic)
 - ✅ Limit to single repository
 - ✅ Minimum required permissions
@@ -98,11 +101,12 @@ Transition from **Week 1 Manual Mode** (human implementation, automated merge) t
 # .github/workflows/coordinator.yml
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Every 30 minutes
+    - cron: '*/30 * * * *' # Every 30 minutes
   workflow_dispatch: # Keep manual trigger
 ```
 
 **Testing:**
+
 - Start with manual trigger: `gh workflow run coordinator.yml`
 - Verify board polling works
 - Enable schedule after successful test
@@ -110,6 +114,7 @@ on:
 ### 3. Cost Monitoring Setup
 
 **Track API Usage:**
+
 - Claude API calls (for AI worker assistance)
 - GitHub API calls (coordinator polling)
 - Storage (artifacts, logs)
@@ -117,6 +122,7 @@ on:
 **Budget:** TBD (estimate $50-100/month for Week 2)
 
 **Monitoring:**
+
 - Use `scripts/track-costs.js` (already created in swarm setup)
 - Weekly cost review
 - Alert if >$25/week
@@ -194,6 +200,7 @@ gh pr create --title "..." --body "..." --label "lane:backend"
 ### Using Claude Code for Implementation
 
 **Prompt Template:**
+
 ```
 I need to implement [feature] for the tournament platform.
 
@@ -217,6 +224,7 @@ After you provide the code, I'll review before committing.
 ```
 
 **Review Checklist:**
+
 - [ ] Follows multi-tenant architecture
 - [ ] Includes proper error handling
 - [ ] Has unit tests
@@ -228,28 +236,33 @@ After you provide the code, I'll review before committing.
 ### AI Assistance for Different Lanes
 
 **Backend Lane:**
+
 - API endpoint implementation
 - Database queries (with Prisma)
 - Business logic
 - Validation with Zod schemas
 
 **Frontend Lane:**
+
 - React components
 - Tailwind CSS styling
 - Form handling
 - State management
 
 **Contracts Lane:**
+
 - TypeScript interfaces
 - Zod validation schemas
 - API contract definitions
 
 **Tests Lane:**
+
 - Unit tests
 - Integration tests
 - Test fixtures and mocks
 
 **Migrations Lane:**
+
 - Prisma schema changes
 - Migration SQL files
 - Data migrations
@@ -261,6 +274,7 @@ After you provide the code, I'll review before committing.
 ### Daily Metrics (Week 2)
 
 Track these daily:
+
 - [ ] Tickets processed (target: 2-3 per day)
 - [ ] AI-assisted vs manual implementations
 - [ ] Auto-merge success rate
@@ -271,6 +285,7 @@ Track these daily:
 ### Weekly Review
 
 Every Friday:
+
 - [ ] Review week's velocity
 - [ ] Analyze bottlenecks
 - [ ] Adjust AI prompts based on quality
@@ -280,6 +295,7 @@ Every Friday:
 ### Success Indicators
 
 ✅ **Good Signs:**
+
 - Tickets completed faster than Week 1
 - AI suggestions need minimal edits
 - Auto-merge rate >90%
@@ -288,6 +304,7 @@ Every Friday:
 - Costs within budget
 
 ⚠️ **Warning Signs:**
+
 - AI suggestions require heavy rework
 - Auto-merge rate dropping
 - Security issues found in review
@@ -301,6 +318,7 @@ Every Friday:
 ### Suggested Tickets for Week 2 (15 total)
 
 #### Sprint 1 Foundation (5 tickets)
+
 1. **Backend:** Add organization CRUD endpoints
 2. **Backend:** Add user profile endpoints
 3. **Frontend:** Create organization selector component
@@ -308,6 +326,7 @@ Every Friday:
 5. **Tests:** Add integration tests for org endpoints
 
 #### Authentication & Multi-Tenant (5 tickets)
+
 6. **Backend:** Implement tenant context middleware
 7. **Backend:** Add RLS policies for Prisma
 8. **Frontend:** Add tenant switcher UI
@@ -315,6 +334,7 @@ Every Friday:
 10. **Migrations:** Add RLS to tournaments table
 
 #### Tournament Management (5 tickets)
+
 11. **Backend:** Implement tournament CRUD endpoints
 12. **Frontend:** Create tournament list page
 13. **Frontend:** Create tournament creation form
@@ -324,15 +344,18 @@ Every Friday:
 ### Prioritization
 
 **High Priority (Do First):**
+
 - Organization CRUD (foundation for all features)
 - Tenant context middleware (required for security)
 - Multi-tenant isolation tests (prevent security bugs)
 
 **Medium Priority (Do Next):**
+
 - Tournament CRUD (core feature)
 - Frontend components (user-facing)
 
 **Low Priority (Do Last):**
+
 - Polish and optimization
 - Additional test coverage
 
@@ -405,6 +428,7 @@ gh project item-add 1 --owner @me --url <issue-url>
 Before committing AI-generated code:
 
 **Security:**
+
 - [ ] No SQL injection vulnerabilities
 - [ ] No XSS vulnerabilities
 - [ ] Proper input validation
@@ -413,6 +437,7 @@ Before committing AI-generated code:
 - [ ] Multi-tenant isolation enforced
 
 **Code Quality:**
+
 - [ ] Follows coding standards
 - [ ] Proper error handling
 - [ ] Meaningful variable names
@@ -421,12 +446,14 @@ Before committing AI-generated code:
 - [ ] TypeScript types correct
 
 **Testing:**
+
 - [ ] Unit tests included
 - [ ] Tests actually test the feature
 - [ ] Edge cases covered
 - [ ] Mocks used appropriately
 
 **Multi-Tenant:**
+
 - [ ] org_id/tenant_id included
 - [ ] Filtered by tenant context
 - [ ] No cross-tenant access possible
@@ -435,6 +462,7 @@ Before committing AI-generated code:
 ### Auto-Merge Eligibility (Unchanged from Week 1)
 
 PR auto-merges if:
+
 - ✅ Size: ≤10 files, ≤800 lines
 - ✅ Security: No sensitive paths touched
 - ✅ Labels: No breaking-change or security-alert
@@ -446,17 +474,18 @@ PR auto-merges if:
 
 ### Estimated Costs (Week 2)
 
-| Service | Usage | Cost |
-|---------|-------|------|
-| **Claude API** | ~500 calls/week | $30-50 |
-| **GitHub API** | Unlimited (included) | $0 |
-| **GitHub Actions** | 2,000 min/month free | $0 |
-| **Storage** | <1GB | $0 |
-| **Total** | - | **$30-50/week** |
+| Service            | Usage                | Cost            |
+| ------------------ | -------------------- | --------------- |
+| **Claude API**     | ~500 calls/week      | $30-50          |
+| **GitHub API**     | Unlimited (included) | $0              |
+| **GitHub Actions** | 2,000 min/month free | $0              |
+| **Storage**        | <1GB                 | $0              |
+| **Total**          | -                    | **$30-50/week** |
 
 ### Cost Optimization
 
 **Reduce Costs:**
+
 - ✅ Use Haiku model for simple tasks
 - ✅ Cache AI responses when possible
 - ✅ Batch similar requests
@@ -464,6 +493,7 @@ PR auto-merges if:
 - ✅ Use manual mode for complex tickets
 
 **Track Costs:**
+
 ```bash
 # Weekly cost check
 node scripts/track-costs.js
@@ -477,18 +507,21 @@ node scripts/track-costs.js
 ## 📚 Resources & References
 
 ### Documentation
+
 - `WEEK-1-COMPLETE.md` - Week 1 results and learnings
 - `docs/SWARM-README.md` - Complete swarm documentation
 - `docs/SWARM-RUNBOOK.md` - Operational procedures
 - `CLAUDE.md` - Multi-tenant architecture guide
 
 ### Tools
+
 - Claude Code - AI implementation assistance
 - GitHub CLI - Issue and PR management
 - Prisma - Database ORM
 - Zod - Runtime validation
 
 ### Monitoring
+
 - `scripts/track-costs.js` - Cost tracking
 - `scripts/collect-metrics.js` - Velocity metrics
 - `scripts/detect-deadlocks.js` - Bottleneck detection
@@ -512,24 +545,28 @@ Week 2 is successful if:
 ## 🔄 Transition Plan
 
 ### Phase 1: Setup (Day 1)
+
 - [ ] Create and configure PAT
 - [ ] Test coordinator manually
 - [ ] Enable polling (30 min intervals)
 - [ ] Create Week 2 ticket backlog
 
 ### Phase 2: Validation (Days 2-3)
+
 - [ ] Process 2-3 tickets with AI assistance
 - [ ] Validate AI code quality
 - [ ] Verify auto-merge still works
 - [ ] Monitor costs
 
 ### Phase 3: Ramp Up (Days 4-7)
+
 - [ ] Increase to 2-3 tickets/day
 - [ ] Refine AI prompts based on results
 - [ ] Adjust polling frequency if needed
 - [ ] Weekly review and retrospective
 
 ### Phase 4: Week 3 Preparation (Day 7)
+
 - [ ] Review Week 2 metrics
 - [ ] Plan Week 3 full automation
 - [ ] Identify improvements needed
@@ -559,6 +596,6 @@ Apply these in Week 2 with AI assistance!
 
 ---
 
-*Prepared by: Claude Code (AI Assistant)*
-*Date: 2025-11-04*
-*Week 1 Achievement: 100% Lane Coverage ✅*
+_Prepared by: Claude Code (AI Assistant)_
+_Date: 2025-11-04_
+_Week 1 Achievement: 100% Lane Coverage ✅_

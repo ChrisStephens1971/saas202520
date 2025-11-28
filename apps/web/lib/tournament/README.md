@@ -20,30 +20,30 @@ Additional states: cancelled, abandoned, forfeited
 
 ### States
 
-| State | Description |
-|-------|-------------|
-| `pending` | Match created, waiting for players to be assigned |
-| `ready` | Both players assigned, waiting to start |
-| `assigned` | Assigned to table but not started yet |
-| `active` | Match in progress |
-| `paused` | Temporarily paused (can resume) |
-| `completed` | Match finished normally with a winner |
-| `cancelled` | Match cancelled before completion |
-| `abandoned` | Match abandoned (e.g., player left) |
-| `forfeited` | One player forfeited, opponent wins |
+| State       | Description                                       |
+| ----------- | ------------------------------------------------- |
+| `pending`   | Match created, waiting for players to be assigned |
+| `ready`     | Both players assigned, waiting to start           |
+| `assigned`  | Assigned to table but not started yet             |
+| `active`    | Match in progress                                 |
+| `paused`    | Temporarily paused (can resume)                   |
+| `completed` | Match finished normally with a winner             |
+| `cancelled` | Match cancelled before completion                 |
+| `abandoned` | Match abandoned (e.g., player left)               |
+| `forfeited` | One player forfeited, opponent wins               |
 
 ### Transitions
 
-| Event | From States | To State | Guards |
-|-------|-------------|----------|--------|
-| `assign_table` | pending | ready | hasPlayers, hasTable |
-| `start` | ready, assigned | active | hasPlayers, hasTable |
-| `pause` | active | paused | - |
-| `resume` | paused | active | - |
-| `complete` | active | completed | hasWinner |
-| `cancel` | pending, ready, assigned | cancelled | - |
-| `abandon` | active, paused | abandoned | - |
-| `forfeit` | active, paused | forfeited | - |
+| Event          | From States              | To State  | Guards               |
+| -------------- | ------------------------ | --------- | -------------------- |
+| `assign_table` | pending                  | ready     | hasPlayers, hasTable |
+| `start`        | ready, assigned          | active    | hasPlayers, hasTable |
+| `pause`        | active                   | paused    | -                    |
+| `resume`       | paused                   | active    | -                    |
+| `complete`     | active                   | completed | hasWinner            |
+| `cancel`       | pending, ready, assigned | cancelled | -                    |
+| `abandon`      | active, paused           | abandoned | -                    |
+| `forfeit`      | active, paused           | forfeited | -                    |
 
 ### Guards
 
@@ -195,7 +195,7 @@ const history = await getMatchHistory(matchId);
 
 console.log('Match:', history.match);
 console.log('Events:');
-history.events.forEach(event => {
+history.events.forEach((event) => {
   console.log(`${event.timestamp}: ${event.kind}`, event.payload);
 });
 
@@ -225,6 +225,7 @@ All state transitions are recorded as events in the `tournament_events` table:
 ```
 
 This provides:
+
 - Complete audit trail of all state changes
 - Ability to replay events and reconstruct state
 - Multi-device synchronization support
@@ -233,6 +234,7 @@ This provides:
 ## Multi-Tenant Isolation
 
 All functions automatically respect tenant boundaries through:
+
 - Match includes tournament relationship with `orgId`
 - All events include `tournamentId` for tenant scoping
 - Queries filter by tournament which is tenant-scoped
@@ -324,9 +326,7 @@ describe('Match State Machine', () => {
   it('should create event on state transition', async () => {
     await startMatch(matchId, options);
     const history = await getMatchHistory(matchId);
-    expect(history.events).toContainEqual(
-      expect.objectContaining({ kind: 'match.start' })
-    );
+    expect(history.events).toContainEqual(expect.objectContaining({ kind: 'match.start' }));
   });
 });
 ```
@@ -334,18 +334,21 @@ describe('Match State Machine', () => {
 ## Architecture Decisions
 
 **Why a State Machine?**
+
 - Prevents illegal state transitions (e.g., scoring a completed match)
 - Provides clear, explicit state flow
 - Enables validation before state changes
 - Supports complex tournament rules
 
 **Why Event Sourcing?**
+
 - Complete audit trail for compliance
 - Enables time-travel debugging
 - Supports multi-device synchronization
 - Allows state reconstruction from events
 
 **Why Guards?**
+
 - Enforces business rules at the state machine level
 - Prevents invalid transitions before they happen
 - Provides clear error messages for validation failures

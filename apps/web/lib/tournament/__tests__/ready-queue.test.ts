@@ -413,9 +413,7 @@ describe('Ready Queue - Queue Status', () => {
       { id: 'm4', state: 'pending' },
     ];
 
-    const pendingCount = matches.filter((m) =>
-      ['pending', 'ready'].includes(m.state)
-    ).length;
+    const pendingCount = matches.filter((m) => ['pending', 'ready'].includes(m.state)).length;
 
     expect(pendingCount).toBe(3);
   });
@@ -623,7 +621,8 @@ describe('Ready Queue - Edge Cases', () => {
     };
 
     const now = new Date();
-    const canAssign = table.status === 'available' && (!table.blockedUntil || table.blockedUntil <= now);
+    const canAssign =
+      table.status === 'available' && (!table.blockedUntil || table.blockedUntil <= now);
 
     expect(canAssign).toBe(false);
   });

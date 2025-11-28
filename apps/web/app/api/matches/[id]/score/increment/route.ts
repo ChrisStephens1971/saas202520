@@ -7,11 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { canScoreMatches } from '@/lib/permissions';
-import {
-  validateScoreIncrement,
-  isMatchComplete,
-  getMatchWinner,
-} from '@tournament/shared';
+import { validateScoreIncrement, isMatchComplete, getMatchWinner } from '@tournament/shared';
 import type {
   IncrementScoreRequest,
   IncrementScoreResponse,
@@ -21,10 +17,7 @@ import { notifyMatchCompleted } from '@/lib/match-notifications';
 import { awardChips } from '@/lib/chip-tracker';
 import type { ChipConfig } from '@/lib/chip-tracker';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -43,10 +36,7 @@ export async function POST(
     }
 
     if (player !== 'A' && player !== 'B') {
-      return NextResponse.json(
-        { error: 'Invalid player: must be A or B' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid player: must be A or B' }, { status: 400 });
     }
 
     // Fetch match with optimistic locking
@@ -95,15 +85,11 @@ export async function POST(
     const raceTo = currentScore.raceTo || 9; // Default race-to-9
 
     // SCORE-002, SCORE-003, SCORE-004: Validate score increment
-    const validation = validateScoreIncrement(
-      currentScore,
-      player,
-      {
-        raceTo,
-        allowHillHill: true,
-        requireConfirmation: true,
-      }
-    );
+    const validation = validateScoreIncrement(currentScore, player, {
+      raceTo,
+      allowHillHill: true,
+      requireConfirmation: true,
+    });
 
     if (!validation.valid) {
       return NextResponse.json(
@@ -213,8 +199,7 @@ export async function POST(
       if (match.tournament.format === 'chip_format' && winnerId) {
         const chipConfig = match.tournament.chipConfig as unknown as ChipConfig;
         if (chipConfig) {
-          const loserId =
-            winnerId === match.playerAId ? match.playerBId : match.playerAId;
+          const loserId = winnerId === match.playerAId ? match.playerBId : match.playerAId;
 
           if (loserId) {
             awardChips(matchId, winnerId, loserId, chipConfig).catch((err) =>
@@ -246,9 +231,6 @@ export async function POST(
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error('Error incrementing score:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

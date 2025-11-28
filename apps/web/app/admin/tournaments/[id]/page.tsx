@@ -16,6 +16,8 @@ import { useSocketEvent, useTournamentRoom } from '@/hooks/useSocket';
 import TournamentBracket from '@/components/TournamentBracket';
 import { SocketEvent } from '@/lib/socket/events';
 import type { TournamentUpdatedPayload } from '@/lib/socket/events';
+import { useConfirm } from '@/hooks/use-confirm';
+import { toast } from 'sonner';
 
 export default function AdminTournamentDetailsPage() {
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function AdminTournamentDetailsPage() {
   const [tournament, setTournament] = useState<TournamentWithStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Join tournament room for real-time updates
   useTournamentRoom(tournamentId, session?.user?.id);
@@ -67,9 +70,7 @@ export default function AdminTournamentDetailsPage() {
   // Real-time updates
   useSocketEvent(SocketEvent.TOURNAMENT_UPDATED, (payload: TournamentUpdatedPayload) => {
     if (payload.tournamentId === tournamentId) {
-      setTournament((prev) =>
-        prev ? { ...prev, ...(payload.changes as any) } : prev
-      );
+      setTournament((prev) => (prev ? { ...prev, ...(payload.changes as any) } : prev));
     }
   });
 
@@ -77,13 +78,13 @@ export default function AdminTournamentDetailsPage() {
   async function handleDelete() {
     if (!tournament) return;
 
-    if (
-      !confirm(
-        `Are you sure you want to delete "${tournament.name}"? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
+    const ok = await confirm({
+      title: 'Delete Tournament',
+      description: `Are you sure you want to delete "${tournament.name}"? This action cannot be undone.`,
+      actionLabel: 'Delete',
+    });
+
+    if (!ok) return;
 
     try {
       const response = await fetch(`/api/tournaments/${tournamentId}`, {
@@ -98,7 +99,7 @@ export default function AdminTournamentDetailsPage() {
       router.push('/admin/tournaments');
     } catch (err) {
       console.error('Error deleting tournament:', err);
-      alert(err instanceof Error ? err.message : 'Failed to delete tournament');
+      toast.error(err instanceof Error ? err.message : 'Failed to delete tournament');
     }
   }
 
@@ -215,9 +216,7 @@ export default function AdminTournamentDetailsPage() {
               </div>
               <div>
                 <div className="text-sm text-gray-400">Race To</div>
-                <div className="text-lg text-white font-medium">
-                  {tournament.raceToWins} games
-                </div>
+                <div className="text-lg text-white font-medium">{tournament.raceToWins} games</div>
               </div>
               {tournament.maxPlayers && (
                 <div>
@@ -270,7 +269,8 @@ export default function AdminTournamentDetailsPage() {
         )}
 
         {/* Tournament Bracket */}
-        {(tournament.format === 'single_elimination' || tournament.format === 'double_elimination') && (
+        {(tournament.format === 'single_elimination' ||
+          tournament.format === 'double_elimination') && (
           <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 mb-6">
             <h3 className="text-xl font-semibold text-white mb-4">Tournament Bracket</h3>
             <div className="bg-white rounded-lg p-4">
@@ -326,6 +326,7 @@ export default function AdminTournamentDetailsPage() {
           </div>
         </div>
       </div>
+      {ConfirmDialog}
     </div>
   );
 }

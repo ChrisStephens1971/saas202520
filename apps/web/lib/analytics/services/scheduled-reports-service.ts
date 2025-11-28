@@ -109,9 +109,7 @@ export interface ReportDelivery {
  * @param config - Report configuration
  * @returns Created report config with ID
  */
-export async function createScheduledReport(
-  config: ReportConfig
-): Promise<ReportConfig> {
+export async function createScheduledReport(config: ReportConfig): Promise<ReportConfig> {
   console.log(`[Reports] Creating scheduled report: ${config.name}`);
 
   // Validate schedule
@@ -134,7 +132,9 @@ export async function createScheduledReport(
       recipients: config.recipients as unknown as Prisma.InputJsonValue,
       format: config.format,
       sections: config.sections as unknown as Prisma.InputJsonValue,
-      dateRange: config.dateRange ? (config.dateRange as unknown as Prisma.InputJsonValue) : undefined,
+      dateRange: config.dateRange
+        ? (config.dateRange as unknown as Prisma.InputJsonValue)
+        : undefined,
       createdBy: config.createdBy,
       nextRunAt,
     },

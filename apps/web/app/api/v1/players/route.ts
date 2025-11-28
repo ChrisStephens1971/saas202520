@@ -42,25 +42,16 @@ export async function GET(request: NextRequest) {
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
 
     // Validate query parameters
-    const validation = safeValidateQuery(
-      playerListQuerySchema,
-      request.nextUrl.searchParams
-    );
+    const validation = safeValidateQuery(playerListQuerySchema, request.nextUrl.searchParams);
 
     if (!validation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: validation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: validation.error.errors });
     }
 
     const { page, limit, search, skillLevel } = validation.data;
@@ -122,20 +113,18 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const profileMap = new Map(
-      playerProfiles.map(p => [p.playerId, p])
-    );
+    const profileMap = new Map(playerProfiles.map((p) => [p.playerId, p]));
 
     // Calculate stats for each player
-    let playersWithStats = players.map(p => {
+    let playersWithStats = players.map((p) => {
       const profile = profileMap.get(p.id);
 
       const matchesAsA = p.matchesAsPlayerA;
       const matchesAsB = p.matchesAsPlayerB;
 
       const wins = [
-        ...matchesAsA.filter(m => m.winnerId === p.id),
-        ...matchesAsB.filter(m => m.winnerId === p.id),
+        ...matchesAsA.filter((m) => m.winnerId === p.id),
+        ...matchesAsB.filter((m) => m.winnerId === p.id),
       ].length;
 
       const totalMatches = matchesAsA.length + matchesAsB.length;
@@ -157,9 +146,7 @@ export async function GET(request: NextRequest) {
 
     // Filter by skill level if specified
     if (skillLevel) {
-      playersWithStats = playersWithStats.filter(
-        p => p.skillLevel === skillLevel
-      );
+      playersWithStats = playersWithStats.filter((p) => p.skillLevel === skillLevel);
     }
 
     // Apply pagination
@@ -168,7 +155,7 @@ export async function GET(request: NextRequest) {
     const paginatedPlayers = playersWithStats.slice(skip, skip + limit);
 
     // Transform to API response format
-    const data: PlayerSummary[] = paginatedPlayers.map(p => ({
+    const data: PlayerSummary[] = paginatedPlayers.map((p) => ({
       id: p.id,
       name: p.name,
       skillLevel: p.skillLevel,
@@ -181,7 +168,6 @@ export async function GET(request: NextRequest) {
     const rateLimitHeaders = getRateLimitHeaders(1000, 994, Date.now() + 3600000);
 
     return apiPaginated(data, pagination, rateLimitHeaders);
-
   } catch (error) {
     console.error('[API Error] GET /api/v1/players:', error);
     return internalError(

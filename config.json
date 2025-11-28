@@ -23,13 +23,7 @@
     "baseSpecPath": "packages/api-contracts/openapi.yaml"
   },
   "ci": {
-    "requiredChecks": [
-      "build",
-      "test",
-      "lint",
-      "typecheck",
-      "security-scan"
-    ],
+    "requiredChecks": ["build", "test", "lint", "typecheck", "security-scan"],
     "checkNameNote": "IMPORTANT: Job names must match these exactly"
   },
   "lanes": {

@@ -3,6 +3,7 @@
 This is a streamlined prompt template for AI assistants to guide users through planning a simpler multi-tenant SaaS application, focused on getting to MVP quickly.
 
 **Use this version when:**
+
 - Building a lean startup or MVP
 - Small team (1-5 people)
 - Target scale: <100 tenants in first year
@@ -10,6 +11,7 @@ This is a streamlined prompt template for AI assistants to guide users through p
 - Standard compliance requirements
 
 **Use the full template when:**
+
 - Enterprise sales strategy
 - Regulated industries requiring heavy compliance
 - Complex integrations and customization
@@ -159,39 +161,46 @@ You are helping plan a multi-tenant SaaS MVP. Guide the user through this stream
 After gathering responses, create a concise planning document:
 
 ### 1. Product Summary (1 page)
+
 - Problem and solution
 - Target customer
 - MVP feature list (5 key features)
 - Differentiator
 
 ### 2. Technical Plan (1-2 pages)
+
 - Tech stack decisions with rationale
 - Multi-tenancy approach
 - Infrastructure and hosting
 - Third-party services (Stripe, email, etc.)
 
 ### 3. MVP Scope (1 page)
+
 - In-scope features
 - Explicitly out-of-scope (post-MVP)
 - User flows for core features
 
 ### 4. Business Model (1 page)
+
 - Pricing tiers (keep it simple!)
 - Free vs. paid features
 - Payment processing approach
 
 ### 5. Compliance & Legal (1 page)
+
 - Required legal documents
 - Data handling and privacy basics
 - Cookie consent if needed
 
 ### 6. Launch Checklist (1 page)
+
 - Pre-launch tasks
 - Beta testing plan
 - Go-to-market approach
 - First 10 customer acquisition plan
 
 ### 7. Timeline & Milestones
+
 - MVP development phases
 - Beta launch date
 - Public launch date
@@ -204,28 +213,33 @@ After gathering responses, create a concise planning document:
 When synthesizing the plan, remind the user:
 
 **Keep It Simple:**
+
 - Start with ONE paid tier (can add more later)
 - Defer enterprise features (SSO, custom SLAs, advanced security)
 - Use managed services (less DevOps burden)
 - Avoid premature optimization
 
 **Technical Decisions:**
+
 - Choose boring, proven technology
 - Monolith before microservices
 - Shared database is fine for MVP
 - Use existing libraries, don't build from scratch
 
 **Feature Discipline:**
+
 - 5 core features maximum for MVP
 - Every additional feature delays launch
 - Post-MVP roadmap is OK to have, but stay focused
 
 **Launch Fast:**
+
 - 8-12 weeks to MVP for small team
 - Private beta → public beta → paid launch
 - Get feedback early and iterate
 
 **Avoid These Pitfalls:**
+
 - Building too many features before launch
 - Enterprise features when targeting SMBs
 - Custom auth systems (use Auth0/Clerk/Supabase)

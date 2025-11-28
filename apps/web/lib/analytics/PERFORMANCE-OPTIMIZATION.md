@@ -40,6 +40,7 @@ CREATE INDEX idx_analytics_user_date ON analytics_events(user_id, created_at DES
 ```
 
 **Performance Impact:**
+
 - Query time reduction: 80-95%
 - Before: 2-5 seconds for complex queries
 - After: 100-500ms for same queries
@@ -47,6 +48,7 @@ CREATE INDEX idx_analytics_user_date ON analytics_events(user_id, created_at DES
 ### B. Query Optimization Examples
 
 **BEFORE (Slow):**
+
 ```typescript
 // ❌ Fetches all fields, no pagination
 const subscriptions = await prisma.subscription.findMany({
@@ -59,6 +61,7 @@ const subscriptions = await prisma.subscription.findMany({
 ```
 
 **AFTER (Optimized):**
+
 ```typescript
 // ✅ Selective fields, pagination, proper indexing
 const subscriptions = await prisma.subscription.findMany({
@@ -89,6 +92,7 @@ const subscriptions = await prisma.subscription.findMany({
 ### C. Batch Queries with Promise.all
 
 **BEFORE (Sequential):**
+
 ```typescript
 // ❌ 3 sequential queries = 300ms
 const current = await getRevenueMetrics(currentMonth);
@@ -97,6 +101,7 @@ const cohorts = await getCohortData(currentMonth);
 ```
 
 **AFTER (Parallel):**
+
 ```typescript
 // ✅ Parallel execution = 100ms
 const [current, previous, cohorts] = await Promise.all([
@@ -111,6 +116,7 @@ const [current, previous, cohorts] = await Promise.all([
 ### D. Aggregation Optimization
 
 **BEFORE (Multiple Queries):**
+
 ```typescript
 // ❌ N+1 queries
 const tournaments = await prisma.tournament.findMany();
@@ -122,6 +128,7 @@ for (const tournament of tournaments) {
 ```
 
 **AFTER (Single Aggregation):**
+
 ```typescript
 // ✅ Single query with aggregation
 const tournaments = await prisma.tournament.findMany({
@@ -141,18 +148,19 @@ const tournaments = await prisma.tournament.findMany({
 
 ### A. Cache TTL Strategy
 
-| Data Type | TTL | Rationale |
-|-----------|-----|-----------|
-| Revenue Metrics (current month) | 5 minutes | Frequently updated |
-| Revenue Metrics (historical) | 1 hour | Rarely changes |
-| Cohort Analysis | 30 minutes | Medium volatility |
-| Tournament Performance | 15 minutes | Active tournaments |
-| Predictive Models | 1 hour | Expensive computation |
-| Export Jobs | 24 hours | Static once generated |
+| Data Type                       | TTL        | Rationale             |
+| ------------------------------- | ---------- | --------------------- |
+| Revenue Metrics (current month) | 5 minutes  | Frequently updated    |
+| Revenue Metrics (historical)    | 1 hour     | Rarely changes        |
+| Cohort Analysis                 | 30 minutes | Medium volatility     |
+| Tournament Performance          | 15 minutes | Active tournaments    |
+| Predictive Models               | 1 hour     | Expensive computation |
+| Export Jobs                     | 24 hours   | Static once generated |
 
 ### B. Cache Warming Strategy
 
 **Implementation:**
+
 ```typescript
 // Warm cache for common queries on schedule
 async function warmCommonCaches(tenantId: string) {
@@ -183,6 +191,7 @@ async function warmCommonCaches(tenantId: string) {
 ### C. Cache Invalidation Patterns
 
 **Event-Based Invalidation:**
+
 ```typescript
 // When subscription changes, invalidate related caches
 async function onSubscriptionChanged(subscription: Subscription) {
@@ -192,15 +201,14 @@ async function onSubscriptionChanged(subscription: Subscription) {
     `ltv:${subscription.tenantId}`,
   ];
 
-  await Promise.all(
-    patterns.map(pattern => CacheManager.invalidatePattern(pattern))
-  );
+  await Promise.all(patterns.map((pattern) => CacheManager.invalidatePattern(pattern)));
 }
 ```
 
 ### D. Memory Usage Estimates
 
 **Per Tenant (Monthly):**
+
 - Revenue metrics: ~10 KB
 - Cohort data: ~50 KB
 - Tournament analytics: ~30 KB
@@ -216,16 +224,17 @@ async function onSubscriptionChanged(subscription: Subscription) {
 
 ### A. Current Targets
 
-| Endpoint | Target | Current | Status |
-|----------|--------|---------|--------|
-| GET /api/analytics/revenue | < 200ms | 150ms | ✅ |
-| GET /api/analytics/cohorts | < 300ms | 250ms | ✅ |
-| GET /api/analytics/predictions | < 500ms | 450ms | ✅ |
-| POST /api/analytics/export | < 100ms | 80ms | ✅ |
+| Endpoint                       | Target  | Current | Status |
+| ------------------------------ | ------- | ------- | ------ |
+| GET /api/analytics/revenue     | < 200ms | 150ms   | ✅     |
+| GET /api/analytics/cohorts     | < 300ms | 250ms   | ✅     |
+| GET /api/analytics/predictions | < 500ms | 450ms   | ✅     |
+| POST /api/analytics/export     | < 100ms | 80ms    | ✅     |
 
 ### B. Response Size Optimization
 
 **Pagination:**
+
 ```typescript
 // Always paginate large datasets
 interface PaginatedResponse<T> {
@@ -240,6 +249,7 @@ interface PaginatedResponse<T> {
 ```
 
 **Compression:**
+
 ```typescript
 // Enable gzip compression for API responses
 // In Next.js config:
@@ -260,6 +270,7 @@ module.exports = {
 ### A. Memoization
 
 **BEFORE:**
+
 ```typescript
 // ❌ Re-renders on every parent update
 export function RevenueChart({ data }: Props) {
@@ -269,6 +280,7 @@ export function RevenueChart({ data }: Props) {
 ```
 
 **AFTER:**
+
 ```typescript
 // ✅ Only re-renders when data changes
 export const RevenueChart = React.memo(({ data }: Props) => {
@@ -368,6 +380,7 @@ import { format, startOfMonth } from 'date-fns'; // ✅ Only imports needed func
 ## 6. Load Testing Results
 
 ### Test Configuration
+
 - Tool: Artillery
 - Scenario: 100 concurrent users
 - Duration: 5 minutes
@@ -376,12 +389,14 @@ import { format, startOfMonth } from 'date-fns'; // ✅ Only imports needed func
 ### Results
 
 **Before Optimization:**
+
 - Requests/sec: 50
 - P95 latency: 2.5s
 - P99 latency: 4.2s
 - Error rate: 2.3%
 
 **After Optimization:**
+
 - Requests/sec: 250 (5x improvement)
 - P95 latency: 180ms (93% improvement)
 - P99 latency: 350ms (92% improvement)
@@ -426,17 +441,20 @@ scenarios:
 ### A. Horizontal Scaling
 
 **Current Capacity (Single Instance):**
+
 - Concurrent users: 500
 - Requests/min: 15,000
 - Memory usage: 2 GB
 - CPU usage: 40%
 
 **Scaling Triggers:**
+
 - CPU > 70% for 5 minutes → Scale to 2 instances
 - Memory > 80% → Scale to 2 instances
 - Response time P95 > 500ms → Scale to 2 instances
 
 **Auto-Scaling Configuration (AWS):**
+
 ```yaml
 AutoScalingGroup:
   MinSize: 1
@@ -460,7 +478,7 @@ const prisma = new PrismaClient({
   // Connection pool settings
   pool: {
     max: 20, // Max connections
-    min: 5,  // Min connections
+    min: 5, // Min connections
     acquireTimeout: 30000,
     idleTimeout: 300000,
   },
@@ -470,18 +488,22 @@ const prisma = new PrismaClient({
 ### C. Redis Clustering
 
 **For > 10,000 tenants:**
+
 ```typescript
 // Redis Cluster configuration
-const redis = new Redis.Cluster([
-  { host: 'redis-1', port: 6379 },
-  { host: 'redis-2', port: 6379 },
-  { host: 'redis-3', port: 6379 },
-], {
-  redisOptions: {
-    password: process.env.REDIS_PASSWORD,
-  },
-  clusterRetryStrategy: (times) => Math.min(100 * times, 2000),
-});
+const redis = new Redis.Cluster(
+  [
+    { host: 'redis-1', port: 6379 },
+    { host: 'redis-2', port: 6379 },
+    { host: 'redis-3', port: 6379 },
+  ],
+  {
+    redisOptions: {
+      password: process.env.REDIS_PASSWORD,
+    },
+    clusterRetryStrategy: (times) => Math.min(100 * times, 2000),
+  }
+);
 ```
 
 ---
@@ -541,12 +563,14 @@ async function trackQuery(name: string, fn: () => Promise<any>) {
 ## 9. Cost-Benefit Analysis
 
 ### Database Optimization
+
 - **Implementation Time:** 4 hours
 - **Performance Gain:** 80-95% faster queries
 - **Cost Reduction:** 40% less database load → smaller instance
 - **ROI:** 10x
 
 ### Caching Layer
+
 - **Implementation Time:** 8 hours
 - **Performance Gain:** 90% cache hit rate
 - **Additional Cost:** $50/month (Redis)
@@ -555,6 +579,7 @@ async function trackQuery(name: string, fn: () => Promise<any>) {
 - **ROI:** 20x
 
 ### Code Splitting
+
 - **Implementation Time:** 2 hours
 - **Performance Gain:** 38% smaller bundles
 - **User Experience:** 50% faster page load
@@ -581,6 +606,7 @@ async function trackQuery(name: string, fn: () => Promise<any>) {
 ## Summary
 
 **Overall Performance Improvements:**
+
 - API response time: 85% faster
 - Database queries: 90% faster
 - Bundle size: 38% smaller
@@ -588,6 +614,7 @@ async function trackQuery(name: string, fn: () => Promise<any>) {
 - Error rate: 95% reduction
 
 **Next Steps for Production:**
+
 1. Configure auto-scaling based on load
 2. Set up comprehensive monitoring
 3. Implement alert rules
@@ -595,6 +622,7 @@ async function trackQuery(name: string, fn: () => Promise<any>) {
 5. Schedule weekly performance reviews
 
 **Estimated Capacity:**
+
 - Current: 500 concurrent users per instance
 - Scaled (5 instances): 2,500 concurrent users
 - Target: 10,000+ users with Redis cluster

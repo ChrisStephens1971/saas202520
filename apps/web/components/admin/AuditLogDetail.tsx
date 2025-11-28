@@ -111,20 +111,13 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Audit Log Details</h3>
-              <p className="text-sm text-gray-500 mt-1">
-                {format(timestamp, 'PPpp')}
-              </p>
+              <p className="text-sm text-gray-500 mt-1">{format(timestamp, 'PPpp')}</p>
             </div>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600 transition-colors"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -140,77 +133,53 @@ export function AuditLogDetail({ log, onClose }: AuditLogDetailProps) {
             {/* Basic Info */}
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Action
-                </label>
-                <div className="text-sm text-gray-900 font-semibold capitalize">
-                  {log.action}
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Action</label>
+                <div className="text-sm text-gray-900 font-semibold capitalize">{log.action}</div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Resource
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Resource</label>
                 <div className="text-sm text-gray-900 capitalize">{log.resource}</div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  User
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">User</label>
                 <div className="text-sm text-gray-900">{log.userName}</div>
                 <div className="text-xs text-gray-500 font-mono">{log.userId}</div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Resource ID
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Resource ID</label>
                 <div className="text-sm text-gray-900 font-mono break-all">
                   {log.resourceId || '—'}
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  IP Address
-                </label>
-                <div className="text-sm text-gray-900 font-mono">
-                  {log.ipAddress || '—'}
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">IP Address</label>
+                <div className="text-sm text-gray-900 font-mono">{log.ipAddress || '—'}</div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Organization
-                </label>
-                <div className="text-sm text-gray-900 font-mono break-all">
-                  {log.orgId}
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Organization</label>
+                <div className="text-sm text-gray-900 font-mono break-all">{log.orgId}</div>
               </div>
             </div>
 
-            {(log.userAgent ? (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  User Agent
-                </label>
-                <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg font-mono break-all">
-                  {log.userAgent as string}
+            {
+              (log.userAgent ? (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">User Agent</label>
+                  <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded-lg font-mono break-all">
+                    {log.userAgent as string}
+                  </div>
                 </div>
-              </div>
-            ) : null) as any}
+              ) : null) as any
+            }
 
             {/* Changes (Diff View) */}
-            {hasDiff && (
-              <DiffViewer before={changes.before} after={changes.after} />
-            )}
+            {hasDiff && <DiffViewer before={changes.before} after={changes.after} />}
 
             {/* Raw Changes (if not a proper diff) */}
-            {log.changes && !hasDiff && (
-              <JsonViewer data={log.changes} title="Changes" />
-            )}
+            {log.changes && !hasDiff && <JsonViewer data={log.changes} title="Changes" />}
 
             {/* Metadata */}
-            {log.metadata && (
-              <JsonViewer data={log.metadata} title="Metadata" />
-            )}
+            {log.metadata && <JsonViewer data={log.metadata} title="Metadata" />}
 
             {/* Link to Resource */}
             {log.resourceId && (

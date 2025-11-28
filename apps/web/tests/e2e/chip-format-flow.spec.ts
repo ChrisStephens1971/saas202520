@@ -96,7 +96,7 @@ test.describe('Chip Format Tournament Flow', () => {
       );
 
       await Promise.all(
-        players.map(player =>
+        players.map((player) =>
           prisma.tournamentPlayer.create({
             data: {
               tournamentId,
@@ -148,7 +148,10 @@ test.describe('Chip Format Tournament Flow', () => {
       await recordButton.click();
 
       // Select winner (first player in the match)
-      await page.getByLabel(/winner/i).first().check();
+      await page
+        .getByLabel(/winner/i)
+        .first()
+        .check();
 
       // Submit result
       await page.getByRole('button', { name: /submit|save/i }).click();
@@ -193,7 +196,10 @@ test.describe('Chip Format Tournament Flow', () => {
         const recordButton = matchSection.getByRole('button', { name: /record.*result/i });
         await recordButton.click();
 
-        await page.getByLabel(/winner/i).first().check();
+        await page
+          .getByLabel(/winner/i)
+          .first()
+          .check();
         await page.getByRole('button', { name: /submit/i }).click();
         await page.waitForTimeout(300);
       }
@@ -204,7 +210,7 @@ test.describe('Chip Format Tournament Flow', () => {
         orderBy: { chipCount: 'desc' },
       });
 
-      const playersWithChips = standings.filter(p => p.chipCount > 0);
+      const playersWithChips = standings.filter((p) => p.chipCount > 0);
       expect(playersWithChips.length).toBeGreaterThan(0);
     });
 
@@ -313,7 +319,7 @@ test.describe('Chip Format Tournament Flow', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId: tournament.id,
@@ -378,7 +384,7 @@ test.describe('Chip Format Tournament Flow', () => {
     );
 
     await Promise.all(
-      players.map(player =>
+      players.map((player) =>
         prisma.tournamentPlayer.create({
           data: {
             tournamentId: tournament.id,

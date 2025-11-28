@@ -19,6 +19,7 @@ Transform the tournament platform into a native app-like experience through Prog
 ### What problem are we solving?
 
 Tournament organizers and participants face significant challenges when accessing our platform on mobile devices:
+
 - **Poor Mobile Experience:** Current interface not optimized for touch, with tap targets too small and no gesture support
 - **Connectivity Issues:** Venues often have unreliable Wi-Fi, causing tournament management disruptions
 - **Slow Performance:** Mobile users experience 3-5 second load times on typical 3G connections
@@ -61,28 +62,30 @@ Tournament organizers and participants face significant challenges when accessin
 
 ### Key Metrics
 
-| Metric | Baseline | Target | Timeline |
-|--------|----------|--------|----------|
-| Mobile page load time (3G) | 4.2s | <2s | Week 4 completion |
-| Lighthouse PWA score | 45 | >90 | Week 4 completion |
-| Time to Interactive (TTI) | 5.1s | <3s | Week 4 completion |
-| PWA install rate | 0% | 30% | 4 weeks post-launch |
-| Push notification opt-in | 0% | 50% | 4 weeks post-launch |
-| Offline usage sessions | 0% | 15% | 4 weeks post-launch |
-| Mobile bounce rate | 45% | <30% | 4 weeks post-launch |
-| Mobile conversion rate | 2.3% | >3.5% | 8 weeks post-launch |
-| User satisfaction (mobile) | 3.2/5 | >4.2/5 | 8 weeks post-launch |
+| Metric                     | Baseline | Target | Timeline            |
+| -------------------------- | -------- | ------ | ------------------- |
+| Mobile page load time (3G) | 4.2s     | <2s    | Week 4 completion   |
+| Lighthouse PWA score       | 45       | >90    | Week 4 completion   |
+| Time to Interactive (TTI)  | 5.1s     | <3s    | Week 4 completion   |
+| PWA install rate           | 0%       | 30%    | 4 weeks post-launch |
+| Push notification opt-in   | 0%       | 50%    | 4 weeks post-launch |
+| Offline usage sessions     | 0%       | 15%    | 4 weeks post-launch |
+| Mobile bounce rate         | 45%      | <30%   | 4 weeks post-launch |
+| Mobile conversion rate     | 2.3%     | >3.5%  | 8 weeks post-launch |
+| User satisfaction (mobile) | 3.2/5    | >4.2/5 | 8 weeks post-launch |
 
 ---
 
 ## 4. User Stories
 
 ### Story 1: Offline Tournament Management
+
 **As a** Tournament Director
 **I want** to manage tournaments offline when Wi-Fi drops
 **So that** I can continue operations without connectivity interruptions
 
 **Acceptance Criteria:**
+
 - [ ] Can view full tournament bracket offline
 - [ ] Can record match scores offline (queued for sync)
 - [ ] Visual indicator shows offline status clearly
@@ -91,11 +94,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Conflict resolution UI for simultaneous edits
 
 ### Story 2: Fast Mobile Loading
+
 **As a** Player on 3G connection
 **I want** brackets to load in under 2 seconds
 **So that** I can quickly check my match status without frustration
 
 **Acceptance Criteria:**
+
 - [ ] Initial page load <2s on 3G network
 - [ ] Time to Interactive (TTI) <3s
 - [ ] First Contentful Paint <1s
@@ -104,11 +109,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Images lazy-load below fold
 
 ### Story 3: PWA Installation
+
 **As a** Regular mobile user
 **I want** to install the platform as an app
 **So that** I can access it quickly from my home screen
 
 **Acceptance Criteria:**
+
 - [ ] Install prompt appears after 3 visits or key action
 - [ ] Custom install UI (not browser default)
 - [ ] One-tap installation process
@@ -117,11 +124,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Can dismiss prompt (remembered for 7 days)
 
 ### Story 4: Push Notifications for Matches
+
 **As a** Tournament participant
 **I want** push notifications when my match is ready
 **So that** I don't miss my turn or delay the tournament
 
 **Acceptance Criteria:**
+
 - [ ] Notification 5 minutes before match starts
 - [ ] Notification when assigned to table
 - [ ] Action buttons: "View Match", "Dismiss"
@@ -130,11 +139,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Badge count on app icon
 
 ### Story 5: Touch-Optimized Interface
+
 **As a** Mobile user with large fingers
 **I want** tap targets to be large and properly spaced
 **So that** I can interact accurately without accidental taps
 
 **Acceptance Criteria:**
+
 - [ ] All tap targets minimum 44x44px
 - [ ] 8px spacing between interactive elements
 - [ ] Visual feedback within 300ms of tap
@@ -143,11 +154,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Long-press reveals context menus
 
 ### Story 6: Gesture Navigation
+
 **As a** Tournament Director navigating quickly
 **I want** to use swipe gestures for common actions
 **So that** I can manage tournaments faster than clicking buttons
 
 **Acceptance Criteria:**
+
 - [ ] Swipe right to go back
 - [ ] Swipe left to advance/dismiss
 - [ ] Pull down to refresh
@@ -156,11 +169,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Visual feedback for gesture recognition
 
 ### Story 7: Background Sync
+
 **As a** Scorekeeper with spotty connection
 **I want** my recorded scores to sync automatically when online
 **So that** I don't have to manually retry failed submissions
 
 **Acceptance Criteria:**
+
 - [ ] Actions queued when offline
 - [ ] Auto-sync when connectivity detected
 - [ ] Manual sync trigger available
@@ -169,11 +184,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Can view queued actions
 
 ### Story 8: App Shortcuts
+
 **As a** Tournament Director in a rush
 **I want** quick access shortcuts to common tasks
 **So that** I can jump directly to creating tournaments or viewing active ones
 
 **Acceptance Criteria:**
+
 - [ ] Long-press app icon shows shortcuts
 - [ ] "New Tournament" shortcut
 - [ ] "Active Tournaments" shortcut
@@ -182,11 +199,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Deep links to correct pages
 
 ### Story 9: Offline Viewing
+
 **As a** Player in a venue with no Wi-Fi
 **I want** to view tournament information offline
 **So that** I can check standings and schedules without connectivity
 
 **Acceptance Criteria:**
+
 - [ ] Recently viewed tournaments cached
 - [ ] Brackets viewable offline
 - [ ] Player profiles cached
@@ -195,11 +214,13 @@ Tournament organizers and participants face significant challenges when accessin
 - [ ] Cache expires after 7 days
 
 ### Story 10: Smart Notification Preferences
+
 **As a** User who values privacy
 **I want** granular control over notifications
 **So that** I only receive relevant updates without spam
 
 **Acceptance Criteria:**
+
 - [ ] Opt-in prompt with clear benefits
 - [ ] Separate toggles by notification type
 - [ ] Quiet hours setting (no notifications)
@@ -214,6 +235,7 @@ Tournament organizers and participants face significant challenges when accessin
 ### Must Have (P0)
 
 **Touch Optimizations:**
+
 - 44x44px minimum tap targets across all interactive elements
 - 8px minimum spacing between adjacent tap targets
 - Visual feedback (highlight/ripple) within 300ms of tap
@@ -221,6 +243,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Bottom navigation bar for thumb-friendly access
 
 **Offline Capabilities:**
+
 - Service worker with cache-first strategy for static assets
 - IndexedDB for offline data storage (tournaments, brackets, profiles)
 - Offline viewing of recently accessed tournaments
@@ -228,6 +251,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Queue for offline actions (match scores, updates)
 
 **Performance:**
+
 - Page load <2s on 3G connection
 - Time to Interactive <3s
 - First Contentful Paint <1s
@@ -236,6 +260,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Lazy loading for below-fold content
 
 **PWA Basics:**
+
 - HTTPS everywhere
 - Valid web app manifest (manifest.json)
 - Service worker registered
@@ -247,6 +272,7 @@ Tournament organizers and participants face significant challenges when accessin
 ### Should Have (P1)
 
 **Advanced Offline:**
+
 - Background sync for queued actions
 - Conflict resolution UI for simultaneous edits
 - Sync status indicator
@@ -254,6 +280,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Offline action queue viewer
 
 **Push Notifications:**
+
 - Web Push API integration
 - Match starting notifications (5 min warning)
 - Table assignment notifications
@@ -262,6 +289,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Granular notification preferences
 
 **Gestures:**
+
 - Swipe left/right navigation
 - Pull-to-refresh
 - Long-press context menus
@@ -269,12 +297,14 @@ Tournament organizers and participants face significant challenges when accessin
 - Double-tap quick actions
 
 **Haptic Feedback:**
+
 - Light tap on button press
 - Medium tap on success
 - Strong tap on error/warning
 - Pattern tap for achievements
 
 **PWA Advanced:**
+
 - App shortcuts (long-press icon)
 - Splash screen
 - Status bar theming
@@ -283,6 +313,7 @@ Tournament organizers and participants face significant challenges when accessin
 ### Nice to Have (P2)
 
 **Native-Like Features:**
+
 - Share target API (share results to PWA)
 - Camera access for QR code scanning
 - Geolocation for venue check-in
@@ -290,6 +321,7 @@ Tournament organizers and participants face significant challenges when accessin
 - Bottom sheet modals
 
 **Performance Optimizations:**
+
 - Virtualized lists for long data sets
 - Request Animation Frame (RAF) for smooth animations
 - Web Workers for heavy computations
@@ -297,12 +329,14 @@ Tournament organizers and participants face significant challenges when accessin
 - Resource hints (preconnect, prefetch)
 
 **Advanced Notifications:**
+
 - Rich media (images, icons)
 - Grouped notifications
 - Silent notifications (badge only)
 - Scheduled notifications
 
 **Accessibility:**
+
 - Voice commands
 - Screen reader optimizations
 - High contrast mode
@@ -437,6 +471,7 @@ Pinch-to-zoom → Bracket zooms for detail
 ### Mobile-Specific Layouts
 
 **Bottom Navigation (Primary):**
+
 ```
 ┌─────────────────────────────────┐
 │                                 │
@@ -450,11 +485,13 @@ Pinch-to-zoom → Bracket zooms for detail
 ```
 
 **Thumb Zones:**
+
 - Green (easy): Bottom 30% - Primary actions
 - Yellow (okay): Middle 40% - Secondary content
 - Red (hard): Top 30% - Minimal interaction, scrollable content
 
 **Simplified UI for Mobile:**
+
 - Single column layouts
 - Larger text (16px minimum)
 - Generous whitespace
@@ -463,7 +500,8 @@ Pinch-to-zoom → Bracket zooms for detail
 
 ### Mockups/Wireframes
 
-*To be created by design team - Priority screens:*
+_To be created by design team - Priority screens:_
+
 1. Install prompt (custom UI)
 2. Bottom navigation layout
 3. Offline indicator banner
@@ -480,6 +518,7 @@ Pinch-to-zoom → Bracket zooms for detail
 ### Architecture Overview
 
 **PWA Stack:**
+
 - **Service Worker:** Workbox 7.x for caching strategies
 - **Manifest:** Web app manifest with icons, theme colors, shortcuts
 - **Cache Storage:** Cache API for static assets
@@ -488,6 +527,7 @@ Pinch-to-zoom → Bracket zooms for detail
 - **Background Sync:** Background Sync API for reliable data submission
 
 **Caching Strategy:**
+
 ```
 Static Assets (HTML, CSS, JS, images):
   - Strategy: Cache-First (Workbox CacheFirst)
@@ -514,6 +554,7 @@ Images:
 ```
 
 **Offline Data Storage:**
+
 ```javascript
 // IndexedDB Schema (Dexie)
 const db = new Dexie('TournamentPlatformDB');
@@ -522,7 +563,7 @@ db.version(1).stores({
   brackets: '++id, tournamentId, tenantId',
   players: '++id, tenantId, name',
   matches: '++id, tournamentId, status',
-  syncQueue: '++id, action, timestamp, retries'
+  syncQueue: '++id, action, timestamp, retries',
 });
 
 // Tenant scoping on all queries
@@ -530,6 +571,7 @@ db.tournaments.where('tenantId').equals(currentTenant);
 ```
 
 **Push Notification Flow:**
+
 ```
 Server event (match assigned)
   ↓
@@ -551,6 +593,7 @@ Opens/focuses PWA to relevant page
 ### Dependencies
 
 **Required:**
+
 - **Workbox 7.x:** Service worker library for caching strategies
 - **Dexie.js 3.x:** IndexedDB wrapper for offline storage
 - **Firebase Cloud Messaging (FCM):** Push notification delivery (free tier)
@@ -559,6 +602,7 @@ Opens/focuses PWA to relevant page
 - **Sharp:** Image optimization (WebP conversion)
 
 **Optional:**
+
 - **Comlink:** For Web Workers communication
 - **idb-keyval:** Lightweight key-value storage
 - **Localforage:** Unified storage API (fallback)
@@ -608,6 +652,7 @@ Response: { success: boolean }
 ```
 
 **Modified Endpoints:**
+
 - Add `Cache-Control` headers to existing APIs for offline caching
 - Add `ETag` support for conditional requests
 - Return minimal payloads for mobile (exclude unnecessary fields)
@@ -617,6 +662,7 @@ Response: { success: boolean }
 **What data needs to be collected/stored?**
 
 **Client-Side (IndexedDB):**
+
 - Cached tournaments (last 10 viewed)
 - Tournament brackets (for offline viewing)
 - Player profiles (recently viewed)
@@ -698,6 +744,7 @@ CREATE TABLE sync_queue (
 ### Performance Budgets
 
 **Load Performance:**
+
 - JavaScript bundle: <300KB (gzipped)
 - CSS bundle: <50KB (gzipped)
 - Total page weight: <1MB
@@ -705,6 +752,7 @@ CREATE TABLE sync_queue (
 - Third-party scripts: <100KB
 
 **Runtime Performance:**
+
 - First Contentful Paint (FCP): <1s
 - Largest Contentful Paint (LCP): <2.5s
 - Time to Interactive (TTI): <3s
@@ -713,6 +761,7 @@ CREATE TABLE sync_queue (
 - Animation frame rate: 60fps (16.67ms/frame)
 
 **Monitoring:**
+
 - Real User Monitoring (RUM) via web-vitals library
 - Lighthouse CI in deployment pipeline
 - Performance budgets enforced in CI/CD
@@ -721,12 +770,14 @@ CREATE TABLE sync_queue (
 ### Browser Support
 
 **Target Browsers:**
+
 - Chrome/Edge 90+ (Chromium)
 - Safari 15+ (iOS 15+)
 - Firefox 90+
 - Samsung Internet 14+
 
 **PWA Feature Support:**
+
 - Service Worker: All target browsers ✅
 - Web App Manifest: All target browsers ✅
 - Push Notifications: Chrome/Edge/Firefox ✅, Safari 16+ (iOS 16.4+) ⚠️
@@ -735,6 +786,7 @@ CREATE TABLE sync_queue (
 - Install Prompt: Chrome/Edge (custom), Safari (Add to Home Screen)
 
 **Fallbacks:**
+
 - iOS <16.4: No push (show in-app notifications instead)
 - No Background Sync: Manual sync button always available
 - No Badge API: Show count in tab title
@@ -743,23 +795,27 @@ CREATE TABLE sync_queue (
 ### Multi-Tenant Considerations
 
 **Data Isolation:**
+
 - All cached data includes tenant_id field
 - Service worker filters cache by tenant
 - Switching tenants clears previous tenant's cache
 - Push notifications tenant-scoped
 
 **Branding:**
+
 - Manifest generated per tenant (tenant colors, logo)
 - App name includes tenant name (if whitelabel)
 - Splash screen uses tenant branding
 - Theme color from tenant settings
 
 **Performance:**
+
 - Separate cache namespace per tenant
 - Tenant-specific performance monitoring
 - Resource limits per tenant (cache size)
 
 **Compliance:**
+
 - Tenant-specific push notification consent
 - Data retention policies per tenant
 - GDPR/CCPA settings per tenant
@@ -771,6 +827,7 @@ CREATE TABLE sync_queue (
 ### Rollout Strategy
 
 **Phase 1: Internal Testing (Week 4, Days 1-2)**
+
 - [ ] Deploy to staging environment
 - [ ] Internal team tests on 5+ device types (iOS, Android, tablets)
 - [ ] Test offline scenarios (airplane mode, slow 3G)
@@ -778,6 +835,7 @@ CREATE TABLE sync_queue (
 - [ ] Run Lighthouse audits (target: >85 score)
 
 **Phase 2: Beta (Week 5, Days 1-7)**
+
 - [ ] Deploy to production with feature flag
 - [ ] Enable for 10% of mobile users (random selection)
 - [ ] Monitor metrics: load times, error rates, install rate
@@ -785,18 +843,21 @@ CREATE TABLE sync_queue (
 - [ ] Fix critical issues within 24 hours
 
 **Phase 3: Gradual Rollout (Week 6)**
+
 - [ ] Day 1-2: 25% of mobile users
 - [ ] Day 3-4: 50% of mobile users
 - [ ] Day 5-6: 75% of mobile users
 - [ ] Day 7: 100% of mobile users
 
 **Phase 4: Post-Launch Optimization (Weeks 7-8)**
+
 - [ ] Analyze usage patterns (offline, notifications, installs)
 - [ ] A/B test install prompt timing and messaging
 - [ ] Optimize cache sizes based on usage data
 - [ ] Iterate on notification templates based on click rates
 
 **Rollback Plan:**
+
 - Feature flag allows instant rollback
 - Service worker version pinned (can roll back to previous)
 - Database migrations backward-compatible
@@ -805,6 +866,7 @@ CREATE TABLE sync_queue (
 ### Success Criteria for Launch
 
 **Go/No-Go Criteria (Must Pass Before Each Phase):**
+
 - ✅ Lighthouse PWA score >85
 - ✅ Mobile page load <2.5s on 3G (target <2s in production)
 - ✅ Zero critical bugs in staging
@@ -815,6 +877,7 @@ CREATE TABLE sync_queue (
 - ✅ No data loss in offline sync testing
 
 **Success Metrics (4 weeks post-launch):**
+
 - ✅ PWA install rate >30%
 - ✅ Push notification opt-in >50%
 - ✅ Offline usage sessions >15%
@@ -827,6 +890,7 @@ CREATE TABLE sync_queue (
 ### Marketing/Communication Plan
 
 **Internal Communication:**
+
 - **Week 4 Day 1:** Kick-off email to engineering and product teams
 - **Week 4 Day 5:** Demo in all-hands meeting
 - **Week 5 Day 1:** Beta announcement to internal Slack channel
@@ -835,11 +899,13 @@ CREATE TABLE sync_queue (
 **Customer Communication:**
 
 **Pre-Launch (Week 4):**
+
 - Blog post: "Coming Soon: Offline Tournament Management"
 - Teaser on social media (Twitter, LinkedIn)
 - Email to active TDs: "Be among the first to try our new mobile experience"
 
 **Launch (Week 6):**
+
 - **Email Campaign:** "Your Tournament Platform Just Got Mobile-First"
   - Subject: "New: Install our app for offline tournaments & push notifications"
   - Body: Benefits (offline, faster, notifications), install instructions
@@ -861,6 +927,7 @@ CREATE TABLE sync_queue (
   - Community forum: Announcement with Q&A thread
 
 **Post-Launch (Week 7-8):**
+
 - Weekly blog posts: "Top 5 ways to use offline mode", "Getting the most from push notifications"
 - User testimonials (with permission)
 - Feature spotlight emails (drip campaign)
@@ -869,20 +936,20 @@ CREATE TABLE sync_queue (
 
 ## 9. Risks and Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| **iOS Safari PWA limitations** (no background sync, limited push) | High | High | Progressive enhancement: manual sync button always available, in-app notifications fallback, educate users on iOS limitations |
-| **Offline sync conflicts** (two users edit same match offline) | High | Medium | Last-write-wins with conflict resolution UI, show "conflicted" state, allow manual resolution, log all conflicts for analysis |
-| **Large offline cache** (users with low storage) | Medium | Medium | Cache size limits (50MB max), auto-clear old entries, allow users to clear cache, prioritize recent tournaments only |
-| **Push notification spam** (too many notifications) | High | Medium | Smart rate limiting (max 3/hour), granular preferences, quiet hours, allow instant disable, A/B test frequency |
-| **Poor performance on low-end devices** (<2GB RAM) | High | Medium | Performance budgets enforced, testing on low-end devices (Moto G4), lazy loading, virtualized lists, reduce animations |
-| **Service worker bugs** (breaks entire site) | Critical | Low | Thorough testing, versioned service workers, instant rollback capability, skip-waiting only after user confirmation |
-| **Cross-tenant data leakage in cache** | Critical | Low | All cached data tenant-scoped, clear cache on tenant switch, automated tests for isolation, security audit |
-| **Users don't discover PWA install** | Medium | High | Multiple touchpoints (banner, profile, tutorial), smart timing (after 3 visits), highlight benefits, A/B test messaging |
-| **Background sync queue grows too large** | Medium | Low | Queue size limit (100 actions), expire old actions (24 hours), manual clear option, retry with exponential backoff |
-| **Push notification token expiration** | Medium | Medium | Auto-refresh tokens, re-prompt for permission if expired, graceful fallback to in-app notifications |
-| **Browser compatibility issues** | Medium | Low | Progressive enhancement, feature detection, fallbacks for unsupported browsers, extensive cross-browser testing |
-| **Increased server load from sync requests** | Medium | Medium | Rate limiting per user, batch sync endpoints, efficient queries, caching on server, monitor server metrics |
+| Risk                                                              | Impact   | Probability | Mitigation                                                                                                                    |
+| ----------------------------------------------------------------- | -------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **iOS Safari PWA limitations** (no background sync, limited push) | High     | High        | Progressive enhancement: manual sync button always available, in-app notifications fallback, educate users on iOS limitations |
+| **Offline sync conflicts** (two users edit same match offline)    | High     | Medium      | Last-write-wins with conflict resolution UI, show "conflicted" state, allow manual resolution, log all conflicts for analysis |
+| **Large offline cache** (users with low storage)                  | Medium   | Medium      | Cache size limits (50MB max), auto-clear old entries, allow users to clear cache, prioritize recent tournaments only          |
+| **Push notification spam** (too many notifications)               | High     | Medium      | Smart rate limiting (max 3/hour), granular preferences, quiet hours, allow instant disable, A/B test frequency                |
+| **Poor performance on low-end devices** (<2GB RAM)                | High     | Medium      | Performance budgets enforced, testing on low-end devices (Moto G4), lazy loading, virtualized lists, reduce animations        |
+| **Service worker bugs** (breaks entire site)                      | Critical | Low         | Thorough testing, versioned service workers, instant rollback capability, skip-waiting only after user confirmation           |
+| **Cross-tenant data leakage in cache**                            | Critical | Low         | All cached data tenant-scoped, clear cache on tenant switch, automated tests for isolation, security audit                    |
+| **Users don't discover PWA install**                              | Medium   | High        | Multiple touchpoints (banner, profile, tutorial), smart timing (after 3 visits), highlight benefits, A/B test messaging       |
+| **Background sync queue grows too large**                         | Medium   | Low         | Queue size limit (100 actions), expire old actions (24 hours), manual clear option, retry with exponential backoff            |
+| **Push notification token expiration**                            | Medium   | Medium      | Auto-refresh tokens, re-prompt for permission if expired, graceful fallback to in-app notifications                           |
+| **Browser compatibility issues**                                  | Medium   | Low         | Progressive enhancement, feature detection, fallbacks for unsupported browsers, extensive cross-browser testing               |
+| **Increased server load from sync requests**                      | Medium   | Medium      | Rate limiting per user, batch sync endpoints, efficient queries, caching on server, monitor server metrics                    |
 
 ---
 
@@ -890,31 +957,31 @@ CREATE TABLE sync_queue (
 
 **Sprint 10 Week 4 (5 days)**
 
-| Milestone | Target Date | Owner | Status |
-|-----------|-------------|-------|--------|
-| **PRD Approved** | Day 1 AM | Product | ⏳ |
-| **Technical Spec Written** | Day 1 PM | Engineering Lead | ⏳ |
-| **Design Mockups Complete** | Day 2 AM | Design | ⏳ |
-| **Service Worker + Manifest** | Day 2 PM | Frontend | ⏳ |
-| **Offline Caching Implemented** | Day 3 AM | Frontend | ⏳ |
-| **Push Notifications Backend** | Day 3 PM | Backend | ⏳ |
-| **Touch Optimizations + Gestures** | Day 4 AM | Frontend | ⏳ |
-| **Performance Optimizations** | Day 4 PM | Frontend | ⏳ |
-| **Testing Complete** | Day 5 AM | QA | ⏳ |
-| **Lighthouse Score >85** | Day 5 AM | Frontend | ⏳ |
-| **Internal Demo** | Day 5 PM | Product | ⏳ |
-| **Staging Deployment** | Day 5 PM | DevOps | ⏳ |
+| Milestone                          | Target Date | Owner            | Status |
+| ---------------------------------- | ----------- | ---------------- | ------ |
+| **PRD Approved**                   | Day 1 AM    | Product          | ⏳     |
+| **Technical Spec Written**         | Day 1 PM    | Engineering Lead | ⏳     |
+| **Design Mockups Complete**        | Day 2 AM    | Design           | ⏳     |
+| **Service Worker + Manifest**      | Day 2 PM    | Frontend         | ⏳     |
+| **Offline Caching Implemented**    | Day 3 AM    | Frontend         | ⏳     |
+| **Push Notifications Backend**     | Day 3 PM    | Backend          | ⏳     |
+| **Touch Optimizations + Gestures** | Day 4 AM    | Frontend         | ⏳     |
+| **Performance Optimizations**      | Day 4 PM    | Frontend         | ⏳     |
+| **Testing Complete**               | Day 5 AM    | QA               | ⏳     |
+| **Lighthouse Score >85**           | Day 5 AM    | Frontend         | ⏳     |
+| **Internal Demo**                  | Day 5 PM    | Product          | ⏳     |
+| **Staging Deployment**             | Day 5 PM    | DevOps           | ⏳     |
 
 **Post-Sprint Timeline:**
 
-| Milestone | Target Date | Status |
-|-----------|-------------|--------|
-| Beta Launch (10% users) | Week 5 Day 1 | ⏳ |
-| Beta Feedback Review | Week 5 Day 7 | ⏳ |
-| Gradual Rollout Start | Week 6 Day 1 | ⏳ |
-| Full Launch (100% users) | Week 6 Day 7 | ⏳ |
-| First Metrics Review | Week 7 Day 7 | ⏳ |
-| Optimization Sprint | Week 8 | ⏳ |
+| Milestone                | Target Date  | Status |
+| ------------------------ | ------------ | ------ |
+| Beta Launch (10% users)  | Week 5 Day 1 | ⏳     |
+| Beta Feedback Review     | Week 5 Day 7 | ⏳     |
+| Gradual Rollout Start    | Week 6 Day 1 | ⏳     |
+| Full Launch (100% users) | Week 6 Day 7 | ⏳     |
+| First Metrics Review     | Week 7 Day 7 | ⏳     |
+| Optimization Sprint      | Week 8       | ⏳     |
 
 ---
 
@@ -937,12 +1004,14 @@ CREATE TABLE sync_queue (
 ### Research and References
 
 **User Research:**
+
 - Mobile user survey (n=247): 78% want offline access, 64% want push notifications
 - TD interviews (n=12): Connectivity issues are #1 pain point at venues
 - Competitor analysis: 4/5 leading platforms offer PWA or native apps
 - Analytics: 72% of traffic from mobile, 45% bounce rate (vs 28% desktop)
 
 **Technical Research:**
+
 - [PWA Best Practices (web.dev)](https://web.dev/pwa-best-practices/)
 - [Workbox Caching Strategies](https://developer.chrome.com/docs/workbox/caching-strategies-overview/)
 - [Web Push Protocol](https://datatracker.ietf.org/doc/html/rfc8030)
@@ -950,12 +1019,14 @@ CREATE TABLE sync_queue (
 - Lighthouse PWA Checklist: 11 audits, must pass all for score >90
 
 **Competitive Analysis:**
+
 - **Challonge:** Native apps (iOS/Android), no PWA, offline limited
 - **Battlefy:** PWA with install prompt, basic offline, no push notifications
 - **Toornament:** Responsive website only, no PWA features
 - **Smash.gg:** Native apps + PWA, full offline, push notifications ✅ (gold standard)
 
 **Market Data:**
+
 - PWA install rates: Average 30-40% for B2C, 15-25% for B2B
 - Push notification opt-in: Average 40-60% (depends on value proposition)
 - Mobile performance: 1 second delay = 7% conversion loss (Google)
@@ -964,6 +1035,7 @@ CREATE TABLE sync_queue (
 ### Related Documents
 
 **To Be Created:**
+
 - Technical Spec: `technical/specs/mobile-pwa-architecture.md`
 - API Spec: `technical/api-specs/push-notifications-api.md`
 - Test Plan: `technical/testing/mobile-pwa-test-plan.md`
@@ -971,12 +1043,14 @@ CREATE TABLE sync_queue (
 - User Guide: `docs/user-guides/installing-pwa.md`
 
 **Existing References:**
+
 - Sprint 10 Plan: `sprints/current/sprint-10-business-growth.md`
 - Multi-Tenant Architecture: `technical/multi-tenant-architecture.md`
 - Coding Standards: `C:\devop\coding_standards.md`
 - Mobile Analytics: (Dashboard link TBD)
 
 **External References:**
+
 - [Workbox Documentation](https://developer.chrome.com/docs/workbox/)
 - [Web App Manifest Spec](https://www.w3.org/TR/appmanifest/)
 - [Push API Spec](https://www.w3.org/TR/push-api/)
@@ -986,8 +1060,8 @@ CREATE TABLE sync_queue (
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date       | Author                     | Changes                                                |
+| ---------- | -------------------------- | ------------------------------------------------------ |
 | 2025-11-06 | Claude (Product Assistant) | Initial comprehensive draft with all sections complete |
 
 ---
@@ -995,6 +1069,7 @@ CREATE TABLE sync_queue (
 ## Notes for Implementation Team
 
 **Priority User Flows to Build First:**
+
 1. Service worker + basic caching (offline viewing)
 2. Touch optimizations (44px tap targets, gestures)
 3. Install prompt (custom UI)
@@ -1002,6 +1077,7 @@ CREATE TABLE sync_queue (
 5. Push notifications (match starting, table assignment)
 
 **Testing Priorities:**
+
 1. Offline scenarios (airplane mode, slow 3G)
 2. Cross-browser (iOS Safari, Chrome, Firefox)
 3. Low-end devices (Moto G4, iPhone SE)
@@ -1009,18 +1085,21 @@ CREATE TABLE sync_queue (
 5. Lighthouse PWA audit (target >90)
 
 **Performance Monitoring:**
+
 - Set up web-vitals tracking immediately
 - Dashboard for real-time metrics
 - Alerts for regressions >10%
 - Weekly performance review meetings
 
 **User Education:**
+
 - In-app tutorial on first install
 - Tooltips for new gestures
 - Help center articles
 - Video demos (2-3 minutes each)
 
 **Metrics to Track Daily:**
+
 - Install rate
 - Push opt-in rate
 - Offline session rate
@@ -1029,6 +1108,7 @@ CREATE TABLE sync_queue (
 - Notification click-through rate
 
 **Post-Launch Experiments:**
+
 - A/B test install prompt timing (3 visits vs first tournament)
 - A/B test install prompt copy (3 variants)
 - A/B test notification frequency (3/day vs 5/day)

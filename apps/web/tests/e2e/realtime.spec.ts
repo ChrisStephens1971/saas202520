@@ -93,13 +93,19 @@ test.describe('Real-Time Features', () => {
 
       if (exists > 0) {
         // Get initial score
-        const initialScore = await matchCard.locator('[data-testid="player-score"]').first().textContent();
+        const initialScore = await matchCard
+          .locator('[data-testid="player-score"]')
+          .first()
+          .textContent();
 
         // Wait for potential update (adjust timing based on test data)
         await page.waitForTimeout(3000);
 
         // Check if score changed (would need actual real-time update)
-        const updatedScore = await matchCard.locator('[data-testid="player-score"]').first().textContent();
+        const updatedScore = await matchCard
+          .locator('[data-testid="player-score"]')
+          .first()
+          .textContent();
 
         // Score might change or stay same depending on test environment
         expect(updatedScore).toBeDefined();
@@ -358,7 +364,9 @@ test.describe('Real-Time Features', () => {
       await page.waitForLoadState('networkidle');
 
       // Get initial state (e.g., leaderboard data)
-      const initialLeaderboard = await page.locator('[data-testid="live-leaderboard"]').textContent();
+      const initialLeaderboard = await page
+        .locator('[data-testid="live-leaderboard"]')
+        .textContent();
 
       // Simulate disconnect and reconnect
       await page.context().setOffline(true);
@@ -367,7 +375,9 @@ test.describe('Real-Time Features', () => {
       await page.waitForTimeout(2000);
 
       // Check leaderboard still shows data
-      const reconnectedLeaderboard = await page.locator('[data-testid="live-leaderboard"]').textContent();
+      const reconnectedLeaderboard = await page
+        .locator('[data-testid="live-leaderboard"]')
+        .textContent();
 
       // Data should still be present (may have updated)
       expect(reconnectedLeaderboard).toBeTruthy();

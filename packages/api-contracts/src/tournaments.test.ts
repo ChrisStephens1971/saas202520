@@ -36,7 +36,6 @@ import {
 } from './tournaments';
 
 describe('Tournament API Contracts', () => {
-
   // ==========================================================================
   // Enum Tests
   // ==========================================================================
@@ -160,9 +159,15 @@ describe('Tournament API Contracts', () => {
 
     it('should reject invalid slug format', () => {
       expect(() => TournamentSchema.parse({ ...validTournament, slug: 'Invalid_Slug' })).toThrow();
-      expect(() => TournamentSchema.parse({ ...validTournament, slug: 'slug with spaces' })).toThrow();
-      expect(() => TournamentSchema.parse({ ...validTournament, slug: '-leading-hyphen' })).toThrow();
-      expect(() => TournamentSchema.parse({ ...validTournament, slug: 'trailing-hyphen-' })).toThrow();
+      expect(() =>
+        TournamentSchema.parse({ ...validTournament, slug: 'slug with spaces' })
+      ).toThrow();
+      expect(() =>
+        TournamentSchema.parse({ ...validTournament, slug: '-leading-hyphen' })
+      ).toThrow();
+      expect(() =>
+        TournamentSchema.parse({ ...validTournament, slug: 'trailing-hyphen-' })
+      ).toThrow();
     });
 
     it('should reject race to wins outside valid range', () => {
@@ -183,8 +188,12 @@ describe('Tournament API Contracts', () => {
     });
 
     it('should reject invalid datetime formats', () => {
-      expect(() => TournamentSchema.parse({ ...validTournament, createdAt: '2025-01-01' })).toThrow();
-      expect(() => TournamentSchema.parse({ ...validTournament, updatedAt: 'invalid-date' })).toThrow();
+      expect(() =>
+        TournamentSchema.parse({ ...validTournament, createdAt: '2025-01-01' })
+      ).toThrow();
+      expect(() =>
+        TournamentSchema.parse({ ...validTournament, updatedAt: 'invalid-date' })
+      ).toThrow();
     });
   });
 
@@ -217,9 +226,15 @@ describe('Tournament API Contracts', () => {
     });
 
     it('should reject negative stat counts', () => {
-      expect(() => TournamentWithStatsSchema.parse({ ...validTournamentWithStats, playerCount: -1 })).toThrow();
-      expect(() => TournamentWithStatsSchema.parse({ ...validTournamentWithStats, matchCount: -5 })).toThrow();
-      expect(() => TournamentWithStatsSchema.parse({ ...validTournamentWithStats, completedMatchCount: -10 })).toThrow();
+      expect(() =>
+        TournamentWithStatsSchema.parse({ ...validTournamentWithStats, playerCount: -1 })
+      ).toThrow();
+      expect(() =>
+        TournamentWithStatsSchema.parse({ ...validTournamentWithStats, matchCount: -5 })
+      ).toThrow();
+      expect(() =>
+        TournamentWithStatsSchema.parse({ ...validTournamentWithStats, completedMatchCount: -10 })
+      ).toThrow();
     });
 
     it('should accept zero stat counts', () => {
@@ -287,19 +302,33 @@ describe('Tournament API Contracts', () => {
     });
 
     it('should reject invalid slug format', () => {
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, slug: 'Invalid Slug' })).toThrow();
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, slug: 'slug_with_underscore' })).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, slug: 'Invalid Slug' })
+      ).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, slug: 'slug_with_underscore' })
+      ).toThrow();
     });
 
     it('should reject invalid race to wins values', () => {
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: 0 })).toThrow();
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: 22 })).toThrow();
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: -1 })).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: 0 })
+      ).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: 22 })
+      ).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, raceToWins: -1 })
+      ).toThrow();
     });
 
     it('should reject invalid max players values', () => {
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, maxPlayers: 7 })).toThrow();
-      expect(() => CreateTournamentRequestSchema.parse({ ...validRequest, maxPlayers: 200 })).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, maxPlayers: 7 })
+      ).toThrow();
+      expect(() =>
+        CreateTournamentRequestSchema.parse({ ...validRequest, maxPlayers: 200 })
+      ).toThrow();
     });
   });
 

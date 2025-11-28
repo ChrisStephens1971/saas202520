@@ -91,12 +91,7 @@ export default function RolesPage() {
             onClick={() => router.push('/admin/users')}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -124,9 +119,7 @@ export default function RolesPage() {
             <div className="bg-white rounded-lg shadow">
               <div className="p-6 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900">User Roles</h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Select a role to view permissions
-                </p>
+                <p className="text-sm text-gray-600 mt-1">Select a role to view permissions</p>
               </div>
               <div className="p-2">
                 {roles.map((role) => {
@@ -144,9 +137,7 @@ export default function RolesPage() {
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{config.icon}</span>
                         <div>
-                          <div className="font-semibold text-gray-900">
-                            {config.title}
-                          </div>
+                          <div className="font-semibold text-gray-900">{config.title}</div>
                           <div className="text-sm text-gray-600 mt-1">
                             {ROLE_PERMISSIONS[role].includes(Permission.ADMIN_FULL_ACCESS)
                               ? 'All permissions'
@@ -165,9 +156,7 @@ export default function RolesPage() {
               <h3 className="font-semibold text-gray-900 mb-2">
                 About {roleDescriptions[selectedRole].title}
               </h3>
-              <p className="text-sm text-gray-600">
-                {roleDescriptions[selectedRole].description}
-              </p>
+              <p className="text-sm text-gray-600">{roleDescriptions[selectedRole].description}</p>
             </div>
           </div>
 
@@ -176,17 +165,13 @@ export default function RolesPage() {
             <div className="bg-white rounded-lg shadow">
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">
-                    {roleDescriptions[selectedRole].icon}
-                  </span>
+                  <span className="text-3xl">{roleDescriptions[selectedRole].icon}</span>
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
                       {roleDescriptions[selectedRole].title} Permissions
                     </h2>
                     <p className="text-sm text-gray-600 mt-1">
-                      {ROLE_PERMISSIONS[selectedRole].includes(
-                        Permission.ADMIN_FULL_ACCESS
-                      )
+                      {ROLE_PERMISSIONS[selectedRole].includes(Permission.ADMIN_FULL_ACCESS)
                         ? 'This role has full system access'
                         : 'Detailed permissions for this role'}
                     </p>
@@ -195,77 +180,63 @@ export default function RolesPage() {
               </div>
 
               <div className="p-6">
-                {ROLE_PERMISSIONS[selectedRole].includes(
-                  Permission.ADMIN_FULL_ACCESS
-                ) ? (
+                {ROLE_PERMISSIONS[selectedRole].includes(Permission.ADMIN_FULL_ACCESS) ? (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">🔓</div>
-                    <p className="text-lg font-semibold text-gray-900">
-                      Full Access
-                    </p>
+                    <p className="text-lg font-semibold text-gray-900">Full Access</p>
                     <p className="text-sm text-gray-600 mt-2">
-                      Administrators have unrestricted access to all system
-                      features and functions.
+                      Administrators have unrestricted access to all system features and functions.
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {Object.entries(permissionGroups).map(
-                      ([groupName, permissions]) => {
-                        const hasAnyPermission = permissions.some((permission) =>
-                          hasPermission(selectedRole, permission)
-                        );
+                    {Object.entries(permissionGroups).map(([groupName, permissions]) => {
+                      const hasAnyPermission = permissions.some((permission) =>
+                        hasPermission(selectedRole, permission)
+                      );
 
-                        if (!hasAnyPermission) return null;
+                      if (!hasAnyPermission) return null;
 
-                        return (
-                          <div key={groupName}>
-                            <h3 className="font-semibold text-gray-900 mb-3">
-                              {groupName}
-                            </h3>
-                            <div className="space-y-2">
-                              {permissions.map((permission) => {
-                                const hasAccess = hasPermission(
-                                  selectedRole,
-                                  permission
-                                );
+                      return (
+                        <div key={groupName}>
+                          <h3 className="font-semibold text-gray-900 mb-3">{groupName}</h3>
+                          <div className="space-y-2">
+                            {permissions.map((permission) => {
+                              const hasAccess = hasPermission(selectedRole, permission);
 
-                                if (!hasAccess) return null;
+                              if (!hasAccess) return null;
 
-                                return (
-                                  <div
-                                    key={permission}
-                                    className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg"
+                              return (
+                                <div
+                                  key={permission}
+                                  className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg"
+                                >
+                                  <svg
+                                    className="w-5 h-5 text-green-600 flex-shrink-0"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                   >
-                                    <svg
-                                      className="w-5 h-5 text-green-600 flex-shrink-0"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 13l4 4L19 7"
-                                      />
-                                    </svg>
-                                    <div className="flex-1">
-                                      <div className="text-sm font-medium text-gray-900">
-                                        {getPermissionName(permission)}
-                                      </div>
-                                      <div className="text-xs text-gray-600 mt-0.5">
-                                        {permission}
-                                      </div>
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M5 13l4 4L19 7"
+                                    />
+                                  </svg>
+                                  <div className="flex-1">
+                                    <div className="text-sm font-medium text-gray-900">
+                                      {getPermissionName(permission)}
                                     </div>
+                                    <div className="text-xs text-gray-600 mt-0.5">{permission}</div>
                                   </div>
-                                );
-                              })}
-                            </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        );
-                      }
-                    )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -274,12 +245,8 @@ export default function RolesPage() {
             {/* Permissions Matrix */}
             <div className="bg-white rounded-lg shadow mt-6">
               <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  Permissions Matrix
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">
-                  Quick comparison of all roles
-                </p>
+                <h2 className="text-lg font-semibold text-gray-900">Permissions Matrix</h2>
+                <p className="text-sm text-gray-600 mt-1">Quick comparison of all roles</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -302,57 +269,50 @@ export default function RolesPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {Object.entries(permissionGroups).map(
-                      ([groupName, permissions]) => (
-                        <tr key={groupName} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                            {groupName}
-                          </td>
-                          {roles.map((role) => {
-                            const hasAnyInGroup = permissions.some(
-                              (permission) => hasPermission(role, permission)
-                            );
+                    {Object.entries(permissionGroups).map(([groupName, permissions]) => (
+                      <tr key={groupName} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{groupName}</td>
+                        {roles.map((role) => {
+                          const hasAnyInGroup = permissions.some((permission) =>
+                            hasPermission(role, permission)
+                          );
 
-                            return (
-                              <td
-                                key={role}
-                                className="px-6 py-4 text-center"
-                              >
-                                {hasAnyInGroup ? (
-                                  <svg
-                                    className="w-5 h-5 text-green-600 mx-auto"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M5 13l4 4L19 7"
-                                    />
-                                  </svg>
-                                ) : (
-                                  <svg
-                                    className="w-5 h-5 text-gray-300 mx-auto"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M6 18L18 6M6 6l12 12"
-                                    />
-                                  </svg>
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      )
-                    )}
+                          return (
+                            <td key={role} className="px-6 py-4 text-center">
+                              {hasAnyInGroup ? (
+                                <svg
+                                  className="w-5 h-5 text-green-600 mx-auto"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              ) : (
+                                <svg
+                                  className="w-5 h-5 text-gray-300 mx-auto"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

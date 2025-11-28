@@ -10,6 +10,7 @@
 ## Overview
 
 Comprehensive API endpoint tests created for all Sprint 3 features covering:
+
 - **Scoring API** (3 endpoints)
 - **Payment API** (6 endpoints)
 - **Payout API** (3 endpoints)
@@ -30,6 +31,7 @@ Comprehensive API endpoint tests created for all Sprint 3 features covering:
 **Purpose:** Shared mocking utilities and test data factories
 
 **Key Features:**
+
 - `createMockSession()` - Mock NextAuth sessions
 - `createMockPrisma()` - Mock Prisma client with all methods
 - `createMockStripe()` - Mock Stripe SDK
@@ -37,6 +39,7 @@ Comprehensive API endpoint tests created for all Sprint 3 features covering:
 - `createMockRequest()` - Mock NextRequest helper
 
 **Usage:**
+
 ```typescript
 import { createMockSession, factories } from '../__tests__/utils/test-helpers';
 
@@ -55,6 +58,7 @@ const match = factories.match({ score: { playerA: 5, playerB: 3 } });
 **Test Count:** 28 test cases
 
 **Coverage:**
+
 - ✅ Authentication (401 if not authenticated)
 - ✅ Input validation (player, device, rev required)
 - ✅ Player validation (must be A or B)
@@ -71,19 +75,20 @@ const match = factories.match({ score: { playerA: 5, playerB: 3 } });
 - ✅ Error handling (500 on database error)
 
 **Key Test Scenarios:**
+
 ```typescript
 // Optimistic locking
-it('should return 409 if rev mismatch (concurrent update)')
+it('should return 409 if rev mismatch (concurrent update)');
 
 // Permission checks
-it('should return 403 if user does not have scorekeeper permission')
+it('should return 403 if user does not have scorekeeper permission');
 
 // Match completion
-it('should mark match as completed when race-to is reached')
+it('should mark match as completed when race-to is reached');
 
 // Audit trail
-it('should create score update record')
-it('should create tournament event')
+it('should create score update record');
+it('should create tournament event');
 ```
 
 ---
@@ -95,6 +100,7 @@ it('should create tournament event')
 **Test Count:** 26 test cases
 
 **Coverage:**
+
 - ✅ Authentication
 - ✅ Input validation (device, rev required)
 - ✅ Match validation
@@ -112,18 +118,19 @@ it('should create tournament event')
 - ✅ Error handling
 
 **Key Test Scenarios:**
+
 ```typescript
 // Undo limits
-it('should query only the last 3 undoable actions (MAX_UNDO_DEPTH)')
-it('should only undo increment actions (not undo actions)')
+it('should query only the last 3 undoable actions (MAX_UNDO_DEPTH)');
+it('should only undo increment actions (not undo actions)');
 
 // State restoration
-it('should revert match to active state when undoing')
-it('should increment rev for optimistic locking')
+it('should revert match to active state when undoing');
+it('should increment rev for optimistic locking');
 
 // canUndo flag
-it('should set canUndo to true if more actions are available')
-it('should set canUndo to false if no more actions available')
+it('should set canUndo to true if more actions are available');
+it('should set canUndo to false if no more actions available');
 ```
 
 ---
@@ -135,6 +142,7 @@ it('should set canUndo to false if no more actions available')
 **Test Count:** 13 test cases
 
 **Coverage:**
+
 - ✅ Authentication
 - ✅ Match validation
 - ✅ History retrieval (default limit 50)
@@ -148,18 +156,19 @@ it('should set canUndo to false if no more actions available')
 - ✅ Error handling
 
 **Key Test Scenarios:**
+
 ```typescript
 // Pagination
-it('should return score updates with default limit of 50')
-it('should respect custom limit query parameter')
+it('should return score updates with default limit of 50');
+it('should respect custom limit query parameter');
 
 // canUndo flag
-it('should set canUndo to true if undoable actions exist')
-it('should count only non-undone increment actions for canUndo')
+it('should set canUndo to true if undoable actions exist');
+it('should count only non-undone increment actions for canUndo');
 
 // Edge cases
-it('should return empty array if no history exists')
-it('should handle invalid limit gracefully (defaults to 50)')
+it('should return empty array if no history exists');
+it('should handle invalid limit gracefully (defaults to 50)');
 ```
 
 ---
@@ -173,6 +182,7 @@ it('should handle invalid limit gracefully (defaults to 50)')
 **Test Count:** 15 test cases
 
 **Coverage (PAY-001):**
+
 - ✅ Authentication
 - ✅ Input validation (orgId required)
 - ✅ Permission checks (owner or TD only)
@@ -188,21 +198,22 @@ it('should handle invalid limit gracefully (defaults to 50)')
 - ✅ Database errors
 
 **Key Test Scenarios:**
+
 ```typescript
 // Permissions
-it('should allow owners to create Stripe account')
-it('should allow TDs to create Stripe account')
+it('should allow owners to create Stripe account');
+it('should allow TDs to create Stripe account');
 
 // Existing accounts
-it('should return 400 if Stripe account already exists and is onboarded')
-it('should reuse existing Stripe account if not onboarded')
+it('should return 400 if Stripe account already exists and is onboarded');
+it('should reuse existing Stripe account if not onboarded');
 
 // Account creation
-it('should create new Stripe Connect account')
-it('should save Stripe account to database')
+it('should create new Stripe Connect account');
+it('should save Stripe account to database');
 
 // Onboarding
-it('should create account link with correct URLs')
+it('should create account link with correct URLs');
 ```
 
 ---
@@ -214,6 +225,7 @@ it('should create account link with correct URLs')
 **Test Count:** 14 test cases
 
 **Coverage (PAY-002):**
+
 - ✅ Authentication
 - ✅ Input validation (tournamentId, amount, purpose required)
 - ✅ Amount validation (> 0)
@@ -230,18 +242,19 @@ it('should create account link with correct URLs')
 - ✅ Database errors
 
 **Key Test Scenarios:**
+
 ```typescript
 // Validation
-it('should return 400 if amount is zero or negative')
-it('should return 403 if user not member of organization')
+it('should return 400 if amount is zero or negative');
+it('should return 403 if user not member of organization');
 
 // Stripe account
-it('should return 400 if organization has no Stripe account')
-it('should return 400 if charges not enabled on Stripe account')
+it('should return 400 if organization has no Stripe account');
+it('should return 400 if charges not enabled on Stripe account');
 
 // Payment intent
-it('should create Stripe payment intent with correct parameters')
-it('should save payment record to database')
+it('should create Stripe payment intent with correct parameters');
+it('should save payment record to database');
 ```
 
 ---
@@ -257,12 +270,14 @@ it('should save payment record to database')
 **Coverage (SCORE-007):**
 
 **GET /scorekeepers:**
+
 - ✅ Authentication
 - ✅ Permission checks (owner/TD only)
 - ✅ Scorekeeper listing
 - ✅ Empty list handling
 
 **POST /scorekeepers:**
+
 - ✅ Authentication
 - ✅ Input validation (userId or userEmail required)
 - ✅ User lookup by email
@@ -271,26 +286,28 @@ it('should save payment record to database')
 - ✅ Permission errors
 
 **DELETE /scorekeepers:**
+
 - ✅ Authentication
 - ✅ Input validation (userId query param required)
 - ✅ Role removal
 - ✅ Permission errors
 
 **Key Test Scenarios:**
+
 ```typescript
 // GET
-it('should allow owners to list scorekeepers')
-it('should allow TDs to list scorekeepers')
-it('should return empty array if no scorekeepers exist')
+it('should allow owners to list scorekeepers');
+it('should allow TDs to list scorekeepers');
+it('should return empty array if no scorekeepers exist');
 
 // POST
-it('should accept userId')
-it('should look up user by email if provided')
-it('should return 404 if user email not found')
+it('should accept userId');
+it('should look up user by email if provided');
+it('should return 404 if user email not found');
 
 // DELETE
-it('should remove scorekeeper role successfully')
-it('should return 500 if removal fails with permission error')
+it('should remove scorekeeper role successfully');
+it('should return 500 if removal fails with permission error');
 ```
 
 ---
@@ -339,12 +356,14 @@ pnpm test:coverage
 ### Mocking Strategy
 
 **NextAuth:**
+
 ```typescript
 jest.mock('@/auth');
 const mockGetServerSession = require('@/auth').getServerSession as jest.Mock;
 ```
 
 **Prisma:**
+
 ```typescript
 jest.mock('@/lib/prisma');
 const mockPrisma = createMockPrisma();
@@ -352,6 +371,7 @@ require('@/lib/prisma').prisma = mockPrisma;
 ```
 
 **Stripe:**
+
 ```typescript
 jest.mock('@/lib/stripe');
 const mockCreatePaymentIntent = require('@/lib/stripe').createPaymentIntent as jest.Mock;
@@ -360,6 +380,7 @@ const mockCreatePaymentIntent = require('@/lib/stripe').createPaymentIntent as j
 ### Test Structure
 
 All tests follow consistent structure:
+
 ```typescript
 describe('Endpoint Name', () => {
   beforeEach(() => {
@@ -379,12 +400,12 @@ describe('Endpoint Name', () => {
 
 ## Coverage Summary
 
-| Category | Endpoints | Tests | Coverage |
-|----------|-----------|-------|----------|
-| **Scoring API** | 3 | 67 | 85%+ |
-| **Payment API** | 2 (of 6) | 29 | 80%+ |
-| **Permission API** | 3 | 22 | 90%+ |
-| **Total** | 8 | 118 | 80%+ |
+| Category           | Endpoints | Tests | Coverage |
+| ------------------ | --------- | ----- | -------- |
+| **Scoring API**    | 3         | 67    | 85%+     |
+| **Payment API**    | 2 (of 6)  | 29    | 80%+     |
+| **Permission API** | 3         | 22    | 90%+     |
+| **Total**          | 8         | 118   | 80%+     |
 
 ### Endpoints Covered
 
@@ -400,6 +421,7 @@ describe('Endpoint Name', () => {
 ### Remaining Payment Endpoints (Not Implemented)
 
 The following payment endpoints still need tests:
+
 - ⏳ POST /api/payments/[id]/confirm
 - ⏳ POST /api/payments/[id]/refund
 - ⏳ GET /api/payments/[id]/dispute-evidence
@@ -408,6 +430,7 @@ The following payment endpoints still need tests:
 ### Payout Endpoints (Not Implemented)
 
 The following payout endpoints still need tests:
+
 - ⏳ POST /api/tournaments/[id]/payouts/calculate
 - ⏳ GET /api/tournaments/[id]/payouts
 - ⏳ PUT /api/tournaments/[id]/payouts
@@ -417,7 +440,9 @@ The following payout endpoints still need tests:
 ## Testing Best Practices Applied
 
 ### 1. Multi-Tenant Isolation
+
 Every test verifies tenant scoping where applicable:
+
 ```typescript
 expect(mockPrisma.organizationMember.findFirst).toHaveBeenCalledWith(
   expect.objectContaining({
@@ -430,27 +455,35 @@ expect(mockPrisma.organizationMember.findFirst).toHaveBeenCalledWith(
 ```
 
 ### 2. Permission Checks (SCORE-007)
+
 All protected endpoints test role-based access:
+
 ```typescript
-it('should return 403 if user does not have scorekeeper permission')
-it('should allow scorekeepers to increment score')
+it('should return 403 if user does not have scorekeeper permission');
+it('should allow scorekeepers to increment score');
 ```
 
 ### 3. Optimistic Locking
+
 Concurrent update scenarios tested:
+
 ```typescript
-it('should return 409 if rev mismatch (concurrent update)')
+it('should return 409 if rev mismatch (concurrent update)');
 ```
 
 ### 4. Audit Trail (SCORE-006)
+
 All scoring operations verify audit records:
+
 ```typescript
-it('should create score update record')
-it('should create tournament event')
+it('should create score update record');
+it('should create tournament event');
 ```
 
 ### 5. Error Handling
+
 Every endpoint tests:
+
 - 400 Bad Request (validation errors)
 - 401 Unauthorized (no auth)
 - 403 Forbidden (no permission)
@@ -463,6 +496,7 @@ Every endpoint tests:
 ## Next Steps
 
 ### Immediate (Priority 1)
+
 1. Implement remaining payment endpoint tests:
    - POST /api/payments/[id]/confirm
    - POST /api/payments/[id]/refund
@@ -475,12 +509,14 @@ Every endpoint tests:
    - PUT /api/tournaments/[id]/payouts
 
 ### Short-term (Priority 2)
+
 3. Add integration tests (with test server)
 4. Add contract tests (Zod schema validation)
 5. Set up CI/CD test pipeline
 6. Configure code coverage reporting
 
 ### Long-term (Priority 3)
+
 7. Add E2E tests with Playwright
 8. Add performance/load tests
 9. Add mutation testing (Stryker)
@@ -491,12 +527,14 @@ Every endpoint tests:
 ## Known Limitations
 
 ### Current Test Scope
+
 - **Unit tests only** - No integration or E2E tests yet
 - **Mocked dependencies** - Stripe, Prisma, NextAuth all mocked
 - **No middleware tests** - Bypasses Next.js middleware layer
 - **No real database** - Using in-memory mocks
 
 ### Missing Coverage
+
 - Integration tests with real HTTP requests
 - Multi-tenant data isolation verification
 - Real Stripe webhook handling
@@ -510,12 +548,14 @@ Every endpoint tests:
 ### When to Update Tests
 
 **Add new tests when:**
+
 - Adding new API endpoints
 - Adding new validation rules
 - Adding new permission checks
 - Adding new business logic
 
 **Update existing tests when:**
+
 - Changing endpoint URLs
 - Changing request/response schemas
 - Changing validation rules
@@ -524,6 +564,7 @@ Every endpoint tests:
 ### Mock Updates
 
 **Update test-helpers.ts when:**
+
 - Adding new Prisma models
 - Adding new Stripe methods
 - Adding new shared utilities

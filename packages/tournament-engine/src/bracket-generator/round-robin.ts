@@ -186,8 +186,7 @@ export function calculateStandings(
 
   // Calculate win percentages
   for (const entry of playerMap.values()) {
-    entry.winPercentage =
-      entry.matchesPlayed > 0 ? entry.wins / entry.matchesPlayed : 0;
+    entry.winPercentage = entry.matchesPlayed > 0 ? entry.wins / entry.matchesPlayed : 0;
   }
 
   // Sort by points descending, then by win percentage, then by wins
@@ -241,13 +240,8 @@ export function recordMatchResult(
  * @param playerId - Player ID
  * @returns Array of matches involving the player
  */
-export function getMatchesForPlayer(
-  bracket: RoundRobinResult,
-  playerId: string
-): BracketMatch[] {
-  return bracket.matches.filter(
-    (m) => m.playerAId === playerId || m.playerBId === playerId
-  );
+export function getMatchesForPlayer(bracket: RoundRobinResult, playerId: string): BracketMatch[] {
+  return bracket.matches.filter((m) => m.playerAId === playerId || m.playerBId === playerId);
 }
 
 /**

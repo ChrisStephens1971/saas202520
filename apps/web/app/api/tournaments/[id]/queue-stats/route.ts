@@ -7,10 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getQueueStats } from '@/lib/chip-format-engine';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: tournamentId } = await params;
     const stats = await getQueueStats(tournamentId);

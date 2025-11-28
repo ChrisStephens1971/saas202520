@@ -12,6 +12,7 @@ Implemented 11 READ-ONLY public API v1 endpoints for tournaments, players, and m
 ## Files Created
 
 ### Type Definitions & Validation
+
 1. **`/apps/web/lib/api/types/public-api.types.ts`** (486 lines)
    - TypeScript interfaces for all API responses
    - Tournament, Player, Match types
@@ -128,36 +129,42 @@ Implemented 11 READ-ONLY public API v1 endpoints for tournaments, players, and m
 ## Technical Implementation
 
 ### Query Parameter Validation
+
 - All endpoints use Zod schemas for validation
 - Type-safe query parameter parsing
 - Clear validation error messages
 - Default values for pagination (page=1, limit=20, max=100)
 
 ### Multi-Tenant Isolation
+
 - All queries filter by `orgId` (from API key context)
 - Uses Prisma `where` clauses with tenant filtering
 - No cross-tenant data leakage
 - Validates resources belong to tenant before returning
 
 ### Response Format
+
 - Consistent JSON structure across all endpoints
 - Success responses: `{ data: T }` or `{ data: T[], pagination: {...} }`
 - Error responses: `{ error: { code, message, details? }, timestamp }`
 - Rate limit headers on all responses
 
 ### Pagination
+
 - Offset-based pagination (page/limit)
 - Metadata includes: page, limit, total, totalPages, hasNext, hasPrev
 - Default: 20 items per page
 - Maximum: 100 items per page
 
 ### Error Handling
+
 - Comprehensive error types (400, 401, 403, 404, 429, 500)
 - Validation errors with field-level details
 - Privacy-aware forbidden responses
 - Logged server errors (don't expose internals)
 
 ### Performance Considerations
+
 - Efficient Prisma queries with selective field inclusion
 - Indexes on main query fields (orgId, status, etc.)
 - Calculated stats done in application layer
@@ -165,37 +172,41 @@ Implemented 11 READ-ONLY public API v1 endpoints for tournaments, players, and m
 
 ## API Endpoints Summary
 
-| Method | Endpoint | Description | Filters |
-|--------|----------|-------------|---------|
-| GET | `/api/v1/tournaments` | List tournaments | status, format, page, limit |
-| GET | `/api/v1/tournaments/:id` | Tournament details | - |
-| GET | `/api/v1/tournaments/:id/matches` | Tournament matches | round, status |
-| GET | `/api/v1/tournaments/:id/players` | Tournament players | status |
-| GET | `/api/v1/tournaments/:id/bracket` | Tournament bracket | - |
-| GET | `/api/v1/players` | List players | search, skillLevel, page, limit |
-| GET | `/api/v1/players/:id` | Player profile | - |
-| GET | `/api/v1/players/:id/history` | Player history | status, page, limit |
-| GET | `/api/v1/players/:id/stats` | Player statistics | - |
-| GET | `/api/v1/matches` | List matches | status, tournamentId, page, limit |
-| GET | `/api/v1/matches/:id` | Match details | - |
+| Method | Endpoint                          | Description        | Filters                           |
+| ------ | --------------------------------- | ------------------ | --------------------------------- |
+| GET    | `/api/v1/tournaments`             | List tournaments   | status, format, page, limit       |
+| GET    | `/api/v1/tournaments/:id`         | Tournament details | -                                 |
+| GET    | `/api/v1/tournaments/:id/matches` | Tournament matches | round, status                     |
+| GET    | `/api/v1/tournaments/:id/players` | Tournament players | status                            |
+| GET    | `/api/v1/tournaments/:id/bracket` | Tournament bracket | -                                 |
+| GET    | `/api/v1/players`                 | List players       | search, skillLevel, page, limit   |
+| GET    | `/api/v1/players/:id`             | Player profile     | -                                 |
+| GET    | `/api/v1/players/:id/history`     | Player history     | status, page, limit               |
+| GET    | `/api/v1/players/:id/stats`       | Player statistics  | -                                 |
+| GET    | `/api/v1/matches`                 | List matches       | status, tournamentId, page, limit |
+| GET    | `/api/v1/matches/:id`             | Match details      | -                                 |
 
 ## Dependencies on Other Agents
 
 ### Agent 1 (API Auth & Rate Limiting)
+
 **Status:** Pending
 
 **Required:**
+
 - API key authentication middleware (`withApiAuth()`)
 - `tenantId` extraction from API key
 - Rate limiting implementation
 - Rate limit header values (currently mocked)
 
 **Integration Points:**
+
 - Replace `orgId` query param with middleware-provided `tenantId`
 - Wrap route handlers with `withApiAuth()` middleware
 - Use actual rate limit data instead of mocked headers
 
 **Example Integration:**
+
 ```typescript
 // Current (without auth)
 export async function GET(request: NextRequest) {
@@ -213,6 +224,7 @@ export const GET = withApiAuth(async (request: NextRequest, { tenantId }) => {
 ## Testing Status
 
 ### Manual Testing Required
+
 - [ ] Test all endpoints with real data
 - [ ] Verify multi-tenant isolation
 - [ ] Test pagination edge cases
@@ -221,6 +233,7 @@ export const GET = withApiAuth(async (request: NextRequest, { tenantId }) => {
 - [ ] Performance test with large datasets
 
 ### Integration Testing Required (After Agent 1)
+
 - [ ] Test with API authentication
 - [ ] Verify rate limiting works
 - [ ] Test rate limit headers
@@ -252,6 +265,7 @@ export const GET = withApiAuth(async (request: NextRequest, { tenantId }) => {
 ## Code Quality
 
 ### Follows Standards
+
 - ✅ TypeScript with strict typing
 - ✅ JSDoc comments on all exports
 - ✅ Consistent naming conventions (camelCase)
@@ -260,6 +274,7 @@ export const GET = withApiAuth(async (request: NextRequest, { tenantId }) => {
 - ✅ Validation on all inputs
 
 ### Code Organization
+
 - ✅ Modular helper functions
 - ✅ Separated types, validation, and logic
 - ✅ DRY principles (shared helpers)
@@ -268,17 +283,20 @@ export const GET = withApiAuth(async (request: NextRequest, { tenantId }) => {
 ## Next Steps
 
 ### For Agent 1 (API Auth)
+
 1. Implement API key authentication middleware
 2. Add tenant ID extraction from API key
 3. Implement rate limiting
 4. Update all routes to use auth middleware
 
 ### For Agent 3 (Webhooks)
+
 1. Can reference these endpoint patterns
 2. Use same helper functions
 3. Use same error handling patterns
 
 ### For Testing
+
 1. Create seed data for testing
 2. Write integration tests
 3. Test with various tenant scenarios
@@ -318,6 +336,7 @@ docs/api/
 ## Summary
 
 Successfully implemented all 11 core public API v1 endpoints with:
+
 - Complete type safety
 - Comprehensive validation
 - Multi-tenant isolation

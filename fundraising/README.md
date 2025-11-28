@@ -1,4 +1,5 @@
 # Fundraising Package
+
 ## Complete Investor Document Set
 
 **Project:** saas202509 - Multi-Tenant HOA Accounting System
@@ -13,15 +14,15 @@ This folder contains everything you need to pitch investors and close your first
 
 ### Core Documents (Start Here)
 
-| # | Document | Purpose | When to Use |
-|---|----------|---------|-------------|
-| **01** | **Executive Summary** | 1-page overview of opportunity | Email to investors, quick pitch |
-| **02** | **Pitch Deck** | 18-slide presentation (markdown) | Investor meetings, demo day |
-| **03** | **Financial Projections** | 5-year model with unit economics | Detailed investor discussions |
-| **04** | **SAFE Agreement Template** | Investment instrument explanation | Closing investment, legal docs |
-| **05** | **Cap Table Template** | Track equity ownership | Managing investors, dilution |
-| **06** | **Due Diligence Checklist** | What investors will ask for | Preparing for investor questions |
-| **07** | **Investor FAQ** | Answers to common questions | Before/during/after meetings |
+| #      | Document                    | Purpose                           | When to Use                      |
+| ------ | --------------------------- | --------------------------------- | -------------------------------- |
+| **01** | **Executive Summary**       | 1-page overview of opportunity    | Email to investors, quick pitch  |
+| **02** | **Pitch Deck**              | 18-slide presentation (markdown)  | Investor meetings, demo day      |
+| **03** | **Financial Projections**   | 5-year model with unit economics  | Detailed investor discussions    |
+| **04** | **SAFE Agreement Template** | Investment instrument explanation | Closing investment, legal docs   |
+| **05** | **Cap Table Template**      | Track equity ownership            | Managing investors, dilution     |
+| **06** | **Due Diligence Checklist** | What investors will ask for       | Preparing for investor questions |
+| **07** | **Investor FAQ**            | Answers to common questions       | Before/during/after meetings     |
 
 ---
 
@@ -89,21 +90,25 @@ This folder contains everything you need to pitch investors and close your first
 ### Step 4: Start Investor Outreach (Ongoing)
 
 **Week 1:**
+
 - [ ] List 20-30 potential investors (angels, friends, family)
 - [ ] Research each investor (background, investments, thesis)
 - [ ] Draft personalized outreach emails
 
 **Week 2:**
+
 - [ ] Send emails (5-10 per day)
 - [ ] Follow up with interested investors
 - [ ] Schedule first meetings
 
 **Week 3-4:**
+
 - [ ] Conduct investor meetings
 - [ ] Share pitch deck + executive summary
 - [ ] Answer questions (use FAQ document)
 
 **Week 5-6:**
+
 - [ ] Negotiate terms (valuation cap, discount)
 - [ ] Send SAFE agreements via Clerky ($799)
 - [ ] Receive wire transfers
@@ -123,6 +128,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Convert to PDF before sending
 
 **Key Sections:**
+
 - Problem & solution
 - Market size ($1.85B TAM, $500M SAM)
 - Business model ($400-$800/month)
@@ -142,6 +148,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Convert to PowerPoint, Google Slides, or Pitch.com
 
 **Key Slides:**
+
 - Problem (Slide 2-3)
 - Solution (Slide 4-5)
 - Market (Slide 6)
@@ -163,6 +170,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Transfer to Excel/Google Sheets with formulas
 
 **Key Tables:**
+
 - Revenue model (Year 0-5)
 - Expense breakdown
 - Unit economics (LTV, CAC, payback)
@@ -182,6 +190,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Reference document (don't send to investors)
 
 **Key Concepts:**
+
 - What is a SAFE?
 - Valuation cap vs. discount
 - How SAFEs convert
@@ -199,6 +208,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Excel/Google Sheets or Carta
 
 **Key Sections:**
+
 - Equity ownership table
 - Option pool tracking
 - SAFEs & convertible notes
@@ -217,6 +227,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Checklist (don't send unless requested)
 
 **Key Sections:**
+
 - Legal documents (incorporation, IP)
 - Financial information (projections, burn rate)
 - Product & technology (demo, architecture)
@@ -235,6 +246,7 @@ This folder contains everything you need to pitch investors and close your first
 **Format:** Internal reference (don't send unless specific Q asked)
 
 **Key Sections:**
+
 - About the opportunity
 - Competition
 - Traction & validation
@@ -253,12 +265,14 @@ This folder contains everything you need to pitch investors and close your first
 ### For a Friends & Family Round ($25K-$100K)
 
 **Use:**
+
 - ✅ Executive Summary (email it)
 - ✅ Pitch Deck (simplified, 10 slides)
 - ✅ Financials (high-level only)
 - ✅ SAFE Agreement (via Clerky)
 
 **Skip:**
+
 - ❌ Detailed due diligence (they trust you)
 - ❌ Extensive FAQ prep (casual conversations)
 
@@ -269,6 +283,7 @@ This folder contains everything you need to pitch investors and close your first
 ### For Angel Investors ($100K-$500K)
 
 **Use:**
+
 - ✅ Executive Summary (email before meeting)
 - ✅ Full Pitch Deck (18 slides)
 - ✅ Detailed Financials (all tabs)
@@ -283,6 +298,7 @@ This folder contains everything you need to pitch investors and close your first
 ### For Seed VCs ($500K-$2M)
 
 **Use:**
+
 - ✅ All documents above
 - ✅ Comprehensive due diligence
 - ✅ Customer references
@@ -301,6 +317,7 @@ This folder contains everything you need to pitch investors and close your first
 **Current Stage:** Pre-revenue, MVP development
 
 **Realistic Valuations:**
+
 - **Conservative:** $1M - $1.5M pre-money
 - **Moderate:** $1.5M - $2.5M pre-money
 - **Aggressive:** $2.5M - $3.5M pre-money
@@ -308,6 +325,7 @@ This folder contains everything you need to pitch investors and close your first
 **Recommendation:** Start with **$2M valuation cap** on SAFE with 20% discount
 
 **Why?**
+
 - Fair for pre-revenue stage
 - Below average pre-seed ($5.7M per 2025 data)
 - Leaves room for Series A at higher valuation
@@ -317,10 +335,10 @@ This folder contains everything you need to pitch investors and close your first
 
 ### For a $10K Investment at $2M Cap
 
-| Scenario | Equity at Conversion | Notes |
-|----------|---------------------|-------|
-| **SAFE Cap** | ~0.5% | If next round at $5M+ |
-| **Direct Equity** | 0.5% | If priced round now |
+| Scenario          | Equity at Conversion | Notes                 |
+| ----------------- | -------------------- | --------------------- |
+| **SAFE Cap**      | ~0.5%                | If next round at $5M+ |
+| **Direct Equity** | 0.5%                 | If priced round now   |
 
 **Recommendation:** Use SAFE with $2M cap + 20% discount
 
@@ -328,10 +346,10 @@ This folder contains everything you need to pitch investors and close your first
 
 ### For a $100K Investment at $2M Cap
 
-| Scenario | Equity at Conversion | Notes |
-|----------|---------------------|-------|
-| **SAFE Cap** | ~5% | If next round at $5M+ |
-| **Direct Equity** | ~4.8% | If priced round now |
+| Scenario          | Equity at Conversion | Notes                 |
+| ----------------- | -------------------- | --------------------- |
+| **SAFE Cap**      | ~5%                  | If next round at $5M+ |
+| **Direct Equity** | ~4.8%                | If priced round now   |
 
 **Dilution Impact:** 5% is reasonable for $100K pre-revenue
 
@@ -368,6 +386,7 @@ Best,
 ```
 
 **Attachments:**
+
 - 01-Executive-Summary.pdf (always attach)
 - Do NOT attach pitch deck yet (send after they reply)
 
@@ -447,21 +466,25 @@ Best,
 ## 📚 Additional Resources
 
 ### Fundraising Guides
+
 - Y Combinator Startup School: https://www.startupschool.org
 - "Venture Deals" by Brad Feld (book)
 - First Round Review: https://review.firstround.com
 
 ### Legal & Tools
+
 - Clerky (SAFE agreements): https://www.clerky.com ($799)
 - Carta (cap table): https://carta.com ($2K-$5K/year)
 - DocSend (track pitch deck views): https://www.docsend.com
 
 ### Investor Databases
+
 - AngelList: https://angellist.com
 - Crunchbase: https://crunchbase.com
 - Gust: https://gust.com
 
 ### Pitch Deck Tools
+
 - Pitch.com: https://pitch.com (templates)
 - Beautiful.ai: https://beautiful.ai (AI-powered)
 - Google Slides: Free, collaborative
@@ -471,11 +494,13 @@ Best,
 ## 🎯 Next Steps
 
 ### Immediate (Next 24 Hours)
+
 1. [ ] Read through all 7 documents
 2. [ ] Customize Executive Summary with your info
 3. [ ] Practice elevator pitch (30 seconds)
 
 ### This Week
+
 1. [ ] Convert pitch deck to slides (PowerPoint or Google Slides)
 2. [ ] Transfer financial model to Excel/Google Sheets
 3. [ ] Create product demo video (3-5 minutes)
@@ -483,6 +508,7 @@ Best,
 5. [ ] Draft investor outreach emails
 
 ### This Month
+
 1. [ ] Send 20-30 investor emails
 2. [ ] Schedule 5-10 investor meetings
 3. [ ] Present pitch, gather feedback
@@ -490,6 +516,7 @@ Best,
 5. [ ] Close first $25K-$100K
 
 ### Next 3 Months
+
 1. [ ] Close full round ($100K-$500K)
 2. [ ] Update cap table with all investors
 3. [ ] Send first investor update email
@@ -500,22 +527,27 @@ Best,
 ## 💡 Pro Tips
 
 ### Tip 1: Create Urgency
+
 "Raising $400K on a rolling basis. First $200K at $2M cap, last $200K at $2.5M cap."
 → Investors move faster when they think they'll miss out
 
 ### Tip 2: Ask for Introductions
+
 "Not a fit for you? No problem. Who else should I talk to?"
 → Turn "no" into warm introductions
 
 ### Tip 3: Update Investors Regularly
+
 Monthly email updates (even to those who passed)
 → They may invest in your next round
 
 ### Tip 4: Take Every Meeting
+
 Even if you don't think they'll invest
 → Practice makes perfect. You'll get better each time.
 
 ### Tip 5: Celebrate Small Wins
+
 First $10K committed? Celebrate!
 → Fundraising is hard. Acknowledge progress.
 
@@ -537,6 +569,7 @@ If you need help with any of these documents:
 ## 🏆 Success Metrics
 
 **You've succeeded when:**
+
 - [ ] Closed $100K-$500K from 5-10 investors
 - [ ] Terms are fair ($1.5M-$2.5M cap, 20% discount)
 - [ ] Investors are value-add (not just money)
@@ -544,6 +577,7 @@ If you need help with any of these documents:
 - [ ] You can focus on building (not fundraising) for 12 months
 
 **Typical conversion rates:**
+
 - 100 emails → 10 meetings → 2-3 investors → 1 closes
 
 **Don't give up after 5-10 rejections. Keep going.**

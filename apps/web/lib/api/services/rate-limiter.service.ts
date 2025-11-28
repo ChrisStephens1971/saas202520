@@ -37,10 +37,7 @@ const TIER_RATE_LIMITS: Record<ApiTier, number> = {
  * @param tier - API tier (determines rate limit)
  * @returns Rate limit result with allowed status and remaining requests
  */
-export async function checkRateLimit(
-  keyId: string,
-  tier: ApiTier
-): Promise<RateLimitResult> {
+export async function checkRateLimit(keyId: string, tier: ApiTier): Promise<RateLimitResult> {
   const limit = TIER_RATE_LIMITS[tier];
   const now = Date.now();
   const currentHour = Math.floor(now / 3600000); // Current hour timestamp
@@ -102,10 +99,7 @@ export async function checkRateLimit(
  * @param keyId - API key ID
  * @param hour - Current hour timestamp
  */
-export async function incrementCounter(
-  keyId: string,
-  hour: number
-): Promise<void> {
+export async function incrementCounter(keyId: string, hour: number): Promise<void> {
   const redisKey = `ratelimit:${keyId}:${hour}`;
 
   try {
@@ -127,10 +121,7 @@ export async function incrementCounter(
  * @param tier - API tier
  * @returns Number of remaining requests in current hour
  */
-export async function getRemainingRequests(
-  keyId: string,
-  tier: ApiTier
-): Promise<number> {
+export async function getRemainingRequests(keyId: string, tier: ApiTier): Promise<number> {
   const limit = TIER_RATE_LIMITS[tier];
   const now = Date.now();
   const currentHour = Math.floor(now / 3600000);
@@ -172,10 +163,7 @@ export async function resetCounter(keyId: string): Promise<void> {
  * @param tier - API tier
  * @returns Rate limit result without modifying counter
  */
-export async function getRateLimitInfo(
-  keyId: string,
-  tier: ApiTier
-): Promise<RateLimitResult> {
+export async function getRateLimitInfo(keyId: string, tier: ApiTier): Promise<RateLimitResult> {
   const limit = TIER_RATE_LIMITS[tier];
   const now = Date.now();
   const currentHour = Math.floor(now / 3600000);
@@ -215,10 +203,7 @@ export async function getRateLimitInfo(
  * @param tier - API tier
  * @returns True if rate limited, false otherwise
  */
-export async function isRateLimited(
-  keyId: string,
-  tier: ApiTier
-): Promise<boolean> {
+export async function isRateLimited(keyId: string, tier: ApiTier): Promise<boolean> {
   const info = await getRateLimitInfo(keyId, tier);
   return !info.allowed;
 }

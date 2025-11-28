@@ -11,9 +11,11 @@
 ## What Was Created
 
 ### 1. Updated Prisma Schema
+
 **File:** `prisma/schema.prisma`
 
 Added 5 new models with complete type definitions:
+
 - ✅ `AnalyticsEvent` - Raw event tracking
 - ✅ `RevenueAggregate` - Revenue metrics (MRR, ARR, churn)
 - ✅ `UserCohort` - User retention analysis
@@ -21,9 +23,11 @@ Added 5 new models with complete type definitions:
 - ✅ `ScheduledReport` - Automated report configuration
 
 ### 2. Migration SQL
+
 **File:** `prisma/migrations/20251106_add_analytics_tables/migration.sql`
 
 Complete SQL migration script including:
+
 - ✅ 5 CREATE TABLE statements with all columns and constraints
 - ✅ 11 indexes (including composite and descending indexes)
 - ✅ 6 foreign key constraints (with CASCADE and SET NULL)
@@ -31,9 +35,11 @@ Complete SQL migration script including:
 - ✅ Table and column comments for documentation
 
 ### 3. Migration Documentation
+
 **File:** `prisma/migrations/20251106_add_analytics_tables/README.md`
 
 Comprehensive migration guide with:
+
 - ✅ Table specifications with all columns
 - ✅ Index strategy and performance optimizations
 - ✅ Multi-tenant considerations
@@ -43,9 +49,11 @@ Comprehensive migration guide with:
 - ✅ Testing checklist
 
 ### 4. Prisma Client Types
+
 **Generated:** `node_modules/@prisma/client`
 
 TypeScript types generated for all 5 new models:
+
 - ✅ Full type definitions for all fields
 - ✅ Relation types (Organization, User)
 - ✅ Query builder types
@@ -56,18 +64,19 @@ TypeScript types generated for all 5 new models:
 ## Database Schema Details
 
 ### Table: `analytics_events`
+
 **Purpose:** Raw event stream for analytics
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | TEXT (PK) | Unique event ID |
-| tenant_id | TEXT (FK) | Organization ID |
-| event_type | VARCHAR(100) | Event type (payment_completed, user_signup, etc.) |
-| event_data | JSONB | Flexible event-specific data |
-| user_id | TEXT (FK, nullable) | User who triggered event |
-| session_id | VARCHAR(255, nullable) | Session identifier |
-| timestamp | TIMESTAMP | Event occurrence time |
-| created_at | TIMESTAMP | Record creation time |
+| Column     | Type                   | Description                                       |
+| ---------- | ---------------------- | ------------------------------------------------- |
+| id         | TEXT (PK)              | Unique event ID                                   |
+| tenant_id  | TEXT (FK)              | Organization ID                                   |
+| event_type | VARCHAR(100)           | Event type (payment_completed, user_signup, etc.) |
+| event_data | JSONB                  | Flexible event-specific data                      |
+| user_id    | TEXT (FK, nullable)    | User who triggered event                          |
+| session_id | VARCHAR(255, nullable) | Session identifier                                |
+| timestamp  | TIMESTAMP              | Event occurrence time                             |
+| created_at | TIMESTAMP              | Record creation time                              |
 
 **Indexes:** 3 (tenant+event_type, tenant+timestamp, user+timestamp)
 **Foreign Keys:** organizations(id), users(id)
@@ -75,26 +84,27 @@ TypeScript types generated for all 5 new models:
 ---
 
 ### Table: `revenue_aggregates`
+
 **Purpose:** Pre-computed revenue metrics
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | TEXT (PK) | Unique aggregate ID |
-| tenant_id | TEXT (FK) | Organization ID |
-| period_start | DATE | Period start date |
-| period_end | DATE | Period end date |
-| period_type | VARCHAR(20) | day, week, month, quarter, year |
-| mrr | DECIMAL(10,2) | Monthly Recurring Revenue |
-| arr | DECIMAL(10,2) | Annual Recurring Revenue |
-| new_revenue | DECIMAL(10,2) | Revenue from new customers |
-| churned_revenue | DECIMAL(10,2) | Revenue lost from churn |
-| expansion_revenue | DECIMAL(10,2) | Revenue growth from existing |
-| total_revenue | DECIMAL(10,2) | Total revenue |
-| payment_count | INTEGER | Total payments |
-| payment_success_count | INTEGER | Successful payments |
-| refund_count | INTEGER | Number of refunds |
-| refund_amount | DECIMAL(10,2) | Total refund amount |
-| updated_at | TIMESTAMP | Last update |
+| Column                | Type          | Description                     |
+| --------------------- | ------------- | ------------------------------- |
+| id                    | TEXT (PK)     | Unique aggregate ID             |
+| tenant_id             | TEXT (FK)     | Organization ID                 |
+| period_start          | DATE          | Period start date               |
+| period_end            | DATE          | Period end date                 |
+| period_type           | VARCHAR(20)   | day, week, month, quarter, year |
+| mrr                   | DECIMAL(10,2) | Monthly Recurring Revenue       |
+| arr                   | DECIMAL(10,2) | Annual Recurring Revenue        |
+| new_revenue           | DECIMAL(10,2) | Revenue from new customers      |
+| churned_revenue       | DECIMAL(10,2) | Revenue lost from churn         |
+| expansion_revenue     | DECIMAL(10,2) | Revenue growth from existing    |
+| total_revenue         | DECIMAL(10,2) | Total revenue                   |
+| payment_count         | INTEGER       | Total payments                  |
+| payment_success_count | INTEGER       | Successful payments             |
+| refund_count          | INTEGER       | Number of refunds               |
+| refund_amount         | DECIMAL(10,2) | Total refund amount             |
+| updated_at            | TIMESTAMP     | Last update                     |
 
 **Indexes:** 2 (UNIQUE tenant+period_type+period_start, tenant+period_start DESC)
 **Foreign Keys:** organizations(id)
@@ -102,20 +112,21 @@ TypeScript types generated for all 5 new models:
 ---
 
 ### Table: `user_cohorts`
+
 **Purpose:** User retention by signup cohort
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | TEXT (PK) | Unique cohort record ID |
-| tenant_id | TEXT (FK) | Organization ID |
-| cohort_month | DATE | First day of signup month |
-| cohort_size | INTEGER | Total users in cohort |
-| month_number | INTEGER | Months since signup (0, 1, 2...) |
-| retained_users | INTEGER | Users still active |
-| retention_rate | DECIMAL(5,2) | Retention percentage |
-| revenue | DECIMAL(10,2) | Revenue from cohort this month |
-| ltv | DECIMAL(10,2) | Cumulative lifetime value |
-| updated_at | TIMESTAMP | Last update |
+| Column         | Type          | Description                      |
+| -------------- | ------------- | -------------------------------- |
+| id             | TEXT (PK)     | Unique cohort record ID          |
+| tenant_id      | TEXT (FK)     | Organization ID                  |
+| cohort_month   | DATE          | First day of signup month        |
+| cohort_size    | INTEGER       | Total users in cohort            |
+| month_number   | INTEGER       | Months since signup (0, 1, 2...) |
+| retained_users | INTEGER       | Users still active               |
+| retention_rate | DECIMAL(5,2)  | Retention percentage             |
+| revenue        | DECIMAL(10,2) | Revenue from cohort this month   |
+| ltv            | DECIMAL(10,2) | Cumulative lifetime value        |
+| updated_at     | TIMESTAMP     | Last update                      |
 
 **Indexes:** 2 (UNIQUE tenant+cohort_month+month_number, tenant+cohort_month DESC)
 **Foreign Keys:** organizations(id)
@@ -123,24 +134,25 @@ TypeScript types generated for all 5 new models:
 ---
 
 ### Table: `tournament_aggregates`
+
 **Purpose:** Tournament performance metrics
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | TEXT (PK) | Unique aggregate ID |
-| tenant_id | TEXT (FK) | Organization ID |
-| period_start | DATE | Period start date |
-| period_end | DATE | Period end date |
-| period_type | VARCHAR(20) | day, week, month, quarter, year |
-| tournament_count | INTEGER | Total tournaments |
-| completed_count | INTEGER | Completed tournaments |
-| completion_rate | DECIMAL(5,2) | Completion percentage |
-| total_players | INTEGER | Total player registrations |
-| avg_players | DECIMAL(10,2) | Average players per tournament |
-| avg_duration_minutes | DECIMAL(10,2) | Average duration |
-| most_popular_format | VARCHAR(100) | Most popular format |
-| revenue | DECIMAL(10,2) | Total revenue |
-| updated_at | TIMESTAMP | Last update |
+| Column               | Type          | Description                     |
+| -------------------- | ------------- | ------------------------------- |
+| id                   | TEXT (PK)     | Unique aggregate ID             |
+| tenant_id            | TEXT (FK)     | Organization ID                 |
+| period_start         | DATE          | Period start date               |
+| period_end           | DATE          | Period end date                 |
+| period_type          | VARCHAR(20)   | day, week, month, quarter, year |
+| tournament_count     | INTEGER       | Total tournaments               |
+| completed_count      | INTEGER       | Completed tournaments           |
+| completion_rate      | DECIMAL(5,2)  | Completion percentage           |
+| total_players        | INTEGER       | Total player registrations      |
+| avg_players          | DECIMAL(10,2) | Average players per tournament  |
+| avg_duration_minutes | DECIMAL(10,2) | Average duration                |
+| most_popular_format  | VARCHAR(100)  | Most popular format             |
+| revenue              | DECIMAL(10,2) | Total revenue                   |
+| updated_at           | TIMESTAMP     | Last update                     |
 
 **Indexes:** 2 (UNIQUE tenant+period_type+period_start, tenant+period_start DESC)
 **Foreign Keys:** organizations(id)
@@ -148,22 +160,23 @@ TypeScript types generated for all 5 new models:
 ---
 
 ### Table: `scheduled_reports`
+
 **Purpose:** Automated report configuration
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | TEXT (PK) | Unique report config ID |
-| tenant_id | TEXT (FK) | Organization ID |
-| name | VARCHAR(255) | Report name |
-| report_type | VARCHAR(50) | revenue_summary, user_analytics, etc. |
-| frequency | VARCHAR(20) | daily, weekly, monthly |
-| recipients | TEXT[] | Email addresses |
-| parameters | JSONB | Report configuration |
-| last_run_at | TIMESTAMP | Last delivery time |
-| next_run_at | TIMESTAMP | Next scheduled delivery |
-| is_active | BOOLEAN | Enabled/disabled |
-| created_at | TIMESTAMP | Creation time |
-| updated_at | TIMESTAMP | Last update |
+| Column      | Type         | Description                           |
+| ----------- | ------------ | ------------------------------------- |
+| id          | TEXT (PK)    | Unique report config ID               |
+| tenant_id   | TEXT (FK)    | Organization ID                       |
+| name        | VARCHAR(255) | Report name                           |
+| report_type | VARCHAR(50)  | revenue_summary, user_analytics, etc. |
+| frequency   | VARCHAR(20)  | daily, weekly, monthly                |
+| recipients  | TEXT[]       | Email addresses                       |
+| parameters  | JSONB        | Report configuration                  |
+| last_run_at | TIMESTAMP    | Last delivery time                    |
+| next_run_at | TIMESTAMP    | Next scheduled delivery               |
+| is_active   | BOOLEAN      | Enabled/disabled                      |
+| created_at  | TIMESTAMP    | Creation time                         |
+| updated_at  | TIMESTAMP    | Last update                           |
 
 **Indexes:** 2 (tenant_id, next_run_at)
 **Foreign Keys:** organizations(id)
@@ -173,6 +186,7 @@ TypeScript types generated for all 5 new models:
 ## Multi-Tenant Architecture
 
 All tables enforce multi-tenancy:
+
 - ✅ Every table has `tenant_id` column
 - ✅ Foreign keys to `organizations(id)` with CASCADE delete
 - ✅ Indexes optimized for tenant-scoped queries
@@ -185,6 +199,7 @@ All tables enforce multi-tenancy:
 ## Performance Optimizations
 
 ### Indexes Created (11 total):
+
 1. `analytics_events(tenant_id, event_type)` - Fast event filtering
 2. `analytics_events(tenant_id, timestamp DESC)` - Time-series queries
 3. `analytics_events(user_id, timestamp DESC)` - User activity lookups
@@ -198,6 +213,7 @@ All tables enforce multi-tenancy:
 11. `scheduled_reports(next_run_at)` - Scheduling queries
 
 ### Index Strategy:
+
 - **Composite indexes** for multi-column WHERE clauses
 - **Descending indexes** for recent data queries (DESC on timestamp/date columns)
 - **Unique constraints** prevent duplicate aggregates and enable efficient upserts
@@ -250,11 +266,11 @@ await prisma.analyticsEvent.create({
     eventData: {
       amount: 49.99,
       currency: 'USD',
-      paymentMethod: 'stripe'
+      paymentMethod: 'stripe',
     },
     userId: 'user_456',
-    timestamp: new Date()
-  }
+    timestamp: new Date(),
+  },
 });
 
 // Query revenue aggregates
@@ -263,12 +279,12 @@ const revenue = await prisma.revenueAggregate.findMany({
     tenantId: 'org_123',
     periodType: 'month',
     periodStart: {
-      gte: new Date('2025-01-01')
-    }
+      gte: new Date('2025-01-01'),
+    },
   },
   orderBy: {
-    periodStart: 'desc'
-  }
+    periodStart: 'desc',
+  },
 });
 ```
 
@@ -317,6 +333,7 @@ const revenue = await prisma.revenueAggregate.findMany({
 **Migration Name:** `20251106_add_analytics_tables`
 
 **What was done:**
+
 1. Updated Prisma schema with 5 analytics models (136 lines added)
 2. Created comprehensive SQL migration script (7.4KB)
 3. Added detailed migration documentation (9.4KB)

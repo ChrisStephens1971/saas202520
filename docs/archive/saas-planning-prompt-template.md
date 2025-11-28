@@ -360,11 +360,13 @@ You are helping plan a multi-tenant SaaS application. Guide the user through the
 After gathering all responses, synthesize a comprehensive SaaS planning document with these sections:
 
 ### 1. Executive Summary
+
 - Product vision and value proposition
 - Target market and scale
 - Key differentiators
 
 ### 2. Technical Architecture Plan
+
 - Multi-tenancy architecture decision with rationale
 - Technology stack and infrastructure
 - Security architecture
@@ -372,12 +374,14 @@ After gathering all responses, synthesize a comprehensive SaaS planning document
 - Key technical trade-offs and risks
 
 ### 3. Business Model & Pricing
+
 - Pricing tiers and strategy
 - Feature matrix by tier
 - Billing and subscription management approach
 - Growth and upsell strategy
 
 ### 4. Product Roadmap & Features
+
 - Core MVP features
 - Tenant customization capabilities
 - User management model
@@ -385,6 +389,7 @@ After gathering all responses, synthesize a comprehensive SaaS planning document
 - Phase 1, 2, 3 feature priorities
 
 ### 5. Compliance & Legal Framework
+
 - Required compliance certifications
 - Data governance and privacy policies
 - Tenant isolation strategy
@@ -392,12 +397,14 @@ After gathering all responses, synthesize a comprehensive SaaS planning document
 - Risk mitigation plan
 
 ### 6. Go-to-Market Strategy
+
 - Customer onboarding flow
 - Support model
 - Migration and integration plan
 - Key operational considerations
 
 ### 7. Enterprise Operations Plan (If Applicable)
+
 - DevOps and CI/CD strategy
 - High availability and disaster recovery
 - Environment management
@@ -405,24 +412,28 @@ After gathering all responses, synthesize a comprehensive SaaS planning document
 - Performance and capacity planning
 
 ### 8. Enterprise Sales & Customer Success (If Applicable)
+
 - Enterprise sales process and POC approach
 - Professional services and implementation plan
 - Account management structure
 - Extensibility and customization framework
 
 ### 9. Governance & Risk Management (If Applicable)
+
 - Change management process
 - Vendor and dependency management
 - API versioning and backwards compatibility
 - Security and compliance audit schedules
 
 ### 10. Critical Success Factors
+
 - Technical prerequisites
 - Business milestones
 - Compliance checkpoints
 - Resource requirements
 
 ### 11. Open Questions & Next Steps
+
 - Unresolved decisions
 - Further research needed
 - Recommended next actions

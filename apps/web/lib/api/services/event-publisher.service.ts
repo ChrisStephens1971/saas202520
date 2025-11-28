@@ -70,15 +70,11 @@ export async function publishEvent(
     const webhooks = await getWebhooksForEvent(tenantId, event);
 
     if (webhooks.length === 0) {
-      console.log(
-        `[Event Publisher] No webhooks subscribed to ${event} for tenant ${tenantId}`
-      );
+      console.log(`[Event Publisher] No webhooks subscribed to ${event} for tenant ${tenantId}`);
       return 0;
     }
 
-    console.log(
-      `[Event Publisher] Publishing ${event} to ${webhooks.length} webhook(s)`
-    );
+    console.log(`[Event Publisher] Publishing ${event} to ${webhooks.length} webhook(s)`);
 
     // Create delivery log and queue job for each webhook
     for (const webhook of webhooks) {
@@ -117,9 +113,7 @@ export async function publishEvent(
  *
  * @param jobData - Webhook job data
  */
-export async function publishWebhookJob(
-  jobData: WebhookJobData
-): Promise<void> {
+export async function publishWebhookJob(jobData: WebhookJobData): Promise<void> {
   await webhookQueue.add(jobData, {
     jobId: jobData.deliveryId, // Use delivery ID as job ID for idempotency
   });
@@ -213,12 +207,10 @@ export async function publishTournamentCompleted(
     throw new Error('Tournament not found or not completed');
   }
 
-  const duration = tournament.startedAt && tournament.completedAt
-    ? Math.floor(
-        (tournament.completedAt.getTime() - tournament.startedAt.getTime()) /
-          60000
-      )
-    : 0;
+  const duration =
+    tournament.startedAt && tournament.completedAt
+      ? Math.floor((tournament.completedAt.getTime() - tournament.startedAt.getTime()) / 60000)
+      : 0;
 
   return publishEvent(
     WebhookEvent.TOURNAMENT_COMPLETED,
@@ -238,10 +230,7 @@ export async function publishTournamentCompleted(
 /**
  * Publish Match Started event
  */
-export async function publishMatchStarted(
-  matchId: string,
-  tenantId: string
-): Promise<number> {
+export async function publishMatchStarted(matchId: string, tenantId: string): Promise<number> {
   const match = await prisma.match.findUnique({
     where: { id: matchId },
     include: {
@@ -284,10 +273,7 @@ export async function publishMatchStarted(
 /**
  * Publish Match Completed event
  */
-export async function publishMatchCompleted(
-  matchId: string,
-  tenantId: string
-): Promise<number> {
+export async function publishMatchCompleted(matchId: string, tenantId: string): Promise<number> {
   const match = await prisma.match.findUnique({
     where: { id: matchId },
     include: {
@@ -304,13 +290,10 @@ export async function publishMatchCompleted(
   const score = match.score as any;
   const duration =
     match.startedAt && match.completedAt
-      ? Math.floor(
-          (match.completedAt.getTime() - match.startedAt.getTime()) / 60000
-        )
+      ? Math.floor((match.completedAt.getTime() - match.startedAt.getTime()) / 60000)
       : undefined;
 
-  const winner =
-    match.winnerId === match.playerAId ? match.playerA : match.playerB;
+  const winner = match.winnerId === match.playerAId ? match.playerA : match.playerB;
 
   return publishEvent(
     WebhookEvent.MATCH_COMPLETED,
@@ -348,10 +331,7 @@ export async function publishMatchCompleted(
 /**
  * Publish Player Registered event
  */
-export async function publishPlayerRegistered(
-  playerId: string,
-  tenantId: string
-): Promise<number> {
+export async function publishPlayerRegistered(playerId: string, tenantId: string): Promise<number> {
   const player = await prisma.player.findUnique({
     where: { id: playerId },
     include: {
@@ -382,10 +362,7 @@ export async function publishPlayerRegistered(
 /**
  * Publish Player Checked In event
  */
-export async function publishPlayerCheckedIn(
-  playerId: string,
-  tenantId: string
-): Promise<number> {
+export async function publishPlayerCheckedIn(playerId: string, tenantId: string): Promise<number> {
   const player = await prisma.player.findUnique({
     where: { id: playerId },
     include: {
@@ -401,9 +378,7 @@ export async function publishPlayerCheckedIn(
     throw new Error('Player not found or not checked in');
   }
 
-  const checkedInCount = player.tournament.players.filter(
-    (p) => p.status === 'checked_in'
-  ).length;
+  const checkedInCount = player.tournament.players.filter((p) => p.status === 'checked_in').length;
 
   return publishEvent(
     WebhookEvent.PLAYER_CHECKED_IN,
@@ -441,8 +416,7 @@ export async function publishPlayerEliminated(
     throw new Error('Player not found');
   }
 
-  const totalMatches =
-    player.matchesAsPlayerA.length + player.matchesAsPlayerB.length;
+  const totalMatches = player.matchesAsPlayerA.length + player.matchesAsPlayerB.length;
   const wins =
     player.matchesAsPlayerA.filter((m) => m.winnerId === player.id).length +
     player.matchesAsPlayerB.filter((m) => m.winnerId === player.id).length;

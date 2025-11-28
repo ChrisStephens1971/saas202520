@@ -48,11 +48,7 @@ export async function example2_RevenueBreakdown(tenantId: string) {
   console.log('\n=== Example 2: Revenue Breakdown ===\n');
 
   const now = new Date();
-  const breakdown = await RevenueCalculator.getRevenueBreakdown(
-    tenantId,
-    now,
-    now
-  );
+  const breakdown = await RevenueCalculator.getRevenueBreakdown(tenantId, now, now);
 
   console.log('Revenue Breakdown:');
   console.log(`  Total Revenue: $${breakdown.total.toLocaleString()}`);
@@ -78,16 +74,11 @@ export async function example2_RevenueBreakdown(tenantId: string) {
 export async function example3_RevenueProjection(tenantId: string) {
   console.log('\n=== Example 3: Revenue Projection ===\n');
 
-  const projection = await RevenueCalculator.calculateRevenueProjection(
-    tenantId,
-    6
-  );
+  const projection = await RevenueCalculator.calculateRevenueProjection(tenantId, 6);
 
   console.log(`Method: ${projection.method}`);
   console.log(`Confidence: ${projection.confidence}`);
-  console.log(
-    `Avg Growth Rate: ${projection.baseData.avgGrowthRate.toFixed(2)}%`
-  );
+  console.log(`Avg Growth Rate: ${projection.baseData.avgGrowthRate.toFixed(2)}%`);
   console.log(`\nProjections:`);
 
   projection.projections.forEach((p) => {
@@ -148,14 +139,9 @@ export async function example5_MultiCohortComparison(tenantId: string) {
   console.log('\n=== Example 5: Multi-Cohort Comparison ===\n');
 
   // Compare last 6 cohorts
-  const cohorts = Array.from({ length: 6 }, (_, i) =>
-    subMonths(new Date(), i + 1)
-  );
+  const cohorts = Array.from({ length: 6 }, (_, i) => subMonths(new Date(), i + 1));
 
-  const comparison = await CohortAnalyzer.compareCohortsRetention(
-    tenantId,
-    cohorts
-  );
+  const comparison = await CohortAnalyzer.compareCohortsRetention(tenantId, cohorts);
 
   console.log('Cohort Performance:');
   comparison.cohorts.forEach((c) => {
@@ -165,22 +151,10 @@ export async function example5_MultiCohortComparison(tenantId: string) {
   });
 
   console.log('\nInsights:');
-  console.log(
-    `  Best Cohort: ${format(
-      comparison.insights.bestPerformingCohort,
-      'MMM yyyy'
-    )}`
-  );
-  console.log(
-    `  Worst Cohort: ${format(
-      comparison.insights.worstPerformingCohort,
-      'MMM yyyy'
-    )}`
-  );
+  console.log(`  Best Cohort: ${format(comparison.insights.bestPerformingCohort, 'MMM yyyy')}`);
+  console.log(`  Worst Cohort: ${format(comparison.insights.worstPerformingCohort, 'MMM yyyy')}`);
   console.log(`  Trend: ${comparison.insights.avgRetentionTrend}`);
-  console.log(
-    `  Volatility: ${comparison.insights.retentionVolatility.toFixed(2)}%`
-  );
+  console.log(`  Volatility: ${comparison.insights.retentionVolatility.toFixed(2)}%`);
 
   return comparison;
 }
@@ -241,9 +215,7 @@ export async function example7_CompleteDashboard(tenantId: string) {
   console.log(`  Churn Rate: ${dashboard.kpis.churnRate.toFixed(2)}%`);
   console.log(`  Avg LTV: $${dashboard.kpis.avgLTV.toLocaleString()}`);
   console.log(`  Tournaments: ${dashboard.kpis.totalTournaments}`);
-  console.log(
-    `  Completion Rate: ${dashboard.kpis.completionRate.toFixed(2)}%`
-  );
+  console.log(`  Completion Rate: ${dashboard.kpis.completionRate.toFixed(2)}%`);
 
   console.log('\nTrends:');
   console.log(`  Revenue: ${dashboard.trends.revenue}`);
@@ -276,26 +248,14 @@ export async function example8_AnalyticsHealthCheck(tenantId: string) {
   console.log(`Overall Status: ${health.status.toUpperCase()}`);
 
   console.log('\nData Freshness:');
-  console.log(
-    `  Revenue: ${health.dataFreshness.revenue.hoursAgo.toFixed(1)}h ago`
-  );
-  console.log(
-    `  Cohorts: ${health.dataFreshness.cohorts.hoursAgo.toFixed(1)}h ago`
-  );
-  console.log(
-    `  Tournaments: ${health.dataFreshness.tournaments.hoursAgo.toFixed(1)}h ago`
-  );
+  console.log(`  Revenue: ${health.dataFreshness.revenue.hoursAgo.toFixed(1)}h ago`);
+  console.log(`  Cohorts: ${health.dataFreshness.cohorts.hoursAgo.toFixed(1)}h ago`);
+  console.log(`  Tournaments: ${health.dataFreshness.tournaments.hoursAgo.toFixed(1)}h ago`);
 
   console.log('\nData Quality:');
-  console.log(
-    `  Revenue: ${health.dataQuality.revenueCompleteness.toFixed(1)}%`
-  );
-  console.log(
-    `  Cohorts: ${health.dataQuality.cohortCompleteness.toFixed(1)}%`
-  );
-  console.log(
-    `  Tournaments: ${health.dataQuality.tournamentCompleteness.toFixed(1)}%`
-  );
+  console.log(`  Revenue: ${health.dataQuality.revenueCompleteness.toFixed(1)}%`);
+  console.log(`  Cohorts: ${health.dataQuality.cohortCompleteness.toFixed(1)}%`);
+  console.log(`  Tournaments: ${health.dataQuality.tournamentCompleteness.toFixed(1)}%`);
 
   console.log('\nCache Performance:');
   console.log(`  Hit Rate: ${health.cacheStats.hitRate.toFixed(2)}%`);
@@ -364,7 +324,7 @@ export async function example10_CompleteWorkflow(tenantId: string) {
     baseUsers: 150,
     baseRevenue: 7500,
     baseTournaments: 75,
-    growthRate: 0.10,
+    growthRate: 0.1,
     churnRate: 0.18,
     seasonality: true,
   });

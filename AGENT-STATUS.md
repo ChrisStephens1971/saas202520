@@ -1,13 +1,13 @@
 # 🤖 Agent Status Board
+
 **Last Updated:** 2025-11-04T19:31:33.973236Z
 **Total Agents:** 1
 
-
 ## 💤 Idle Agents
 
-| Agent | Last Active | Ready For |
-|-------|-------------|----------|
-| system | 2025-11-04T00:00 | Any task |
+| Agent  | Last Active      | Ready For |
+| ------ | ---------------- | --------- |
+| system | 2025-11-04T00:00 | Any task  |
 
 ## 📊 Statistics
 
@@ -18,6 +18,6 @@
 
 ### Lane Utilization
 
-| Lane | Active | Blocked | Idle | Total |
-|------|--------|---------|------|-------|
-| unknown | 0 | 0 | 1 | 1 |
+| Lane    | Active | Blocked | Idle | Total |
+| ------- | ------ | ------- | ---- | ----- |
+| unknown | 0      | 0       | 1    | 1     |

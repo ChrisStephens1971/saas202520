@@ -45,6 +45,7 @@ Redis client is already installed (`ioredis` in package.json).
 ### 3. Start Redis
 
 **Local Development:**
+
 ```bash
 # Docker
 docker run -d -p 6379:6379 redis:alpine
@@ -54,6 +55,7 @@ docker-compose up redis
 ```
 
 **Production:**
+
 - AWS ElastiCache
 - Redis Cloud
 - Upstash Redis
@@ -144,11 +146,7 @@ await writeThrough(
 import { emitCacheEvent, CacheEvent } from '@/lib/cache';
 
 // When tournament is updated
-await emitCacheEvent(
-  CacheEvent.TOURNAMENT_UPDATED,
-  tenantId,
-  tournamentId
-);
+await emitCacheEvent(CacheEvent.TOURNAMENT_UPDATED, tenantId, tournamentId);
 
 // When match is completed
 await emitCacheEvent(
@@ -159,11 +157,7 @@ await emitCacheEvent(
 );
 
 // When user logs out
-await emitCacheEvent(
-  CacheEvent.USER_LOGGED_OUT,
-  tenantId,
-  userId
-);
+await emitCacheEvent(CacheEvent.USER_LOGGED_OUT, tenantId, userId);
 ```
 
 ### Bulk Operations
@@ -172,10 +166,11 @@ await emitCacheEvent(
 import { BulkInvalidation, batchGet, batchSet } from '@/lib/cache';
 
 // Batch get
-const results = await batchGet<Tournament>(
-  tenantId,
-  ['tournament:1', 'tournament:2', 'tournament:3']
-);
+const results = await batchGet<Tournament>(tenantId, [
+  'tournament:1',
+  'tournament:2',
+  'tournament:3',
+]);
 
 // Batch set
 const entries = new Map([
@@ -210,17 +205,17 @@ All cache keys are prefixed with tenant ID for multi-tenant isolation:
 
 ## Cache TTL Guidelines
 
-| Data Type | TTL | Reason |
-|-----------|-----|--------|
-| Tournament data | 5 minutes | Moderate changes |
-| Tournament list | 3 minutes | Frequently updated |
-| Tournament matches | 1 minute | Real-time updates |
-| Leaderboards | 1 minute | Real-time scores |
-| User session | 24 hours | Long-lived |
-| User profile | 1 hour | Infrequent changes |
-| Analytics | 15 minutes | Computed data |
-| API responses | 5 minutes | Default caching |
-| Static config | 1 hour | Rarely changes |
+| Data Type          | TTL        | Reason             |
+| ------------------ | ---------- | ------------------ |
+| Tournament data    | 5 minutes  | Moderate changes   |
+| Tournament list    | 3 minutes  | Frequently updated |
+| Tournament matches | 1 minute   | Real-time updates  |
+| Leaderboards       | 1 minute   | Real-time scores   |
+| User session       | 24 hours   | Long-lived         |
+| User profile       | 1 hour     | Infrequent changes |
+| Analytics          | 15 minutes | Computed data      |
+| API responses      | 5 minutes  | Default caching    |
+| Static config      | 1 hour     | Rarely changes     |
 
 ## Invalidation Strategies
 

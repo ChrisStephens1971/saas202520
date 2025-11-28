@@ -78,14 +78,15 @@ class Logger {
    * Log an error message
    */
   error(message: string, error?: Error | unknown, metadata?: LogMetadata): void {
-    const errorMetadata = error instanceof Error
-      ? {
-          errorMessage: error.message,
-          errorStack: error.stack,
-          errorName: error.name,
-          ...metadata,
-        }
-      : metadata;
+    const errorMetadata =
+      error instanceof Error
+        ? {
+            errorMessage: error.message,
+            errorStack: error.stack,
+            errorName: error.name,
+            ...metadata,
+          }
+        : metadata;
 
     this.log(LogLevel.ERROR, message, errorMetadata);
   }

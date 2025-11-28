@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface NotificationTemplate {
   id: string;
@@ -103,20 +104,17 @@ export default function NotificationSettingsPage() {
       });
 
       if (!response.ok) throw new Error('Failed to send test notification');
-      alert('Test notification sent successfully!');
+      toast.success('Test notification sent successfully!');
       setTestRecipient('');
     } catch (error) {
       console.error('Error sending test notification:', error);
-      alert('Failed to send test notification');
+      toast.error('Failed to send test notification');
     } finally {
       setSendingTest(false);
     }
   };
 
-  const handleToggleNotification = async (
-    type: 'email' | 'sms' | 'push',
-    enabled: boolean
-  ) => {
+  const handleToggleNotification = async (type: 'email' | 'sms' | 'push', enabled: boolean) => {
     try {
       const response = await fetch('/api/admin/settings', {
         method: 'PATCH',
@@ -159,16 +157,12 @@ export default function NotificationSettingsPage() {
 
         {/* Notification Toggles */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-            Notification Channels
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Notification Channels</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-medium text-gray-900">Email Notifications</h3>
-                <p className="text-sm text-gray-500">
-                  Send notifications via email
-                </p>
+                <p className="text-sm text-gray-500">Send notifications via email</p>
               </div>
               <button
                 onClick={() => handleToggleNotification('email', !emailEnabled)}
@@ -183,9 +177,7 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-medium text-gray-900">SMS Notifications</h3>
-                <p className="text-sm text-gray-500">
-                  Send notifications via SMS (Twilio)
-                </p>
+                <p className="text-sm text-gray-500">Send notifications via SMS (Twilio)</p>
               </div>
               <button
                 onClick={() => handleToggleNotification('sms', !smsEnabled)}
@@ -199,12 +191,8 @@ export default function NotificationSettingsPage() {
 
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Push Notifications
-                </h3>
-                <p className="text-sm text-gray-500">
-                  Send browser push notifications
-                </p>
+                <h3 className="text-sm font-medium text-gray-900">Push Notifications</h3>
+                <p className="text-sm text-gray-500">Send browser push notifications</p>
               </div>
               <button
                 onClick={() => handleToggleNotification('push', !pushEnabled)}
@@ -221,9 +209,7 @@ export default function NotificationSettingsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Template List */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Notification Templates
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Notification Templates</h2>
             <div className="space-y-2">
               {templates.map((template) => (
                 <button
@@ -236,12 +222,8 @@ export default function NotificationSettingsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-900">
-                        {template.name}
-                      </h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {template.type.toUpperCase()}
-                      </p>
+                      <h3 className="text-sm font-medium text-gray-900">{template.name}</h3>
+                      <p className="text-xs text-gray-500 mt-1">{template.type.toUpperCase()}</p>
                     </div>
                     <svg
                       className="h-5 w-5 text-gray-400"
@@ -317,9 +299,7 @@ export default function NotificationSettingsPage() {
                     )}
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Body
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Body</label>
                       <textarea
                         value={selectedTemplate.body}
                         onChange={(e) =>
@@ -348,9 +328,7 @@ export default function NotificationSettingsPage() {
                 ) : (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Type
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                       <div className="text-sm text-gray-900">
                         {selectedTemplate.type.toUpperCase()}
                       </div>
@@ -361,16 +339,12 @@ export default function NotificationSettingsPage() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Subject
                         </label>
-                        <div className="text-sm text-gray-900">
-                          {selectedTemplate.subject}
-                        </div>
+                        <div className="text-sm text-gray-900">{selectedTemplate.subject}</div>
                       </div>
                     )}
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Body
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Body</label>
                       <div className="text-sm text-gray-900 bg-gray-50 p-3 rounded-lg whitespace-pre-wrap font-mono">
                         {selectedTemplate.body}
                       </div>
@@ -386,11 +360,7 @@ export default function NotificationSettingsPage() {
                           type={testType === 'email' ? 'email' : 'tel'}
                           value={testRecipient}
                           onChange={(e) => setTestRecipient(e.target.value)}
-                          placeholder={
-                            testType === 'email'
-                              ? 'email@example.com'
-                              : '+1234567890'
-                          }
+                          placeholder={testType === 'email' ? 'email@example.com' : '+1234567890'}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         />
                         <button

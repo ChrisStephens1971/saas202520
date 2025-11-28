@@ -227,10 +227,7 @@ export async function getRevenueAnalytics(
 
   // Add projection
   try {
-    result.projection = await RevenueCalculator.calculateRevenueProjection(
-      tenantId,
-      6
-    );
+    result.projection = await RevenueCalculator.calculateRevenueProjection(tenantId, 6);
   } catch {
     console.warn(`[Analytics] Could not generate projection`);
   }
@@ -284,9 +281,7 @@ export async function getCohortAnalytics(
       const analysis = await CohortAnalyzer.analyzeCohort(tenantId, cohortMonth);
       cohorts.push(analysis);
     } catch {
-      console.warn(
-        `[Analytics] No data for cohort ${format(cohortMonth, 'yyyy-MM')}`
-      );
+      console.warn(`[Analytics] No data for cohort ${format(cohortMonth, 'yyyy-MM')}`);
     }
   }
 
@@ -389,10 +384,7 @@ export async function getTournamentAnalytics(
 
   if (!aggregate) {
     throw new Error(
-      `No tournament data found for tenant ${tenantId} in ${format(
-        startDate,
-        'yyyy-MM'
-      )}`
+      `No tournament data found for tenant ${tenantId} in ${format(startDate, 'yyyy-MM')}`
     );
   }
 
@@ -408,9 +400,7 @@ export async function getTournamentAnalytics(
         ? parseFloat(aggregate.completionRate.toString())
         : 0,
       totalPlayers: aggregate.totalPlayers || 0,
-      avgPlayers: aggregate.avgPlayers
-        ? parseFloat(aggregate.avgPlayers.toString())
-        : 0,
+      avgPlayers: aggregate.avgPlayers ? parseFloat(aggregate.avgPlayers.toString()) : 0,
       avgDuration: aggregate.avgDurationMinutes
         ? parseFloat(aggregate.avgDurationMinutes.toString())
         : 0,
@@ -456,9 +446,7 @@ export async function getTournamentAnalytics(
             : 0,
         revenueGrowth:
           result.previous.revenue > 0
-            ? ((result.metrics.revenue - result.previous.revenue) /
-                result.previous.revenue) *
-              100
+            ? ((result.metrics.revenue - result.previous.revenue) / result.previous.revenue) * 100
             : 0,
       };
     }
@@ -478,9 +466,7 @@ export async function getTournamentAnalytics(
  * @param tenantId - Organization ID
  * @returns Dashboard KPIs and trends
  */
-export async function getDashboardSummary(
-  tenantId: string
-): Promise<DashboardSummary> {
+export async function getDashboardSummary(tenantId: string): Promise<DashboardSummary> {
   console.log(`[Analytics] Generating dashboard summary for ${tenantId}`);
 
   const _now = new Date();
@@ -508,23 +494,22 @@ export async function getDashboardSummary(
     revenue.growth?.revenueGrowth && revenue.growth.revenueGrowth > 2
       ? 'up'
       : revenue.growth?.revenueGrowth && revenue.growth.revenueGrowth < -2
-      ? 'down'
-      : 'flat';
+        ? 'down'
+        : 'flat';
 
   const retentionTrend: 'up' | 'down' | 'flat' =
     cohorts.comparison?.insights.avgRetentionTrend === 'improving'
       ? 'up'
       : cohorts.comparison?.insights.avgRetentionTrend === 'declining'
-      ? 'down'
-      : 'flat';
+        ? 'down'
+        : 'flat';
 
   const tournamentTrend: 'up' | 'down' | 'flat' =
     tournaments.growth?.tournamentGrowth && tournaments.growth.tournamentGrowth > 5
       ? 'up'
-      : tournaments.growth?.tournamentGrowth &&
-        tournaments.growth.tournamentGrowth < -5
-      ? 'down'
-      : 'flat';
+      : tournaments.growth?.tournamentGrowth && tournaments.growth.tournamentGrowth < -5
+        ? 'down'
+        : 'flat';
 
   // Generate alerts
   const alerts: Array<{ type: 'warning' | 'info' | 'success'; message: string }> = [];
@@ -596,9 +581,7 @@ export async function refreshAnalytics(tenantId: string): Promise<void> {
  * @param tenantId - Organization ID
  * @returns Analytics health status
  */
-export async function getAnalyticsHealth(
-  tenantId: string
-): Promise<AnalyticsHealth> {
+export async function getAnalyticsHealth(tenantId: string): Promise<AnalyticsHealth> {
   console.log(`[Analytics] Checking analytics health for ${tenantId}`);
 
   const now = new Date();

@@ -34,10 +34,7 @@ type _GetMatchesQuery = z.infer<typeof GetMatchesQuerySchema>;
  * Get player match history
  * Returns paginated match history with opponent info, results, and tournament context
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Extract tenant context (authentication + org validation)
     const tenantResult = await extractTenantContext();
@@ -112,12 +109,7 @@ export async function GET(
     });
 
     // Get match history
-    const matchHistory = await getPlayerMatchHistory(
-      playerId,
-      tenantId,
-      query.limit,
-      query.offset
-    );
+    const matchHistory = await getPlayerMatchHistory(playerId, tenantId, query.limit, query.offset);
 
     // Filter by status if specified
     let filteredMatches = matchHistory;

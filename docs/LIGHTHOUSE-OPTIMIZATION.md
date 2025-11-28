@@ -47,6 +47,7 @@ pnpm lhci autorun --config=lighthouserc.json
 7. **Compression** - Gzip/Brotli on deployment
 
 **Caching Strategy:**
+
 - Static assets: 24 hours (StaleWhileRevalidate)
 - API calls: 5 minutes (NetworkFirst)
 - Google Fonts: 1 year (CacheFirst)
@@ -184,17 +185,19 @@ pnpm lhci autorun --config=lighthouserc.json
 ### Issue: Large JavaScript Bundle
 
 **Fix:**
+
 ```javascript
 // Use dynamic imports for large components
 const AnalyticsDashboard = dynamic(() => import('@/components/AnalyticsDashboard'), {
   loading: () => <LoadingSkeleton />,
-  ssr: false // Client-side only if needed
+  ssr: false, // Client-side only if needed
 });
 ```
 
 ### Issue: Slow Image Loading
 
 **Fix:**
+
 ```jsx
 // Use Next.js Image with proper sizing
 import Image from 'next/image';
@@ -207,29 +210,27 @@ import Image from 'next/image';
   priority // For above-the-fold images
   placeholder="blur"
   blurDataURL="data:image/..."
-/>
+/>;
 ```
 
 ### Issue: Low Accessibility Score
 
 **Fix:**
+
 ```jsx
 // Add proper ARIA labels
-<button
-  onClick={handleClick}
-  aria-label="Open tournament details"
-  aria-expanded={isExpanded}
->
+<button onClick={handleClick} aria-label="Open tournament details" aria-expanded={isExpanded}>
   View Details
-</button>
+</button>;
 
 // Ensure color contrast
-const buttonClass = "bg-blue-600 text-white" // 4.5:1 contrast minimum
+const buttonClass = 'bg-blue-600 text-white'; // 4.5:1 contrast minimum
 ```
 
 ### Issue: Missing PWA Icons
 
 **Fix:**
+
 ```bash
 # Create icons directory
 mkdir apps/web/public/icons
@@ -241,6 +242,7 @@ mkdir apps/web/public/icons
 ### Issue: Third-Party Script Impact
 
 **Fix:**
+
 ```jsx
 // Use Next.js Script component with strategy
 import Script from 'next/script';
@@ -248,7 +250,7 @@ import Script from 'next/script';
 <Script
   src="https://analytics.example.com/script.js"
   strategy="lazyOnload" // or "afterInteractive"
-/>
+/>;
 ```
 
 ---
@@ -383,6 +385,6 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 
 ---
 
-*Last Updated: 2025-01-06*
-*Sprint: 8*
-*Status: Ready for Audits*
+_Last Updated: 2025-01-06_
+_Sprint: 8_
+_Status: Ready for Audits_

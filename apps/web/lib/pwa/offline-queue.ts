@@ -117,9 +117,7 @@ export async function queueAction(
 /**
  * Get all queued actions
  */
-export async function getQueuedActions(
-  status?: QueuedAction['status']
-): Promise<QueuedAction[]> {
+export async function getQueuedActions(status?: QueuedAction['status']): Promise<QueuedAction[]> {
   const db = await getDB();
 
   if (status) {
@@ -132,9 +130,7 @@ export async function getQueuedActions(
 /**
  * Get queued actions by type
  */
-export async function getQueuedActionsByType(
-  type: QueuedAction['type']
-): Promise<QueuedAction[]> {
+export async function getQueuedActionsByType(type: QueuedAction['type']): Promise<QueuedAction[]> {
   const db = await getDB();
   return db.getAllFromIndex(STORE_NAME, 'by-type', type);
 }
@@ -150,10 +146,7 @@ export async function getAction(id: string): Promise<QueuedAction | undefined> {
 /**
  * Update an action's status
  */
-export async function updateAction(
-  id: string,
-  updates: Partial<QueuedAction>
-): Promise<void> {
+export async function updateAction(id: string, updates: Partial<QueuedAction>): Promise<void> {
   const db = await getDB();
   const action = await db.get(STORE_NAME, id);
 
@@ -485,9 +478,7 @@ async function handleOnline(): Promise<void> {
     const successCount = results.filter((r) => r.success).length;
     const failCount = results.length - successCount;
 
-    console.log(
-      `[OfflineQueue] Sync complete: ${successCount} success, ${failCount} failed`
-    );
+    console.log(`[OfflineQueue] Sync complete: ${successCount} success, ${failCount} failed`);
 
     // Clear completed actions after successful sync
     if (successCount > 0) {

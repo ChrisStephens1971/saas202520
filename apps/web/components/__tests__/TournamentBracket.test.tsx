@@ -524,9 +524,12 @@ describe('TournamentBracket', () => {
       render(<TournamentBracket tournamentId="tournament-123" />);
 
       await waitFor(() => {
-        const completedMatch = screen.getByText('Player A').closest('div')?.parentElement?.parentElement;
-        const inProgressMatch = screen.getByText('Player C').closest('div')?.parentElement?.parentElement;
-        const pendingMatch = screen.getByText('Player E').closest('div')?.parentElement?.parentElement;
+        const completedMatch = screen.getByText('Player A').closest('div')
+          ?.parentElement?.parentElement;
+        const inProgressMatch = screen.getByText('Player C').closest('div')
+          ?.parentElement?.parentElement;
+        const pendingMatch = screen.getByText('Player E').closest('div')
+          ?.parentElement?.parentElement;
 
         expect(completedMatch).toHaveClass('border-green-500');
         expect(inProgressMatch).toHaveClass('border-blue-500');

@@ -106,9 +106,7 @@ export function isStandalone(): boolean {
 export function isMobile(): boolean {
   if (typeof window === 'undefined') return false;
 
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 /**
@@ -240,8 +238,7 @@ export function getNetworkState(): NetworkState {
   const connection = (navigator as NavigatorConnection).connection;
 
   if (connection) {
-    const isSlow =
-      connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g';
+    const isSlow = connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g';
 
     return {
       status: isSlow ? 'slow' : 'online',
@@ -514,7 +511,7 @@ export async function share(data: ShareData): Promise<ShareResult> {
  */
 export async function getAppVersion(): Promise<string | null> {
   try {
-    const response = await sendMessageToSW({ type: 'GET_VERSION' }) as any;
+    const response = (await sendMessageToSW({ type: 'GET_VERSION' })) as any;
     return response.version || null;
   } catch {
     return null;

@@ -11,6 +11,7 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 ### Can You Do This Solo?
 
 **Yes, if you have:**
+
 - ✅ Full-stack coding ability (or willing to learn)
 - ✅ 6-12 months runway (savings or part-time income)
 - ✅ Self-discipline and persistence
@@ -18,6 +19,7 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 - ✅ Customer conversation skills
 
 **Realistic Timelines:**
+
 - MVP: 3-6 months
 - First paying customer: 4-8 months
 - Product-market fit: 12-24 months
@@ -42,6 +44,7 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 ### Choose the Right Market
 
 **Good for Solo:**
+
 - ✅ Self-service business model
 - ✅ Small team buyers (not committees)
 - ✅ Low compliance (avoid healthcare/fintech initially)
@@ -49,6 +52,7 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 - ✅ Niche products ($10-50K target MRR)
 
 **Avoid:**
+
 - ❌ Enterprise sales cycles
 - ❌ Heavy regulation
 - ❌ Intense competition requiring huge budget
@@ -56,6 +60,7 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 ### Keep Product Simple
 
 **MVP Rules:**
+
 - 3-5 core features MAX
 - Single user persona
 - Mobile-responsive web (not native apps)
@@ -80,10 +85,12 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 4. **Serverless:** Next.js + Supabase
 
 **Hosting (Keep Simple):**
+
 - Vercel, Railway, Fly.io, or Render
 - NOT: Kubernetes, self-managed servers
 
 **Use Services, Not Code:**
+
 - Auth: Clerk, Supabase Auth (don't build)
 - Payments: Stripe (only option)
 - Email: Resend, Postmark
@@ -94,10 +101,13 @@ Essential advice for building a SaaS alone. Read this first, refer to full guide
 ## The 3-5-10 Rule
 
 ### 3 Core Features
+
 Pick 3 essential features that solve core problem. That's it.
 
 ### 5 User Flows
+
 Design 5 critical user flows end-to-end:
+
 1. Sign up and create workspace
 2. Core feature #1
 3. Core feature #2
@@ -105,6 +115,7 @@ Design 5 critical user flows end-to-end:
 5. Subscribe and pay
 
 ### 10 Screens Maximum
+
 Landing, signup, login, dashboard, 5 app screens, settings, billing.
 
 **Cut Everything Else.**
@@ -114,6 +125,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## Working With Claude (AI)
 
 ### Claude Can Help With:
+
 - Code generation and scaffolding
 - Bug fixes and debugging
 - Architecture advice
@@ -121,12 +133,14 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 - Problem solving
 
 ### How to Use Effectively:
+
 1. **Be specific** - Detailed prompts get better results
 2. **Iterate** - Start high-level, then dive into specifics
 3. **Verify** - Understand code before using
 4. **Learn** - Ask "why" to understand patterns
 
 ### Claude Cannot:
+
 - Make product decisions for you
 - Talk to customers
 - Replace your judgment
@@ -139,21 +153,25 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ### Sustainable Weekly Schedule (40-50 hrs)
 
 **Monday (6-8h):**
+
 - Planning and priorities
 - Admin tasks
 
 **Tuesday-Thursday (8-10h/day):**
+
 - Deep work blocks (4h AM, 4h PM)
 - Coding and building
 - Phone on airplane mode
 
 **Friday (6-8h):**
+
 - Testing and bug fixes
 - Deploy to staging
 - Retrospective
 - Customer support
 
 **Saturday-Sunday:**
+
 - **OFF** (take weekends, avoid burnout)
 
 ### Protecting Deep Work
@@ -171,18 +189,21 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## When to DIY vs. Pay
 
 ### Always DIY:
+
 - ✅ Core product code
 - ✅ Database architecture
 - ✅ Customer conversations
 - ✅ Product decisions
 
 ### Consider Paying For:
+
 - **Design:** $500-$5K (logo, landing page, UI kit)
 - **Legal:** $500-$2K (ToS/Privacy review)
 - **Accounting:** $100-$500/mo (once you have revenue)
 - **DevOps:** $1K-$5K (CI/CD setup, security audit)
 
 ### Never Pay For (At MVP):
+
 - ❌ Expensive agencies
 - ❌ PR firms
 - ❌ SEO services
@@ -210,16 +231,19 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## First 10 Customers
 
 ### Customers 1-3: Your Network
+
 - Former colleagues, friends in industry
 - Direct outreach, personal ask
 - Week 12-14
 
 ### Customers 4-7: Direct Outreach
+
 - LinkedIn, Twitter, Reddit, communities
 - Start conversations, provide value first
 - Week 14-18
 
 ### Customers 8-10: Launch Platforms
+
 - Product Hunt, Hacker News, Reddit
 - Be authentic, not salesy
 - Week 18-24
@@ -233,6 +257,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## When to Hire
 
 ### Ready When:
+
 - $5K+ MRR (contractor)
 - $10K+ MRR (part-time)
 - $20K+ MRR (full-time)
@@ -240,6 +265,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 - Clear, repetitive work to delegate
 
 ### Who to Hire First:
+
 1. Part-time developer (scale dev capacity)
 2. Designer (improve UX/conversion)
 3. Customer support (free up your time)
@@ -252,6 +278,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## Mental Health
 
 ### Warning Signs of Burnout:
+
 - Can't focus >30 minutes
 - Dread opening laptop
 - Sleeping poorly
@@ -259,6 +286,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 - No joy in coding
 
 ### Prevention:
+
 - **Exercise:** 3-4x/week minimum
 - **Sleep:** 7-8 hours
 - **Social:** See friends weekly
@@ -267,6 +295,7 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 - **Community:** Join founder groups (Indie Hackers)
 
 ### When to Consider Quitting:
+
 - No traction after 18+ months
 - Severe mental health impact
 - Runway exhausted
@@ -279,17 +308,20 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## Essential Resources
 
 ### Communities:
+
 - Indie Hackers (indiehackers.com)
 - Twitter #BuildInPublic
 - Reddit: r/SaaS, r/Entrepreneur
 
 ### Books:
+
 - "The Mom Test" - Customer conversations
 - "The Lean Startup" - Building iteratively
 - "Traction" - Marketing channels
 - "Zero to Sold" - Arvid Kahl's journey
 
 ### Tools Budget:
+
 - Minimal: $50-100/month
 - Comfortable: $200-300/month
 - Don't overspend before revenue
@@ -299,30 +331,35 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## Your 90-Day Plan
 
 ### Week 1:
+
 - [ ] Read full solo founder guide
 - [ ] Complete Lite planning template
 - [ ] Talk to 5 potential customers
 - [ ] Join Indie Hackers
 
 ### Week 2-4:
+
 - [ ] Validate problem with 20 conversations
 - [ ] Finalize MVP scope (3 features)
 - [ ] Set up dev environment
 - [ ] Create wireframes
 
 ### Week 5-12:
+
 - [ ] Build MVP (follow 12-week sprint plan)
 - [ ] Deploy to staging weekly
 - [ ] Show progress to potential customers
 - [ ] Build email list
 
 ### Week 13-16:
+
 - [ ] Beta launch (10-20 users)
 - [ ] Daily monitoring and support
 - [ ] Collect feedback, iterate
 - [ ] Fix critical bugs
 
 ### Week 17+:
+
 - [ ] Public launch
 - [ ] First paying customers
 - [ ] Continue iterating
@@ -333,18 +370,21 @@ Landing, signup, login, dashboard, 5 app screens, settings, billing.
 ## Success Metrics
 
 ### Year 1:
+
 - Product launched ✓
 - 10-50 paying customers ✓
 - $1K-$10K MRR ✓
 - Product-market fit emerging ✓
 
 ### Year 2:
+
 - 50-200 customers
 - $10K-$50K MRR
 - Profitable or nearly
 - Maybe first hire
 
 ### Year 3:
+
 - 200-500 customers
 - $50K-$150K MRR
 - Small team (2-5 people)
@@ -387,6 +427,7 @@ Before starting development:
 ## Quick Links
 
 **For detailed guidance, see full guide:**
+
 - [Complete Solo Founder Guide](solo-founder-guide.md) (14 sections, 60 min read)
 - [12-Week Sprint Plan](12-week-mvp-sprint-plan.md) (week-by-week dev plan)
 - [Planning Template Lite](saas-planning-prompt-lite.md) (plan your SaaS)
@@ -412,12 +453,14 @@ You have Claude, communities, and this guide.
 **Full Guide:** [solo-founder-guide.md](solo-founder-guide.md) (~7,000 words)
 
 **Use This Quick Reference When:**
+
 - Need quick motivation or reality check
 - Forgot key principles
 - Making strategic decisions
 - Feeling stuck or burned out
 
 **Use Full Guide When:**
+
 - Starting your SaaS journey
 - Need deep tactical advice
 - Facing specific challenges (hiring, marketing, etc.)

@@ -15,54 +15,54 @@ Comprehensive monitoring strategy for analytics infrastructure including metrics
 
 ### A. Application Performance Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| API Response Time (P50) | Median response time | < 100ms | > 200ms |
-| API Response Time (P95) | 95th percentile | < 300ms | > 500ms |
-| API Response Time (P99) | 99th percentile | < 500ms | > 1000ms |
-| Request Rate | Requests per second | - | > 500 req/s |
-| Error Rate | Failed requests % | < 0.1% | > 1% |
-| Throughput | Successful req/min | - | Drop > 50% |
+| Metric                  | Description          | Target  | Alert Threshold |
+| ----------------------- | -------------------- | ------- | --------------- |
+| API Response Time (P50) | Median response time | < 100ms | > 200ms         |
+| API Response Time (P95) | 95th percentile      | < 300ms | > 500ms         |
+| API Response Time (P99) | 99th percentile      | < 500ms | > 1000ms        |
+| Request Rate            | Requests per second  | -       | > 500 req/s     |
+| Error Rate              | Failed requests %    | < 0.1%  | > 1%            |
+| Throughput              | Successful req/min   | -       | Drop > 50%      |
 
 ### B. Cache Performance Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Cache Hit Rate | % of requests served from cache | > 80% | < 60% |
-| Cache Miss Rate | % of cache misses | < 20% | > 40% |
-| Cache Memory Usage | Redis memory used | < 80% | > 90% |
-| Cache Eviction Rate | Keys evicted/min | < 10/min | > 100/min |
-| Cache Latency | Redis operation time | < 5ms | > 20ms |
+| Metric              | Description                     | Target   | Alert Threshold |
+| ------------------- | ------------------------------- | -------- | --------------- |
+| Cache Hit Rate      | % of requests served from cache | > 80%    | < 60%           |
+| Cache Miss Rate     | % of cache misses               | < 20%    | > 40%           |
+| Cache Memory Usage  | Redis memory used               | < 80%    | > 90%           |
+| Cache Eviction Rate | Keys evicted/min                | < 10/min | > 100/min       |
+| Cache Latency       | Redis operation time            | < 5ms    | > 20ms          |
 
 ### C. Database Performance Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Query Time (avg) | Average query duration | < 100ms | > 500ms |
-| Query Time (P95) | 95th percentile | < 200ms | > 1000ms |
-| Connection Pool Usage | % of connections used | < 70% | > 90% |
-| Slow Queries | Queries > 1s | 0 | > 5/min |
-| Database CPU | CPU utilization | < 70% | > 85% |
-| Database Memory | Memory utilization | < 80% | > 90% |
+| Metric                | Description            | Target  | Alert Threshold |
+| --------------------- | ---------------------- | ------- | --------------- |
+| Query Time (avg)      | Average query duration | < 100ms | > 500ms         |
+| Query Time (P95)      | 95th percentile        | < 200ms | > 1000ms        |
+| Connection Pool Usage | % of connections used  | < 70%   | > 90%           |
+| Slow Queries          | Queries > 1s           | 0       | > 5/min         |
+| Database CPU          | CPU utilization        | < 70%   | > 85%           |
+| Database Memory       | Memory utilization     | < 80%   | > 90%           |
 
 ### D. Background Job Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Queue Length | Jobs waiting | < 10 | > 100 |
-| Job Success Rate | % successful jobs | > 99% | < 95% |
-| Job Processing Time | Avg time per job | < 30s | > 120s |
-| Failed Jobs | Failed jobs/hour | 0 | > 5 |
-| Worker Health | Active workers | All | Any down |
+| Metric              | Description       | Target | Alert Threshold |
+| ------------------- | ----------------- | ------ | --------------- |
+| Queue Length        | Jobs waiting      | < 10   | > 100           |
+| Job Success Rate    | % successful jobs | > 99%  | < 95%           |
+| Job Processing Time | Avg time per job  | < 30s  | > 120s          |
+| Failed Jobs         | Failed jobs/hour  | 0      | > 5             |
+| Worker Health       | Active workers    | All    | Any down        |
 
 ### E. Business Metrics
 
-| Metric | Description | Target | Alert Threshold |
-|--------|-------------|--------|-----------------|
-| Active Users | Users in last hour | - | Drop > 30% |
-| Revenue Calculations | Successful calcs/day | - | < expected |
-| Export Success Rate | % successful exports | > 99% | < 95% |
-| Report Delivery Rate | % reports sent | > 99% | < 98% |
+| Metric               | Description          | Target | Alert Threshold |
+| -------------------- | -------------------- | ------ | --------------- |
+| Active Users         | Users in last hour   | -      | Drop > 30%      |
+| Revenue Calculations | Successful calcs/day | -      | < expected      |
+| Export Success Rate  | % successful exports | > 99%  | < 95%           |
+| Report Delivery Rate | % reports sent       | > 99%  | < 98%           |
 
 ---
 
@@ -134,9 +134,7 @@ export function trackIncrement(name: string, tags?: string[]) {
 // Track revenue calculation time
 const start = Date.now();
 const revenue = await RevenueCalculator.calculateMRR(tenantId, date);
-trackTiming('revenue.calculation_time', Date.now() - start, [
-  `tenant:${tenantId}`,
-]);
+trackTiming('revenue.calculation_time', Date.now() - start, [`tenant:${tenantId}`]);
 
 // Track cache hit/miss
 if (cachedData) {
@@ -359,9 +357,9 @@ export async function getMetrics() {
 
 ```yaml
 # Critical: High Error Rate
-- name: "Analytics - High Error Rate"
+- name: 'Analytics - High Error Rate'
   type: metric alert
-  query: "avg(last_5m):sum:analytics.errors{env:production}.as_rate() > 0.01"
+  query: 'avg(last_5m):sum:analytics.errors{env:production}.as_rate() > 0.01'
   message: |
     ⚠️ CRITICAL: Analytics error rate > 1%
 
@@ -376,9 +374,9 @@ export async function getMetrics() {
   priority: 1
 
 # Warning: Slow API Response
-- name: "Analytics - Slow API Response"
+- name: 'Analytics - Slow API Response'
   type: metric alert
-  query: "avg(last_5m):avg:analytics.api.response_time{env:production} > 500"
+  query: 'avg(last_5m):avg:analytics.api.response_time{env:production} > 500'
   message: |
     ⚠️ WARNING: API response time > 500ms
 
@@ -392,9 +390,9 @@ export async function getMetrics() {
   priority: 2
 
 # Warning: Low Cache Hit Rate
-- name: "Analytics - Low Cache Hit Rate"
+- name: 'Analytics - Low Cache Hit Rate'
   type: metric alert
-  query: "avg(last_10m):avg:analytics.cache.hit_rate{env:production} < 0.6"
+  query: 'avg(last_10m):avg:analytics.cache.hit_rate{env:production} < 0.6'
   message: |
     ⚠️ WARNING: Cache hit rate < 60%
 
@@ -409,9 +407,9 @@ export async function getMetrics() {
     - severity:warning
 
 # Critical: Database Connection Pool Exhausted
-- name: "Analytics - DB Connection Pool"
+- name: 'Analytics - DB Connection Pool'
   type: metric alert
-  query: "avg(last_5m):avg:analytics.db.pool_usage{env:production} > 0.9"
+  query: 'avg(last_5m):avg:analytics.db.pool_usage{env:production} > 0.9'
   message: |
     🚨 CRITICAL: Database connection pool > 90%
 
@@ -426,9 +424,9 @@ export async function getMetrics() {
   priority: 1
 
 # Warning: Export Queue Backlog
-- name: "Analytics - Export Queue Backlog"
+- name: 'Analytics - Export Queue Backlog'
   type: metric alert
-  query: "avg(last_5m):avg:analytics.export.queue_length{env:production} > 100"
+  query: 'avg(last_5m):avg:analytics.export.queue_length{env:production} > 100'
   message: |
     ⚠️ WARNING: Export queue backlog > 100 jobs
 
@@ -483,10 +481,7 @@ import winston from 'winston';
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json()
-  ),
+  format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
   defaultMeta: {
     service: 'analytics',
     env: process.env.NODE_ENV,
@@ -547,41 +542,47 @@ WARN: Rate limit exceeded
 
 ### Severity Levels
 
-| Level | Response Time | Examples |
-|-------|--------------|----------|
-| P1 (Critical) | < 15 min | Service down, data loss |
-| P2 (High) | < 1 hour | Degraded performance, high error rate |
-| P3 (Medium) | < 4 hours | Partial feature outage |
-| P4 (Low) | Next business day | Minor bugs, UX issues |
+| Level         | Response Time     | Examples                              |
+| ------------- | ----------------- | ------------------------------------- |
+| P1 (Critical) | < 15 min          | Service down, data loss               |
+| P2 (High)     | < 1 hour          | Degraded performance, high error rate |
+| P3 (Medium)   | < 4 hours         | Partial feature outage                |
+| P4 (Low)      | Next business day | Minor bugs, UX issues                 |
 
 ### Incident Response Procedure
 
 **1. Detection**
+
 - Alert triggered
 - User report
 - Monitoring dashboard anomaly
 
 **2. Assessment**
+
 - Determine severity
 - Identify affected users
 - Estimate impact
 
 **3. Communication**
+
 - Update status page
 - Notify stakeholders
 - Post in incident channel
 
 **4. Mitigation**
+
 - Implement fix or workaround
 - Scale resources if needed
 - Rollback if necessary
 
 **5. Resolution**
+
 - Verify fix works
 - Monitor for recurrence
 - Update status page
 
 **6. Post-Mortem**
+
 - Document incident
 - Identify root cause
 - Create action items
@@ -675,14 +676,7 @@ function calculateApdex(responseTimes: number[]) {
     satisfied,
     tolerating,
     frustrated,
-    rating:
-      apdex >= 0.94
-        ? 'Excellent'
-        : apdex >= 0.85
-        ? 'Good'
-        : apdex >= 0.7
-        ? 'Fair'
-        : 'Poor',
+    rating: apdex >= 0.94 ? 'Excellent' : apdex >= 0.85 ? 'Good' : apdex >= 0.7 ? 'Fair' : 'Poor',
   };
 }
 ```
@@ -710,6 +704,7 @@ function calculateApdex(responseTimes: number[]) {
 ## Summary
 
 **Monitoring Stack:**
+
 - Metrics: Datadog / CloudWatch / Prometheus
 - Logs: CloudWatch Logs / Datadog / ELK
 - Errors: Sentry
@@ -717,6 +712,7 @@ function calculateApdex(responseTimes: number[]) {
 - Alerts: PagerDuty + Slack
 
 **Key Metrics:**
+
 - API Response Time (P95 < 300ms)
 - Cache Hit Rate (> 80%)
 - Error Rate (< 0.1%)
@@ -724,6 +720,7 @@ function calculateApdex(responseTimes: number[]) {
 - Export Success Rate (> 99%)
 
 **Next Steps:**
+
 1. Complete dashboard setup
 2. Configure all alerts
 3. Test incident response

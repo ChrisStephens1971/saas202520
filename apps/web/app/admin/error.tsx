@@ -19,10 +19,7 @@ export default function AdminError({
       <div className="max-w-md w-full">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
           <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full mb-4">
-            <AlertTriangle
-              className="w-6 h-6 text-red-600 dark:text-red-400"
-              aria-hidden="true"
-            />
+            <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" aria-hidden="true" />
           </div>
 
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 text-center mb-2">

@@ -38,15 +38,16 @@ Comprehensive caching strategy for the analytics infrastructure, detailing TTL p
 
 ### A. Revenue Calculator
 
-| Data Type | TTL | Rationale | Invalidation Trigger |
-|-----------|-----|-----------|---------------------|
-| Current month MRR | 5 min | Actively changing | Subscription change |
-| Historical MRR | 1 hour | Rarely changes | Manual correction |
-| Revenue projection | 1 hour | Expensive calculation | New month |
-| LTV calculation | 30 min | Medium volatility | Churn event |
-| Revenue breakdown | 15 min | Moderate changes | Payment event |
+| Data Type          | TTL    | Rationale             | Invalidation Trigger |
+| ------------------ | ------ | --------------------- | -------------------- |
+| Current month MRR  | 5 min  | Actively changing     | Subscription change  |
+| Historical MRR     | 1 hour | Rarely changes        | Manual correction    |
+| Revenue projection | 1 hour | Expensive calculation | New month            |
+| LTV calculation    | 30 min | Medium volatility     | Churn event          |
+| Revenue breakdown  | 15 min | Moderate changes      | Payment event        |
 
 **Example:**
+
 ```typescript
 // Cache current MRR for 5 minutes
 await CacheManager.set(
@@ -65,14 +66,15 @@ await CacheManager.set(
 
 ### B. Cohort Analyzer
 
-| Data Type | TTL | Rationale | Invalidation Trigger |
-|-----------|-----|-----------|---------------------|
-| Cohort retention | 30 min | Infrequent updates | User churn |
-| Cohort LTV | 30 min | Calculated from subscriptions | Subscription change |
-| Retention curve | 1 hour | Historical analysis | End of month |
-| Cohort comparison | 1 hour | Expensive query | New cohort data |
+| Data Type         | TTL    | Rationale                     | Invalidation Trigger |
+| ----------------- | ------ | ----------------------------- | -------------------- |
+| Cohort retention  | 30 min | Infrequent updates            | User churn           |
+| Cohort LTV        | 30 min | Calculated from subscriptions | Subscription change  |
+| Retention curve   | 1 hour | Historical analysis           | End of month         |
+| Cohort comparison | 1 hour | Expensive query               | New cohort data      |
 
 **Example:**
+
 ```typescript
 await CacheManager.set(
   CacheManager.getCacheKey('cohort', 'retention', tenantId, cohortDate),
@@ -83,14 +85,15 @@ await CacheManager.set(
 
 ### C. Tournament Analyzer
 
-| Data Type | TTL | Rationale | Invalidation Trigger |
-|-----------|-----|-----------|---------------------|
-| Active tournament metrics | 5 min | Real-time data | Tournament update |
-| Completed tournament | 24 hours | Immutable | Never (historical) |
-| Format popularity | 1 hour | Aggregate data | New tournament |
-| Player engagement | 15 min | Moderate frequency | Player action |
+| Data Type                 | TTL      | Rationale          | Invalidation Trigger |
+| ------------------------- | -------- | ------------------ | -------------------- |
+| Active tournament metrics | 5 min    | Real-time data     | Tournament update    |
+| Completed tournament      | 24 hours | Immutable          | Never (historical)   |
+| Format popularity         | 1 hour   | Aggregate data     | New tournament       |
+| Player engagement         | 15 min   | Moderate frequency | Player action        |
 
 **Example:**
+
 ```typescript
 // Short TTL for active tournaments
 await CacheManager.set(
@@ -109,13 +112,14 @@ await CacheManager.set(
 
 ### D. Predictive Models
 
-| Data Type | TTL | Rationale | Invalidation Trigger |
-|-----------|-----|-----------|---------------------|
-| Revenue forecast | 1 hour | Expensive computation | New revenue data |
-| User growth prediction | 1 hour | Complex calculation | Significant user change |
-| Trend analysis | 2 hours | Long-term patterns | End of week |
+| Data Type              | TTL     | Rationale             | Invalidation Trigger    |
+| ---------------------- | ------- | --------------------- | ----------------------- |
+| Revenue forecast       | 1 hour  | Expensive computation | New revenue data        |
+| User growth prediction | 1 hour  | Complex calculation   | Significant user change |
+| Trend analysis         | 2 hours | Long-term patterns    | End of week             |
 
 **Example:**
+
 ```typescript
 await CacheManager.set(
   CacheManager.getCacheKey('prediction', 'revenue', tenantId, months),
@@ -126,17 +130,18 @@ await CacheManager.set(
 
 ### E. Export Service
 
-| Data Type | TTL | Rationale | Invalidation Trigger |
-|-----------|-----|-----------|---------------------|
-| Export job status | 1 hour | Temporary state | Job completion |
-| Generated export | 24 hours | Static file | Manual deletion |
-| Export metadata | 1 hour | Job tracking | Never |
+| Data Type         | TTL      | Rationale       | Invalidation Trigger |
+| ----------------- | -------- | --------------- | -------------------- |
+| Export job status | 1 hour   | Temporary state | Job completion       |
+| Generated export  | 24 hours | Static file     | Manual deletion      |
+| Export metadata   | 1 hour   | Job tracking    | Never                |
 
 ---
 
 ## 3. Cache Key Naming Convention
 
 ### Pattern
+
 ```
 {namespace}:{entity}:{tenantId}:{identifier}:{variant}
 ```
@@ -144,6 +149,7 @@ await CacheManager.set(
 ### Examples
 
 **Revenue:**
+
 ```
 revenue:mrr:tenant-001:2024-11:current
 revenue:mrr:tenant-001:2024-10:historical
@@ -151,6 +157,7 @@ revenue:breakdown:tenant-001:2024-11
 ```
 
 **Cohorts:**
+
 ```
 cohort:retention:tenant-001:2024-01:12months
 cohort:ltv:tenant-001:2024-01
@@ -158,6 +165,7 @@ cohort:compare:tenant-001:2024-01-02-03
 ```
 
 **Tournaments:**
+
 ```
 tournament:metrics:tenant-001:tour-001
 tournament:popularity:tenant-001:2024-11
@@ -165,12 +173,14 @@ tournament:engagement:tenant-001:2024-11
 ```
 
 **Predictions:**
+
 ```
 prediction:revenue:tenant-001:6months
 prediction:users:tenant-001:3months
 ```
 
 ### Namespace Benefits
+
 - Easy pattern-based invalidation
 - Clear data organization
 - Simple debugging and monitoring
@@ -182,6 +192,7 @@ prediction:users:tenant-001:3months
 ### A. Event-Based Invalidation
 
 **Subscription Events:**
+
 ```typescript
 // When subscription is created/updated/canceled
 async function onSubscriptionEvent(subscription: Subscription) {
@@ -207,6 +218,7 @@ async function onSubscriptionEvent(subscription: Subscription) {
 ```
 
 **Tournament Events:**
+
 ```typescript
 async function onTournamentUpdate(tournament: Tournament) {
   await CacheManager.invalidate([
@@ -227,16 +239,19 @@ async function onTournamentUpdate(tournament: Tournament) {
 ### B. Pattern-Based Invalidation
 
 **Clear all revenue caches for a tenant:**
+
 ```typescript
 await CacheManager.invalidatePattern(`revenue:*:${tenantId}:*`);
 ```
 
 **Clear all caches for a specific month:**
+
 ```typescript
 await CacheManager.invalidatePattern(`*:*:${tenantId}:${month}:*`);
 ```
 
 **Clear all prediction caches:**
+
 ```typescript
 await CacheManager.invalidatePattern(`prediction:*`);
 ```
@@ -244,6 +259,7 @@ await CacheManager.invalidatePattern(`prediction:*`);
 ### C. Time-Based Invalidation
 
 **Scheduled cache invalidation (via cron):**
+
 ```typescript
 // Clear old export caches daily
 cron.schedule('0 0 * * *', async () => {
@@ -264,6 +280,7 @@ cron.schedule('0 */6 * * *', async () => {
 ### A. Proactive Warming
 
 **On Application Start:**
+
 ```typescript
 async function warmCriticalCaches() {
   const tenants = await prisma.tenant.findMany({
@@ -296,6 +313,7 @@ async function warmCriticalCaches() {
 ### B. Scheduled Warming
 
 **Hourly warming for active data:**
+
 ```typescript
 cron.schedule('0 * * * *', async () => {
   await warmCommonCaches();
@@ -332,6 +350,7 @@ async function warmCommonCaches() {
 ### C. On-Demand Warming
 
 **After data import:**
+
 ```typescript
 async function onDataImport(tenantId: string) {
   // Warm all analytics caches after bulk import
@@ -350,6 +369,7 @@ async function onDataImport(tenantId: string) {
 ### A. Per-Tenant Estimates
 
 **Average Cache Size:**
+
 ```
 Revenue Metrics:
 - Current month MRR: 2 KB
@@ -381,14 +401,15 @@ Grand Total per Tenant: ~200 KB
 ### B. Scaling Calculations
 
 | Tenants | Total Cache Size | Redis Memory | Headroom |
-|---------|-----------------|--------------|----------|
-| 100 | 20 MB | 256 MB | 92% |
-| 500 | 100 MB | 512 MB | 80% |
-| 1,000 | 200 MB | 512 MB | 61% |
-| 5,000 | 1 GB | 2 GB | 50% |
-| 10,000 | 2 GB | 4 GB | 50% |
+| ------- | ---------------- | ------------ | -------- |
+| 100     | 20 MB            | 256 MB       | 92%      |
+| 500     | 100 MB           | 512 MB       | 80%      |
+| 1,000   | 200 MB           | 512 MB       | 61%      |
+| 5,000   | 1 GB             | 2 GB         | 50%      |
+| 10,000  | 2 GB             | 4 GB         | 50%      |
 
 **Recommended Redis Configuration:**
+
 - 1-1,000 tenants: 512 MB instance
 - 1,000-5,000 tenants: 2 GB instance
 - 5,000-10,000 tenants: 4 GB instance
@@ -397,6 +418,7 @@ Grand Total per Tenant: ~200 KB
 ### C. Eviction Policy
 
 **Redis Configuration:**
+
 ```conf
 # Evict least recently used keys when max memory reached
 maxmemory-policy allkeys-lru
@@ -430,6 +452,7 @@ interface CacheStats {
 ### B. Monitoring Dashboard
 
 **Track:**
+
 1. Hit rate (target: > 80%)
 2. Memory usage (alert: > 85%)
 3. Key count trend
@@ -486,6 +509,7 @@ const redisConfig = {
 ### B. High Availability (Production)
 
 **Redis Sentinel Configuration:**
+
 ```typescript
 const redis = new Redis({
   sentinels: [
@@ -499,6 +523,7 @@ const redis = new Redis({
 ```
 
 **Redis Cluster (10,000+ tenants):**
+
 ```typescript
 const redis = new Redis.Cluster(
   [
@@ -546,6 +571,7 @@ const redis = new Redis.Cluster(
 ## Summary
 
 **Cache Strategy Highlights:**
+
 - Hit rate target: 80%+
 - Memory usage per tenant: ~200 KB
 - Recommended Redis: 2 GB for 1,000 tenants
@@ -554,6 +580,7 @@ const redis = new Redis.Cluster(
 - Warming: Proactive + on-demand
 
 **Expected Performance:**
+
 - 90% reduction in database queries
 - 85% faster API response times
 - 99.9% cache availability (with Sentinel/Cluster)

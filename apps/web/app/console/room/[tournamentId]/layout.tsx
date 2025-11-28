@@ -24,16 +24,10 @@ export const metadata: Metadata = {
     title: 'TD Console',
   },
   icons: {
-    apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 };
 
-export default function RoomViewLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RoomViewLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

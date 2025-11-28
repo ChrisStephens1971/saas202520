@@ -31,7 +31,9 @@ export default async function ProfileSettingsPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">Profile Settings</h1>
-        <p className="text-muted-foreground">Manage your player profile, privacy, and notifications</p>
+        <p className="text-muted-foreground">
+          Manage your player profile, privacy, and notifications
+        </p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
@@ -68,7 +70,9 @@ export default async function ProfileSettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Privacy Settings</CardTitle>
-              <CardDescription>Control what information is visible to other players</CardDescription>
+              <CardDescription>
+                Control what information is visible to other players
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <PrivacySettingsForm settings={profile.profile.privacySettings} playerId={userId} />
@@ -84,7 +88,10 @@ export default async function ProfileSettingsPage() {
               <CardDescription>Choose how you want to receive notifications</CardDescription>
             </CardHeader>
             <CardContent>
-              <NotificationSettingsForm preferences={profile.profile.notificationPreferences} playerId={userId} />
+              <NotificationSettingsForm
+                preferences={profile.profile.notificationPreferences}
+                playerId={userId}
+              />
             </CardContent>
           </Card>
         </TabsContent>

@@ -26,9 +26,7 @@ export default async function UnauthorizedPage() {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-          Access Denied
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h1>
 
         {/* Message */}
         <p className="text-gray-600 dark:text-gray-400 mb-8">
@@ -38,12 +36,8 @@ export default async function UnauthorizedPage() {
 
         {/* User Info */}
         <div className="mb-8 rounded-lg border border-gray-200 bg-white p-4 dark:bg-gray-800 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-            Logged in as:
-          </p>
-          <p className="font-medium text-gray-900 dark:text-white">
-            {session.user.email}
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Logged in as:</p>
+          <p className="font-medium text-gray-900 dark:text-white">{session.user.email}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
             Role: <span className="font-medium">{session.user.role}</span>
           </p>
@@ -70,7 +64,8 @@ export default async function UnauthorizedPage() {
 
         {/* Help Text */}
         <p className="mt-8 text-xs text-gray-500 dark:text-gray-400">
-          If you believe you should have access to this page, please contact your organization owner.
+          If you believe you should have access to this page, please contact your organization
+          owner.
         </p>
       </div>
     </div>

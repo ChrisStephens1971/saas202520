@@ -103,11 +103,13 @@ Backend Libraries:
 ## API Endpoints
 
 ### Score Increment
+
 ```
 POST /api/matches/[id]/score/increment
 ```
 
 **Request:**
+
 ```json
 {
   "player": "A" | "B",
@@ -117,6 +119,7 @@ POST /api/matches/[id]/score/increment
 ```
 
 **Response (200):**
+
 ```json
 {
   "match": {
@@ -155,6 +158,7 @@ POST /api/matches/[id]/score/increment
 ```
 
 **Errors:**
+
 - `400 Bad Request`: Validation failed, missing fields
 - `401 Unauthorized`: No session
 - `403 Forbidden`: User doesn't have scorekeeper role
@@ -164,11 +168,13 @@ POST /api/matches/[id]/score/increment
 ---
 
 ### Score Undo
+
 ```
 POST /api/matches/[id]/score/undo
 ```
 
 **Request:**
+
 ```json
 {
   "device": "string (UUID)",
@@ -177,6 +183,7 @@ POST /api/matches/[id]/score/undo
 ```
 
 **Response (200):**
+
 ```json
 {
   "match": {
@@ -197,6 +204,7 @@ POST /api/matches/[id]/score/undo
 ```
 
 **Notes:**
+
 - Only undoes last action
 - Marks original as `undone: true` (preserves audit trail)
 - Creates new "undo" action record
@@ -205,11 +213,13 @@ POST /api/matches/[id]/score/undo
 ---
 
 ### Score History
+
 ```
 GET /api/matches/[id]/score/history?limit=50
 ```
 
 **Response (200):**
+
 ```json
 {
   "updates": [
@@ -414,10 +424,13 @@ POST /score/increment
 const match = await prisma.match.findUnique({ where: { id } });
 
 if (match.rev !== requestRev) {
-  return NextResponse.json({
-    error: 'Match was updated by another user. Please refresh.',
-    currentRev: match.rev
-  }, { status: 409 });
+  return NextResponse.json(
+    {
+      error: 'Match was updated by another user. Please refresh.',
+      currentRev: match.rev,
+    },
+    { status: 409 }
+  );
 }
 
 // Update increments version
@@ -425,8 +438,8 @@ await prisma.match.update({
   where: { id },
   data: {
     score: newScore,
-    rev: { increment: 1 }  // ← Atomic increment
-  }
+    rev: { increment: 1 }, // ← Atomic increment
+  },
 });
 ```
 
@@ -485,30 +498,27 @@ Located in `/packages/shared/src/lib/scoring-validation.test.ts`
 ```typescript
 describe('Scoring Validation', () => {
   it('should allow valid score increment', () => {
-    const result = validateScoreIncrement(
-      { playerA: 5, playerB: 3, raceTo: 9 },
-      'A',
-      { raceTo: 9, allowHillHill: true, requireConfirmation: true }
-    );
+    const result = validateScoreIncrement({ playerA: 5, playerB: 3, raceTo: 9 }, 'A', {
+      raceTo: 9,
+      allowHillHill: true,
+      requireConfirmation: true,
+    });
     expect(result.valid).toBe(true);
   });
 
   it('should prevent score exceeding race-to', () => {
-    const result = validateScoreIncrement(
-      { playerA: 9, playerB: 7, raceTo: 9 },
-      'A',
-      { raceTo: 9 }
-    );
+    const result = validateScoreIncrement({ playerA: 9, playerB: 7, raceTo: 9 }, 'A', {
+      raceTo: 9,
+    });
     expect(result.valid).toBe(false);
     expect(result.errors).toContain('Player A score cannot exceed race-to 9');
   });
 
   it('should detect hill-hill (8-8 in race-to-9)', () => {
-    const result = validateScoreIncrement(
-      { playerA: 8, playerB: 7, raceTo: 9 },
-      'B',
-      { raceTo: 9, requireConfirmation: true }
-    );
+    const result = validateScoreIncrement({ playerA: 8, playerB: 7, raceTo: 9 }, 'B', {
+      raceTo: 9,
+      requireConfirmation: true,
+    });
     expect(result.warnings).toContain('Hill-hill situation...');
   });
 });
@@ -655,11 +665,7 @@ export function ScoringCard({ match }) {
 ### Error Handling Wrapper
 
 ```typescript
-async function scoreWithRetry(
-  matchId: string,
-  player: 'A' | 'B',
-  maxRetries = 3
-) {
+async function scoreWithRetry(matchId: string, player: 'A' | 'B', maxRetries = 3) {
   let retries = 0;
 
   while (retries < maxRetries) {
@@ -668,23 +674,20 @@ async function scoreWithRetry(
       const match = await getMatch(matchId);
 
       // Attempt score increment
-      const response = await fetch(
-        `/api/matches/${matchId}/score/increment`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            player,
-            device: getDeviceId(),
-            rev: match.rev
-          })
-        }
-      );
+      const response = await fetch(`/api/matches/${matchId}/score/increment`, {
+        method: 'POST',
+        body: JSON.stringify({
+          player,
+          device: getDeviceId(),
+          rev: match.rev,
+        }),
+      });
 
       if (response.status === 409) {
         // Optimistic lock collision - retry with fresh rev
         retries++;
         console.log(`Conflict detected, retrying (${retries}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, 100 * retries)); // Backoff
+        await new Promise((resolve) => setTimeout(resolve, 100 * retries)); // Backoff
         continue;
       }
 
@@ -714,22 +717,16 @@ export async function POST(request, { params }) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.id) {
-    return NextResponse.json(
-      { error: 'Unauthorized' },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const match = await prisma.match.findUnique({
     where: { id: params.id },
-    include: { tournament: true }
+    include: { tournament: true },
   });
 
   // Check permission
-  const hasPermission = await canScoreMatches(
-    session.user.id,
-    match.tournament.orgId
-  );
+  const hasPermission = await canScoreMatches(session.user.id, match.tournament.orgId);
 
   if (!hasPermission) {
     return NextResponse.json(
@@ -747,6 +744,7 @@ export async function POST(request, { params }) {
 ## Monitoring & Debugging
 
 ### Check Score History
+
 ```bash
 # Via API
 curl http://localhost:3000/api/matches/match-123/score/history
@@ -760,6 +758,7 @@ psql "postgresql://..." -c "
 ```
 
 ### Audit Trail for Disputes
+
 ```bash
 # Get all tournament events
 curl http://localhost:3000/api/matches/match-123/score/history?limit=100 | jq '.updates | map({action, actor, timestamp})'
@@ -769,6 +768,7 @@ curl http://localhost:3000/api/matches/match-123/score/history?limit=100 | jq '.
 ```
 
 ### Performance Profiling
+
 ```typescript
 // Measure score increment time
 const start = performance.now();

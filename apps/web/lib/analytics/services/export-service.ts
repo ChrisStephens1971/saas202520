@@ -294,12 +294,7 @@ export async function exportToExcel(
   }
 
   for (const item of data.revenue.breakdown) {
-    revenueSheet.addRow([
-      format(item.date, 'yyyy-MM-dd'),
-      item.amount,
-      item.type,
-      item.source,
-    ]);
+    revenueSheet.addRow([format(item.date, 'yyyy-MM-dd'), item.amount, item.type, item.source]);
   }
 
   // Format currency columns
@@ -500,12 +495,14 @@ export async function exportToPDF(
   doc.text('Revenue Breakdown (Last 10)', 15, yPos);
   yPos += 7;
 
-  const revenueRows = data.revenue.breakdown.slice(0, 10).map((item) => [
-    format(item.date, 'yyyy-MM-dd'),
-    item.type,
-    item.source,
-    `$${item.amount.toLocaleString()}`,
-  ]);
+  const revenueRows = data.revenue.breakdown
+    .slice(0, 10)
+    .map((item) => [
+      format(item.date, 'yyyy-MM-dd'),
+      item.type,
+      item.source,
+      `$${item.amount.toLocaleString()}`,
+    ]);
 
   autoTable(doc, {
     startY: yPos,
@@ -564,10 +561,7 @@ export async function exportToPDF(
     body: [
       ['Total Tournaments', data.tournaments.summary.total.toLocaleString()],
       ['Completed', data.tournaments.summary.completed.toLocaleString()],
-      [
-        'Completion Rate',
-        `${data.tournaments.summary.completionRate.toFixed(1)}%`,
-      ],
+      ['Completion Rate', `${data.tournaments.summary.completionRate.toFixed(1)}%`],
       ['Avg Players', data.tournaments.summary.avgPlayers.toFixed(1)],
     ],
     theme: 'striped',
@@ -583,11 +577,7 @@ export async function exportToPDF(
     doc.setPage(i);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}`,
-      15,
-      pageHeight - 10
-    );
+    doc.text(`Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}`, 15, pageHeight - 10);
     doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, pageHeight - 10);
   }
 
@@ -617,9 +607,7 @@ export async function queueExportJob(
   exportType: 'revenue' | 'tournaments' | 'users',
   options: ExportJobOptions
 ): Promise<string> {
-  console.log(
-    `[Export] Queueing ${options.format} export job for tenant ${tenantId}`
-  );
+  console.log(`[Export] Queueing ${options.format} export job for tenant ${tenantId}`);
 
   const job = await addJob('export', {
     tenantId,
@@ -656,7 +644,12 @@ export async function getExportStatus(jobId: string): Promise<ExportJobStatus> {
 
   const status: ExportJobStatus = {
     jobId: job.id || 'unknown',
-    status: state === 'completed' || state === 'failed' ? state : state === 'active' ? 'active' : 'waiting',
+    status:
+      state === 'completed' || state === 'failed'
+        ? state
+        : state === 'active'
+          ? 'active'
+          : 'waiting',
     progress: typeof progress === 'number' ? progress : 0,
     createdAt: new Date(job.timestamp),
   };

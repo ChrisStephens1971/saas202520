@@ -82,9 +82,7 @@ export default function QueueStatsDashboard({ tournamentId }: Props) {
 
         {/* Average Chips */}
         <div className="text-center p-3 bg-green-50 rounded-lg">
-          <div className="text-2xl font-bold text-green-600">
-            {stats.averageChips.toFixed(1)}
-          </div>
+          <div className="text-2xl font-bold text-green-600">{stats.averageChips.toFixed(1)}</div>
           <div className="text-xs text-gray-600 mt-1">Avg Chips</div>
         </div>
 
@@ -106,9 +104,7 @@ export default function QueueStatsDashboard({ tournamentId }: Props) {
 
         {/* Active Now */}
         <div className="text-center p-3 bg-yellow-50 rounded-lg">
-          <div className="text-2xl font-bold text-yellow-600">
-            {queueData.activeMatchesCount}
-          </div>
+          <div className="text-2xl font-bold text-yellow-600">{queueData.activeMatchesCount}</div>
           <div className="text-xs text-gray-600 mt-1">Active Now</div>
         </div>
       </div>

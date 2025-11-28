@@ -10,6 +10,7 @@
 This is your main project brief - a high-level overview of what you're building and why.
 
 **You can:**
+
 - Paste an existing project description here
 - Write a few paragraphs about your idea
 - Leave it blank and let Claude ask questions
@@ -21,23 +22,23 @@ This is your main project brief - a high-level overview of what you're building 
 
 ### What Problem Are You Solving?
 
-*(Describe the pain point or opportunity)*
+_(Describe the pain point or opportunity)_
 
 ### What's Your Solution?
 
-*(Describe your product/service at a high level)*
+_(Describe your product/service at a high level)_
 
 ### Who Are Your Target Users?
 
-*(Who will use this? Be specific)*
+_(Who will use this? Be specific)_
 
 ### What Makes This Different?
 
-*(How is this better than alternatives?)*
+_(How is this better than alternatives?)_
 
 ### What's Your Vision?
 
-*(Where do you see this in 1-3 years?)*
+_(Where do you see this in 1-3 years?)_
 
 ---
 

@@ -34,10 +34,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/tournaments/clx1234/matches?round=1&status=completed
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -45,10 +42,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -81,10 +75,7 @@ export async function GET(
     );
 
     if (!queryValidation.success) {
-      return validationError(
-        'Invalid query parameters',
-        { errors: queryValidation.error.errors }
-      );
+      return validationError('Invalid query parameters', { errors: queryValidation.error.errors });
     }
 
     const { round, status } = queryValidation.data;
@@ -115,10 +106,7 @@ export async function GET(
     // Fetch matches
     const matchesResult = await prisma.match.findMany({
       where,
-      orderBy: [
-        { round: 'asc' },
-        { position: 'asc' },
-      ],
+      orderBy: [{ round: 'asc' }, { position: 'asc' }],
       include: {
         playerA: {
           select: {
@@ -141,7 +129,7 @@ export async function GET(
     });
 
     // Type assertion for Prisma include (until client is regenerated)
-    type MatchWithRelations = typeof matchesResult[0] & {
+    type MatchWithRelations = (typeof matchesResult)[0] & {
       playerA: { id: string; name: string } | null;
       playerB: { id: string; name: string } | null;
       table: { label: string } | null;
@@ -151,9 +139,7 @@ export async function GET(
     // Transform to API response format
     const data: TournamentMatchSummary[] = matches.map((m) => {
       const score = m.score as unknown as { playerA?: number; playerB?: number };
-      const winner = m.winnerId
-        ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB)
-        : null;
+      const winner = m.winnerId ? (m.playerA?.id === m.winnerId ? m.playerA : m.playerB) : null;
 
       return {
         id: m.id,
@@ -176,7 +162,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 997, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/tournaments/${id}/matches:`, error);

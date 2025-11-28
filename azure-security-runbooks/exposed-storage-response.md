@@ -10,6 +10,7 @@
 ## Overview
 
 This runbook covers response to publicly exposed Azure Storage accounts including:
+
 - Storage account with public network access enabled
 - Blob containers with anonymous public access
 - Storage account keys leaked
@@ -21,6 +22,7 @@ This runbook covers response to publicly exposed Azure Storage accounts includin
 ## Detection Indicators
 
 ### Automated Alerts
+
 - Azure Policy: Public network access enabled
 - Defender for Storage: Mass download detected
 - Defender for Storage: Unusual access pattern
@@ -28,6 +30,7 @@ This runbook covers response to publicly exposed Azure Storage accounts includin
 - Cost anomaly: Unexpected egress charges
 
 ### Manual Discovery
+
 - Container shows "Public access level: Blob" or "Container"
 - Storage account firewall shows "Allow from all networks"
 - Anonymous access successful without authentication
@@ -324,6 +327,7 @@ az monitor diagnostic-settings create \
 ### Compliance Impact Assessment
 
 **Determine if breach notification is required:**
+
 - **GDPR:** If PII of EU residents exposed → 72 hours to notify
 - **HIPAA:** If PHI exposed → Notify HHS within 60 days
 - **State Laws:** Varies by state (e.g., California CCPA)
@@ -344,6 +348,7 @@ az storage blob list \
 ### Root Cause Analysis
 
 **Common Causes:**
+
 1. Developer testing with public access (forgot to remove)
 2. Policy not enforced (audit mode vs. deny mode)
 3. Overly permissive SAS token shared publicly

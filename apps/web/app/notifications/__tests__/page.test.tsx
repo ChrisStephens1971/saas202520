@@ -146,7 +146,9 @@ describe('NotificationsPage', () => {
 
       await waitFor(() => {
         expect(screen.getByText('No notifications')).toBeInTheDocument();
-        expect(screen.getByText("You're all caught up! No new notifications at this time.")).toBeInTheDocument();
+        expect(
+          screen.getByText("You're all caught up! No new notifications at this time.")
+        ).toBeInTheDocument();
       });
     });
 
@@ -328,9 +330,7 @@ describe('NotificationsPage', () => {
       render(<NotificationsPage />);
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          expect.stringContaining('orgId=org-456')
-        );
+        expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('orgId=org-456'));
       });
     });
   });

@@ -7,7 +7,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { createPaymentIntent } from '@/lib/stripe';
-import type { CreatePaymentIntentRequest, CreatePaymentIntentResponse } from '@tournament/shared/types/payment';
+import type {
+  CreatePaymentIntentRequest,
+  CreatePaymentIntentResponse,
+} from '@tournament/shared/types/payment';
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,10 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (amount <= 0) {
-      return NextResponse.json(
-        { error: 'Amount must be greater than 0' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Amount must be greater than 0' }, { status: 400 });
     }
 
     // Get tournament and verify organization
@@ -48,10 +48,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!tournament) {
-      return NextResponse.json(
-        { error: 'Tournament not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Tournament not found' }, { status: 404 });
     }
 
     if (tournament.organization.members.length === 0) {
@@ -120,7 +117,12 @@ export async function POST(request: NextRequest) {
         stripePaymentIntent: payment.stripePaymentIntent || '',
         amount: payment.amount.toNumber(),
         currency: payment.currency,
-        status: payment.status as 'pending' | 'succeeded' | 'failed' | 'refunded' | 'partially_refunded',
+        status: payment.status as
+          | 'pending'
+          | 'succeeded'
+          | 'failed'
+          | 'refunded'
+          | 'partially_refunded',
         purpose: payment.purpose as 'entry_fee' | 'side_pot' | 'addon',
         description: payment.description ?? undefined,
         refundedAmount: payment.refundedAmount?.toNumber() || 0,
@@ -135,9 +137,6 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     console.error('Error creating payment intent:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

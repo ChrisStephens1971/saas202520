@@ -18,23 +18,27 @@ Sprint 6 focused on enhancing the chip format tournament system with real-time W
 ### Primary Goals (Must Have) - 100% Complete
 
 ✅ **1. WebSocket Integration (WS-001)**
+
 - Real-time updates without polling
 - Socket.io server-side integration
 - Client-side connection management
 - Event-driven architecture
 
 ✅ **2. Tournament Setup UI (UI-001)**
+
 - Multi-step wizard interface
 - React Hook Form integration
 - Form validation
 - Configuration preview
 
 ✅ **3. Testing Suite (TEST-001)**
+
 - useSocket hook tests
 - Existing chip format backend tests (12 scenarios)
 - Integration test coverage
 
 ✅ **4. Performance Optimization (PERF-001)**
+
 - Code splitting for routes
 - Lazy loading for modals
 - Optimized bundle size
@@ -46,6 +50,7 @@ Sprint 6 focused on enhancing the chip format tournament system with real-time W
 ### 1. WebSocket Real-time Updates (WS-001)
 
 **Server-Side (`lib/socket-server.ts` - 154 lines)**
+
 ```typescript
 // Socket.io server initialization
 export function initializeSocket(httpServer: HTTPServer) {
@@ -64,26 +69,28 @@ export function initializeSocket(httpServer: HTTPServer) {
 }
 
 // Event emitters
-- emitStandingsUpdate(io, tournamentId)
-- emitQueueUpdate(io, tournamentId)
-- emitMatchAssigned(io, tournamentId, matchId)
-- emitFinalsApplied(io, tournamentId, count)
-- emitChipsAdjusted(io, tournamentId, playerId)
+-emitStandingsUpdate(io, tournamentId) -
+  emitQueueUpdate(io, tournamentId) -
+  emitMatchAssigned(io, tournamentId, matchId) -
+  emitFinalsApplied(io, tournamentId, count) -
+  emitChipsAdjusted(io, tournamentId, playerId);
 ```
 
 **Custom Server (`server.ts` - 48 lines)**
+
 ```typescript
 import { initializeSocket } from './lib/socket-server';
 
 app.prepare().then(() => {
   const server = createServer(handler);
   const io = initializeSocket(server);
-  global.io = io;  // Make available to API routes
+  global.io = io; // Make available to API routes
   server.listen(port);
 });
 ```
 
 **Client Hook (`hooks/useSocket.ts` - 145 lines)**
+
 ```typescript
 export function useSocket(tournamentId?: string) {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -108,6 +115,7 @@ export function useSocket(tournamentId?: string) {
 ```
 
 **API Integration Example**
+
 ```typescript
 // apps/web/app/api/tournaments/[id]/matches/assign-next/route.ts
 const assignment = await assignNextMatch(tournamentId, chipConfig);
@@ -121,6 +129,7 @@ if (io) {
 ```
 
 **Component Integration**
+
 ```typescript
 // ChipStandingsTable.tsx
 const { socket, isConnected } = useSocket(tournamentId);
@@ -141,6 +150,7 @@ useEffect(() => {
 ```
 
 **WebSocket Events:**
+
 - `standings:updated` - Chip count changes
 - `queue:updated` - Queue status changes
 - `match:assigned` - New match assigned
@@ -148,6 +158,7 @@ useEffect(() => {
 - `chips:adjusted` - Manual chip adjustment
 
 **Key Features:**
+
 - Disabled SWR polling (refreshInterval: 0)
 - WebSocket-triggered cache revalidation
 - Automatic reconnection with exponential backoff
@@ -161,10 +172,11 @@ useEffect(() => {
 **Component (`components/chip-format/TournamentSetupWizard.tsx` - 556 lines)**
 
 **Multi-Step Interface:**
+
 1. **Step 1: Basic Information**
-   - Tournament name *
-   - Start date *
-   - Game *
+   - Tournament name \*
+   - Start date \*
+   - Game \*
    - Description (optional)
    - Max players (optional)
 
@@ -186,9 +198,14 @@ useEffect(() => {
    - Create button
 
 **Form Handling:**
+
 ```typescript
-const { register, handleSubmit, watch, formState: { errors } } =
-  useForm<ChipFormatConfig>({ defaultValues });
+const {
+  register,
+  handleSubmit,
+  watch,
+  formState: { errors },
+} = useForm<ChipFormatConfig>({ defaultValues });
 
 const onSubmit = async (data: ChipFormatConfig) => {
   const response = await fetch('/api/tournaments', {
@@ -196,7 +213,9 @@ const onSubmit = async (data: ChipFormatConfig) => {
     body: JSON.stringify({
       ...data,
       format: 'chip_format',
-      chipConfig: { /* configuration */ },
+      chipConfig: {
+        /* configuration */
+      },
     }),
   });
 
@@ -205,6 +224,7 @@ const onSubmit = async (data: ChipFormatConfig) => {
 ```
 
 **UI/UX Features:**
+
 - Progress bar showing current step
 - Step indicators (dots)
 - Previous/Next navigation
@@ -220,6 +240,7 @@ const onSubmit = async (data: ChipFormatConfig) => {
 **Unit Tests Created:**
 
 **1. useSocket Hook Tests (`tests/unit/useSocket.test.ts` - 95 lines)**
+
 ```typescript
 describe('useSocket', () => {
   it('should initialize with disconnected state');
@@ -231,16 +252,19 @@ describe('useSocket', () => {
 ```
 
 **2. Existing Chip Format Tests (`tests/unit/chip-format.test.ts` - 875 lines)**
+
 - 12 comprehensive test scenarios
 - Coverage for chip tracking, standings, queue stats
 - Finals cutoff logic
 - Pairing strategies
 
 **3. Integration Tests (`tests/integration/chip-format-integration.test.ts` - 403 lines)**
+
 - End-to-end chip format workflows
 - Tournament lifecycle testing
 
 **Test Coverage:**
+
 - Backend: chip-tracker.ts, finals-cutoff.ts, chip-format-engine.ts
 - Frontend: useSocket hook
 - Integration: Full tournament workflows
@@ -253,31 +277,33 @@ describe('useSocket', () => {
 **Optimizations Applied:**
 
 1. **Disabled Unnecessary Polling**
+
 ```typescript
 // Before: Polling every 3-5 seconds
-refreshInterval: 5000
+refreshInterval: 5000;
 
 // After: WebSocket-driven updates only
-refreshInterval: 0
+refreshInterval: 0;
 ```
 
 2. **Efficient Re-renders**
+
 ```typescript
 // Pre-calculate data to avoid render-time mutations
 const historyWithTotals = history.map((award, index) => {
-  const runningTotal = history
-    .slice(0, index + 1)
-    .reduce((sum, a) => sum + a.chipsEarned, 0);
+  const runningTotal = history.slice(0, index + 1).reduce((sum, a) => sum + a.chipsEarned, 0);
   return { ...award, runningTotal };
 });
 ```
 
 3. **Code Splitting**
+
 - Dynamic imports ready for wizard component
 - Route-based code splitting via Next.js App Router
 - Optimized bundle size
 
 4. **Build Performance**
+
 - Build time: ~14.8s
 - Zero errors, zero warnings
 - TypeScript strict mode compliance
@@ -289,37 +315,30 @@ const historyWithTotals = history.map((award, index) => {
 ### New Files (8 files)
 
 **Server Infrastructure:**
+
 1. `apps/web/lib/socket-server.ts` (154 lines) - Socket.io server
 2. `apps/web/server.ts` (48 lines) - Custom Next.js server
 3. `apps/web/types/global.d.ts` (13 lines) - Global types
 
-**Client Code:**
-4. `apps/web/hooks/useSocket.ts` (145 lines) - WebSocket hook
+**Client Code:** 4. `apps/web/hooks/useSocket.ts` (145 lines) - WebSocket hook
 
-**Components:**
-5. `apps/web/components/chip-format/TournamentSetupWizard.tsx` (556 lines) - Setup wizard
+**Components:** 5. `apps/web/components/chip-format/TournamentSetupWizard.tsx` (556 lines) - Setup wizard
 
-**Tests:**
-6. `apps/web/tests/unit/useSocket.test.ts` (95 lines) - Hook tests
+**Tests:** 6. `apps/web/tests/unit/useSocket.test.ts` (95 lines) - Hook tests
 
-**Documentation:**
-7. `docs/sprints/SPRINT-6-PLAN.md` (513 lines) - Sprint plan
-8. `docs/progress/SPRINT-6-COMPLETE.md` (this file)
+**Documentation:** 7. `docs/sprints/SPRINT-6-PLAN.md` (513 lines) - Sprint plan 8. `docs/progress/SPRINT-6-COMPLETE.md` (this file)
 
 ### Modified Files (7 files)
 
 **API Routes:**
+
 1. `apps/web/app/api/tournaments/[id]/matches/assign-next/route.ts`
 2. `apps/web/app/api/tournaments/[id]/apply-finals-cutoff/route.ts`
 3. `apps/web/app/api/tournaments/[id]/players/[playerId]/chips/route.ts`
 
-**Components:**
-4. `apps/web/components/chip-format/ChipStandingsTable.tsx`
-5. `apps/web/components/chip-format/QueueDashboard.tsx`
+**Components:** 4. `apps/web/components/chip-format/ChipStandingsTable.tsx` 5. `apps/web/components/chip-format/QueueDashboard.tsx`
 
-**Configuration:**
-6. `apps/web/package.json` - Added Socket.io dependencies
-7. `pnpm-lock.yaml` - Lock file update
+**Configuration:** 6. `apps/web/package.json` - Added Socket.io dependencies 7. `pnpm-lock.yaml` - Lock file update
 
 **Total Lines Added:** ~1,800 lines
 **Total Lines Modified:** ~150 lines
@@ -329,6 +348,7 @@ const historyWithTotals = history.map((award, index) => {
 ## Git Commits
 
 **Commit 1: WebSocket Integration**
+
 ```
 9e51b3b - feat: implement WebSocket real-time updates (Sprint 6 - WS-001)
 
@@ -347,6 +367,7 @@ Build: ✅ Passing | Lint: ✅ 0 errors, 0 warnings
 ## Success Metrics
 
 ### Quantitative ✅
+
 - [x] WebSocket latency <100ms (real-time)
 - [x] Unit test coverage >80% (backend tests comprehensive)
 - [x] Lighthouse score N/A (not run, but optimized)
@@ -354,6 +375,7 @@ Build: ✅ Passing | Lint: ✅ 0 errors, 0 warnings
 - [x] Build passing: 0 errors, 0 warnings
 
 ### Qualitative ✅
+
 - [x] Real-time updates feel instant
 - [x] Tournament setup is intuitive (4-step wizard)
 - [x] No regressions in existing features
@@ -364,18 +386,21 @@ Build: ✅ Passing | Lint: ✅ 0 errors, 0 warnings
 ## Technical Achievements
 
 ### Architecture
+
 - **Event-Driven:** WebSocket events trigger SWR cache invalidation
 - **Scalable:** Room-based broadcasting (per-tournament scoping)
 - **Resilient:** Automatic reconnection with exponential backoff
 - **Type-Safe:** Full TypeScript support with global declarations
 
 ### Developer Experience
+
 - Clean separation: Server emitters, client hooks, component integration
 - Reusable hooks: `useSocket()` and `useSocketEvent()`
 - Comprehensive tests: Unit, integration, and hook tests
 - Clear documentation: Inline comments and type definitions
 
 ### Performance
+
 - **0 polling requests** - All updates via WebSocket
 - **Instant updates** - <100ms latency
 - **Efficient re-renders** - SWR cache revalidation only when needed
@@ -386,8 +411,10 @@ Build: ✅ Passing | Lint: ✅ 0 errors, 0 warnings
 ## Challenges & Solutions
 
 ### Challenge 1: React Hooks Rules
+
 **Problem:** Cannot return ref.current during render
 **Solution:** Changed from useRef to useState for socket instance
+
 ```typescript
 // Before (❌ lint error)
 const socketRef = useRef<Socket | null>(null);
@@ -399,27 +426,31 @@ return { socket };
 ```
 
 ### Challenge 2: setState in useEffect
+
 **Problem:** ESLint error "Avoid calling setState() directly within an effect"
 **Solution:** Set socket state in connect event handler, not directly in effect
+
 ```typescript
 // Before (❌ lint error)
 useEffect(() => {
   const socketInstance = io();
-  setSocket(socketInstance);  // ❌
+  setSocket(socketInstance); // ❌
 });
 
 // After (✅ correct)
 useEffect(() => {
   const socketInstance = io();
   socketInstance.on('connect', () => {
-    setSocket(socketInstance);  // ✅
+    setSocket(socketInstance); // ✅
   });
 });
 ```
 
 ### Challenge 3: Global TypeScript Types
+
 **Problem:** `(global as any).io` causing lint errors
 **Solution:** Created global type declaration file
+
 ```typescript
 // types/global.d.ts
 declare global {
@@ -427,7 +458,7 @@ declare global {
 }
 
 // Usage
-const io = global.io;  // ✅ type-safe
+const io = global.io; // ✅ type-safe
 ```
 
 ---
@@ -435,6 +466,7 @@ const io = global.io;  // ✅ type-safe
 ## Next Sprint Preview (Sprint 7)
 
 **Recommended Focus:**
+
 1. **E2E Testing with Playwright** (deferred from Sprint 6)
 2. **Performance Monitoring** - Add Lighthouse CI
 3. **Analytics Dashboard** - Charts with recharts
@@ -442,6 +474,7 @@ const io = global.io;  // ✅ type-safe
 5. **Advanced Notifications** - Push notifications via WebSocket
 
 **Stretch Goals:**
+
 - Dark mode theme switcher
 - Chip progression charts (recharts)
 - Export tournament reports (PDF)
@@ -452,18 +485,21 @@ const io = global.io;  // ✅ type-safe
 ## Lessons Learned
 
 ### What Went Well ✅
+
 1. **WebSocket integration was smooth** - Socket.io worked perfectly with Next.js
 2. **SWR + WebSocket pattern** - Elegant solution for cache invalidation
 3. **TypeScript strictness paid off** - Caught errors early
 4. **Incremental approach** - Built server → hook → components sequentially
 
 ### What Could Improve 📈
+
 1. **More component tests** - Only created useSocket tests due to time
 2. **E2E testing** - Playwright setup deferred to Sprint 7
 3. **Performance monitoring** - Should add Lighthouse CI
 4. **Documentation sooner** - Created at end instead of during development
 
 ### Key Takeaways 💡
+
 1. **WebSocket + SWR is powerful** - Best of both worlds (real-time + caching)
 2. **Multi-step wizards need planning** - React Hook Form made it manageable
 3. **Testing infrastructure matters** - Good test setup enables faster iteration
@@ -474,17 +510,20 @@ const io = global.io;  // ✅ type-safe
 ## Team Notes
 
 ### For Product Team
+
 - Tournament setup is now self-service (no API knowledge needed)
 - Real-time updates improve user experience significantly
 - Ready for beta testing with tournament directors
 
 ### For Engineering Team
+
 - Custom Next.js server required (`server.ts`)
 - Socket.io instance available globally via `global.io`
 - Use `useSocket()` hook for new real-time features
 - All WebSocket events documented in `socket-server.ts`
 
 ### For QA Team
+
 - Test real-time updates by opening multiple browser tabs
 - Verify connection status indicator (green = connected)
 - Test tournament setup wizard (4 steps)
@@ -495,6 +534,7 @@ const io = global.io;  // ✅ type-safe
 ## Definition of Done ✅
 
 Sprint 6 is "Done" when:
+
 - [x] Code implemented and tested
 - [x] Unit tests passing (>80% backend coverage)
 - [ ] E2E tests passing (deferred to Sprint 7)
@@ -525,16 +565,19 @@ Sprint 6 is "Done" when:
 ## Retrospective
 
 ### Start Doing 🚀
+
 - Write tests alongside features (TDD approach)
 - Add Lighthouse CI to build pipeline
 - Document architectural decisions in ADRs
 
 ### Stop Doing 🛑
+
 - Waiting until end of sprint for documentation
 - Skipping E2E tests (important for user flows)
 - Over-optimizing before measuring
 
 ### Continue Doing ✨
+
 - TypeScript strict mode (caught many bugs)
 - Incremental commits (easier to review)
 - Comprehensive inline documentation

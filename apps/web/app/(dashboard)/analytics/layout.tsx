@@ -11,10 +11,6 @@ export const metadata: Metadata = {
   description: 'View detailed analytics for your tournament platform',
 };
 
-export default function AnalyticsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AnalyticsLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

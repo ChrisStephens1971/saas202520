@@ -191,9 +191,7 @@ export function RevenueAnalytics({ dateRange }: RevenueAnalyticsProps) {
                     className="text-green-600"
                     strokeWidth="12"
                     strokeDasharray={440}
-                    strokeDashoffset={
-                      440 - (440 * (data?.paymentSuccessRate || 0)) / 100
-                    }
+                    strokeDashoffset={440 - (440 * (data?.paymentSuccessRate || 0)) / 100}
                     strokeLinecap="round"
                     stroke="currentColor"
                     fill="transparent"
@@ -220,8 +218,8 @@ export function RevenueAnalytics({ dateRange }: RevenueAnalyticsProps) {
                 {(data?.paymentSuccessRate ?? 0) >= 95
                   ? 'Excellent payment reliability'
                   : (data?.paymentSuccessRate ?? 0) >= 85
-                  ? 'Good payment reliability'
-                  : 'Review payment failures'}
+                    ? 'Good payment reliability'
+                    : 'Review payment failures'}
               </p>
             </div>
           </div>

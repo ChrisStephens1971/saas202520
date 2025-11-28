@@ -28,10 +28,7 @@ import { authenticateApiRequest } from '@/lib/api/public-api-auth';
  * @example
  * GET /api/v1/players/clx1234567890
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -39,10 +36,7 @@ export async function GET(
     const auth = await authenticateApiRequest(request);
 
     if (!auth.success) {
-      return NextResponse.json(
-        { error: auth.error.message },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: auth.error.message }, { status: 401 });
     }
 
     const tenantId = auth.context.tenantId;
@@ -91,7 +85,8 @@ export async function GET(
     });
 
     // Check privacy settings
-    const privacySettings = (profile?.privacySettings as unknown as { profilePublic?: boolean }) || {};
+    const privacySettings =
+      (profile?.privacySettings as unknown as { profilePublic?: boolean }) || {};
     if (!privacySettings.profilePublic) {
       return forbiddenError('This player profile is private');
     }
@@ -136,7 +131,6 @@ export async function GET(
 
     const rateLimitHeaders = getRateLimitHeaders(1000, 993, Date.now() + 3600000);
     return apiSuccess(data, rateLimitHeaders);
-
   } catch (error) {
     const { id } = await params;
     console.error(`[API Error] GET /api/v1/players/${id}:`, error);

@@ -115,10 +115,7 @@ export async function getReadyQueue(
   const queuedMatches: QueuedMatch[] = [];
 
   for (const match of tournament.matches) {
-    const dependencies = await getMatchDependencies(
-      match.id,
-      tournament.format
-    );
+    const dependencies = await getMatchDependencies(match.id, tournament.format);
 
     // Check if all dependencies are completed
     const canStart =
@@ -157,10 +154,7 @@ export async function getReadyQueue(
  * Get dependencies for a match
  * Dependencies are matches that must complete before this match can start
  */
-async function getMatchDependencies(
-  matchId: string,
-  format: string
-): Promise<string[]> {
+async function getMatchDependencies(matchId: string, format: string): Promise<string[]> {
   const dependencies: string[] = [];
 
   // For bracket formats, check if this match depends on previous round results
@@ -199,9 +193,7 @@ async function getMatchDependencies(
 
         // Add IDs of matches that aren't completed yet
         dependencies.push(
-          ...feedingMatches
-            .filter((m) => m.state !== 'completed')
-            .map((m) => m.id)
+          ...feedingMatches.filter((m) => m.state !== 'completed').map((m) => m.id)
         );
       }
     }
@@ -216,9 +208,7 @@ async function getMatchDependencies(
 /**
  * Auto-assign ready matches to available tables
  */
-export async function autoAssignTables(
-  tournamentId: string
-): Promise<TableAssignment[]> {
+export async function autoAssignTables(tournamentId: string): Promise<TableAssignment[]> {
   // Get available tables
   const availableTables = await prisma.table.findMany({
     where: {
@@ -232,10 +222,7 @@ export async function autoAssignTables(
   }
 
   // Get ready matches
-  const readyMatches = await getReadyQueue(
-    tournamentId,
-    availableTables.length
-  );
+  const readyMatches = await getReadyQueue(tournamentId, availableTables.length);
 
   if (readyMatches.length === 0) {
     return []; // No matches ready
@@ -301,9 +288,7 @@ export async function releaseTable(tableId: string): Promise<void> {
 /**
  * Get queue status for a tournament
  */
-export async function getQueueStatus(
-  tournamentId: string
-): Promise<QueueStatus> {
+export async function getQueueStatus(tournamentId: string): Promise<QueueStatus> {
   const readyMatches = await getReadyQueue(tournamentId, 10);
 
   const [availableTables, activeMatches, pendingMatches] = await Promise.all([
@@ -359,10 +344,7 @@ export async function startMatch(matchId: string): Promise<void> {
 /**
  * Mark match as completed and release table
  */
-export async function completeMatch(
-  matchId: string,
-  winnerId: string
-): Promise<void> {
+export async function completeMatch(matchId: string, winnerId: string): Promise<void> {
   const match = await prisma.match.findUnique({
     where: { id: matchId },
     select: { tableId: true },
@@ -391,9 +373,7 @@ export async function completeMatch(
  * Suggest optimal match assignments to minimize wait times
  * Uses greedy algorithm to maximize table utilization
  */
-export async function optimizeQueueAssignments(
-  tournamentId: string
-): Promise<{
+export async function optimizeQueueAssignments(tournamentId: string): Promise<{
   suggestedAssignments: TableAssignment[];
   projectedWaitTime: number;
 }> {
@@ -417,9 +397,7 @@ export async function optimizeQueueAssignments(
   const assignments: TableAssignment[] = [];
 
   // Greedy assignment: assign highest priority matches first
-  const sortedMatches = [...readyMatches].sort(
-    (a, b) => b.priority - a.priority
-  );
+  const sortedMatches = [...readyMatches].sort((a, b) => b.priority - a.priority);
 
   for (let i = 0; i < Math.min(sortedMatches.length, availableTables.length); i++) {
     const match = sortedMatches[i];
@@ -445,8 +423,7 @@ export async function optimizeQueueAssignments(
       return sum + waitMinutes;
     }, 0);
 
-  const avgWaitTime =
-    readyMatches.length > 0 ? totalWaitMinutes / readyMatches.length : 0;
+  const avgWaitTime = readyMatches.length > 0 ? totalWaitMinutes / readyMatches.length : 0;
 
   return {
     suggestedAssignments: assignments,

@@ -155,7 +155,7 @@ export function generateTournamentReportPDF(data: TournamentReportData): jsPDF {
 
   const playerTableData = data.players
     .sort((a, b) => a.rank - b.rank)
-    .map(player => [
+    .map((player) => [
       player.rank.toString(),
       player.name,
       player.totalChips.toLocaleString(),
@@ -202,7 +202,7 @@ export function generateTournamentReportPDF(data: TournamentReportData): jsPDF {
   const matchTableData = data.matches
     .sort((a, b) => a.matchNumber - b.matchNumber)
     .slice(0, 50) // Limit to first 50 matches to avoid PDF being too large
-    .map(match => [
+    .map((match) => [
       match.matchNumber.toString(),
       match.player1,
       match.player2,
@@ -238,12 +238,7 @@ export function generateTournamentReportPDF(data: TournamentReportData): jsPDF {
     doc.setPage(i);
     doc.setFontSize(8);
     doc.setTextColor(100);
-    doc.text(
-      `Page ${i} of ${pageCount}`,
-      105,
-      290,
-      { align: 'center' }
-    );
+    doc.text(`Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
     doc.text(
       `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
       105,
@@ -336,7 +331,7 @@ export function generatePlayerReportPDF(
   doc.text('Match History', 14, currentY);
   currentY += 5;
 
-  const matchTableData = matches.map(match => [
+  const matchTableData = matches.map((match) => [
     match.matchNumber.toString(),
     match.player1 === player.name ? match.player2 : match.player1,
     match.winner === player.name ? 'Won' : match.winner ? 'Lost' : 'In Progress',

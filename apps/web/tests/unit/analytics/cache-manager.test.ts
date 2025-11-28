@@ -129,11 +129,7 @@ describe('CacheManager', () => {
     });
 
     it('should handle special characters in keys', () => {
-      const key = CacheManager.getCacheKey(
-        'export',
-        'tenant@001',
-        'report:monthly'
-      );
+      const key = CacheManager.getCacheKey('export', 'tenant@001', 'report:monthly');
 
       expect(key).toBeDefined();
       expect(typeof key).toBe('string');
@@ -159,12 +155,9 @@ describe('CacheManager', () => {
 
       const dataGenerator = async () => ({ mrr: 15000 });
 
-      await CacheManager.warmCache(
-        'revenue:tenant-001',
-        dataGenerator,
-        300,
-        { skipIfExists: true }
-      );
+      await CacheManager.warmCache('revenue:tenant-001', dataGenerator, 300, {
+        skipIfExists: true,
+      });
 
       const cached = await CacheManager.get('revenue:tenant-001');
       expect(cached).toEqual(existing);
@@ -176,12 +169,9 @@ describe('CacheManager', () => {
 
       const dataGenerator = async () => ({ mrr: 15000 });
 
-      await CacheManager.warmCache(
-        'revenue:tenant-001',
-        dataGenerator,
-        300,
-        { skipIfExists: false }
-      );
+      await CacheManager.warmCache('revenue:tenant-001', dataGenerator, 300, {
+        skipIfExists: false,
+      });
 
       const cached = await CacheManager.get('revenue:tenant-001');
       expect(cached).toEqual({ mrr: 15000 });
@@ -192,9 +182,9 @@ describe('CacheManager', () => {
         throw new Error('Data generation failed');
       };
 
-      await expect(
-        CacheManager.warmCache('test:key', failingGenerator)
-      ).rejects.toThrow('Data generation failed');
+      await expect(CacheManager.warmCache('test:key', failingGenerator)).rejects.toThrow(
+        'Data generation failed'
+      );
     });
   });
 

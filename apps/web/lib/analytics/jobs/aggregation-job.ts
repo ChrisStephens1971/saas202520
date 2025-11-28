@@ -30,9 +30,7 @@ import { AggregationJobData } from './queue';
  * @param job - BullMQ job instance
  * @returns Job result summary
  */
-export async function processAggregationJob(
-  job: Job<AggregationJobData>
-): Promise<{
+export async function processAggregationJob(job: Job<AggregationJobData>): Promise<{
   success: boolean;
   tenantsProcessed: number;
   aggregationType: string;
@@ -174,9 +172,7 @@ export async function processAggregationJob(
  * @param processor - The actual job processor function
  * @returns Wrapped processor with timing
  */
-export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(
-  processor: T
-): T {
+export function withTiming<T extends (...args: unknown[]) => Promise<unknown>>(processor: T): T {
   return (async (...args: unknown[]) => {
     const startTime = Date.now();
     try {

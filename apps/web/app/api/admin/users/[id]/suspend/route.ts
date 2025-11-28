@@ -31,10 +31,7 @@ const SuspendUserSchema = z.object({
  * Suspend user temporarily
  * Invalidates all sessions for the suspension period
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   // Verify admin authentication
   const authResult = await requireAdmin(request);
   if (!authResult.authorized) {

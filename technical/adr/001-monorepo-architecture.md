@@ -10,12 +10,14 @@
 ## Context
 
 We are building a complex offline-first tournament platform with multiple interconnected services:
+
 - **Web application** (Next.js PWA with TD Console, Player View, Kiosk Mode)
 - **Sync service** (Node + Fastify for CRDT sync over WebSocket)
 - **Shared packages** (CRDT types, domain models, validation schemas, sport configs)
 - **Multiple deployment targets** (web, mobile PWA, potential native apps)
 
 Key technical constraints:
+
 - **Offline-first architecture** requires shared CRDT logic between client and server
 - **Event-sourced system** needs consistent event schemas across all services
 - **Type safety** is critical for tournament state management
@@ -31,6 +33,7 @@ We need to decide between a monorepo (single repository with multiple packages) 
 We will adopt a **monorepo architecture using Turborepo** to house all services and shared packages in a single repository.
 
 Structure:
+
 ```
 tournament-platform/
 ├── apps/
@@ -52,6 +55,7 @@ tournament-platform/
 ## Consequences
 
 ### Positive Consequences
+
 - **Type safety across boundaries**: TypeScript types flow seamlessly from DB schema → API → client with zero manual synchronization
 - **Code reuse**: CRDT logic, event schemas, validation rules, and sport configs are defined once and used everywhere
 - **Atomic changes**: Refactoring domain models, API contracts, or event schemas happens in a single PR with coordinated changes
@@ -61,12 +65,14 @@ tournament-platform/
 - **Consistent tooling**: Shared ESLint, Prettier, TypeScript configs across all packages
 
 ### Negative Consequences
+
 - **Larger repository size**: All code in one place (mitigated: still small compared to most enterprise repos)
 - **Potential build complexity**: Need to configure Turborepo properly (mitigated: well-documented, mature tooling)
 - **Git history mixing**: Commits for different services in same timeline (mitigated: conventional commits with scope prefixes)
 - **Repository permissions**: Cannot grant granular access per service (mitigated: not an issue for 2-person team)
 
 ### Neutral Consequences
+
 - **Learning curve**: Team needs to understand monorepo concepts and Turborepo (1-2 days learning investment)
 - **CI/CD adjustments**: Deploy pipelines need to detect changed apps (Turborepo provides helpers for this)
 
@@ -75,15 +81,18 @@ tournament-platform/
 ## Alternatives Considered
 
 ### Alternative 1: Multi-Repo (Separate Repositories)
+
 **Description:** Create separate Git repositories for web app, sync service, and shared packages. Share code via npm packages published to private registry or Git submodules.
 
 **Pros:**
+
 - Clear service boundaries
 - Independent versioning per service
 - Smaller repository sizes
 - Granular access control possible
 
 **Cons:**
+
 - **Type safety breaks**: Changes to shared types require publishing package → updating versions → coordinating releases
 - **Coordination overhead**: Refactoring domain models requires PRs across 3-5 repositories
 - **Dependency hell**: Managing versions of shared packages across repos is error-prone
@@ -96,14 +105,17 @@ tournament-platform/
 ---
 
 ### Alternative 2: Monorepo with Nx
+
 **Description:** Use Nx instead of Turborepo for monorepo orchestration.
 
 **Pros:**
+
 - More features than Turborepo (code generation, affected graph visualization, plugin ecosystem)
 - Strong Angular/React support
 - Powerful dependency graph analysis
 
 **Cons:**
+
 - Steeper learning curve and more complex configuration
 - Heavier tooling overhead (Nx is more opinionated)
 - Slower than Turborepo for simple build/cache workflows
@@ -114,14 +126,17 @@ tournament-platform/
 ---
 
 ### Alternative 3: Monorepo with pnpm Workspaces (No Turborepo)
+
 **Description:** Use pnpm workspaces alone without an orchestration layer like Turborepo.
 
 **Pros:**
+
 - Simpler setup (native pnpm feature)
 - No additional tooling to learn
 - Works well for basic monorepos
 
 **Cons:**
+
 - No intelligent caching (rebuilds everything every time)
 - No task pipelines (must manually manage build order)
 - Slower CI/CD (no incremental builds)
@@ -143,6 +158,7 @@ tournament-platform/
 ## Notes
 
 **Implementation checklist:**
+
 - [ ] Initialize Turborepo with `npx create-turbo@latest`
 - [ ] Configure `turbo.json` with build, dev, test, lint tasks
 - [ ] Set up `apps/web` and `apps/sync-service`
@@ -155,6 +171,7 @@ tournament-platform/
 If monorepo becomes unmanageable (unlikely for 2-person team), we can extract services later using Git history filtering tools. Starting with monorepo is lower risk than starting multi-repo.
 
 **Team impact:**
+
 - **Estimated setup time:** 4-6 hours
 - **Learning time:** 1-2 days for full proficiency
 - **Ongoing maintenance:** Minimal (Turborepo is mostly transparent after setup)

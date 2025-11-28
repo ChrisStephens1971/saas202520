@@ -45,7 +45,9 @@ describe('Scoring Validation', () => {
       const result = validateScoreIncrement(currentScore, 'B', rules);
 
       expect(result.valid).toBe(true);
-      expect(result.warnings).toContain('Hill-hill situation: both players one game away from winning');
+      expect(result.warnings).toContain(
+        'Hill-hill situation: both players one game away from winning'
+      );
     });
 
     it('should warn when match is won', () => {
@@ -53,7 +55,7 @@ describe('Scoring Validation', () => {
       const result = validateScoreIncrement(currentScore, 'A', rules);
 
       expect(result.valid).toBe(true);
-      expect(result.warnings.some(w => w.includes('Match complete'))).toBe(true);
+      expect(result.warnings.some((w) => w.includes('Match complete'))).toBe(true);
     });
   });
 
@@ -87,7 +89,7 @@ describe('Scoring Validation', () => {
       const result = validateScoreIntegrity(score, raceTo);
 
       expect(result.valid).toBe(true);
-      expect(result.warnings.some(w => w.includes('Large score difference'))).toBe(true);
+      expect(result.warnings.some((w) => w.includes('Large score difference'))).toBe(true);
     });
   });
 

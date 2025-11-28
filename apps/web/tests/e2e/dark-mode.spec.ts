@@ -80,9 +80,7 @@ test.describe('Dark Mode Theme', () => {
   test('should change theme colors', async ({ page }) => {
     // Get background color in light mode
     const body = page.locator('body');
-    const lightBg = await body.evaluate(el =>
-      window.getComputedStyle(el).backgroundColor
-    );
+    const lightBg = await body.evaluate((el) => window.getComputedStyle(el).backgroundColor);
 
     // Switch to dark mode
     const themeSwitcher = page.getByRole('button', { name: /theme|light|dark/i }).first();
@@ -91,9 +89,7 @@ test.describe('Dark Mode Theme', () => {
     await page.waitForTimeout(500);
 
     // Get background color in dark mode
-    const darkBg = await body.evaluate(el =>
-      window.getComputedStyle(el).backgroundColor
-    );
+    const darkBg = await body.evaluate((el) => window.getComputedStyle(el).backgroundColor);
 
     // Colors should be different
     expect(lightBg).not.toBe(darkBg);
@@ -102,7 +98,7 @@ test.describe('Dark Mode Theme', () => {
   test('should have smooth transition', async ({ page }) => {
     // Check for transition property on body or html
     const body = page.locator('body');
-    const hasTransition = await body.evaluate(el => {
+    const hasTransition = await body.evaluate((el) => {
       const transition = window.getComputedStyle(el).transition;
       return transition.includes('background') || transition.includes('color');
     });

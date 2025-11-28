@@ -76,10 +76,7 @@ describe('PredictiveModels', () => {
     });
 
     it('should handle insufficient data', async () => {
-      mockRevenueMetricsModel.findMany.mockResolvedValue([
-        { mrr: 10000 },
-        { mrr: 11000 },
-      ]);
+      mockRevenueMetricsModel.findMany.mockResolvedValue([{ mrr: 10000 }, { mrr: 11000 }]);
 
       const result = await PredictiveModels.predictRevenue('tenant-001', 3);
 
@@ -99,10 +96,7 @@ describe('PredictiveModels', () => {
 
       mockUserModel.count.mockResolvedValue(170);
 
-      const result = await PredictiveModels.predictUserGrowth(
-        'tenant-001',
-        3
-      );
+      const result = await PredictiveModels.predictUserGrowth('tenant-001', 3);
 
       expect(result).toBeDefined();
       expect(result.predictions).toHaveLength(3);
@@ -115,10 +109,7 @@ describe('PredictiveModels', () => {
         .mockResolvedValueOnce(110)
         .mockResolvedValueOnce(121);
 
-      const result = await PredictiveModels.predictUserGrowth(
-        'tenant-001',
-        2
-      );
+      const result = await PredictiveModels.predictUserGrowth('tenant-001', 2);
 
       expect(result.growthRate).toBeGreaterThan(0);
     });
@@ -200,17 +191,10 @@ describe('PredictiveModels', () => {
       const volatileData = [10, 5, 20, 8, 18, 12];
       const stableData = [10, 11, 10, 11, 10, 11];
 
-      const volatileInterval = PredictiveModels.calculateConfidenceInterval(
-        15,
-        volatileData
-      );
-      const stableInterval = PredictiveModels.calculateConfidenceInterval(
-        15,
-        stableData
-      );
+      const volatileInterval = PredictiveModels.calculateConfidenceInterval(15, volatileData);
+      const stableInterval = PredictiveModels.calculateConfidenceInterval(15, stableData);
 
-      const volatileWidth =
-        volatileInterval.upper - volatileInterval.lower;
+      const volatileWidth = volatileInterval.upper - volatileInterval.lower;
       const stableWidth = stableInterval.upper - stableInterval.lower;
 
       expect(volatileWidth).toBeGreaterThan(stableWidth);
@@ -219,16 +203,8 @@ describe('PredictiveModels', () => {
     it('should handle different confidence levels', () => {
       const data = [10, 12, 11, 13];
 
-      const interval95 = PredictiveModels.calculateConfidenceInterval(
-        15,
-        data,
-        0.95
-      );
-      const interval99 = PredictiveModels.calculateConfidenceInterval(
-        15,
-        data,
-        0.99
-      );
+      const interval95 = PredictiveModels.calculateConfidenceInterval(15, data, 0.95);
+      const interval99 = PredictiveModels.calculateConfidenceInterval(15, data, 0.99);
 
       const width95 = interval95.upper - interval95.lower;
       const width99 = interval99.upper - interval99.lower;
@@ -265,7 +241,7 @@ describe('PredictiveModels', () => {
     it('should identify quarterly patterns', () => {
       const data = Array.from({ length: 12 }, (_, i) => ({
         period: new Date(2024, i, 1),
-        value: 1000 + ((i % 3 === 0) ? 500 : 0), // Spike every 3 months
+        value: 1000 + (i % 3 === 0 ? 500 : 0), // Spike every 3 months
       }));
 
       const result = PredictiveModels.detectSeasonality(data);
@@ -311,15 +287,11 @@ describe('PredictiveModels', () => {
     it('should handle empty dataset', async () => {
       mockRevenueMetricsModel.findMany.mockResolvedValue([]);
 
-      await expect(
-        PredictiveModels.predictRevenue('tenant-001', 3)
-      ).rejects.toThrow();
+      await expect(PredictiveModels.predictRevenue('tenant-001', 3)).rejects.toThrow();
     });
 
     it('should validate prediction horizon', async () => {
-      await expect(
-        PredictiveModels.predictRevenue('tenant-001', 0)
-      ).rejects.toThrow();
+      await expect(PredictiveModels.predictRevenue('tenant-001', 0)).rejects.toThrow();
 
       await expect(
         PredictiveModels.predictRevenue('tenant-001', 25) // Too far
@@ -327,13 +299,11 @@ describe('PredictiveModels', () => {
     });
 
     it('should handle database errors', async () => {
-      mockRevenueMetricsModel.findMany.mockRejectedValue(
-        new Error('Database error')
-      );
+      mockRevenueMetricsModel.findMany.mockRejectedValue(new Error('Database error'));
 
-      await expect(
-        PredictiveModels.predictRevenue('tenant-001', 3)
-      ).rejects.toThrow('Database error');
+      await expect(PredictiveModels.predictRevenue('tenant-001', 3)).rejects.toThrow(
+        'Database error'
+      );
     });
   });
 });

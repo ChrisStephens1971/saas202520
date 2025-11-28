@@ -10,6 +10,7 @@
 The notification service provides multi-channel notifications (in-app, email, SMS) with rate limiting, deduplication, and preference management. This guide covers complete setup for production deployment.
 
 **Features:**
+
 - ✅ In-app notifications
 - ✅ Email notifications (SMTP/SendGrid)
 - ✅ SMS notifications (Twilio)
@@ -24,11 +25,11 @@ The notification service provides multi-channel notifications (in-app, email, SM
 
 ### Required Services
 
-| Service | Purpose | Required For | Cost |
-|---------|---------|--------------|------|
-| **Upstash Redis** | Rate limiting & SMS deduplication | Production | Free tier available |
-| **Email Provider** | Email notifications | Email | SMTP free, SendGrid paid |
-| **Twilio** | SMS notifications | SMS | Pay-as-you-go |
+| Service            | Purpose                           | Required For | Cost                     |
+| ------------------ | --------------------------------- | ------------ | ------------------------ |
+| **Upstash Redis**  | Rate limiting & SMS deduplication | Production   | Free tier available      |
+| **Email Provider** | Email notifications               | Email        | SMTP free, SendGrid paid |
+| **Twilio**         | SMS notifications                 | SMS          | Pay-as-you-go            |
 
 ### Optional Services
 
@@ -42,6 +43,7 @@ The notification service provides multi-channel notifications (in-app, email, SM
 ### Why Upstash Redis?
 
 Upstash Redis is used for:
+
 - **Rate limiting** - Prevents abuse (10 email/min, 5 SMS/min per org)
 - **SMS deduplication** - Prevents duplicate SMS within 2-minute window
 - **Distributed locking** - Ensures consistency across multiple app instances
@@ -101,6 +103,7 @@ const rateLimiters = {
 ```
 
 **To adjust limits:**
+
 1. Edit `apps/web/lib/notification-service.ts`
 2. Change the numbers in `slidingWindow(count, window)`
 3. Redeploy
@@ -194,6 +197,7 @@ await sgMail.send({
 ### Why Twilio?
 
 Twilio is the industry standard for SMS with:
+
 - Global coverage (200+ countries)
 - Reliable delivery (>99% uptime)
 - Programmable messaging
@@ -241,6 +245,7 @@ WHERE id = 'your-org-id';
 ```
 
 Or via admin panel (when implemented):
+
 - Organization Settings > Integrations > Twilio
 - Enter credentials
 - Test SMS delivery
@@ -393,6 +398,7 @@ pnpm test tests/unit/notification*.test.ts
 ```
 
 Expected results:
+
 - **64 tests passing** (notification system)
 - No errors or warnings
 
@@ -460,6 +466,7 @@ pnpm prisma studio
 **Symptoms:** Can send unlimited emails/SMS rapidly
 **Cause:** Redis credentials missing or incorrect
 **Fix:**
+
 1. Verify `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` in `.env.local`
 2. Check Upstash console for connection errors
 3. Restart dev server: `pnpm dev`
@@ -469,6 +476,7 @@ pnpm prisma studio
 **Symptoms:** Email notifications fail with SMTP error
 **Cause:** Incorrect SMTP credentials or blocked by provider
 **Fix:**
+
 1. Verify SMTP credentials (host, port, user, password)
 2. For Gmail: Use App Password, not account password
 3. Check spam folder for test emails
@@ -479,6 +487,7 @@ pnpm prisma studio
 **Symptoms:** SMS notifications fail with Twilio error
 **Cause:** Missing or incorrect Twilio credentials in database
 **Fix:**
+
 1. Verify organization has Twilio credentials set:
    ```sql
    SELECT "twilioAccountSid", "twilioPhoneNumber"
@@ -494,6 +503,7 @@ pnpm prisma studio
 **Symptoms:** Valid SMS blocked as duplicate
 **Cause:** Redis key collision or TTL issue
 **Fix:**
+
 1. Check Redis for stale keys: `KEYS sms:dedupe:*`
 2. Manually delete if needed: `DEL sms:dedupe:+1234567890:xyz`
 3. Verify 2-minute window is acceptable for use case
@@ -503,6 +513,7 @@ pnpm prisma studio
 **Symptoms:** STOP commands not unsubscribing users
 **Cause:** Twilio webhook not configured correctly
 **Fix:**
+
 1. Verify webhook URL in Twilio console
 2. Ensure URL is publicly accessible (not localhost)
 3. Check webhook logs in Twilio console
@@ -572,30 +583,30 @@ EMAIL_FROM=noreply@yourdomain.com
 
 ### MVP / Small Scale (<1000 active users)
 
-| Service | Usage | Cost |
-|---------|-------|------|
-| Upstash Redis | 10,000 commands/day | **Free** |
-| Email (SMTP) | 500 emails/day | **Free** |
-| Twilio SMS | 100 SMS/month | **$0.75/month** |
-| **Total** | | **~$1/month** |
+| Service       | Usage               | Cost            |
+| ------------- | ------------------- | --------------- |
+| Upstash Redis | 10,000 commands/day | **Free**        |
+| Email (SMTP)  | 500 emails/day      | **Free**        |
+| Twilio SMS    | 100 SMS/month       | **$0.75/month** |
+| **Total**     |                     | **~$1/month**   |
 
 ### Growth Stage (1000-10,000 users)
 
-| Service | Usage | Cost |
-|---------|-------|------|
-| Upstash Redis | 100,000 commands/day | **$10/month** |
-| SendGrid | 50,000 emails/month | **$20/month** |
-| Twilio SMS | 1,000 SMS/month | **$7.50/month** |
-| **Total** | | **~$40/month** |
+| Service       | Usage                | Cost            |
+| ------------- | -------------------- | --------------- |
+| Upstash Redis | 100,000 commands/day | **$10/month**   |
+| SendGrid      | 50,000 emails/month  | **$20/month**   |
+| Twilio SMS    | 1,000 SMS/month      | **$7.50/month** |
+| **Total**     |                      | **~$40/month**  |
 
 ### Scale (10,000+ users)
 
-| Service | Usage | Cost |
-|---------|-------|------|
-| Upstash Redis | 1M+ commands/day | **$50-100/month** |
-| SendGrid | 100,000+ emails/month | **$80-200/month** |
-| Twilio SMS | 10,000 SMS/month | **$75/month** |
-| **Total** | | **~$200-400/month** |
+| Service       | Usage                 | Cost                |
+| ------------- | --------------------- | ------------------- |
+| Upstash Redis | 1M+ commands/day      | **$50-100/month**   |
+| SendGrid      | 100,000+ emails/month | **$80-200/month**   |
+| Twilio SMS    | 10,000 SMS/month      | **$75/month**       |
+| **Total**     |                       | **~$200-400/month** |
 
 ---
 

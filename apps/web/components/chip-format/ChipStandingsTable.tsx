@@ -139,9 +139,7 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
             <div className="text-sm text-gray-600">Total Players</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {stats.averageChips.toFixed(1)}
-            </div>
+            <div className="text-2xl font-bold text-green-600">{stats.averageChips.toFixed(1)}</div>
             <div className="text-sm text-gray-600">Avg Chips</div>
           </div>
           <div className="text-center">
@@ -203,20 +201,13 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
           <tbody>
             {sortedStandings.map((player) => {
               const isFinalist = player.rank <= finalsCount;
-              const rowClass = isFinalist
-                ? 'bg-green-50 border-l-4 border-green-500'
-                : '';
+              const rowClass = isFinalist ? 'bg-green-50 border-l-4 border-green-500' : '';
 
               return (
-                <tr
-                  key={player.playerId}
-                  className={`border-b hover:bg-gray-50 ${rowClass}`}
-                >
+                <tr key={player.playerId} className={`border-b hover:bg-gray-50 ${rowClass}`}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-gray-700">
-                        #{player.rank}
-                      </span>
+                      <span className="text-lg font-bold text-gray-700">#{player.rank}</span>
                       {isFinalist && (
                         <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-semibold">
                           FINALIST
@@ -230,9 +221,7 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
                       🔷 {player.chipCount}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-center text-gray-700">
-                    {player.matchesPlayed}
-                  </td>
+                  <td className="px-4 py-3 text-center text-gray-700">{player.matchesPlayed}</td>
                   <td className="px-4 py-3 text-center">
                     <span className="text-green-600 font-semibold">{player.wins}</span>
                     <span className="mx-1 text-gray-400">/</span>
@@ -244,10 +233,10 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
                         player.status === 'active'
                           ? 'bg-yellow-100 text-yellow-800'
                           : player.status === 'finalist'
-                          ? 'bg-green-100 text-green-800'
-                          : player.status === 'eliminated'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-gray-100 text-gray-800'
+                            ? 'bg-green-100 text-green-800'
+                            : player.status === 'eliminated'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
                       }`}
                     >
                       {player.status.toUpperCase()}
@@ -270,7 +259,9 @@ export default function ChipStandingsTable({ tournamentId, finalsCount }: Props)
       {/* WebSocket connection status */}
       <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-600 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`} />
+          <span
+            className={`inline-block w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-400'}`}
+          />
           <span>{isConnected ? 'Live updates active' : 'Connecting...'}</span>
         </div>
         <span>Last updated: {new Date().toLocaleTimeString()}</span>

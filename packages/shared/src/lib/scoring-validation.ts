@@ -40,8 +40,7 @@ export function validateScoreIncrement(
   }
 
   // SCORE-004: Hill-hill detection (both players one game away from winning)
-  const isHillHill =
-    newScore.playerA === raceTo - 1 && newScore.playerB === raceTo - 1;
+  const isHillHill = newScore.playerA === raceTo - 1 && newScore.playerB === raceTo - 1;
 
   if (isHillHill && rules.requireConfirmation) {
     warnings.push('Hill-hill situation: both players one game away from winning');
@@ -79,10 +78,7 @@ export function isMatchComplete(score: MatchScore, raceTo: number): boolean {
  * Determines the winner of a match
  * Returns 'A', 'B', or null if no winner yet
  */
-export function getMatchWinner(
-  score: MatchScore,
-  raceTo: number
-): 'A' | 'B' | null {
+export function getMatchWinner(score: MatchScore, raceTo: number): 'A' | 'B' | null {
   if (score.playerA === raceTo) return 'A';
   if (score.playerB === raceTo) return 'B';
   return null;
@@ -92,10 +88,7 @@ export function getMatchWinner(
  * SCORE-003: Validate that a score doesn't violate game rules
  * Prevents impossible score combinations
  */
-export function validateScoreIntegrity(
-  score: MatchScore,
-  raceTo: number
-): ScoreValidationResult {
+export function validateScoreIntegrity(score: MatchScore, raceTo: number): ScoreValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -133,7 +126,10 @@ export function validateScoreIntegrity(
 /**
  * SCORE-002: Calculate games remaining for each player
  */
-export function getGamesRemaining(score: MatchScore, raceTo: number): {
+export function getGamesRemaining(
+  score: MatchScore,
+  raceTo: number
+): {
   playerA: number;
   playerB: number;
 } {

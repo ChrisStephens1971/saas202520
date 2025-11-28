@@ -69,9 +69,7 @@ describe('Round Robin Tournament Generator', () => {
 
     it('should reject invalid player counts', () => {
       expect(() => generateRoundRobinBracket([])).toThrow('less than 2');
-      expect(() => generateRoundRobinBracket([{ id: '1', name: 'P1' }])).toThrow(
-        'less than 2'
-      );
+      expect(() => generateRoundRobinBracket([{ id: '1', name: 'P1' }])).toThrow('less than 2');
 
       const tooMany = createPlayers(65);
       expect(() => generateRoundRobinBracket(tooMany)).toThrow('Maximum round robin size');
@@ -175,9 +173,7 @@ describe('Round Robin Tournament Generator', () => {
 
       // Verify player-1 is in each match
       for (const match of player1Matches) {
-        expect(
-          match.playerAId === 'player-1' || match.playerBId === 'player-1'
-        ).toBe(true);
+        expect(match.playerAId === 'player-1' || match.playerBId === 'player-1').toBe(true);
       }
     });
 

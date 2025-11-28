@@ -36,12 +36,12 @@ We're increasing marketing spend and driving more sign-ups. If we can't convert 
 
 ### Key Metrics
 
-| Metric | Baseline | Target | Timeline |
-|--------|----------|--------|----------|
-| Activation rate | 25% | 40% | Q1 2025 |
-| Time to first action | 30 min | 5 min | Q1 2025 |
-| Setup completion | 40% | 70% | Q1 2025 |
-| New user NPS | 35 | 50 | Q1 2025 |
+| Metric               | Baseline | Target | Timeline |
+| -------------------- | -------- | ------ | -------- |
+| Activation rate      | 25%      | 40%    | Q1 2025  |
+| Time to first action | 30 min   | 5 min  | Q1 2025  |
+| Setup completion     | 40%      | 70%    | Q1 2025  |
+| New user NPS         | 35       | 50     | Q1 2025  |
 
 ## 4. User Stories
 
@@ -50,6 +50,7 @@ We're increasing marketing spend and driving more sign-ups. If we can't convert 
 **So that** I can quickly understand the product value and achieve my goal
 
 ### Acceptance Criteria
+
 - [ ] User sees a welcome screen immediately after sign-up
 - [ ] Onboarding flow has 3-5 clear steps
 - [ ] User can skip onboarding if they prefer
@@ -59,6 +60,7 @@ We're increasing marketing spend and driving more sign-ups. If we can't convert 
 ## 5. Requirements
 
 ### Must Have (P0)
+
 - Welcome screen with value proposition
 - 3-step guided setup flow
 - Ability to skip onboarding
@@ -66,12 +68,14 @@ We're increasing marketing spend and driving more sign-ups. If we can't convert 
 - Celebration screen after first success
 
 ### Should Have (P1)
+
 - Personalization based on use case selection
 - Interactive tutorial overlays
 - Sample data for exploration
 - Email follow-up for incomplete onboarding
 
 ### Nice to Have (P2)
+
 - Video walkthrough option
 - Live chat support during onboarding
 - Customizable onboarding paths
@@ -149,22 +153,22 @@ Celebration! → Dashboard
 
 ## 9. Risks and Mitigations
 
-| Risk | Impact | Probability | Mitigation |
-|------|--------|-------------|------------|
-| Users find flow too prescriptive | High | Medium | Make skip button prominent, A/B test |
-| Technical bugs during rollout | High | Low | Gradual rollout, thorough testing |
-| Doesn't actually improve metrics | High | Medium | Run for 2 weeks, be ready to rollback |
+| Risk                             | Impact | Probability | Mitigation                            |
+| -------------------------------- | ------ | ----------- | ------------------------------------- |
+| Users find flow too prescriptive | High   | Medium      | Make skip button prominent, A/B test  |
+| Technical bugs during rollout    | High   | Low         | Gradual rollout, thorough testing     |
+| Doesn't actually improve metrics | High   | Medium      | Run for 2 weeks, be ready to rollback |
 
 ## 10. Timeline and Milestones
 
-| Milestone | Target Date | Status |
-|-----------|-------------|--------|
-| PRD Approved | Jan 15, 2025 | ✅ |
-| Design Complete | Jan 22, 2025 | ⏳ |
-| Development Complete | Feb 5, 2025 | ⏳ |
-| Testing Complete | Feb 10, 2025 | ⏳ |
-| Launch to 10% | Feb 12, 2025 | ⏳ |
-| Full Launch | Feb 19, 2025 | ⏳ |
+| Milestone            | Target Date  | Status |
+| -------------------- | ------------ | ------ |
+| PRD Approved         | Jan 15, 2025 | ✅     |
+| Design Complete      | Jan 22, 2025 | ⏳     |
+| Development Complete | Feb 5, 2025  | ⏳     |
+| Testing Complete     | Feb 10, 2025 | ⏳     |
+| Launch to 10%        | Feb 12, 2025 | ⏳     |
+| Full Launch          | Feb 19, 2025 | ⏳     |
 
 ## 11. Open Questions
 
@@ -191,6 +195,6 @@ Celebration! → Dashboard
 
 ## Revision History
 
-| Date | Author | Changes |
-|------|--------|---------|
+| Date         | Author       | Changes                    |
+| ------------ | ------------ | -------------------------- |
 | Jan 15, 2025 | Solo Founder | Initial draft and approval |

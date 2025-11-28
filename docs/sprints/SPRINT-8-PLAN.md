@@ -27,6 +27,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 #### PRIMARY GOALS (Must Have)
 
 **1. Analytics Dashboard UI (ANALYTICS-002)** ⭐ HIGH PRIORITY
+
 - Complete recharts visualization components (deferred from Sprint 7)
 - Chip progression line chart
 - Tournament statistics cards
@@ -37,6 +38,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 2 days
 
 **2. Production Infrastructure Setup (INFRA-001)** ⭐ HIGH PRIORITY
+
 - Set up staging environment (separate from development)
 - Configure production environment variables
 - Database migration strategy for production
@@ -46,6 +48,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 2 days
 
 **3. Monitoring & Alerting (MONITOR-001)** ⭐ HIGH PRIORITY
+
 - Application Performance Monitoring (APM) setup
 - Real-time error alerts
 - Performance metrics dashboard
@@ -62,6 +65,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 #### PRIMARY GOALS (Must Have)
 
 **4. Mobile PWA Optimization (MOBILE-001)** ⭐ HIGH PRIORITY
+
 - Progressive Web App manifest.json
 - Service Worker for offline support
 - Mobile-responsive layout improvements
@@ -72,6 +76,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 2 days
 
 **5. Dark Mode Theme (UI-001)**
+
 - Dark theme color palette (following design system)
 - Theme switcher component
 - Persistent theme preference (localStorage)
@@ -81,6 +86,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 1.5 days
 
 **6. Advanced Notifications (NOTIFY-002)**
+
 - Browser Push Notifications API
 - WebSocket-based real-time notifications
 - Notification preferences UI
@@ -97,6 +103,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 ### 🎁 Secondary Goals (Should Have)
 
 **7. Advanced Tournament Features (FEATURE-001)**
+
 - Tournament filtering (by status, date, format)
 - Advanced search with filters
 - Tournament templates (save/reuse configurations)
@@ -105,6 +112,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 2 days
 
 **8. Export & Reporting (REPORT-001)**
+
 - Export tournament results to PDF
 - CSV export for match history
 - Tournament summary reports
@@ -119,6 +127,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 #### PRIMARY GOALS (Must Have)
 
 **9. Staging Deployment (DEPLOY-001)** ⭐ CRITICAL
+
 - Deploy to staging environment
 - Run full E2E test suite against staging
 - Performance testing (Lighthouse audit)
@@ -129,6 +138,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 - **Estimate:** 1 day
 
 **10. Production Deployment (DEPLOY-002)** ⭐ CRITICAL
+
 - Production database setup with backups
 - Deploy application to production
 - DNS configuration
@@ -163,6 +173,7 @@ Sprint 8 is a comprehensive production readiness sprint combining three strategi
 ### Dependencies
 
 **New Packages:**
+
 ```bash
 # Analytics & Visualization
 pnpm add recharts@^2.15.0              # Already installed in Sprint 7
@@ -186,12 +197,14 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ### Infrastructure Requirements
 
 **Staging Environment:**
+
 - Separate PostgreSQL database (saas202520_staging)
 - Separate Redis instance (if needed)
 - Environment variables configured
 - Subdomain: staging.yourdomain.com
 
 **Production Environment:**
+
 - Production PostgreSQL with automated backups
 - Production Redis
 - CDN configuration
@@ -199,6 +212,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 - Domain: yourdomain.com
 
 **Monitoring Tools:**
+
 - Sentry for error tracking
 - Uptime monitoring service
 - APM dashboard (e.g., New Relic, DataDog, or self-hosted)
@@ -210,12 +224,14 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ### Quantitative Metrics
 
 **Analytics:**
+
 - [x] Analytics dashboard loads in <2s
 - [x] Charts render smoothly (60fps)
 - [x] All charts display accurate data
 - [x] Export functionality works for CSV/JSON
 
 **Mobile PWA:**
+
 - [x] Lighthouse PWA score >= 90
 - [x] Service Worker installs successfully
 - [x] Offline functionality works
@@ -223,6 +239,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 - [x] Mobile UI responsive on all screen sizes
 
 **Production:**
+
 - [x] Staging deployment successful
 - [x] All E2E tests pass on staging
 - [x] Zero critical bugs in UAT
@@ -231,6 +248,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 - [x] Rollback plan tested and documented
 
 **Performance:**
+
 - [x] Lighthouse Performance >= 90 (maintained from Sprint 7)
 - [x] First Contentful Paint <= 1.5s
 - [x] Time to Interactive <= 3.5s
@@ -252,6 +270,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ### High Risk Items
 
 **1. Production Deployment**
+
 - **Risk:** Downtime or data loss during deployment
 - **Mitigation:**
   - Full database backup before deployment
@@ -260,6 +279,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
   - Blue-green deployment if possible
 
 **2. Browser Compatibility (PWA)**
+
 - **Risk:** Service Worker issues on iOS Safari
 - **Mitigation:**
   - Test on multiple iOS versions
@@ -267,6 +287,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
   - Progressive enhancement approach
 
 **3. Performance Regression**
+
 - **Risk:** New features slow down application
 - **Mitigation:**
   - Lighthouse CI enforces budgets
@@ -274,6 +295,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
   - Code splitting for analytics bundle
 
 **4. Third-party Dependencies**
+
 - **Risk:** Sentry/monitoring services downtime
 - **Mitigation:**
   - Fallback error logging to file system
@@ -287,18 +309,21 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ### Week 1: Analytics & Infrastructure
 
 **Day 1-2: Analytics Dashboard**
+
 - Create recharts components
 - Integrate with existing API endpoints
 - Test data visualization accuracy
 - Export functionality
 
 **Day 3-4: Production Infrastructure**
+
 - Set up staging environment
 - Configure production environment
 - Set up automated backups
 - Error tracking integration
 
 **Day 5: Monitoring Setup**
+
 - APM configuration
 - Alert rules configuration
 - Dashboard setup
@@ -309,22 +334,26 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ### Week 2: Mobile, UX & Deployment
 
 **Day 6-7: Mobile PWA**
+
 - PWA manifest and service worker
 - Mobile UI responsive improvements
 - Test on iOS/Android devices
 - Add to Home Screen testing
 
 **Day 8: Dark Mode & Notifications**
+
 - Dark theme implementation
 - Notification system setup
 - User preferences UI
 
 **Day 9: Advanced Features**
+
 - Tournament filtering/search
 - Export to PDF
 - Player ranking system
 
 **Day 10: Deployment**
+
 - Staging deployment
 - UAT and bug fixes
 - Production deployment
@@ -335,6 +364,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 ## Testing Strategy
 
 ### E2E Tests (Playwright)
+
 - All existing E2E tests must pass (from Sprint 7)
 - New E2E tests for:
   - Analytics dashboard interactions
@@ -343,6 +373,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
   - Notification preferences
 
 ### Manual Testing
+
 - Mobile testing on:
   - iPhone (Safari)
   - Android (Chrome)
@@ -352,6 +383,7 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 - UAT with real users
 
 ### Performance Testing
+
 - Lighthouse audits (automated via CI)
 - Load testing (k6 or similar)
 - Database query performance
@@ -364,12 +396,14 @@ pnpm add jspdf-autotable@^3.8.3        # Tables in PDF
 Sprint 8 is "Done" when:
 
 **Analytics:**
+
 - [x] Analytics dashboard fully functional with recharts
 - [x] All visualizations display accurate data
 - [x] Export functionality works (CSV/JSON)
 - [x] Mobile-responsive analytics views
 
 **Production Readiness:**
+
 - [x] Staging environment deployed and tested
 - [x] Production environment configured
 - [x] Automated backups running
@@ -378,6 +412,7 @@ Sprint 8 is "Done" when:
 - [x] UAT completed with zero critical bugs
 
 **Mobile & UX:**
+
 - [x] PWA functional (service worker, manifest)
 - [x] Dark mode implemented across all pages
 - [x] Notifications working (browser push)
@@ -385,6 +420,7 @@ Sprint 8 is "Done" when:
 - [x] Lighthouse PWA score >= 90
 
 **Deployment:**
+
 - [x] Production deployment successful
 - [x] All E2E tests passing in production
 - [x] Rollback plan documented and tested
@@ -392,6 +428,7 @@ Sprint 8 is "Done" when:
 - [x] DNS and SSL configured correctly
 
 **Code Quality:**
+
 - [x] All tests passing (unit, integration, E2E)
 - [x] No linting errors or warnings
 - [x] TypeScript strict mode maintained
@@ -405,21 +442,25 @@ Sprint 8 is "Done" when:
 ### If Production Deployment Fails:
 
 **Database Rollback:**
+
 1. Restore from pre-deployment backup
 2. Verify data integrity
 3. Test critical workflows
 
 **Application Rollback:**
+
 1. Revert to previous Docker image/build
 2. Redeploy previous version
 3. Verify application health
 
 **DNS Rollback:**
+
 1. Point DNS back to previous server (if applicable)
 2. Verify routing works
 3. Monitor traffic
 
 **Communication:**
+
 - Notify stakeholders of rollback
 - Document what went wrong
 - Plan remediation steps
@@ -429,18 +470,21 @@ Sprint 8 is "Done" when:
 ## Dependencies & Blockers
 
 ### External Dependencies:
+
 - Production hosting provider (Vercel, AWS, etc.)
 - Domain and DNS access
 - SSL certificate authority
 - Error tracking service (Sentry account)
 
 ### Internal Dependencies:
+
 - Sprint 7 completion (✅ COMPLETE)
 - Design assets for dark mode
 - Content for notification messages
 - UAT user availability
 
 ### Potential Blockers:
+
 - Hosting provider delays
 - DNS propagation time (24-48 hours)
 - iOS PWA limitations
@@ -451,17 +495,20 @@ Sprint 8 is "Done" when:
 ## Communication Plan
 
 ### Daily Standups:
+
 - Progress on analytics dashboard
 - Infrastructure setup status
 - Mobile PWA testing results
 - Deployment readiness check
 
 ### Stakeholder Updates:
+
 - End of Week 1: Analytics demo + staging deployment
 - End of Week 2: Production launch announcement
 - Post-deployment: Metrics and feedback report
 
 ### Documentation:
+
 - Deployment runbook
 - Monitoring playbook
 - Incident response procedures
